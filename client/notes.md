@@ -1,0 +1,1 @@
+- do we need include income on map toggle? will everything that's real be included?
