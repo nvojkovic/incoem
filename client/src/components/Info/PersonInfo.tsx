@@ -16,14 +16,16 @@ const PersonInfo = ({ title, subtitle, person, setPerson }: Props) => {
           <div className="font-semibold text-lg">{title}</div>
           <div className="text-[#475467] text-sm">{subtitle}</div>
         </div>
-        <div className="flex flex-col gap-4 mt-6">
+        <div className="flex gap-4 mt-6">
           <Input
             label="First Name"
             value={person.name}
+            subtype="text"
             setValue={(name) => setPerson({ ...person, name })}
           />
           <Input
             label="Birth Year"
+            subtype="text"
             value={person.birthYear.toString()}
             setValue={(birthYear) =>
               setPerson({ ...person, birthYear: parseInt(birthYear) })

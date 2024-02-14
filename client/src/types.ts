@@ -15,7 +15,13 @@ interface Income {
   type: IncomeType;
 }
 
-type IncomeType = "employment-income" | "social-security" | "company-pension";
+type IncomeType =
+  | "employment-income"
+  | "social-security"
+  | "company-pension"
+  | "basic-annuity"
+  | "other-income"
+  | "paydown";
 
 interface EmploymentIncome extends Income {
   type: "employment-income";
@@ -42,10 +48,56 @@ interface SocialSecurityStart {
 
 interface CompanyPension extends Income {
   type: "company-pension";
+  name: string;
   personId: number;
   annualAmount: number;
   survivorPercent: number;
   yearlyIncreasePercent: number;
-  startAge?: number;
+  startAge?: number | null;
   firstYearProRatePercent: number;
+}
+
+interface BasicAnnuity extends Income {
+  type: "basic-annuity";
+  name: string;
+  personId: number;
+  annualAmount: number;
+  yearsOfDeferral: number;
+  yearlyIncreasePercent: number;
+  survivorPercent: number;
+  firstYearProRatePercent: number;
+}
+
+interface OtherIncome extends Income {
+  type: "other-income";
+  name: string;
+  personId: number;
+  amount: number;
+  frequency: "monthly" | "quarterly" | "semi-annually" | "annually";
+  startYear: number;
+  endYear: number;
+  yearlyIncreasePercent: number;
+  survivorPercent: number;
+  firstYearProRatePercent: number;
+}
+
+interface Paydown extends Income {
+  type: "paydown";
+  name: string;
+  personId: number;
+  total: number;
+  paymentInYear: "beggining" | "end";
+  startYear: number;
+  length: number;
+  interestRate: number;
+}
+
+interface CalculationInfo<T extends Income> {
+  people: Person[];
+  inflation?: number;
+  income: T;
+  startYear: number;
+  currentYear: number;
+  deathYears: number[];
+  dead: number;
 }

@@ -4,21 +4,30 @@ import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 
 interface Props {
-  pension: CompanyPension;
+  annuity: BasicAnnuity;
   people: Person[];
-  setIncome: (income: CompanyPension) => void;
+  setIncome: (income: BasicAnnuity) => void;
   remove: () => void;
 }
 
-const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
+const BasicAnnuity = ({
+  people,
+  remove,
+  annuity: pension,
+  setIncome,
+}: Props) => {
   return (
     <div className="">
       <Section>
         <div className="flex-grow">
           <div className="flex  gap-4 mt-6 items-center">
             <Select
-              options={[...people]}
-              selected={people[pension.personId]}
+              options={[...people, { name: "Joint", id: -1 }]}
+              selected={
+                pension.personId == -1
+                  ? { name: "Joint", id: -1 }
+                  : people[pension.personId]
+              }
               setSelected={(i) => setIncome({ ...pension, personId: i.id })}
               label="Person"
             />
@@ -36,6 +45,14 @@ const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
               setValue={(name) => setIncome({ ...pension, annualAmount: name })}
             />
             <Input
+              label="Years of deferral"
+              subtype="number"
+              value={pension.yearsOfDeferral}
+              setValue={(name) =>
+                setIncome({ ...pension, yearsOfDeferral: name })
+              }
+            />
+            <Input
               label="Survivor"
               subtype="percent"
               value={pension.survivorPercent}
@@ -50,12 +67,6 @@ const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
               setValue={(name) =>
                 setIncome({ ...pension, yearlyIncreasePercent: name })
               }
-            />
-            <Input
-              label="Start Age"
-              subtype="number"
-              value={pension.startAge}
-              setValue={(name) => setIncome({ ...pension, startAge: name })}
             />
             <Input
               label="First-Year Prorate"
@@ -79,4 +90,4 @@ const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
   );
 };
 
-export default CompanyPension;
+export default BasicAnnuity;

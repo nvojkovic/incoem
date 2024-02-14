@@ -16,12 +16,14 @@ const months = [
 
 interface MonthPickerProps {
   selected: number;
-  setSelected: (id: number) => void;
+  setSelected: (id: any) => void;
+  label?: string;
 }
 
-const MonthPicker = ({ selected, setSelected }: MonthPickerProps) => {
+const MonthPicker = ({ selected, setSelected, label }: MonthPickerProps) => {
   return (
     <Select
+      label={label}
       options={months}
       selected={months.find((i) => i.id == selected) || null}
       setSelected={setSelected}

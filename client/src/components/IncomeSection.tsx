@@ -3,6 +3,9 @@ import EmploymentIncome from "./Info/EmploymentIncome";
 import MapSection from "./MapSection";
 import { newIncome } from "../createIncome";
 import CompanyPension from "./Info/CompanyPension";
+import BasicAnnuity from "./Info/BasicAnnuity";
+import Paydown from "./Info/Paydown";
+import OtherIncome from "./Info/OtherIncome";
 
 interface Props {
   title: string;
@@ -30,25 +33,53 @@ const IncomeSection = ({
     <MapSection title={title} defaultOpen={defaultOpen}>
       <div className="flex items-center mb-4">
         <Button type="primary" onClick={() => addIncome(newIncome(type))}>
-          + Employment Income
+          + {title}
         </Button>
       </div>
-      <div className="flex gap-6 overflow-x-scroll">
+      <div className="flex gap-4 flex-col overflow-x-scroll">
         {incomes.map((income, i) => {
           if (income.type === type && income.type === "employment-income")
             return (
-              <div>
-                <EmploymentIncome
-                  key={i}
-                  people={people}
-                  remove={() => removeIncome(i)}
-                  income={income as EmploymentIncome}
-                  setIncome={(income) => setIncome(i, income)}
-                />
-              </div>
+              <EmploymentIncome
+                key={i}
+                people={people}
+                remove={() => removeIncome(i)}
+                income={income as EmploymentIncome}
+                setIncome={(income) => setIncome(i, income)}
+              />
             );
           else if (income.type === type && income.type === "social-security")
             return <div>Not implemented</div>;
+          else if (income.type === type && income.type === "basic-annuity")
+            return (
+              <BasicAnnuity
+                key={i}
+                people={people}
+                remove={() => removeIncome(i)}
+                annuity={income as BasicAnnuity}
+                setIncome={(income) => setIncome(i, income)}
+              />
+            );
+          else if (income.type === type && income.type === "other-income")
+            return (
+              <OtherIncome
+                key={i}
+                people={people}
+                remove={() => removeIncome(i)}
+                annuity={income as OtherIncome}
+                setIncome={(income) => setIncome(i, income)}
+              />
+            );
+          else if (income.type === type && income.type === "paydown")
+            return (
+              <Paydown
+                key={i}
+                people={people}
+                remove={() => removeIncome(i)}
+                paydown={income as Paydown}
+                setIncome={(income) => setIncome(i, income)}
+              />
+            );
           else if (income.type === type && income.type === "company-pension")
             return (
               <CompanyPension
