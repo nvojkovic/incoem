@@ -1,13 +1,16 @@
-export const calculateEmploymentIncome = ({
-  people,
-  income,
-  startYear,
-  currentYear,
-  deathYears,
-  inflation,
-}: CalculationInfo<EmploymentIncome>) => {
+import { adjustForInflation, isDead } from "./utils";
+
+export const calculateEmploymentIncome = (
+  info: CalculationInfo<EmploymentIncome>,
+) => {
+  const { people, income, startYear, currentYear } = info;
   const person = people[income.personId];
   const age = currentYear - person.birthYear;
+
+  if (income.startAge > age || isDead(info) || age > income.retirementAgeYear) {
+    return 0;
+  }
+
   let baseAmount =
     income.annualIncome *
     Math.pow(
@@ -15,27 +18,12 @@ export const calculateEmploymentIncome = ({
       Math.min(age - income.startAge, currentYear - startYear),
     );
 
-  if (inflation) {
-    baseAmount =
-      baseAmount / Math.pow(1 + inflation / 100, currentYear - startYear);
-  }
-  if (income.startAge > age) {
-    return 0;
-  }
+  baseAmount = adjustForInflation(info, baseAmount, startYear);
 
   if (income.startAge === age) {
     return (baseAmount * income.firstYearProratePercent) / 100;
   }
 
-  if (
-    deathYears[person.id] &&
-    deathYears[person.id] + people[person.id].birthYear <= currentYear
-  ) {
-    return 0;
-  }
-  if (age > income.retirementAgeYear) {
-    return 0;
-  }
   if (income.retirementAgeYear === age) {
     return baseAmount * (income.retirementAgeMonth / 12);
   }

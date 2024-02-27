@@ -1,12 +1,12 @@
 export const newEmploymentIncome = (): any => ({
   type: "employment-income",
   personId: 0,
-  annualIncome: 0,
+  annualIncome: null,
   startAge: null,
-  firstYearProratePercent: 100,
+  firstYearProratePercent: null,
   yearlyIncreasePercent: null,
   retirementAgeYear: null,
-  retirementAgeMonth: 12,
+  retirementAgeMonth: null,
 });
 
 export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
@@ -15,6 +15,10 @@ export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
   annualAmount: 0,
   cola: 0,
   alreadyReceiving: false,
+  pia: 0,
+  calculationMethod: "manual",
+  startAgeYear: null as any,
+  startAgeMonth: null as any,
 });
 
 export const newPensionIncome = (): any => ({

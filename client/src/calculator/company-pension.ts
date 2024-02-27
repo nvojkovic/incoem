@@ -1,12 +1,9 @@
-export const calculateCompanyPension = ({
-  people,
-  income,
-  startYear,
-  currentYear,
-  deathYears,
-  dead,
-  inflation,
-}: CalculationInfo<CompanyPension>) => {
+import { adjustForInflation, isDead } from "./utils";
+
+export const calculateCompanyPension = (
+  info: CalculationInfo<CompanyPension>,
+) => {
+  const { people, income, startYear, currentYear } = info;
   const person = people[income.personId];
   const age = currentYear - person.birthYear;
   const start = income.startAge
@@ -19,20 +16,13 @@ export const calculateCompanyPension = ({
       currentYear - start,
     );
 
-  if (inflation) {
-    yearAmount =
-      yearAmount / Math.pow(1 + inflation / 100, currentYear - start);
-  }
+  yearAmount = adjustForInflation(info, yearAmount, start);
 
   if (income.startAge && income.startAge > age) {
     return 0;
   }
 
-  if (
-    dead != -1 &&
-    dead == income.personId &&
-    deathYears[income.personId] < age
-  ) {
+  if (isDead(info)) {
     return (yearAmount * income.survivorPercent) / 100;
   }
   if (income.startAge === age) {

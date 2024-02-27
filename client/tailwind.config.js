@@ -1,3 +1,4 @@
+const colors = require("tailwindcss/colors");
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -7,6 +8,14 @@ export default {
         maxHeight: "max-height",
       },
     },
+    colors: {
+      "main-orange": "#FF7957",
+      ...colors,
+    },
   },
-  plugins: [],
+  plugins: [
+    function({ addVariant }) {
+      addVariant("fullscreen", "&:fullscreen");
+    },
+  ],
 };

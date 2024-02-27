@@ -1,27 +1,18 @@
-export const calculateOtherIncome = ({
-  people,
-  income,
-  startYear,
-  currentYear,
-  inflation,
-  deathYears,
-  dead,
-}: CalculationInfo<OtherIncome>) => {
-  const person = people[income.personId];
-  const age = currentYear - person.birthYear;
+import { adjustForInflation, isDead } from "./utils";
+
+export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
+  const { income, startYear, currentYear } = info;
+
   const start = startYear + (income.startYear || 0);
+  if (currentYear < start) {
+    return 0;
+  }
+
   let yearAmount =
     income.amount *
     (1 + income.yearlyIncreasePercent / 100) ** (currentYear - start);
 
-  if (inflation) {
-    yearAmount = yearAmount / (1 + inflation / 100) ** (currentYear - start);
-  }
-
-  console.log(currentYear, start);
-  if (currentYear < start) {
-    return 0;
-  }
+  yearAmount = adjustForInflation(info, yearAmount, start);
 
   if (income.frequency === "monthly") {
     yearAmount = yearAmount * 12;
@@ -31,11 +22,7 @@ export const calculateOtherIncome = ({
     yearAmount = yearAmount * 2;
   }
 
-  if (
-    dead != -1 &&
-    dead == income.personId &&
-    deathYears[income.personId] < age
-  ) {
+  if (isDead(info)) {
     return (yearAmount * income.survivorPercent) / 100;
   }
   if (income.startYear + startYear === currentYear) {

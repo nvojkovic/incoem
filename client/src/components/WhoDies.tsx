@@ -5,7 +5,7 @@ const WhoDies = ({ active, setWhoDies, i, title }: any) => {
       onClick={() => setWhoDies(i)}
     >
       {active ? (
-        <div className="bg-green-500 h-[10px] w-[10px] rounded-full" />
+        <div className="bg-[#FF6C47] h-[10px] w-[10px] rounded-full" />
       ) : (
         <div className="bg-white h-[10px] w-[10px] rounded-full" />
       )}

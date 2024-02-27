@@ -50,7 +50,7 @@ const EmploymentIncome = ({ people, remove, income, setIncome }: Props) => {
           }
         />
         <Input
-          label="Retirement Year"
+          label="Retirement Age"
           subtype="text"
           value={income.retirementAgeYear}
           setValue={(name) => setIncome({ ...income, retirementAgeYear: name })}

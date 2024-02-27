@@ -6,18 +6,21 @@ interface Props {
   value: any;
   disabled?: boolean;
   toggleable?: boolean;
-  subtype?: "money" | "percent" | "text" | "number";
-  size?: "sm" | "md" | "lg";
+  placeholder?: string;
+  subtype?: "money" | "percent" | "text" | "number" | "date" | "toggle";
+  size?: "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
 }
 const calcSize = (s: any) => {
   if (s == "sm") return "w-28";
   if (s == "md") return "w-36";
   if (s == "lg") return "w-48";
+  if (s == "full") return "w-full";
 };
 const Input = ({
   subtype = "text",
   size = "sm",
+  placeholder,
   label,
   value,
   toggleable = false,
@@ -25,13 +28,16 @@ const Input = ({
   disabled = false,
 }: Props) => {
   let input = null as any;
+  const basic =
+    "focus:outline-none focus:border-[#FF6C47] focus:ring-1 focus:ring-[#FF6C47] rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100";
   if (subtype === "money") {
     input = (
       <CurrencyInput
         prefix="$"
         defaultValue={value}
         decimalsLimit={2}
-        className={`rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100  ${size == "sm" && "w-28"}`}
+        disabled={disabled}
+        className={`${basic} ${size == "sm" && "w-28"}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
       />
     );
@@ -40,9 +46,10 @@ const Input = ({
       <CurrencyInput
         defaultValue={value}
         disableAbbreviations={true}
+        disabled={disabled}
         decimalSeparator=""
         groupSeparator=""
-        className={`rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100  ${size == "sm" && "w-28"}`}
+        className={`${basic}  ${size == "sm" && "w-28"}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
       />
     );
@@ -51,24 +58,39 @@ const Input = ({
       <CurrencyInput
         suffix="%"
         defaultValue={value}
+        disabled={disabled}
         decimalsLimit={2}
-        className={`rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100  ${size == "sm" && "w-28"}`}
+        className={`${basic}  ${size == "sm" && "w-28"}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
       />
     );
+  } else if (subtype === "date") {
+    input = (
+      <input
+        type="date"
+        disabled={disabled}
+        className={`${basic} ${calcSize(size)} `}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    );
+  } else if (subtype === "toggle") {
+    input = <Toggle enabled={value} setEnabled={setValue} />;
   } else {
     input = (
       <input
         type="text"
         disabled={disabled}
-        className={`rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 ${calcSize(size)}`}
+        className={`${basic} ${calcSize(size)} `}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
       />
     );
   }
   return (
-    <div className="flex flex-col gap-1 flex-shrink">
+    <div className="flex flex-col gap-1">
       <div className="flex gap-2 items-center">
         <label htmlFor={label} className="text-sm text-[#344054]">
           {label}

@@ -15,7 +15,7 @@ const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
     <div className="">
       <Section>
         <div className="flex-grow">
-          <div className="flex  gap-4 mt-6 items-center">
+          <div className="flex gap-4 items-center">
             <Select
               options={[...people]}
               selected={people[pension.personId]}
@@ -68,10 +68,12 @@ const CompanyPension = ({ people, remove, pension, setIncome }: Props) => {
                 })
               }
             />
-            <TrashIcon
-              className="text-red-500 w-6 cursor-pointer"
-              onClick={remove}
-            />
+            <button>
+              <TrashIcon
+                className="text-red-500 w-6 cursor-pointer"
+                onClick={remove}
+              />
+            </button>
           </div>
         </div>
       </Section>

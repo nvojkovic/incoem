@@ -1,7 +1,7 @@
 interface Person {
   name: string;
   birthYear: number;
-  birthMonth: string;
+  birthMonth: number;
   id: number;
 }
 interface IncomeMapData {
@@ -35,13 +35,11 @@ interface EmploymentIncome extends Income {
 
 interface SocialSecurityIncome extends Income {
   type: "social-security";
+  calculationMethod: "automatic" | "manual";
+  pia: number;
   annualAmount: number;
   alreadyReceiving: boolean;
   cola: number;
-  startOptions?: SocialSecurityStart;
-}
-
-interface SocialSecurityStart {
   startAgeYear: number;
   startAgeMonth: number;
 }
@@ -100,4 +98,21 @@ interface CalculationInfo<T extends Income> {
   currentYear: number;
   deathYears: number[];
   dead: number;
+}
+
+interface Client {
+  title: string;
+  createdAt: string;
+  id: number;
+  data: IncomeMapData;
+  scenarios: ScenarioSettings[];
+}
+
+interface ScenarioSettings {
+  name: string;
+  maxYearsShown: number;
+  deathYears: (number | null)[];
+  inflation: number;
+  whoDies: number;
+  data: IncomeMapData;
 }

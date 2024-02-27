@@ -17,9 +17,11 @@ function Select({ label, options, selected, setSelected }: Props) {
       </label>
       <div className="min-w-48 ">
         <Listbox value={selected} onChange={setSelected}>
-          <div className="relative mt-1">
-            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[10px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#EAECF0]">
-              <span className="block truncate">{selected?.name}</span>
+          <div className="relative">
+            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[8px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD]">
+              <span className="block truncate min-h-6 text-base">
+                {selected?.name}
+              </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
                   className="h-5 w-5 text-gray-400"
@@ -39,9 +41,10 @@ function Select({ label, options, selected, setSelected }: Props) {
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default select-none py-2 pl-10 pr-4 ${active
-                          ? "bg-[#ffd6cc] text-amber-900"
-                          : "text-gray-900"
+                        `relative cursor-default select-none py-2 text-left pl-8 ${
+                          active
+                            ? "bg-[#ffd6cc] text-amber-900"
+                            : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -49,8 +52,9 @@ function Select({ label, options, selected, setSelected }: Props) {
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${selected ? "font-medium" : "font-normal"
-                              }`}
+                            className={`block truncate ${
+                              selected ? "font-medium" : "font-normal"
+                            }`}
                           >
                             {person.name}
                           </span>

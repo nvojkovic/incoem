@@ -2,7 +2,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 interface Props {
-  title: string;
+  title: string | React.ReactNode;
   defaultOpen?: boolean;
   children: React.ReactNode;
 }
@@ -11,13 +11,10 @@ const MapSection = ({ title, defaultOpen = false, children }: Props) => {
   return (
     <div className="flex-grow">
       <div
-        className="flex justify-between mb-6 pb-3 border-b border-[#EAECF0] cursor-pointer"
+        className="flex justify-between mb-6 pb-3 border-b border-[#EAECF0] cursor-pointer font-semibold text-lg"
         onClick={() => setOpen(!open)}
       >
-        <div className="flex flex-col">
-          <div className="font-semibold text-lg ">{title}</div>
-          <div className="text-[#475467]">{}</div>
-        </div>
+        {title}
         {open ? (
           <ChevronUpIcon className="text-[#475467] w-6" />
         ) : (
@@ -25,7 +22,7 @@ const MapSection = ({ title, defaultOpen = false, children }: Props) => {
         )}
       </div>
       <div
-        className={` overflow-hidden transition-maxHeight duration-500 ease-in-out ${open ? "max-h-[1000px]" : "max-h-0 "}`}
+        className={` transition-maxHeight duration-500 ease-in-out ${open ? "max-h-[1000px]" : "max-h-0 overflow-hidden"}`}
       >
         {children}
       </div>

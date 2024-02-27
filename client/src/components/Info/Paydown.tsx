@@ -11,13 +11,17 @@ interface Props {
 }
 
 const BasicAnnuity = ({ people, remove, paydown, setIncome }: Props) => {
+  const options = [...people] as any[];
+  if (people.length == 2) {
+    options.push({ name: "Joint", id: -1 });
+  }
   return (
     <div className="">
       <Section>
         <div className="flex-grow">
-          <div className="flex  gap-4 mt-6 items-center">
+          <div className="flex  gap-4 items-center">
             <Select
-              options={[...people, { name: "Joint", id: -1 }]}
+              options={options}
               selected={
                 paydown.personId == -1
                   ? { name: "Joint", id: -1 }

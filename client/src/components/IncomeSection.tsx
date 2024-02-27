@@ -6,6 +6,8 @@ import CompanyPension from "./Info/CompanyPension";
 import BasicAnnuity from "./Info/BasicAnnuity";
 import Paydown from "./Info/Paydown";
 import OtherIncome from "./Info/OtherIncome";
+import { PlusIcon } from "@heroicons/react/24/solid";
+import SocialSecurity from "./Info/SocialSecurity";
 
 interface Props {
   title: string;
@@ -30,13 +32,29 @@ const IncomeSection = ({
   type,
 }: Props) => {
   return (
-    <MapSection title={title} defaultOpen={defaultOpen}>
-      <div className="flex items-center mb-4">
-        <Button type="primary" onClick={() => addIncome(newIncome(type))}>
-          + {title}
-        </Button>
-      </div>
-      <div className="flex gap-4 flex-col overflow-x-scroll">
+    <MapSection
+      title={
+        <div className="flex gap-6 items-center w-full">
+          <div>{title}</div>
+          <div className="w-8 mr">
+            <Button
+              type="secondary"
+              onClick={(e) => {
+                addIncome(newIncome(type));
+                e.stopPropagation();
+              }}
+            >
+              <div className="text-sm">
+                <PlusIcon className="h-4 w-4" />
+              </div>
+            </Button>
+          </div>
+        </div>
+      }
+      defaultOpen={defaultOpen}
+    >
+      <div className="flex items-center mb-4 w-8"></div>
+      <div className="flex gap-4 flex-col">
         {incomes.map((income, i) => {
           if (income.type === type && income.type === "employment-income")
             return (
@@ -49,7 +67,15 @@ const IncomeSection = ({
               />
             );
           else if (income.type === type && income.type === "social-security")
-            return <div>Not implemented</div>;
+            return (
+              <SocialSecurity
+                key={i}
+                people={people}
+                remove={() => removeIncome(i)}
+                income={income as SocialSecurityIncome}
+                setIncome={(income) => setIncome(i, income)}
+              />
+            );
           else if (income.type === type && income.type === "basic-annuity")
             return (
               <BasicAnnuity

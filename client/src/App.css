@@ -21,3 +21,20 @@ tr:last-of-type td:first-of-type {
 tr:last-of-type td:last-of-type {
   border-bottom-right-radius: 10px;
 }
+
+.fullscreen-hidden {
+}
+.fullscreen-hidden:fullscreen {
+  background-color: #f0f !important;
+  display: none !important;
+}
+
+.fullscreen-hidden:-webkit-full-screen {
+  background-color: #f0f !important;
+  display: none !important;
+}
+
+.fullscreen-hidden:-moz-full-screen {
+  background-color: #f0f !important;
+  display: none !important;
+}

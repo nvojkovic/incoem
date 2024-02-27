@@ -16,13 +16,17 @@ const BasicAnnuity = ({
   annuity: pension,
   setIncome,
 }: Props) => {
+  const options = [...people] as any[];
+  if (people.length == 2) {
+    options.push({ name: "Joint", id: -1 });
+  }
   return (
     <div className="">
       <Section>
         <div className="flex-grow">
-          <div className="flex  gap-4 mt-6 items-center">
+          <div className="flex gap-4 mt-6 items-center">
             <Select
-              options={[...people, { name: "Joint", id: -1 }]}
+              options={options}
               selected={
                 pension.personId == -1
                   ? { name: "Joint", id: -1 }
@@ -53,7 +57,7 @@ const BasicAnnuity = ({
               }
             />
             <Input
-              label="Survivor"
+              label="Survivor %"
               subtype="percent"
               value={pension.survivorPercent}
               setValue={(name) =>
