@@ -1,17 +1,31 @@
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import Toggle from "./Toggle";
 import CurrencyInput from "react-currency-input-field";
+import { Tooltip } from "flowbite-react";
 
 interface Props {
   label: string;
   value: any;
   disabled?: boolean;
+  vertical?: boolean;
+  tooltip?: string;
   toggleable?: boolean;
   placeholder?: string;
-  subtype?: "money" | "percent" | "text" | "number" | "date" | "toggle";
-  size?: "sm" | "md" | "lg" | "full";
+  onKeyDown?: (e: any) => void;
+  subtype?:
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "textarea";
+  size?: "xs" | "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
 }
 const calcSize = (s: any) => {
+  if (s == "xs") return "w-20";
   if (s == "sm") return "w-28";
   if (s == "md") return "w-36";
   if (s == "lg") return "w-48";
@@ -21,11 +35,14 @@ const Input = ({
   subtype = "text",
   size = "sm",
   placeholder,
+  vertical = false,
   label,
   value,
   toggleable = false,
   setValue,
+  tooltip,
   disabled = false,
+  ...props
 }: Props) => {
   let input = null as any;
   const basic =
@@ -34,11 +51,12 @@ const Input = ({
     input = (
       <CurrencyInput
         prefix="$"
-        defaultValue={value}
+        value={value}
         decimalsLimit={2}
         disabled={disabled}
-        className={`${basic} ${size == "sm" && "w-28"}`}
+        className={`${basic} ${size == "sm" && "w-full"}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
+        {...props}
       />
     );
   } else if (subtype === "number") {
@@ -47,10 +65,10 @@ const Input = ({
         defaultValue={value}
         disableAbbreviations={true}
         disabled={disabled}
-        decimalSeparator=""
-        groupSeparator=""
-        className={`${basic}  ${size == "sm" && "w-28"}`}
+        disableGroupSeparators={true}
+        className={`${basic}  ${size == "sm" && "w-full"} ${calcSize(size)}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
+        {...props}
       />
     );
   } else if (subtype === "percent") {
@@ -60,8 +78,9 @@ const Input = ({
         defaultValue={value}
         disabled={disabled}
         decimalsLimit={2}
-        className={`${basic}  ${size == "sm" && "w-28"}`}
+        className={`${basic}  ${size == "sm" && "w-full"} ${calcSize(size)}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
+        {...props}
       />
     );
   } else if (subtype === "date") {
@@ -76,23 +95,48 @@ const Input = ({
       />
     );
   } else if (subtype === "toggle") {
-    input = <Toggle enabled={value} setEnabled={setValue} />;
-  } else {
+    input = (
+      <div
+        className={
+          "focus:outline-none focus:border-[#FF6C47] focus:ring-1 focus:ring-[#FF6C47] rounded-lg py-2 disabled:bg-gray-100 m-auto"
+        }
+      >
+        <Toggle enabled={value} setEnabled={setValue} />
+      </div>
+    );
+  } else if (subtype == "text" || subtype == "password") {
     input = (
       <input
-        type="text"
+        type={subtype}
         disabled={disabled}
         className={`${basic} ${calcSize(size)} `}
         value={value}
+        placeholder={placeholder}
+        onChange={(e) => setValue(e.target.value)}
+        {...props}
+      />
+    );
+  } else if (subtype == "textarea") {
+    input = (
+      <textarea
+        disabled={disabled}
+        className={`${basic} h-56 ${calcSize(size)} `}
+        value={value}
+        cols={20}
         placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
       />
     );
   }
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex gap-2 items-center">
-        <label htmlFor={label} className="text-sm text-[#344054]">
+    <div className={`flex ${vertical && "flex-col"} gap-1 w-full`}>
+      <div
+        className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}
+      >
+        <label
+          htmlFor={label}
+          className={`text-sm text-[#344054] ${!vertical && "min-w-36"}`}
+        >
           {label}
         </label>
         {toggleable && (
@@ -105,7 +149,21 @@ const Input = ({
           />
         )}
       </div>
-      {input}
+      {tooltip ? (
+        <Tooltip
+          content={tooltip}
+          placement="right-end"
+          style="light"
+        // className="border-black border"
+        >
+          <div className="relative cursor-pointer">
+            <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />
+            {input}
+          </div>
+        </Tooltip>
+      ) : (
+        input
+      )}
     </div>
   );
 };

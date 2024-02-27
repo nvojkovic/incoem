@@ -1,7 +1,6 @@
 interface Person {
   name: string;
-  birthYear: number;
-  birthMonth: number;
+  birthday: string;
   id: number;
 }
 interface IncomeMapData {
@@ -11,21 +10,24 @@ interface IncomeMapData {
 }
 
 interface Income {
+  id: number;
   personId: number;
   type: IncomeType;
+  enabled: boolean;
 }
 
 type IncomeType =
   | "employment-income"
   | "social-security"
   | "company-pension"
-  | "basic-annuity"
+  | "annuity"
   | "other-income"
   | "paydown";
 
 interface EmploymentIncome extends Income {
   type: "employment-income";
   startAge: number;
+  name: string;
   firstYearProratePercent: number;
   annualIncome: number;
   yearlyIncreasePercent: number;
@@ -56,7 +58,7 @@ interface CompanyPension extends Income {
 }
 
 interface BasicAnnuity extends Income {
-  type: "basic-annuity";
+  type: "annuity";
   name: string;
   personId: number;
   annualAmount: number;
@@ -92,11 +94,13 @@ interface Paydown extends Income {
 
 interface CalculationInfo<T extends Income> {
   people: Person[];
+  incomes: Income[];
   inflation?: number;
   income: T;
   startYear: number;
   currentYear: number;
   deathYears: number[];
+  ssSurvivorAge: (number | null)[];
   dead: number;
 }
 
@@ -109,9 +113,11 @@ interface Client {
 }
 
 interface ScenarioSettings {
+  id: number;
   name: string;
   maxYearsShown: number;
   deathYears: (number | null)[];
+  ssSurvivorAge: (number | null)[];
   inflation: number;
   whoDies: number;
   data: IncomeMapData;

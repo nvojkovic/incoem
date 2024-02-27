@@ -1,3 +1,4 @@
+import { splitDate } from "../utils";
 import { adjustForInflation, isDead } from "./utils";
 
 export const calculateCompanyPension = (
@@ -5,10 +6,9 @@ export const calculateCompanyPension = (
 ) => {
   const { people, income, startYear, currentYear } = info;
   const person = people[income.personId];
-  const age = currentYear - person.birthYear;
-  const start = income.startAge
-    ? income.startAge + person.birthYear
-    : startYear;
+  const { year: birthYear } = splitDate(person.birthday);
+  const age = currentYear - birthYear;
+  const start = income.startAge ? income.startAge + birthYear : startYear;
   let yearAmount =
     income.annualAmount *
     Math.pow(
@@ -22,7 +22,7 @@ export const calculateCompanyPension = (
     return 0;
   }
 
-  if (isDead(info)) {
+  if (isDead(info, income.personId)) {
     return (yearAmount * income.survivorPercent) / 100;
   }
   if (income.startAge === age) {

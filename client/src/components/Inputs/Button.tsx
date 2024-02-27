@@ -15,8 +15,8 @@ const Button = ({ type, children, onClick, disabled }: Props) => {
   };
   return (
     <button
-      className={`w-full p-2 ${disabled && "opacity-50"} ${style[type]}`}
-      onClick={onClick}
+      className={`w-full filter- p-2 ${disabled && "opacity-50"} ${style[type]}`}
+      onClick={disabled ? () => { } : onClick}
     >
       {children}
     </button>

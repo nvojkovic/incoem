@@ -3,38 +3,53 @@ import Live from "./Live";
 import ResultTable from "./ResultTable";
 import save from "../assets/save.png";
 import Button from "./Inputs/Button";
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
+
+import {
+  ArrowsPointingOutIcon,
+  PrinterIcon,
+} from "@heroicons/react/24/outline";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
-
-const Tab = ({
-  name,
-  active,
-  setActive,
-}: {
-  name: string;
-  active: boolean;
-  setActive: any;
-}) => {
-  return (
-    <div
-      className={`px-3 text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${active ? "border-[#FF6C47] text-[#FF6C47] bg-[#FF79571A]" : "text-[#667085]"}`}
-      onClick={setActive}
-    >
-      {name}
-    </div>
-  );
-};
-
+import ModalInput from "./Inputs/ModalInput";
+import Input from "./Inputs/Input";
+import SortableItem from "./Sortable/SortableItem";
+import ScenarioTab from "./ScenarioTab";
 const Summary = ({
   data,
   store,
   scenarios,
+  hideNav,
+  settings,
+  setSettings,
 }: {
   data: IncomeMapData;
   scenarios: ScenarioSettings[];
   store: any;
+  hideNav: any;
+  settings: ScenarioSettings;
+  setSettings: any;
 }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+  );
   const [tab, setTab] = useState(-1);
+  const [saveOpen, setSaveOpen] = useState(false);
+
   const openFullScreen = () => {
     var elem = document.documentElement as any;
 
@@ -62,10 +77,20 @@ const Summary = ({
     }
   }
 
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    const oldIndex = scenarios.findIndex((s) => s.id === active.id);
+    const newIndex = scenarios.findIndex((s) => s.id === over.id);
+    if (oldIndex !== newIndex) {
+      store(arrayMove([...scenarios], oldIndex, newIndex));
+    }
+  };
+
   const [fullScreen, setFullScreen] = useState(false);
   useLayoutEffect(() => {
     const fullscreenchange = () => {
       setFullScreen(!!document.fullscreenElement);
+      hideNav(!!document.fullscreenElement);
     };
     document.addEventListener("fullscreenchange", fullscreenchange);
     return () => {
@@ -73,18 +98,74 @@ const Summary = ({
     };
   }, []);
 
-  const newScenario = (data: any) => {
-    let name = prompt("Name of scenario");
-    data.name = name;
-    store(save);
-  };
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <div className="font-semibold text-[30px]">Income Map Overview</div>
-        <div className="flex gap-3">
+        <div className="font-semibold text-[30px] print:hidden">
+          Income Map Overview
+        </div>
+        <div className="font-semibold text-[30px] hidden print:block">
+          {scenarios.find((_, i) => i == tab)?.name}
+        </div>
+        <div className="flex gap-3 print:hidden">
           <div>
-            <Button type="secondary" onClick={newScenario}>
+            <Button type="secondary" onClick={() => window.print()}>
+              <div className="flex gap-2">
+                <PrinterIcon className="h-5 w-5" />
+                <div className="text-sm">Print</div>
+              </div>
+            </Button>
+          </div>
+          <ModalInput
+            isOpen={saveOpen}
+            onClose={() => {
+              setSaveOpen(false);
+              setSettings({
+                ...settings,
+                name: "",
+              });
+            }}
+            onConfirm={() => {
+              setSaveOpen(false);
+              setSettings({
+                ...settings,
+                name: "",
+              });
+              store([
+                ...scenarios,
+                { ...settings, id: scenarios.length + 1, data: { ...data } },
+              ]);
+            }}
+          >
+            <div className="py-3">
+              <Input
+                label="Scenario name"
+                value={settings.name}
+                setValue={(name) => setSettings({ ...settings, name })}
+                onKeyDown={(e: any) => {
+                  if (e.key === "Enter") {
+                    setSaveOpen(false);
+                    setSettings({
+                      ...settings,
+                      name: "",
+                    });
+                    store([
+                      ...scenarios,
+                      {
+                        ...settings,
+                        id: scenarios.length + 1,
+                        data: { ...data },
+                      },
+                    ]);
+                  }
+                }}
+                size="full"
+                vertical
+              />
+            </div>
+          </ModalInput>
+          <div>
+            <Button type="secondary" onClick={() => setSaveOpen(true)}>
               <div className="flex gap-2">
                 <img src={save} className="w-5 h-5" />
                 <div className="text-sm">Save scenario</div>
@@ -110,21 +191,78 @@ const Summary = ({
           </div>
         </div>
       </div>
-      <div className="border-b border-[#EAECF0] mb-10 flex">
-        <Tab name="Live" active={tab == -1} setActive={() => setTab(-1)} />
-        {scenarios.map((s, i) => (
-          <Tab name={s.name} active={tab == i} setActive={() => setTab(i)} />
-        ))}
+      <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
+        <div
+          className={`border-b border-[#EAECF0] mb-10 flex print:hidden sticky z-50 ${
+            fullScreen ? "top-[0px]" : "top-[72px]"
+          } bg-white`}
+        >
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={scenarios}
+              strategy={horizontalListSortingStrategy}
+            >
+              <div className="flex">
+                <ScenarioTab
+                  name="Live"
+                  id={-1}
+                  active={tab == -1}
+                  setActive={() => setTab(-1)}
+                  live
+                  store={() => {}}
+                />
+                {scenarios.map((sc, i) => (
+                  <SortableItem
+                    key={sc.id}
+                    id={sc.id}
+                    onClick={() => setTab(i)}
+                  >
+                    <ScenarioTab
+                      name={sc.name}
+                      active={tab == sc.id}
+                      setActive={() => setTab(sc.id)}
+                      id={i}
+                      store={(name: string) => {
+                        store(
+                          scenarios.map((s, j) =>
+                            i == j ? { ...s, name } : s,
+                          ),
+                        );
+                      }}
+                    />
+                  </SortableItem>
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </div>
+
+        {tab == -1 ? (
+          <Live
+            data={data}
+            settings={settings}
+            setSettings={setSettings}
+            fullScreen={fullScreen}
+          />
+        ) : (
+          <ResultTable
+            settings={scenarios.find(({ id }) => id === tab) as any}
+            fullScreen={fullScreen}
+            id={tab}
+            removeScenario={() => {
+              const newScenarios = scenarios.filter((sc) => sc.id != tab);
+              store(newScenarios);
+              setTab(-1);
+            }}
+            data={scenarios.find(({ id }) => id === tab)?.data as any}
+            name={scenarios.find(({ id }) => id === tab)?.name}
+          />
+        )}
       </div>
-      {tab == -1 ? (
-        <Live data={data} store={newScenario} />
-      ) : (
-        <ResultTable
-          settings={scenarios[tab]}
-          data={scenarios[tab].data}
-          name={scenarios[tab].name}
-        />
-      )}
     </div>
   );
 };

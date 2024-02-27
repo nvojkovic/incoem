@@ -1,4 +1,7 @@
+const id = () => Math.floor(Math.random() * 1000000);
 export const newEmploymentIncome = (): any => ({
+  id: id(),
+  enabled: true,
   type: "employment-income",
   personId: 0,
   annualIncome: null,
@@ -10,6 +13,8 @@ export const newEmploymentIncome = (): any => ({
 });
 
 export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
+  id: id(),
+  enabled: true,
   type: "social-security",
   personId: 0,
   annualAmount: 0,
@@ -22,6 +27,8 @@ export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
 });
 
 export const newPensionIncome = (): any => ({
+  id: id(),
+  enabled: true,
   type: "company-pension",
   name: "",
   annualAmount: null,
@@ -33,7 +40,9 @@ export const newPensionIncome = (): any => ({
 });
 
 export const newBasicAnnuity = (): any => ({
-  type: "basic-annuity",
+  id: id(),
+  enabled: true,
+  type: "annuity",
   name: "",
   personId: 0,
   annualAmount: null,
@@ -44,6 +53,8 @@ export const newBasicAnnuity = (): any => ({
 });
 
 export const otherIncome = (): any => ({
+  id: id(),
+  enabled: true,
   type: "other-income",
   personId: 0,
   startYear: null,
@@ -57,6 +68,8 @@ export const otherIncome = (): any => ({
 });
 
 export const paydown = (): any => ({
+  id: id(),
+  enabled: true,
   type: "paydown",
   personId: 0,
   name: "",
@@ -75,7 +88,7 @@ export const newIncome = (type: IncomeType): Income => {
       return newSocialSecurityIncome();
     case "company-pension":
       return newPensionIncome();
-    case "basic-annuity":
+    case "annuity":
       return newBasicAnnuity();
     case "other-income":
       return otherIncome();

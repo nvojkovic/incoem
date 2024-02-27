@@ -6,44 +6,53 @@ import MapSection from "./components/MapSection";
 import { useParams } from "react-router-dom";
 import Summary from "./components/Summary";
 import { updateAtIndex } from "./utils";
+import Layout from "./components/Layout";
+import { getClient, updateData, updateScenarios } from "./services/client";
+import Spinner from "./components/Spinner";
 
-// const NavItem = ({
-//   name,
-//   active,
-//   onClick,
-// }: {
-//   name: string;
-//   active: boolean;
-//   onClick: any;
-// }) => {
-//   return (
-//     <div
-//       className={`cursor-pointer py-2 px-3 font-semibold rounded-md ${active ? "bg-[#FF7957] text-white" : ""}`}
-//       onClick={onClick}
-//     >
-//       {name}
-//     </div>
-//   );
-// };
-//
 function Calculator() {
   const { id } = useParams();
   const [tab, setTab] = useState<"data" | "calculator">("data");
-  useEffect(() => {
-    const d = localStorage.getItem("clients");
-    const data = d ? JSON.parse(d) : null;
-    setData(data.find((c: any) => c.id == id));
-    setTab("data");
-  }, []);
+  const [fullScreen, setFullScreen] = useState(false);
 
-  const store = (client: Client) => {
-    const d = localStorage.getItem("clients");
-    const data = d ? JSON.parse(d) : null;
-    const newData = data.map((c: any) => (c.id == id ? client : c));
-    localStorage.setItem("clients", JSON.stringify(newData));
+  const [settings, setSettings] = useState<ScenarioSettings>({} as any);
+
+  const fetchData = () => {
+    return getClient(id)
+      .then((data) => data.json())
+      .then((data) => {
+        setData(data);
+
+        console.log("sett", data);
+        setSettings({
+          id: data.scenarios.length,
+          maxYearsShown: 30,
+          deathYears: data.data.people.length === 2 ? [null, null] : [null],
+          ssSurvivorAge: data.data.people.length === 2 ? [null, null] : [null],
+          inflation: 0,
+          whoDies: -1,
+          name: "",
+          data,
+        });
+      });
   };
-  const [data, setData] = useState<Client | null>(null);
-  if (!data) return <div>Loading...</div>;
+  useEffect(() => {
+    fetchData();
+  }, []);
+  console.log("settings", settings);
+
+  const [data, setLocal] = useState<Client | null>(null);
+  const setData = (data: Client) => {
+    console.log(data);
+    updateData(data.id, data.data);
+    setLocal(data);
+  };
+  if (!data)
+    return (
+      <Layout page="data" onTabChange={() => {}}>
+        <Spinner />
+      </Layout>
+    );
 
   const removeIncome = (index: number) => {
     setData({
@@ -74,12 +83,21 @@ function Calculator() {
   };
 
   return (
-    <>
+    <Layout
+      page={tab}
+      hidden={fullScreen}
+      onTabChange={(tab: any) => setTab(tab)}
+      household={data.title}
+    >
       <div>
         <div className="mt-6 max-w-[1280px] m-auto mb-32 px-10">
           {tab == "data" ? (
             <div className="flex flex-col gap-6">
-              <MapSection title="Basic information" defaultOpen={true}>
+              <MapSection
+                title="Basic information"
+                defaultOpen={false}
+                toggleabble
+              >
                 <div className="flex gap-6">
                   {data.data.people.map((person, i) => (
                     <PersonInfo
@@ -102,84 +120,48 @@ function Calculator() {
               </MapSection>
               <IncomeSection
                 defaultOpen={true}
-                title="Employment income"
-                subtitle="Basic info about employment income"
-                incomes={data.data.incomes}
-                people={data.data.people}
-                type="employment-income"
-                removeIncome={removeIncome}
-                setIncome={setIncome}
-                addIncome={addIncome}
-              ></IncomeSection>
-              <IncomeSection
-                defaultOpen={true}
-                title="Social Security"
-                subtitle="Basic info about employment income"
                 incomes={data.data.incomes}
                 people={data.data.people}
                 removeIncome={removeIncome}
                 setIncome={setIncome}
                 addIncome={addIncome}
-                type="social-security"
-              ></IncomeSection>
-              <IncomeSection
-                defaultOpen={true}
-                title="Company Pensions"
-                subtitle="Basic info about employment income"
-                incomes={data.data.incomes}
-                people={data.data.people}
-                type="company-pension"
-                removeIncome={removeIncome}
-                setIncome={setIncome}
-                addIncome={addIncome}
-              ></IncomeSection>
-              <IncomeSection
-                defaultOpen={true}
-                title="Basic Annuity"
-                subtitle="Basic info about employment income"
-                incomes={data.data.incomes}
-                people={data.data.people}
-                type="basic-annuity"
-                removeIncome={removeIncome}
-                setIncome={setIncome}
-                addIncome={addIncome}
-              ></IncomeSection>
-
-              <IncomeSection
-                defaultOpen={true}
-                title="Other Income"
-                subtitle="Basic info about employment income"
-                incomes={data.data.incomes}
-                people={data.data.people}
-                type="other-income"
-                removeIncome={removeIncome}
-                setIncome={setIncome}
-                addIncome={addIncome}
-              ></IncomeSection>
-              <IncomeSection
-                defaultOpen={true}
-                title="Paydown"
-                subtitle="Basic info about employment income"
-                incomes={data.data.incomes}
-                people={data.data.people}
-                type="paydown"
-                removeIncome={removeIncome}
-                setIncome={setIncome}
-                addIncome={addIncome}
+                updateIncomes={(incomes: any) => {
+                  setData({
+                    ...data,
+                    data: {
+                      ...data.data,
+                      incomes,
+                    },
+                  });
+                }}
               ></IncomeSection>
             </div>
           ) : (
             <Summary
-              data={data.data}
-              store={(scenario: ScenarioSettings) =>
-                store({ ...data, scenarios: [...data.scenarios, scenario] })
+              data={
+                {
+                  ...data.data,
+                  incomes: data.data.incomes.filter((i) => i.enabled),
+                } as IncomeMapData
               }
+              settings={settings}
+              setSettings={setSettings}
+              hideNav={setFullScreen}
+              store={(scenarios: ScenarioSettings[]) => {
+                console.log("update", scenarios);
+                const client = {
+                  ...data,
+                  scenarios,
+                };
+                setData(client);
+                updateScenarios(client.id, scenarios);
+              }}
               scenarios={data.scenarios}
             />
           )}
         </div>
       </div>
-    </>
+    </Layout>
   );
 }
 

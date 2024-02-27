@@ -5,14 +5,19 @@ import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 interface Props {
   options: any;
   selected: any;
+  vertical?: boolean;
   label?: string;
   setSelected: (s: any) => void;
 }
 
-function Select({ label, options, selected, setSelected }: Props) {
+function Select({ label, vertical, options, selected, setSelected }: Props) {
   return (
-    <div className="flex flex-col gap-1 flex-shrink">
-      <label htmlFor={label} className="text-sm text-[#344054]">
+    <div
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
+        vertical ? "items-start" : "items-center"
+      }`}
+    >
+      <label htmlFor={label} className="text-sm text-[#344054] w-36">
         {label}
       </label>
       <div className="min-w-48 ">
@@ -41,7 +46,7 @@ function Select({ label, options, selected, setSelected }: Props) {
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default select-none py-2 text-left pl-8 ${
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${
                           active
                             ? "bg-[#ffd6cc] text-amber-900"
                             : "text-gray-900"

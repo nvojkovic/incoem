@@ -1,5 +1,3 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
-import Section from "../Section";
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 
@@ -7,24 +5,18 @@ interface Props {
   annuity: BasicAnnuity;
   people: Person[];
   setIncome: (income: BasicAnnuity) => void;
-  remove: () => void;
 }
 
-const BasicAnnuity = ({
-  people,
-  remove,
-  annuity: pension,
-  setIncome,
-}: Props) => {
+const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
   const options = [...people] as any[];
   if (people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
   return (
-    <div className="">
-      <Section>
-        <div className="flex-grow">
-          <div className="flex gap-4 mt-6 items-center">
+    <>
+      <div className="flex-grow">
+        <div className="flex flex-col gap-4">
+          {people.length > 1 && (
             <Select
               options={options}
               selected={
@@ -35,62 +27,64 @@ const BasicAnnuity = ({
               setSelected={(i) => setIncome({ ...pension, personId: i.id })}
               label="Person"
             />
-            <Input
-              label="Title"
-              subtype="text"
-              size="lg"
-              value={pension.name}
-              setValue={(name) => setIncome({ ...pension, name })}
-            />
-            <Input
-              label="Annual amount"
-              subtype="money"
-              value={pension.annualAmount}
-              setValue={(name) => setIncome({ ...pension, annualAmount: name })}
-            />
-            <Input
-              label="Years of deferral"
-              subtype="number"
-              value={pension.yearsOfDeferral}
-              setValue={(name) =>
-                setIncome({ ...pension, yearsOfDeferral: name })
-              }
-            />
+          )}
+          <Input
+            label="Title"
+            subtype="text"
+            size="lg"
+            value={pension.name}
+            setValue={(name) => setIncome({ ...pension, name })}
+          />
+          <Input
+            label="Annual amount"
+            subtype="money"
+            value={pension.annualAmount}
+            setValue={(name) => setIncome({ ...pension, annualAmount: name })}
+          />
+          <Input
+            label="Years of deferral"
+            subtype="number"
+            value={pension.yearsOfDeferral}
+            tooltip="Years of deferral"
+            setValue={(name) =>
+              setIncome({ ...pension, yearsOfDeferral: name })
+            }
+          />
+          {people.length > 1 && pension.personId != -1 && (
             <Input
               label="Survivor %"
               subtype="percent"
+              tooltip="What percentage of the annuity will the survivor receive?"
               value={pension.survivorPercent}
               setValue={(name) =>
                 setIncome({ ...pension, survivorPercent: name })
               }
             />
-            <Input
-              label="Yearly increase"
-              subtype="percent"
-              value={pension.yearlyIncreasePercent}
-              setValue={(name) =>
-                setIncome({ ...pension, yearlyIncreasePercent: name })
-              }
-            />
-            <Input
-              label="First-Year Prorate"
-              subtype="percent"
-              value={pension.firstYearProRatePercent}
-              setValue={(name) =>
-                setIncome({
-                  ...pension,
-                  firstYearProRatePercent: parseInt(name),
-                })
-              }
-            />
-            <TrashIcon
-              className="text-red-500 w-6 cursor-pointer"
-              onClick={remove}
-            />
-          </div>
+          )}
+          <Input
+            label="Yearly increase"
+            subtype="percent"
+            value={pension.yearlyIncreasePercent}
+            tooltip="What percentage will the annuity increase each year?"
+            setValue={(name) =>
+              setIncome({ ...pension, yearlyIncreasePercent: name })
+            }
+          />
+          <Input
+            label="First-Year Prorate"
+            subtype="percent"
+            value={pension.firstYearProRatePercent}
+            tooltip="What percentage of the annuity will be paid in the first year?"
+            setValue={(name) =>
+              setIncome({
+                ...pension,
+                firstYearProRatePercent: parseInt(name),
+              })
+            }
+          />
         </div>
-      </Section>
-    </div>
+      </div>
+    </>
   );
 };
 

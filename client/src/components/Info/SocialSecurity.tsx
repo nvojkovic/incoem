@@ -1,99 +1,102 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
-import Section from "../Section";
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
+import MonthPicker from "../Inputs/MonthPicker";
 
 interface Props {
   income: SocialSecurityIncome;
   people: Person[];
   setIncome: (income: SocialSecurityIncome) => void;
-  remove: () => void;
 }
 
-const BasicAnnuity = ({
-  people,
-  remove,
-  income: pension,
-  setIncome,
-}: Props) => {
+const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
   return (
-    <div className="">
-      <Section>
-        <div className="flex-grow">
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-4 items-center justify-between">
-              <div className="flex gap-4 items-center justify-start">
+    <>
+      <div className="flex-grow">
+        <div className="flex flex-col gap-4">
+          <div className="flex gap-4 items-center justify-between">
+            <div className="flex flex-col gap-4 justify-start">
+              {people.length > 1 && (
                 <Select
                   options={people}
                   selected={people[pension.personId]}
                   setSelected={(i) => setIncome({ ...pension, personId: i.id })}
                   label="Person"
                 />
-                <Select
-                  options={[
-                    { name: "Automatic", id: "automatic" },
-                    { name: "Manual", id: "manual" },
-                  ]}
-                  selected={{
-                    name: (pension.calculationMethod as any).capitalize(),
-                    id: pension.calculationMethod,
-                  }}
-                  setSelected={(i) =>
-                    setIncome({ ...pension, calculationMethod: i.id })
-                  }
-                  label="Calculation Method"
-                />
+              )}
+              <Select
+                options={[
+                  { name: "Automatic", id: "automatic" },
+                  { name: "Manual", id: "manual" },
+                ]}
+                selected={{
+                  name: (pension.calculationMethod as any).capitalize(),
+                  id: pension.calculationMethod,
+                }}
+                setSelected={(i) =>
+                  setIncome({ ...pension, calculationMethod: i.id })
+                }
+                label="Calculation Method"
+              />
+              {pension.calculationMethod == "manual" && (
                 <Input
                   label="Monthly PIA"
                   subtype="money"
                   value={pension.pia}
                   setValue={(name) => setIncome({ ...pension, pia: name })}
+                  tooltip="Primary Insurance Amount"
                 />
+              )}
+              {pension.calculationMethod == "automatic" && (
                 <Input
-                  label="COLA"
-                  subtype="percent"
-                  value={pension.cola}
-                  setValue={(name) => setIncome({ ...pension, pia: name })}
-                />
-
-                <Input
-                  label="Already receiving"
-                  subtype="toggle"
-                  value={pension.alreadyReceiving}
+                  label="Annual amount"
+                  subtype="money"
+                  value={pension.annualAmount}
+                  tooltip="Annual amount"
                   setValue={(name) =>
-                    setIncome({ ...pension, alreadyReceiving: name })
+                    setIncome({ ...pension, annualAmount: name })
                   }
                 />
-                {!pension.alreadyReceiving && (
-                  <Input
-                    label="Start age month"
-                    subtype="number"
-                    value={pension.startAgeMonth}
-                    setValue={(name) =>
-                      setIncome({ ...pension, startAgeMonth: name })
-                    }
-                  />
-                )}
-                {!pension.alreadyReceiving && (
-                  <Input
-                    label="Start age year"
-                    subtype="number"
-                    value={pension.startAgeYear}
-                    setValue={(name) =>
-                      setIncome({ ...pension, startAgeYear: name })
-                    }
-                  />
-                )}
-              </div>
-              <TrashIcon
-                className="text-red-500 w-6 h-6 cursor-pointer"
-                onClick={remove}
+              )}
+              <Input
+                label="COLA"
+                subtype="percent"
+                tooltip="Cost of Living Adjustment"
+                value={pension.cola}
+                setValue={(name) => setIncome({ ...pension, cola: name })}
               />
+
+              <Input
+                label="Already receiving"
+                subtype="toggle"
+                value={pension.alreadyReceiving}
+                setValue={(name) =>
+                  setIncome({ ...pension, alreadyReceiving: name })
+                }
+              />
+              {!pension.alreadyReceiving && (
+                <MonthPicker
+                  label="Start age month"
+                  selected={pension.startAgeMonth}
+                  setSelected={(name) =>
+                    setIncome({ ...pension, startAgeMonth: name.id })
+                  }
+                />
+              )}
+              {!pension.alreadyReceiving && (
+                <Input
+                  label="Start age year"
+                  subtype="number"
+                  value={pension.startAgeYear}
+                  setValue={(name) =>
+                    setIncome({ ...pension, startAgeYear: name })
+                  }
+                />
+              )}
             </div>
           </div>
         </div>
-      </Section>
-    </div>
+      </div>
+    </>
   );
 };
 

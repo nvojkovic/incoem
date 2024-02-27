@@ -18,7 +18,7 @@ const calculate = (info: CalculationInfo<Income>) => {
     return calculatePaydown(info as CalculationInfo<Paydown>);
   } else if (info.income.type === "other-income") {
     return calculateOtherIncome(info as CalculationInfo<OtherIncome>);
-  } else if (info.income.type === "basic-annuity") {
+  } else if (info.income.type === "annuity") {
     return calculateBasicAnnuity(info as CalculationInfo<BasicAnnuity>);
   } else {
     return -1;

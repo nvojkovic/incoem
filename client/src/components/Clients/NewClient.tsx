@@ -6,8 +6,9 @@ import Input from "../Inputs/Input";
 import Toggle from "../Inputs/Toggle";
 import user from "../../assets/user.png";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import MonthPicker from "../Inputs/MonthPicker";
 import { updateAtIndex } from "../../utils";
+import { createClient } from "../../services/client";
+import { useNavigate } from "react-router-dom";
 
 const PersonInfo = ({ person, setPerson }: any) => {
   return (
@@ -15,58 +16,53 @@ const PersonInfo = ({ person, setPerson }: any) => {
       <Input
         label="First Name"
         value={person.name}
+        vertical
         subtype="text"
         size="lg"
         setValue={(name) => setPerson({ ...person, name })}
       />
       <Input
-        label="Birth Year"
-        subtype="number"
-        value={person.birthYear}
-        setValue={(birthYear) => setPerson({ ...person, birthYear: birthYear })}
-      />
-      <MonthPicker
-        label="Birth Month"
-        selected={person.birthMonth}
-        setSelected={(i) => setPerson({ ...person, birthMonth: i.id })}
+        label="Birthday"
+        subtype="date"
+        size="lg"
+        vertical
+        value={person.birthday}
+        setValue={(birthday) => setPerson({ ...person, birthday })}
       />
     </div>
   );
 };
 const newPerson = (id: number) => ({
   name: "",
-  birthYear: null as any,
-  birthMonth: null as any,
+  birthday: null as any,
   id,
 });
-const NewClient = ({ setClients }: any) => {
+const NewClient = () => {
   const [step, setStep] = useState(1);
   const [newOpen, setNewOpen] = useState(false);
-  const [people, setPeople] = useState<Person[]>([newPerson(0)]);
+  const [people, setPeople] = useState<Person[]>([newPerson(0), newPerson(1)]);
   const [name, setName] = useState("");
-  const addClient = () => {
-    setClients((prev: Client[]) => {
-      const newClients = [
-        ...prev,
-        {
-          id: prev.length + 1,
-          title: name,
-          createdAt: new Date().toISOString(),
-          data: {
-            incomes: [],
-            people: people,
-            version: 1 as const,
-          },
-          scenarios: [],
-        },
-      ];
-      localStorage.setItem("clients", JSON.stringify(newClients));
-      return newClients;
-    });
+  const navigate = useNavigate();
+  const addClient = async () => {
+    const client = {
+      id: 1,
+      title: name,
+      createdAt: new Date().toISOString(),
+      data: {
+        incomes: [],
+        people: people,
+        version: 1 as const,
+      },
+      scenarios: [],
+    };
+    const d = await createClient(client);
+    const js = await d.json();
     setNewOpen(false);
     setName("");
     setPeople([newPerson(0)]);
     setStep(1);
+    // await updateClients();
+    navigate(`/client/${js.data.id}`);
   };
   const cancel = () => {
     setNewOpen(false);
@@ -83,6 +79,7 @@ const NewClient = ({ setClients }: any) => {
           value={name}
           setValue={setName}
           size="full"
+          vertical
           placeholder="e.g. John and Katie"
         />
       </div>
@@ -115,26 +112,30 @@ const NewClient = ({ setClients }: any) => {
   return (
     <>
       <Modal isOpen={newOpen} onClose={cancel}>
-        <div className="min-w-[537px]">
+        <div className="min-w-[500px]">
           <div className="flex justify-between items-center mr-2 mb-6">
-            <div className="w-[48px] h-[48px] border-[#EAECF0] border rounded-md flex items-center justify-center">
-              <img src={user} alt="user" className="h-6 w-6 mx-auto" />
+            <div className="flex gap-5">
+              <div className="w-[48px] h-[48px] border-[#EAECF0] border rounded-md flex items-center justify-center">
+                <img src={user} alt="user" className="h-6 w-6 mx-auto" />
+              </div>
+              <div className="flex flex-col items-start ">
+                <div className="font-semibold text-[18px] mb-1">
+                  Add new client
+                </div>
+                <div className="text-[14px] text-[#475467]">
+                  {step == 1
+                    ? "Please enter a name for this client."
+                    : "Please enter the details of the people in this household."}
+                </div>
+              </div>
             </div>
             <div>
               <XMarkIcon className="h-6 w-6 cursor-pointer" onClick={cancel} />
             </div>
           </div>
-          <div className="flex flex-col items-start ">
-            <div className="font-semibold text-[18px] mb-1">Add new client</div>
-            <div className="text-[14px] text-[#475467]">
-              {step == 1
-                ? "Please enter a name for this client."
-                : "Please enter the details of the people in this household."}
-            </div>
-          </div>
           {step === 1 ? Step1 : Step2}
 
-          <div className="flex gap-4 justify-between">
+          <div className="flex gap-4 justify-between mt-6">
             <Button
               type="secondary"
               onClick={() => (step == 1 ? cancel() : setStep(1))}
@@ -145,6 +146,10 @@ const NewClient = ({ setClients }: any) => {
             </Button>
             <Button
               type="primary"
+              disabled={
+                (step == 1 && !name) ||
+                (step == 2 && !people.every((i) => i.name && i.birthday))
+              }
               onClick={() => (step == 1 ? setStep(2) : addClient())}
             >
               <div className="px-4 text-center">

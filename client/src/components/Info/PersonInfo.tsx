@@ -1,5 +1,4 @@
 import Input from "../Inputs/Input";
-import MonthPicker from "../Inputs/MonthPicker";
 import Section from "../Section";
 
 interface Props {
@@ -12,11 +11,11 @@ interface Props {
 const PersonInfo = ({ title, person, setPerson }: Props) => {
   return (
     <Section>
-      <div className="flex-grow">
+      <div className="">
         <div className="flex flex-col pb-6 border-b border-[#EAECF0]">
           <div className="font-semibold text-lg">{title}</div>
         </div>
-        <div className="flex gap-4 mt-6">
+        <div className="flex flex-col gap-4 mt-6">
           <Input
             label="First Name"
             value={person.name}
@@ -25,18 +24,11 @@ const PersonInfo = ({ title, person, setPerson }: Props) => {
             setValue={(name) => setPerson({ ...person, name })}
           />
           <Input
-            label="Birth Year"
+            label="Birthday"
             subtype="date"
             size="lg"
-            value={person.birthYear}
-            setValue={(birthYear) =>
-              setPerson({ ...person, birthYear: parseInt(birthYear) })
-            }
-          />
-          <MonthPicker
-            label="Birth Month"
-            selected={person.birthMonth}
-            setSelected={(i) => setPerson({ ...person, birthMonth: i.id })}
+            value={person.birthday}
+            setValue={(birthday) => setPerson({ ...person, birthday })}
           />
         </div>
       </div>

@@ -13,7 +13,7 @@ export const calculateBasicAnnuity = (info: CalculationInfo<BasicAnnuity>) => {
 
   yearAmount = adjustForInflation(info, yearAmount, start);
 
-  if (isDead(info)) {
+  if (isDead(info, income.personId)) {
     return (yearAmount * income.survivorPercent) / 100;
   }
   if (currentYear == start) {

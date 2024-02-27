@@ -1,53 +1,45 @@
 services:
-  # PostgreSQL database
-  - type: postgres
-    name: my-postgres-db
-    plan: starter
-
-  # Express API Backend
-  # - type: web
-  #   name: my-express-api
-  #   env: node
-  #   buildCommand: cd server && npm install && npm run build
-  #   startCommand: cd server && npm start
-  #   envVars:
-  #     - key: DATABASE_URL
-  #       fromDatabase:
-  #         name: my-postgres-db
-  #         property: connectionString
+  - type: web
+    name: my-express-api
+    runtime: docker
+    rootDir: server
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: income-mapper-db
+          property: connectionString
 
   # Vite React Frontend
-  - type: static
-    name: my-react-frontend
+  - type: web
+    runtime: static
+    name: income-mapper-frontend
+    env: node
     buildCommand: cd client && npm install && npm run build
-    publishDir: client/dist
+    staticPublishPath: client/dist
     envVars:
       - key: REACT_APP_API_URL
         value: https://my-express-api.onrender.com
+      - key: BACKEND_URL
+        value: https://my-express-api.onrender.com/
 
   # SuperTokens Core
-  - type: web
+  - type: pserv
+    runtime: docker
     name: supertokens-core
-    dockerfilePath: ./Dockerfile
-    env: docker
+    rootDir: supertokens
     envVars:
-      - key: SUPERTOKENS_CONFIG
-        value: >
-          connectionURI=postgresql://username:password@my-postgres-db:5432/supertokens;
-          api_keys=your_api_key
+      - key: POSTGRESQL_CONNECTION_URI
+        value: postgresql://mydb_retv_user:cwktnt8t6vlEwb7AWs6JEfBiuEIvZXuu@dpg-cnf5k6la73kc73bsj7j0-a/mydb_retv
       - key: SUPERTOKENS_API_KEY
         value: your_api_key
 
 # Specify environment variables for database access in SuperTokens and the backend app
-envVars:
-  - key: DATABASE_URL
-    fromDatabase:
-      name: my-postgres-db
-      property: connectionString
+# envVars:
+#   - key: DATABASE_URL
+#     fromDatabase:
+#       name: my-postgres-db
+#       property: connectionString
 
-# Define any required custom domains, replacing `example.com` with your actual domain
-customDomains:
-  - service: my-react-frontend
-    domain: www.example.com
-  - service: my-express-api
-    domain: api.example.com
+databases:
+  - name: income-mapper-db
+    databaseName: mydb
