@@ -11,9 +11,6 @@ export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
   if (income.endYear && current > income.endYear) {
     return 0;
   }
-  if (isDead(info, income.personId)) {
-    return 0;
-  }
 
   let yearAmount =
     income.amount *
@@ -36,6 +33,7 @@ export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
   if (isDead(info, income.personId)) {
     return (yearAmount * income.survivorPercent) / 100;
   }
+
   if (current == income.startYear) {
     return (yearAmount * income.firstYearProRatePercent) / 100;
   }
