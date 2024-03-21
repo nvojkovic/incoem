@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: my-express-api
+    name: income-mapper-server
     runtime: docker
     rootDir: server
     envVars:
@@ -12,7 +12,7 @@ services:
   # Vite React Frontend
   - type: web
     runtime: static
-    name: income-mapper-frontend
+    name: income-mapper-client
     env: node
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: client/dist
@@ -28,17 +28,8 @@ services:
     name: supertokens-core
     rootDir: supertokens
     envVars:
-      - key: POSTGRESQL_CONNECTION_URI
-        value: postgresql://mydb_retv_user:cwktnt8t6vlEwb7AWs6JEfBiuEIvZXuu@dpg-cnf5k6la73kc73bsj7j0-a/mydb_retv
       - key: SUPERTOKENS_API_KEY
         value: your_api_key
-
-# Specify environment variables for database access in SuperTokens and the backend app
-# envVars:
-#   - key: DATABASE_URL
-#     fromDatabase:
-#       name: my-postgres-db
-#       property: connectionString
 
 databases:
   - name: income-mapper-db
