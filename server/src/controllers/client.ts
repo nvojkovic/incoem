@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import fs from "fs";
 import { Request, Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
 
@@ -54,6 +55,7 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     req.params.scenario;
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
+  fs.appendFileSync("report.pdf", Buffer.from(data));
   res.setHeader("Content-Disposition", 'attachment; filename="report.pdf"');
   res.contentType("application/pdf");
   res.send(data).end();
