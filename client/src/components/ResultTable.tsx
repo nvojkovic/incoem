@@ -145,13 +145,21 @@ const ResultTable = ({
         >
           <td
             className="px-6 py-3"
-            onClick={() => setSelectedColumn({ type: "year", id: 0 })}
+            onClick={() =>
+              selectedColumn.type === "year"
+                ? setSelectedColumn({ type: "none", id: 0 })
+                : setSelectedColumn({ type: "year", id: 0 })
+            }
           >
             Year
           </td>
           <td
             className="px-6 py-3"
-            onClick={() => setSelectedColumn({ type: "age", id: 0 })}
+            onClick={() =>
+              selectedColumn.type === "age"
+                ? setSelectedColumn({ type: "none", id: 0 })
+                : setSelectedColumn({ type: "age", id: 0 })
+            }
           >
             Age
           </td>
@@ -159,7 +167,10 @@ const ResultTable = ({
             <td
               className="px-6 py-3"
               onClick={() =>
-                setSelectedColumn({ type: "income", id: income.id })
+                selectedColumn.type === "income" &&
+                  selectedColumn.id == income.id
+                  ? setSelectedColumn({ type: "none", id: 0 })
+                  : setSelectedColumn({ type: "income", id: income.id })
               }
             >
               {title(data.incomes, data.people, i)
@@ -173,7 +184,11 @@ const ResultTable = ({
           ))}
           <td
             className="px-6 py-3"
-            onClick={() => setSelectedColumn({ type: "total", id: 0 })}
+            onClick={() =>
+              selectedColumn.type === "total"
+                ? setSelectedColumn({ type: "none", id: 0 })
+                : setSelectedColumn({ type: "total", id: 0 })
+            }
           >
             Total
           </td>
