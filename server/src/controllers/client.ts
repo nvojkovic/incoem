@@ -53,8 +53,9 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     "/" +
     req.params.scenario,
   );
+  const blob = await pdf.blob();
   res.contentType("application/pdf");
-  res.send(pdf);
+  res.send(blob);
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
