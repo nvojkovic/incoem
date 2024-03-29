@@ -4,6 +4,7 @@ import logo from "../assets/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
+import useUser from "../useUser";
 
 const NavItem = ({
   name,
@@ -34,6 +35,7 @@ const Navbar = ({
   household?: string;
 }) => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   return (
     <div className="max-w-[1280px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
@@ -41,7 +43,16 @@ const Navbar = ({
         <div className="flex items-center justify-start w-full">
           <Link to="/clients">
             <div className="flex items-center cursor-pointer">
-              <img src={logo} className="w-9 h-9 mr-2" />
+              <img
+                src={
+                  user?.info?.logo
+                    ? import.meta.env.VITE_API_URL +
+                    "logo?logo=" +
+                    user?.info?.logo
+                    : logo
+                }
+                className="w-9 h-9 mr-2"
+              />
               <div className="font-bold text-[20px] leading-5">
                 Income Mapper
               </div>

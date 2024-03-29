@@ -31,6 +31,14 @@ services:
       - key: SUPERTOKENS_API_KEY
         value: your_api_key
 
+  - type: pserv
+    runtime: docker
+    name: printer
+    rootDir: printer
+    envVars:
+      - key: SUPERTOKENS_API_KEY
+        value: your_api_key
+
 databases:
   - name: income-mapper-db
     databaseName: mydb

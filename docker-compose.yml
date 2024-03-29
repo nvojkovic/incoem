@@ -1,6 +1,17 @@
 version: "3"
 
 services:
+  im-printer:
+    container_name: im-printer
+    build:
+      context: ./printer
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./printer:/app
+    ports:
+      - 3002:3002
+    networks:
+      - main
   im-server:
     container_name: im-server
     build:
