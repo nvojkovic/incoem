@@ -44,19 +44,19 @@ export const getPrintClient = async (req: Request, res: Response) => {
 };
 
 export const getPrintClientPdf = async (req: Request, res: Response) => {
-  const pdf = await fetch(
+  const url =
     process.env.PRINTER_URL +
     "/?url=" +
     process.env.APP_URL +
     "/print/" +
     req.params.id +
     "/" +
-    req.params.scenario,
-  );
+    req.params.scenario;
+  const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
   res.setHeader("Content-Disposition", 'attachment; filename="report.pdf"');
   res.contentType("application/pdf");
-  res.send(data);
+  res.send(data).end();
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
