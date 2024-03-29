@@ -48,8 +48,10 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     process.env.PRINTER_URL +
     "/?url=" +
     process.env.APP_URL +
-    "/print/client/" +
-    req.params.id,
+    "/print/" +
+    req.params.id +
+    "/" +
+    req.params.scenario,
   );
   res.contentType("application/pdf");
   res.send(pdf);
