@@ -14,6 +14,7 @@ import {
   deleteClient,
   getClient,
   getPrintClient,
+  getPrintClientPdf,
   updateClient,
   updateScenario,
 } from "./controllers/client";
@@ -36,7 +37,8 @@ const upload = multer({});
 
 app.get("/clients", verifySession(), allClients);
 app.get("/client/:id", verifySession(), getClient);
-app.get("print/client/:id", verifySession(), getPrintClient);
+app.get("/print/client/pdf/:id/:scenario", verifySession(), getPrintClientPdf);
+app.get("/print/client/:id/", getPrintClient);
 app.post("/client/:id", verifySession(), updateClient);
 app.post("/client/scenarios/:id", verifySession(), updateScenario);
 app.delete("/client/:id", verifySession(), deleteClient);
