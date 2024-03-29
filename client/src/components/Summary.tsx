@@ -114,7 +114,7 @@ const Summary = ({
       "print/client/pdf/" +
       clientId +
       "/" +
-      settings.id,
+      Math.max(tab, 0).toString(),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
