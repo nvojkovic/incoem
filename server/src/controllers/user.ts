@@ -44,3 +44,13 @@ export const getLogo = async (req: any, res: Response) => {
   }
   return res.status(404).send("Not found");
 };
+
+export const getReport = async (req: any, res: Response) => {
+  let { report } = req.query;
+  let file = fs.readFileSync(report);
+  if (file) {
+    res.setHeader("Content-Type", "application/pdf");
+    return res.send(file);
+  }
+  return res.status(404).send("Not found");
+};

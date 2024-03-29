@@ -115,12 +115,12 @@ const Summary = ({
       clientId +
       "/" +
       settings.id,
-    );
+    ).then((res) => res.json());
     setPrinting(false);
-    //open file in new tab
-    const blob = await pdfFile.blob();
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
+    window.open(
+      import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file,
+      "_blank",
+    );
   };
 
   return (

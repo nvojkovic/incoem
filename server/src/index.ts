@@ -18,7 +18,13 @@ import {
   updateClient,
   updateScenario,
 } from "./controllers/client";
-import { getLogo, getUser, updateUser, uploadLogo } from "./controllers/user";
+import {
+  getLogo,
+  getReport,
+  getUser,
+  updateUser,
+  uploadLogo,
+} from "./controllers/user";
 const port = 3000;
 
 let app = express();
@@ -49,6 +55,7 @@ app.get("/stripeRedirect", verifySession(), createPortalSession);
 app.get("/stripeSubscribe", verifySession(), createSubsctiption);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", verifySession(), getLogo);
+app.get("/report/", verifySession(), getReport);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);

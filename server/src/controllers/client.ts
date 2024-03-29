@@ -55,10 +55,9 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     req.params.scenario;
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
-  fs.appendFileSync("report.pdf", Buffer.from(data));
-  res.setHeader("Content-Disposition", 'attachment; filename="report.pdf"');
-  res.contentType("application/pdf");
-  res.send(data).end();
+  const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
+  fs.appendFileSync(file, Buffer.from(data));
+  return res.json({ file });
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
