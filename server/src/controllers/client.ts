@@ -35,7 +35,24 @@ export const getPrintClient = async (req: Request, res: Response) => {
       id,
     },
   });
-  res.json(client);
+  const userdata = await prisma.userInfo.findFirst({
+    where: {
+      id: client?.userId,
+    },
+  });
+  res.json({ ...client, userdata });
+};
+
+export const getPrintClientPdf = async (req: Request, res: Response) => {
+  const pdf = await fetch(
+    process.env.PRINTER_URL +
+    "/?url=" +
+    process.env.APP_URL +
+    "/print/client/" +
+    req.params.id,
+  );
+  res.contentType("application/pdf");
+  res.send(pdf);
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
