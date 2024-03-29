@@ -17,6 +17,9 @@ app.use(
 
 app.get("/", async (req, res) => {
   const { url } = req.query;
+  if (!url) {
+    return res.status(400).send("Missing url query parameter");
+  }
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
     ignoreDefaultArgs: ["--disable-extensions"],
