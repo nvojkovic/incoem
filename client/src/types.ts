@@ -1,3 +1,8 @@
+interface SelectedColumn {
+  type: "year" | "age" | "income" | "total" | "none";
+  id: number;
+}
+
 interface Person {
   name: string;
   birthday: string;

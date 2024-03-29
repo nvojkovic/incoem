@@ -10,21 +10,27 @@ import Root from "./components/Root";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import Session from "supertokens-auth-react/recipe/session";
 import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import EmailVerification from "supertokens-auth-react/recipe/emailverification";
 import Signup from "./pages/signup";
 import Settings from "./pages/settings";
 import Print from "./pages/print";
+import VerifyEmail from "./pages/verify-email";
+import VerifyEmailConfirm from "./pages/verify-email-confim";
+import Home from "./pages/home";
 
 SuperTokens.init({
   appInfo: {
-    apiDomain: "https://my-express-api.onrender.com/",
+    apiDomain: import.meta.env.VITE_API_URL,
     apiBasePath: "/auth",
     appName: "Income Mapper",
-    websiteDomain: import.meta.env.PROD
-      ? "https://income-mapper-frontend.onrender.com"
-      : "http://localhost:5173",
+    websiteDomain: import.meta.env.VITE_APP_URL,
     websiteBasePath: "/login",
   },
-  recipeList: [Session.init(), ThirdPartyEmailPassword.init()],
+  recipeList: [
+    Session.init(),
+    ThirdPartyEmailPassword.init(),
+    EmailVerification.init(),
+  ],
 });
 
 const router = createBrowserRouter([
@@ -32,13 +38,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
+      { path: "/", element: <Home /> },
       {
         path: "/calculator",
         element: <Calculator />,
       },
 
       {
-        path: "/",
+        path: "/clients",
         element: <Clients />,
       },
 
@@ -63,6 +70,14 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/login/verify-email",
+    element: <VerifyEmail />,
+  },
+  {
+    path: "/auth/verify-email",
+    element: <VerifyEmailConfirm />,
   },
 ]);
 

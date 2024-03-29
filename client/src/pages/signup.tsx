@@ -87,7 +87,7 @@ const Signup = () => {
       } else {
         // sign up successful. The session tokens are automatically handled by
         // the frontend SDK.
-        navigate("/login");
+        navigate("/login/verify-email");
       }
     } catch (err: any) {
       if (err.isSuperTokensGeneralError === true) {

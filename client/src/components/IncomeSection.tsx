@@ -127,6 +127,7 @@ const IncomeSection = ({
   };
   return (
     <MapSection
+      toggleabble={false}
       title={
         <div className="flex gap-6 items-center w-full justify-between">
           <div>Income information</div>

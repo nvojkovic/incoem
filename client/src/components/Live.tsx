@@ -7,11 +7,19 @@ const Live = ({
   settings,
   setSettings,
   fullScreen,
+  selectedYear,
+  setSelectedYear,
+  selectedColumn,
+  setSelectedColumn,
 }: {
   data: IncomeMapData;
   settings: ScenarioSettings;
   setSettings: any;
   fullScreen: boolean;
+  selectedYear: number;
+  setSelectedYear: any;
+  selectedColumn: SelectedColumn;
+  setSelectedColumn: any;
 }) => {
   return (
     <div className="rounded-xl border-[#EAECF0] border">
@@ -136,6 +144,10 @@ const Live = ({
         data={data}
         removeScenario={() => { }}
         fullScreen={fullScreen}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        selectedColumn={selectedColumn}
+        setSelectedColumn={setSelectedColumn}
         id={-1}
       />
     </div>

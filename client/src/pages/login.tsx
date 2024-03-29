@@ -47,7 +47,7 @@ const Login = () => {
       } else {
         // sign in successful. The session tokens are automatically handled by
         // the frontend SDK.
-        navigate("/");
+        navigate("/clients");
       }
     } catch (err: any) {
       setSubmitting(false);

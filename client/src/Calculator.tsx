@@ -15,20 +15,17 @@ function Calculator() {
   const [tab, setTab] = useState<"data" | "calculator">("data");
   const [fullScreen, setFullScreen] = useState(false);
 
-  const [settings, setSettings] = useState<ScenarioSettings>({} as any);
-
   const fetchData = () => {
     return getClient(id)
       .then((data) => data.json())
       .then((data) => {
         setData(data);
-
-        console.log("sett", data);
+        data = { ...data.data, scenarios: data.scenarios };
         setSettings({
           id: data.scenarios.length,
           maxYearsShown: 30,
-          deathYears: data.data.people.length === 2 ? [null, null] : [null],
-          ssSurvivorAge: data.data.people.length === 2 ? [null, null] : [null],
+          deathYears: data.people.length === 2 ? [null, null] : [null],
+          ssSurvivorAge: data.people.length === 2 ? [null, null] : [null],
           inflation: 0,
           whoDies: -1,
           name: "",
@@ -39,9 +36,11 @@ function Calculator() {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log("settings", settings);
 
   const [data, setLocal] = useState<Client | null>(null);
+
+  const [settings, setSettings] = useState<ScenarioSettings>({} as any);
+  console.log("settings", settings);
   const setData = (data: Client) => {
     console.log(data);
     updateData(data.id, data.data);
@@ -49,7 +48,7 @@ function Calculator() {
   };
   if (!data)
     return (
-      <Layout page="data" onTabChange={() => {}}>
+      <Layout page="data" onTabChange={() => { }}>
         <Spinner />
       </Layout>
     );
@@ -138,14 +137,14 @@ function Calculator() {
             </div>
           ) : (
             <Summary
+              settings={settings}
+              setSettings={setSettings}
               data={
                 {
                   ...data.data,
                   incomes: data.data.incomes.filter((i) => i.enabled),
                 } as IncomeMapData
               }
-              settings={settings}
-              setSettings={setSettings}
               hideNav={setFullScreen}
               store={(scenarios: ScenarioSettings[]) => {
                 console.log("update", scenarios);
