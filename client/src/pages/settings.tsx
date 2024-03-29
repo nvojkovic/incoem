@@ -64,6 +64,7 @@ const Settings = () => {
                   ref={ref}
                   onChange={upload}
                 />
+                {/*
                 <Button
                   type="secondary"
                   onClick={async () => {
@@ -74,7 +75,7 @@ const Settings = () => {
                   }}
                 >
                   Billing settings
-                </Button>
+                </Button>*/}
               </div>
               <div className="uto">
                 <Button
