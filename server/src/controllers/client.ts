@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
 
 const prisma = new PrismaClient();
@@ -22,6 +22,16 @@ export const getClient = async (req: SessionRequest, res: Response) => {
   const client = await prisma.client.findFirst({
     where: {
       userId,
+      id,
+    },
+  });
+  res.json(client);
+};
+
+export const getPrintClient = async (req: Request, res: Response) => {
+  let id = parseInt(req.params.id);
+  const client = await prisma.client.findFirst({
+    where: {
       id,
     },
   });

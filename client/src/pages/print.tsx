@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import logo from "../assets/logo.png";
 import ResultTable from "../components/ResultTable";
 import { useEffect, useState } from "react";
-import { getClient } from "../services/client";
+import { getPrintClient } from "../services/client";
 import useUser from "../useUser";
 
 const Print = () => {
@@ -10,7 +10,7 @@ const Print = () => {
   const { id, scenarioId } = useParams();
   const { user } = useUser();
   useEffect(() => {
-    getClient(id)
+    getPrintClient(id)
       .then((data) => data.json())
       .then((data) => {
         setClient(data);

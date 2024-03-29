@@ -46,8 +46,8 @@ export const createSubsctiption = async (req: Request, res: Response) => {
       },
     ],
     mode: "subscription",
-    success_url: "http://localhost:5173",
-    cancel_url: "http://localhost:5173",
+    success_url: process.env.APP_URL,
+    cancel_url: process.env.APP_URL,
   });
 
   ///redirect to session.url
