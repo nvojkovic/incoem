@@ -13,7 +13,6 @@ const useUser = () => {
         setUser(userData);
       } else if (response.status === 401) {
         // Redirect to login if unauthorized
-        alert();
         console.log("Unauthorized");
         navigate("/login");
       } else {

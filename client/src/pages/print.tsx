@@ -3,12 +3,10 @@ import logo from "../assets/logo.png";
 import ResultTable from "../components/ResultTable";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
-import useUser from "../useUser";
 
 const Print = () => {
   const [client, setClient] = useState({} as any);
   const { id, scenarioId } = useParams();
-  const { user } = useUser();
   useEffect(() => {
     getPrintClient(id)
       .then((data) => data.json())
@@ -26,9 +24,9 @@ const Print = () => {
         <div className="flex gap-6">
           <div>
             <div className="font-semibold text-2xl mb-3">
-              {user?.info.firmName}
+              {client?.userdata.firmName}
             </div>
-            <div className="font-regular text-xl">{user?.info.name}</div>
+            <div className="font-regular text-xl">{client?.userdata.name}</div>
           </div>
           <img
             src={
@@ -59,7 +57,7 @@ const Print = () => {
       </div>
       <div className="mt-10 mb-20 italic">
         <b>Disclosure: </b>
-        {user?.info?.disclosures}
+        {client?.userdata?.disclosures}
       </div>
     </div>
   );
