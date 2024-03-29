@@ -57,11 +57,11 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <Settings />,
       },
-      {
-        path: "/print/:id/:scenarioId",
-        element: <Print />,
-      },
     ],
+  },
+  {
+    path: "/print/:id/:scenarioId",
+    element: <Print />,
   },
   {
     path: "/login",
