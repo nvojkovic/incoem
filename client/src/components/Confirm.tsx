@@ -33,12 +33,12 @@ const Confirm = ({ isOpen, onClose, children, onConfirm }: any) => {
                 <div className="flex flex-col gap-r">
                   {children}
 
-                  <div className="flex justify-between gap-10 mt-5">
-                    <Button type="secondary" onClick={onClose}>
-                      Cancel
-                    </Button>
+                  <div className="flex flex-row-reverse justify-between gap-10 mt-5">
                     <Button type="primary" onClick={onConfirm}>
                       Confirm
+                    </Button>
+                    <Button type="secondary" onClick={onClose}>
+                      Cancel
                     </Button>
                   </div>
                 </div>

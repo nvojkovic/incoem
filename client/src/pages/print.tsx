@@ -39,11 +39,15 @@ const Print = () => {
           fullScreen={true}
           id={scenario.id}
           removeScenario={() => { }}
+          selectedYear={0}
+          setSelectedYear={() => { }}
+          selectedColumn={{ id: 0, type: "none" }}
+          setSelectedColumn={() => { }}
           data={scenario.data as any}
           name={scenario.name}
         />
       </div>
-      <div className="mt-10 mb-20">
+      <div className="mt-10 mb-20 italic">
         <b>Disclosure: </b>
         {user?.info?.disclosures}
       </div>

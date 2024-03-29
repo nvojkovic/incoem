@@ -29,6 +29,10 @@ const ResultTable = ({
   removeScenario,
   fullScreen,
   name,
+  selectedYear,
+  setSelectedYear,
+  setSelectedColumn,
+  selectedColumn,
 }: {
   data: IncomeMapData;
   settings: ScenarioSettings;
@@ -36,15 +40,14 @@ const ResultTable = ({
   name?: string;
   fullScreen: boolean;
   id: number;
+  selectedYear: number;
+  setSelectedYear: any;
+  selectedColumn: SelectedColumn;
+  setSelectedColumn: any;
 }) => {
   if (!data) return null;
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
-  const [highlightColumn, setHighlightColumn] = useState(-1);
-  const updateHighlightColumn = (i: number) => {
-    if (highlightColumn != i) setHighlightColumn(i);
-    else setHighlightColumn(-1);
-  };
   return (
     <div className="rounded-xl border-[#EAECF0] border">
       {name && (
@@ -140,16 +143,24 @@ const ResultTable = ({
         <thead
           className={`text-xs  cursor-pointer bg-[#F9FAFB] text-[#475467] font-medium text-left sticky z-50 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
         >
-          <td className="px-6 py-3" onClick={() => updateHighlightColumn(0)}>
+          <td
+            className="px-6 py-3"
+            onClick={() => setSelectedColumn({ type: "year", id: 0 })}
+          >
             Year
           </td>
-          <td className="px-6 py-3" onClick={() => updateHighlightColumn(1)}>
+          <td
+            className="px-6 py-3"
+            onClick={() => setSelectedColumn({ type: "age", id: 0 })}
+          >
             Age
           </td>
-          {data.incomes.map((_, i) => (
+          {data.incomes.map((income, i) => (
             <td
               className="px-6 py-3"
-              onClick={() => updateHighlightColumn(i + 2)}
+              onClick={() =>
+                setSelectedColumn({ type: "income", id: income.id })
+              }
             >
               {title(data.incomes, data.people, i)
                 .split("|")
@@ -162,7 +173,7 @@ const ResultTable = ({
           ))}
           <td
             className="px-6 py-3"
-            onClick={() => updateHighlightColumn(data.incomes.length + 2)}
+            onClick={() => setSelectedColumn({ type: "total", id: 0 })}
           >
             Total
           </td>
@@ -171,23 +182,28 @@ const ResultTable = ({
           {yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
             (currentYear, i) => (
               <tr
-                className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border border-[#EAECF0] hover:bg-slate-100`}
+                className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border border-[#EAECF0] hover:bg-slate-100 ${selectedYear === currentYear && "!bg-slate-200"}`}
+                onClick={() =>
+                  currentYear == selectedYear
+                    ? setSelectedYear(0)
+                    : setSelectedYear(currentYear)
+                }
               >
                 <td
-                  className={`font-medium px-6 py-[0.6rem] ${highlightColumn == 0 ? "bg-slate-100" : ""}`}
+                  className={`font-medium px-6 py-[0.6rem] ${selectedColumn.type == "year" ? "bg-slate-200" : ""}`}
                 >
                   {currentYear}
                 </td>
                 <td
-                  className={`font-medium px-6 py-[0.6rem] ${highlightColumn == 1 ? "bg-slate-100" : ""}`}
+                  className={`font-medium px-6 py-[0.6rem] ${selectedColumn.type == "age" ? "bg-slate-200" : ""}`}
                 >
                   {data.people
                     .map((p) => currentYear - splitDate(p.birthday).year)
                     .join("/")}
                 </td>
-                {data.incomes.map((income, i) => (
+                {data.incomes.map((income) => (
                   <td
-                    className={`px-6 py-[0.6rem] text-[#475467] ${highlightColumn == i + 2 ? "bg-slate-100" : ""}`}
+                    className={`px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
                   >
                     {print(
                       calculate({
@@ -205,7 +221,7 @@ const ResultTable = ({
                   </td>
                 ))}
                 <td
-                  className={`font-medium px-6 py-[0.6rem] text-[#475467] ${highlightColumn == data.incomes.length + 2 ? "bg-slate-200" : ""}`}
+                  className={`font-medium px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
                 >
                   {formatter.format(
                     data?.incomes

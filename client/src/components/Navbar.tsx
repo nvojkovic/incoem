@@ -39,7 +39,7 @@ const Navbar = ({
     <div className="max-w-[1280px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
       <div className=" flex justify-between items-center h bg-white w-full">
         <div className="flex items-center justify-start w-full">
-          <Link to="/">
+          <Link to="/clients">
             <div className="flex items-center cursor-pointer">
               <img src={logo} className="w-9 h-9 mr-2" />
               <div className="font-bold text-[20px] leading-5">

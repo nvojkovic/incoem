@@ -1,11 +1,11 @@
 import { MouseEventHandler } from "react";
 
-interface Props {
+type Props = React.HTMLProps<HTMLElement> & {
   type: "primary" | "secondary";
   children: React.ReactNode;
   disabled?: boolean;
   onClick?: MouseEventHandler;
-}
+};
 const Button = ({ type, children, onClick, disabled }: Props) => {
   const style = {
     primary:

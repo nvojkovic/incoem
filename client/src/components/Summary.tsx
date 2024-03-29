@@ -29,9 +29,9 @@ const Summary = ({
   data,
   store,
   scenarios,
-  hideNav,
   settings,
   setSettings,
+  hideNav,
 }: {
   data: IncomeMapData;
   scenarios: ScenarioSettings[];
@@ -49,6 +49,10 @@ const Summary = ({
   );
   const [tab, setTab] = useState(-1);
   const [saveOpen, setSaveOpen] = useState(false);
+  const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
+    id: 0,
+    type: "none",
+  });
 
   const openFullScreen = () => {
     var elem = document.documentElement as any;
@@ -97,6 +101,8 @@ const Summary = ({
       document.removeEventListener("fullscreenchange", fullscreenchange);
     };
   }, []);
+
+  const [selectedYear, setSelectedYear] = useState(0);
 
   return (
     <div>
@@ -247,6 +253,10 @@ const Summary = ({
             settings={settings}
             setSettings={setSettings}
             fullScreen={fullScreen}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            selectedColumn={selectedColumn}
+            setSelectedColumn={setSelectedColumn}
           />
         ) : (
           <ResultTable
@@ -260,6 +270,10 @@ const Summary = ({
             }}
             data={scenarios.find(({ id }) => id === tab)?.data as any}
             name={scenarios.find(({ id }) => id === tab)?.name}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            selectedColumn={selectedColumn}
+            setSelectedColumn={setSelectedColumn}
           />
         )}
       </div>

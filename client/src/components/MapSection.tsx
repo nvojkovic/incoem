@@ -18,7 +18,7 @@ const MapSection = ({
     <div>
       <div
         className={`flex justify-between mb-6 pb-3 border-b border-[#EAECF0] font-semibold text-2xl cursor-pointer  bg-white ${toggleabble ? "" : "z-50 sticky top-[72px]"}`}
-        onClick={() => setOpen(!open)}
+        onClick={() => toggleabble && setOpen(!open)}
       >
         {title}
         {toggleabble ? (

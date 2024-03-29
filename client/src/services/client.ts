@@ -1,8 +1,5 @@
-const API = import.meta.env.PROD
-  ? "https://my-express-api.onrender.com/"
-  : "https://my-express-api.onrender.com/";
-// : "http://localhost:3000/";
-//
+const API = import.meta.env.VITE_API_URL;
+
 const fetchApi = async (url: string, options: any) => {
   console.log("fetchApi", url, options);
   try {
@@ -90,5 +87,15 @@ export const updateSettings = (settings: any) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(settings),
+  });
+};
+
+export const uploadLogo = (logo: any) => {
+  const formData = new FormData();
+  formData.append("logo", logo);
+
+  return fetch(API + "user/logo", {
+    method: "POST",
+    body: formData,
   });
 };
