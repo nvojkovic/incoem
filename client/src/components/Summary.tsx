@@ -27,6 +27,7 @@ import SortableItem from "./Sortable/SortableItem";
 import ScenarioTab from "./ScenarioTab";
 const Summary = ({
   data,
+  clientId,
   store,
   scenarios,
   settings,
@@ -34,6 +35,7 @@ const Summary = ({
   hideNav,
 }: {
   data: IncomeMapData;
+  clientId: any;
   scenarios: ScenarioSettings[];
   store: any;
   hideNav: any;
@@ -103,6 +105,19 @@ const Summary = ({
   }, []);
 
   const [selectedYear, setSelectedYear] = useState(0);
+  const print = async () => {
+    const pdfFile = await fetch(
+      import.meta.env.VITE_API_URL +
+      "print/client/pdf/" +
+      clientId +
+      "/" +
+      settings.id,
+    );
+    //open file in new tab
+    const blob = await pdfFile.blob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
 
   return (
     <div>
@@ -115,7 +130,7 @@ const Summary = ({
         </div>
         <div className="flex gap-3 print:hidden">
           <div>
-            <Button type="secondary" onClick={() => window.print()}>
+            <Button type="secondary" onClick={() => print()}>
               <div className="flex gap-2">
                 <PrinterIcon className="h-5 w-5" />
                 <div className="text-sm">Print</div>
@@ -199,9 +214,8 @@ const Summary = ({
       </div>
       <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
         <div
-          className={`border-b border-[#EAECF0] mb-10 flex print:hidden sticky z-50 ${
-            fullScreen ? "top-[0px]" : "top-[72px]"
-          } bg-white`}
+          className={`border-b border-[#EAECF0] mb-10 flex print:hidden sticky z-50 ${fullScreen ? "top-[0px]" : "top-[72px]"
+            } bg-white`}
         >
           <DndContext
             sensors={sensors}
@@ -219,7 +233,7 @@ const Summary = ({
                   active={tab == -1}
                   setActive={() => setTab(-1)}
                   live
-                  store={() => {}}
+                  store={() => { }}
                 />
                 {scenarios.map((sc, i) => (
                   <SortableItem

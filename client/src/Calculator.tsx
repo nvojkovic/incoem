@@ -137,6 +137,7 @@ function Calculator() {
             </div>
           ) : (
             <Summary
+              clientId={data.id
               settings={settings}
               setSettings={setSettings}
               data={
