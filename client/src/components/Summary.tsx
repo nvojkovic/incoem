@@ -25,6 +25,7 @@ import ModalInput from "./Inputs/ModalInput";
 import Input from "./Inputs/Input";
 import SortableItem from "./Sortable/SortableItem";
 import ScenarioTab from "./ScenarioTab";
+import { Spinner } from "flowbite-react";
 const Summary = ({
   data,
   clientId,
@@ -105,7 +106,9 @@ const Summary = ({
   }, []);
 
   const [selectedYear, setSelectedYear] = useState(0);
+  const [printing, setPrinting] = useState(false);
   const print = async () => {
+    setPrinting(true);
     const pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
       "print/client/pdf/" +
@@ -113,6 +116,7 @@ const Summary = ({
       "/" +
       settings.id,
     );
+    setPrinting(false);
     //open file in new tab
     const blob = await pdfFile.blob();
     const url = URL.createObjectURL(blob);
@@ -134,6 +138,7 @@ const Summary = ({
               <div className="flex gap-2">
                 <PrinterIcon className="h-5 w-5" />
                 <div className="text-sm">Print</div>
+                {printing && <Spinner className="h-5" />}
               </div>
             </Button>
           </div>

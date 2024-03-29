@@ -53,9 +53,10 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     "/" +
     req.params.scenario,
   );
-  const blob = await pdf.blob();
+  const data = await pdf.arrayBuffer();
+  res.setHeader("Content-Disposition", 'attachment; filename="report.pdf"');
   res.contentType("application/pdf");
-  res.send(blob);
+  res.send(data);
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
