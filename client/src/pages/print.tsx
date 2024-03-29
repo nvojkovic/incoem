@@ -30,7 +30,17 @@ const Print = () => {
             </div>
             <div className="font-regular text-xl">{user?.info.name}</div>
           </div>
-          <img src={logo} alt="logo" className="w-20" />
+          <img
+            src={
+              client?.userdata?.logo
+                ? import.meta.env.VITE_API_URL +
+                "logo?logo=" +
+                client?.userdata?.logo
+                : logo
+            }
+            alt="logo"
+            className="w-20"
+          />
         </div>
       </div>
       <div>
