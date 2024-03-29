@@ -27,6 +27,8 @@ app.get("/", async (req, res) => {
   });
   const page = await browser.newPage();
   await page.goto(url as any, { waitUntil: "networkidle0" });
+  //wait a second
+  await new Promise((r) => setTimeout(r, 1000));
   const pdf = await page.pdf({ format: "A4" });
   await browser.close();
   res.contentType("application/pdf");
