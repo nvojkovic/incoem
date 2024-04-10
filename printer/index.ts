@@ -25,8 +25,10 @@ app.get("/", async (req, res) => {
     ignoreDefaultArgs: ["--disable-extensions"],
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
+  console.log("url", url);
   const page = await browser.newPage();
   await page.goto(url as any, { waitUntil: "networkidle0" });
+
   //wait a second
   await new Promise((r) => setTimeout(r, 1000));
   const pdf = await page.pdf({ format: "A4" });

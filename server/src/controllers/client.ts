@@ -56,7 +56,7 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
   const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
-  fs.appendFileSync(file, Buffer.from(data));
+  fs.writeFileSync(file, Buffer.from(data));
   return res.json({ file });
 };
 
