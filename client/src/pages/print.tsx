@@ -37,9 +37,6 @@ const Print = () => {
             alt="logo"
             className="w-20"
           />
-          {client?.userdata?.logo
-            ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
-            : logo}
         </div>
       </div>
       <div>
