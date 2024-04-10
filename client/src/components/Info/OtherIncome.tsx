@@ -77,7 +77,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             setIncome({ ...pension, yearlyIncreasePercent: name })
           }
         />
-        {people.length > 1 && (
+        {people.length > 1 && pension.personId != -1 && (
           <Input
             label="Survivor"
             subtype="percent"
