@@ -16,7 +16,6 @@ import Settings from "./pages/settings";
 import Print from "./pages/print";
 import VerifyEmail from "./pages/verify-email";
 import VerifyEmailConfirm from "./pages/verify-email-confim";
-import Home from "./pages/home";
 
 SuperTokens.init({
   appInfo: {
