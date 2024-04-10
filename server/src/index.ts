@@ -54,7 +54,7 @@ app.get("/user", verifySession(), getUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
 app.get("/stripeSubscribe", verifySession(), createSubsctiption);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
-app.get("/logo/", verifySession(), getLogo);
+app.get("/logo/", getLogo);
 app.get("/report/", verifySession(), getReport);
 
 app.listen(port, "0.0.0.0", () => {
