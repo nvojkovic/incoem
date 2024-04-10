@@ -74,7 +74,7 @@ export const calculateOwnSocialSecurity = (
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
   let ownAmount = 0;
-  if (income.calculationMethod == "automatic") {
+  if (income.calculationMethod == "manual") {
     if (income.alreadyReceiving) {
       ownAmount = income.annualAmount;
     } else if (income.startAgeYear == age) {

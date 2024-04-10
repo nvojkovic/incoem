@@ -21,7 +21,7 @@ export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
   cola: 0,
   alreadyReceiving: false,
   pia: 0,
-  calculationMethod: "manual",
+  calculationMethod: "pia",
   startAgeYear: null as any,
   startAgeMonth: null as any,
 });

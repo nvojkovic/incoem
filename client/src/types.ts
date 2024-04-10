@@ -42,7 +42,7 @@ interface EmploymentIncome extends Income {
 
 interface SocialSecurityIncome extends Income {
   type: "social-security";
-  calculationMethod: "automatic" | "manual";
+  calculationMethod: "manual" | "pia";
   pia: number;
   annualAmount: number;
   alreadyReceiving: boolean;

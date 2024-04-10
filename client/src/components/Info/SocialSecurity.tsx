@@ -25,11 +25,11 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               )}
               <Select
                 options={[
-                  { name: "Automatic", id: "automatic" },
-                  { name: "Manual", id: "manual" },
+                  { name: "Manual", id: "Manual" },
+                  { name: "PIA", id: "pia" },
                 ]}
                 selected={{
-                  name: (pension.calculationMethod as any).capitalize(),
+                  name: pension.calculationMethod === "pia" ? "PIA" : "Manual",
                   id: pension.calculationMethod,
                 }}
                 setSelected={(i) =>
@@ -37,7 +37,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 }
                 label="Calculation Method"
               />
-              {pension.calculationMethod == "manual" && (
+              {pension.calculationMethod == "pia" && (
                 <Input
                   label="Monthly PIA"
                   subtype="money"
@@ -46,7 +46,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                   tooltip="Primary Insurance Amount"
                 />
               )}
-              {pension.calculationMethod == "automatic" && (
+              {pension.calculationMethod == "manual" && (
                 <Input
                   label="Annual amount"
                   subtype="money"
