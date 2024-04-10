@@ -2,9 +2,10 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import stripe from "stripe";
 
+const prisma = new PrismaClient();
+
 export const createSubsctiption = async (req: Request, res: Response) => {
   let userId = (req as any).session!.getUserId();
-  const prisma = new PrismaClient();
   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
   const info = await prisma.userInfo.findUnique({
     where: {
@@ -58,7 +59,6 @@ export const createSubsctiption = async (req: Request, res: Response) => {
 
 export const createPortalSession = async (req: Request, res: Response) => {
   let userId = (req as any).session!.getUserId();
-  const prisma = new PrismaClient();
   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
   const info = await prisma.userInfo.findUnique({
     where: {
