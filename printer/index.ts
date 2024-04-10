@@ -27,7 +27,9 @@ app.get("/", async (req, res) => {
   });
   console.log("url", url);
   const page = await browser.newPage();
-  await page.goto(url as any, { waitUntil: "networkidle0" });
+  await page.goto(url as any, {
+    waitUntil: ["networkidle0", "load", "domcontentloaded"],
+  });
 
   //wait a second
   console.log("waiting");
