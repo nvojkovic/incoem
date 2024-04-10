@@ -33,7 +33,7 @@ app.get("/", async (req, res) => {
 
   //wait a second
   console.log("waiting");
-  await new Promise((r) => setTimeout(r, 1500));
+  await new Promise((r) => setTimeout(r, 2500));
   console.log("done waiting");
   const pdf = await page.pdf({ format: "A4" });
   await browser.close();
