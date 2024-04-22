@@ -3,6 +3,7 @@ import bg from "../assets/login-bg.png";
 import logo from "../assets/logo.png";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
+import Session from "supertokens-web-js/recipe/session";
 import useUser from "../useUser";
 import { useEffect } from "react";
 
@@ -52,6 +53,17 @@ const Subscribe = () => {
             <Button type="primary" onClick={subscribe}>
               Subscribe
             </Button>
+            <div className="mb-4"></div>
+            <Button
+              type="secondary"
+              onClick={async () => {
+                navigate("/login");
+                await Session.signOut();
+              }}
+            >
+              Sign out
+            </Button>
+
             <div className="mb-6"></div>
           </div>
         </div>
