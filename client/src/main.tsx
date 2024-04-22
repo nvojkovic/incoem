@@ -13,10 +13,11 @@ import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyema
 import EmailVerification from "supertokens-auth-react/recipe/emailverification";
 import Signup from "./pages/signup";
 import Settings from "./pages/settings";
-import Print from "./pages/print";
+import PrintPage from "./pages/print";
 import VerifyEmail from "./pages/verify-email";
 import VerifyEmailConfirm from "./pages/verify-email-confim";
 import Subscribe from "./pages/subscribe";
+import PrintLivePage from "./pages/print-live";
 
 SuperTokens.init({
   appInfo: {
@@ -64,8 +65,12 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/print-live/:id/",
+    element: <PrintLivePage />,
+  },
+  {
     path: "/print/:id/:scenarioId",
-    element: <Print />,
+    element: <PrintPage />,
   },
   {
     path: "/login",

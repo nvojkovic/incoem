@@ -109,13 +109,24 @@ const Summary = ({
   const [printing, setPrinting] = useState(false);
   const print = async () => {
     setPrinting(true);
-    const pdfFile = await fetch(
-      import.meta.env.VITE_API_URL +
-      "print/client/pdf/" +
-      clientId +
-      "/" +
-      Math.max(tab, 0).toString(),
-    ).then((res) => res.json());
+    let pdfFile;
+    if (tab === -1) {
+      pdfFile = await fetch(
+        import.meta.env.VITE_API_URL +
+        "print/client/pdf-live/" +
+        clientId +
+        "/?data=" +
+        JSON.stringify(settings),
+      ).then((res) => res.json());
+    } else {
+      pdfFile = await fetch(
+        import.meta.env.VITE_API_URL +
+        "print/client/pdf/" +
+        clientId +
+        "/" +
+        Math.max(tab, 0).toString(),
+      ).then((res) => res.json());
+    }
     setPrinting(false);
     window.open(
       import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file,

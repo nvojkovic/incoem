@@ -60,6 +60,22 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
   return res.json({ file });
 };
 
+export const getPrintClientPdfLive = async (req: Request, res: Response) => {
+  const url =
+    process.env.PRINTER_URL +
+    "/?url=" +
+    process.env.APP_URL +
+    "/print-live/" +
+    req.params.id +
+    "/?data=" +
+    req.query.data;
+  const pdf = await fetch(url);
+  const data = await pdf.arrayBuffer();
+  const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
+  fs.writeFileSync(file, Buffer.from(data));
+  return res.json({ file });
+};
+
 export const updateClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
   let { data } = req.body;

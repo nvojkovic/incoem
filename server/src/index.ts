@@ -19,6 +19,7 @@ import {
   getClient,
   getPrintClient,
   getPrintClientPdf,
+  getPrintClientPdfLive,
   updateClient,
   updateScenario,
 } from "./controllers/client";
@@ -48,6 +49,7 @@ const upload = multer({});
 app.get("/clients", verifySession(), allClients);
 app.get("/client/:id", verifySession(), getClient);
 app.get("/print/client/pdf/:id/:scenario", verifySession(), getPrintClientPdf);
+app.get("/print/client/pdf-live/:id/", verifySession(), getPrintClientPdfLive);
 app.get("/print/client/:id/", getPrintClient);
 app.post("/client/:id", verifySession(), updateClient);
 app.post("/client/scenarios/:id", verifySession(), updateScenario);
