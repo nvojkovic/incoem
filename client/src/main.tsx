@@ -16,6 +16,7 @@ import Settings from "./pages/settings";
 import Print from "./pages/print";
 import VerifyEmail from "./pages/verify-email";
 import VerifyEmailConfirm from "./pages/verify-email-confim";
+import Subscribe from "./pages/subscribe";
 
 SuperTokens.init({
   appInfo: {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Settings />,
+      },
+      {
+        path: "/subscribe",
+        element: <Subscribe />,
       },
     ],
   },

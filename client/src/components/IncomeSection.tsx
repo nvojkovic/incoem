@@ -132,7 +132,11 @@ const IncomeSection = ({
         <div className="flex gap-6 items-center w-full justify-between">
           <div>Income information</div>
           <div className="w-36 mr">
-            <AddIncome addIncome={addIncome} />
+            <AddIncome
+              addIncome={addIncome}
+              people={people}
+              incomes={incomes}
+            />
           </div>
         </div>
       }

@@ -23,12 +23,14 @@ model Client {
 }
 
 model UserInfo {
-  id          String  @id
-  name        String?
-  firmName    String?
-  customerId  String?
-  logo        String?
-  disclosures String?
+  id                String  @id
+  name              String?
+  firmName          String?
+  customerId        String?
+  logo              String?
+  disclosures       String?
+  subsciptionStatus String?
+  subscriptionPlan  String?
 }
 
 model all_auth_recipe_users {

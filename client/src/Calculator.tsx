@@ -40,15 +40,13 @@ function Calculator() {
   const [data, setLocal] = useState<Client | null>(null);
 
   const [settings, setSettings] = useState<ScenarioSettings>({} as any);
-  console.log("settings", settings);
   const setData = (data: Client) => {
-    console.log(data);
     updateData(data.id, data.data);
     setLocal(data);
   };
   if (!data)
     return (
-      <Layout page="data" onTabChange={() => { }}>
+      <Layout page="data" onTabChange={() => {}}>
         <Spinner />
       </Layout>
     );
@@ -72,6 +70,7 @@ function Calculator() {
     });
   };
   const addIncome = (income: Income) => {
+    console.log("addIncome", income);
     setData({
       ...data,
       data: {

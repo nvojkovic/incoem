@@ -7,7 +7,11 @@ import "./supertokens";
 import multer from "multer";
 import supertokens from "supertokens-node";
 import { middleware } from "supertokens-node/framework/express";
-import { createPortalSession, createSubsctiption } from "./controllers/stripe";
+import {
+  createPortalSession,
+  createSubsctiption,
+  stripeWebhook,
+} from "./controllers/stripe";
 import {
   allClients,
   createClient,
@@ -53,6 +57,7 @@ app.post("/settings", verifySession(), updateUser);
 app.get("/user", verifySession(), getUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
 app.get("/stripeSubscribe", verifySession(), createSubsctiption);
+app.post("/stripe/webhook", stripeWebhook);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", getLogo);
 app.get("/report/", verifySession(), getReport);

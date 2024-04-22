@@ -21,7 +21,7 @@ const Settings = () => {
     fetchUser();
   };
   return (
-    <Layout page="settings" onTabChange={() => { }}>
+    <Layout page="settings" onTabChange={() => {}}>
       {settings ? (
         <div className="px-10">
           <MapSection title="Settings" defaultOpen>
@@ -64,18 +64,26 @@ const Settings = () => {
                   ref={ref}
                   onChange={upload}
                 />
-                {/*
-                <Button
-                  type="secondary"
-                  onClick={async () => {
-                    const d = await fetch(
-                      import.meta.env.VITE_API_URL + "stripeSubscribe",
-                    ).then((a) => a.json());
-                    window.open(d.url, "_blank");
-                  }}
-                >
-                  Billing settings
-                </Button>*/}
+                {
+                  <Button
+                    type="secondary"
+                    onClick={async () => {
+                      if (user?.info?.subsciptionStatus === "active") {
+                        const d = await fetch(
+                          import.meta.env.VITE_API_URL + "stripeRedirect",
+                        ).then((a) => a.json());
+                        window.open(d.url, "_blank");
+                      } else {
+                        const d = await fetch(
+                          import.meta.env.VITE_API_URL + "stripeSubscribe",
+                        ).then((a) => a.json());
+                        window.open(d.url, "_blank");
+                      }
+                    }}
+                  >
+                    Billing settings
+                  </Button>
+                }
               </div>
               <div className="uto">
                 <Button

@@ -12,11 +12,13 @@ export const newEmploymentIncome = (): any => ({
   retirementAgeMonth: null,
 });
 
-export const newSocialSecurityIncome = (): SocialSecurityIncome => ({
+export const newSocialSecurityIncome = (
+  person: Person,
+): SocialSecurityIncome => ({
   id: id(),
   enabled: true,
   type: "social-security",
-  personId: 0,
+  personId: person.id,
   annualAmount: 0,
   cola: 0,
   alreadyReceiving: false,
@@ -80,12 +82,12 @@ export const paydown = (): any => ({
   total: null,
 });
 
-export const newIncome = (type: IncomeType): Income => {
+export const newIncome = (type: IncomeType, person: Person): Income => {
   switch (type) {
     case "employment-income":
       return newEmploymentIncome();
     case "social-security":
-      return newSocialSecurityIncome();
+      return newSocialSecurityIncome(person);
     case "company-pension":
       return newPensionIncome();
     case "annuity":
@@ -95,5 +97,4 @@ export const newIncome = (type: IncomeType): Income => {
     case "paydown":
       return paydown();
   }
-  return undefined as any;
 };

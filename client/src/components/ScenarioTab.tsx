@@ -43,7 +43,6 @@ const ScenarioTab = ({
             autoFocus
             className="focus:outline-none focus:border-transparent focus:ring-1 focus:ring-transparent rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 bg-transparent"
             onKeyDown={(e) => {
-              console.log("KEY", e.key);
               if (e.key === "Escape") {
                 e.preventDefault();
                 alert();

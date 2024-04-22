@@ -1,9 +1,48 @@
 import Button from "../Inputs/Button";
 import { newIncome } from "../../createIncome";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
-const AddIncome = ({ addIncome }: any) => {
+
+interface AddIncomeProps {
+  addIncome: (income: Income) => void;
+  people: Person[];
+  incomes: Income[];
+}
+
+const AddIncome = ({ addIncome, people, incomes }: AddIncomeProps) => {
+  const addItem = useMemo(() => {
+    return (type: string, title: string, person: Person) => (
+      <div className="px-1 py-1" key={type + person.name}>
+        <Menu.Item>
+          {({ active }: any) =>
+            type == "social-security" && people.length == 0 ? (
+              <div></div>
+            ) : (
+              <div
+                className={`${
+                  active ? "bg-main-orange text-white" : "text-gray-900"
+                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                onClick={() => {
+                  addIncome(newIncome(type as IncomeType, person));
+                }}
+              >
+                {title}
+              </div>
+            )
+          }
+        </Menu.Item>
+      </div>
+    );
+  }, []);
+  console.log(
+    incomes?.find(
+      (item) => item.personId === 0 && item.type === "social-security",
+    ),
+    incomes,
+    "test",
+  );
+
   return (
     <Button
       type="primary"
@@ -37,26 +76,50 @@ const AddIncome = ({ addIncome }: any) => {
               "annuity",
               "other-income",
               "paydown",
-            ].map((type) => (
-              <div className="px-1 py-1 " key={type}>
-                <Menu.Item>
-                  {({ active }) => (
-                    <div
-                      className={`${active ? "bg-main-orange text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      onClick={() => {
-                        addIncome(newIncome(type as IncomeType));
-                      }}
-                    >
-                      {type
-                        .split("-")
-                        .map((i) => (i as any).capitalize())
-                        .join(" ")}
-                    </div>
-                  )}
-                </Menu.Item>
-              </div>
-            ))}
+            ]
+              .map((type) =>
+                type == "social-security" && people.length == 2
+                  ? [
+                      !incomes?.find(
+                        (item) =>
+                          item.personId === 0 &&
+                          item.type === "social-security",
+                      ) &&
+                        addItem(
+                          type,
+                          type
+                            .split("-")
+                            .map((i) => (i as any).capitalize())
+                            .join(" ") + ` (${people[0].name})`,
+                          people[0],
+                        ),
+
+                      !incomes?.find(
+                        (item) =>
+                          item.personId === 1 &&
+                          item.type === "social-security",
+                      ) &&
+                        addItem(
+                          type,
+                          type
+                            .split("-")
+                            .map((i) => (i as any).capitalize())
+                            .join(" ") + ` (${people[1].name})`,
+                          people[1],
+                        ),
+                    ]
+                  : [
+                      addItem(
+                        type,
+                        type
+                          .split("-")
+                          .map((i) => (i as any).capitalize())
+                          .join(" "),
+                        people[0],
+                      ),
+                    ],
+              )
+              .flat()}
           </Menu.Items>
         </Transition>
       </Menu>
