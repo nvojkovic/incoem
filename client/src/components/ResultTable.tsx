@@ -136,7 +136,7 @@ const ResultTable = ({
                 setValue={() => {}}
               />
             </div>
-            <div className="">
+            <div className="print:mr-[-20px]">
               <Input
                 label="Inflation"
                 disabled

@@ -30,6 +30,7 @@ interface IncomeProviderProps {
   initialData: Client;
   children: React.ReactNode;
 }
+
 export const IncomeProvider = ({
   initialData,
   children,

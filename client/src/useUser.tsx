@@ -11,9 +11,12 @@ const useUser = () => {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
-        // if (userData?.info?.subsciptionStatus !== "active") {
-        //   navigate("/subscribe");
-        // }
+        if (
+          userData?.info?.subsciptionStatus !== "active" &&
+          userData?.info?.subsciptionStatus !== "trialing"
+        ) {
+          navigate("/subscribe");
+        }
       } else if (response.status === 401) {
         // Redirect to login if unauthorized
         console.log("Unauthorized");
