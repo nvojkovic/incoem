@@ -119,7 +119,7 @@ const Live = ({
                   </div>
                 ))}
 
-              {data.people.length > 1 &&
+              {/*data.people.length > 1 &&
                 data.people.map(
                   (person, i) =>
                     settings.whoDies == i &&
@@ -148,7 +148,7 @@ const Live = ({
                         />
                       </div>
                     ),
-                )}
+                )*/}
               <div className="">
                 <Input
                   label="Years"

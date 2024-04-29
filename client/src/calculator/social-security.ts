@@ -24,19 +24,16 @@ export const calculateSocialSecurity = (
     (i) => i.type === "social-security" && i.personId === 1 - income.personId,
   ) as SocialSecurityIncome;
   if (spouse && isDead(info, spouse.personId)) {
-    let survivorAge = info.ssSurvivorAge[income.personId];
-    if (survivorAge != null && birthYear + survivorAge <= currentYear) {
-      // actually taking survivor benefit
-      if (survivorAge >= 60) {
-        const newInfo = {
-          ...info,
-          income: spouse,
-        };
-        ownAmount = Math.max(
-          ownAmount,
-          calculateSurvivorSocialSecurity(newInfo as any),
-        );
-      }
+    // actually taking survivor benefit
+    if (age >= 60) {
+      const newInfo = {
+        ...info,
+        income: spouse,
+      };
+      ownAmount = Math.max(
+        ownAmount,
+        calculateSurvivorSocialSecurity(newInfo as any),
+      );
     }
   }
   if (!income.alreadyReceiving && income.startAgeYear > age)
@@ -57,8 +54,7 @@ export const calculateSocialSecurity = (
         ...info,
         income: spouse,
       } as CalculationInfo<SocialSecurityIncome>;
-      const a = calculateOwnSocialSecurity(newInfo);
-      let spousal = a / 2;
+      const spousal = calculateOwnSocialSecurity(newInfo) / 2;
       ownAmount = Math.max(ownAmount, spousal);
     }
   }
@@ -102,8 +98,9 @@ export const calculateOwnSocialSecurity = (
     (income.alreadyReceiving
       ? info.startYear
       : income.startAgeYear + birthYear);
-
+  console.log("before", ownAmount);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
+  console.log("after", ownAmount, "cola", income.cola, years, currentYear);
   ownAmount = adjustCompoundInterest(ownAmount, years, -(info.inflation || 0));
   return ownAmount;
 };

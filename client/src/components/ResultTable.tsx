@@ -60,6 +60,7 @@ const ResultTable = ({
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
+  const incomes = data.incomes.filter((inc) => inc.enabled);
 
   const print = async () => {
     setPrinting(true);
@@ -109,7 +110,7 @@ const ResultTable = ({
               data.people.map(
                 (person, i) =>
                   settings.whoDies == i &&
-                  data.incomes.find(
+                  incomes.find(
                     (inc) => inc.type == "social-security" && inc.personId == i,
                   ) && (
                     <div className="w-44">
@@ -216,7 +217,7 @@ const ResultTable = ({
           >
             Age
           </td>
-          {data.incomes.map((income, i) => (
+          {incomes.map((income, i) => (
             <td
               className="px-6 py-3"
               onClick={() =>
@@ -226,7 +227,7 @@ const ResultTable = ({
                   : setSelectedColumn({ type: "income", id: income.id })
               }
             >
-              {title(data.incomes, data.people, i)
+              {title(incomes, data.people, i)
                 .split("|")
                 .map((i) => (
                   <span>
@@ -269,7 +270,7 @@ const ResultTable = ({
                     .map((p) => currentYear - splitDate(p.birthday).year)
                     .join("/")}
                 </td>
-                {data.incomes.map((income) => (
+                {incomes.map((income) => (
                   <td
                     className={`px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
                   >
@@ -282,7 +283,7 @@ const ResultTable = ({
                         deathYears: settings.deathYears as any,
                         dead: settings.whoDies,
                         inflation: settings.inflation,
-                        incomes: data.incomes,
+                        incomes: incomes,
                         ssSurvivorAge: settings.ssSurvivorAge,
                       }),
                     )}
@@ -292,7 +293,7 @@ const ResultTable = ({
                   className={`font-medium px-6 py-[0.6rem] text-black ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
                 >
                   {formatter.format(
-                    data?.incomes
+                    incomes
                       .map(
                         (income) =>
                           calculate({
@@ -303,7 +304,7 @@ const ResultTable = ({
                             deathYears: settings.deathYears as any,
                             dead: settings.whoDies,
                             inflation: settings.inflation,
-                            incomes: data.incomes,
+                            incomes: incomes,
                             ssSurvivorAge: settings.ssSurvivorAge,
                           }) as any,
                       )
@@ -321,8 +322,8 @@ const ResultTable = ({
       <div className="mt-10"></div>
       <StackedChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
-        incomes={data.incomes.map((income, i) => ({
-          name: title(data.incomes, data.people, i),
+        incomes={incomes.map((income, i) => ({
+          name: title(incomes, data.people, i),
           data: yearRange(
             startYear,
             startYear + settings.maxYearsShown - 1,
@@ -336,7 +337,7 @@ const ResultTable = ({
                 deathYears: settings.deathYears as any,
                 dead: settings.whoDies,
                 inflation: settings.inflation,
-                incomes: data.incomes,
+                incomes: incomes,
                 ssSurvivorAge: settings.ssSurvivorAge,
               }),
             ),

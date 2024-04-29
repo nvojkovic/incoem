@@ -57,13 +57,13 @@ export const getPrintClient = (id: any) => {
   });
 };
 
-export const updateData = (id: any, data: any) => {
+export const updateData = (id: any, title: string, data: any) => {
   return fetch(API + `client/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ data }),
+    body: JSON.stringify({ title, data }),
   });
 };
 

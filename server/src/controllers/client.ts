@@ -78,7 +78,7 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  let { data } = req.body;
+  let { data, title } = req.body;
   let id = parseInt(req.params.id);
   const client = await prisma.client.update({
     where: {
@@ -87,6 +87,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
     },
     data: {
       data,
+      title,
     },
   });
   res.json(client);

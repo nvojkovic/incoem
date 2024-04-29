@@ -12,6 +12,7 @@ const IncomeContext = React.createContext({
   storeScenarios: (_: ScenarioSettings[]) => {},
   addScenario: (_: ScenarioSettings) => {},
   setPerson: (_: Person) => {},
+  setTitle: (_: string) => {},
 });
 
 const debounce = (callback: Function, wait: number) => {
@@ -24,7 +25,7 @@ const debounce = (callback: Function, wait: number) => {
   };
 };
 
-const updateRemote = debounce(updateData, 1000);
+const updateRemote = debounce(updateData, 500);
 
 interface IncomeProviderProps {
   initialData: Client;
@@ -46,7 +47,7 @@ export const IncomeProvider = ({
     console.log("setting data", data.data.incomes);
     setLocal((data) => {
       const result = fn(data);
-      updateRemote(result.id, result.data);
+      updateRemote(result.id, result.title, result.data);
       return result;
     });
   };
@@ -57,6 +58,13 @@ export const IncomeProvider = ({
         ...data.data,
         incomes,
       },
+    }));
+  };
+
+  const setTitle = (title: string) => {
+    setData((data) => ({
+      ...data,
+      title,
     }));
   };
 
@@ -124,6 +132,7 @@ export const IncomeProvider = ({
     storeScenarios,
     addScenario,
     setPerson,
+    setTitle,
   };
 
   return (

@@ -1,18 +1,19 @@
+import { useInfo } from "../useData";
 import Navbar from "./Navbar";
 
 const Layout = ({
   page,
   children,
-  household,
   hidden,
   onTabChange,
 }: {
   children: React.ReactNode;
   page: string;
   hidden?: boolean;
-  household?: string;
   onTabChange: any;
 }) => {
+  const { data } = useInfo();
+  const household = data?.title;
   return (
     <div>
       <div className="sticky top-0 bg-white mb-6 z-[500]">

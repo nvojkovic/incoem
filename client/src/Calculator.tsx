@@ -54,7 +54,6 @@ function Calculator() {
         page={tab}
         hidden={fullScreen}
         onTabChange={(tab: any) => setTab(tab)}
-        household={data.title}
       >
         <div>
           <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">

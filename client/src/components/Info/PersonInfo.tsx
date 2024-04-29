@@ -7,6 +7,12 @@ interface Props {
   subtitle: string;
   person: Person;
 }
+function calculateAge(birthday: Date) {
+  // birthday is a date
+  var ageDifMs = Date.now() - (birthday as any);
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
 
 const PersonInfo = ({ title, person }: Props) => {
   const { setPerson } = useInfo();
@@ -31,6 +37,14 @@ const PersonInfo = ({ title, person }: Props) => {
             value={person.birthday}
             setValue={(birthday) => setPerson({ ...person, birthday })}
           />
+          <Input
+            label="Age"
+            subtype="text"
+            size="lg"
+            value={calculateAge(new Date(person.birthday))}
+            setValue={(_) => {}}
+            disabled
+          />
         </div>
       </div>
     </Section>
@@ -38,7 +52,7 @@ const PersonInfo = ({ title, person }: Props) => {
 };
 
 export const PeopleInfo = () => {
-  const { data } = useInfo();
+  const { data, setTitle } = useInfo();
 
   return (
     <div className="flex gap-6">
@@ -50,6 +64,23 @@ export const PeopleInfo = () => {
           person={person}
         />
       ))}
+
+      <Section>
+        <div className="">
+          <div className="flex flex-col pb-6 border-b border-[#EAECF0]">
+            <div className="font-semibold text-lg">Household</div>
+          </div>
+          <div className="flex flex-col gap-4 mt-6">
+            <Input
+              label="First Name"
+              value={data.title}
+              size="lg"
+              subtype="text"
+              setValue={(name) => setTitle(name)}
+            />
+          </div>
+        </div>
+      </Section>
     </div>
   );
 };
