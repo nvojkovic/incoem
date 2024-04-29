@@ -25,15 +25,10 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 import SortableItem from "./Sortable/SortableItem";
+import { useInfo } from "../useData";
 
 interface Props {
   defaultOpen?: boolean;
-  incomes: Income[];
-  people: Person[];
-  removeIncome: (index: number) => void;
-  setIncome: (index: number, income: Income) => void;
-  updateIncomes: (incomes: Income[]) => void;
-  addIncome: (income: Income) => void;
 }
 
 const incomeComponents = (
@@ -98,16 +93,11 @@ const incomeComponents = (
     );
 };
 
-const IncomeSection = ({
-  defaultOpen = false,
-  incomes,
-  removeIncome,
-  people,
-  setIncome,
-  addIncome,
-  updateIncomes,
-}: Props) => {
+const IncomeSection = ({ defaultOpen = false }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
+  const { data, removeIncome, setIncome, updateIncomes } = useInfo();
+  const incomes = data.data.incomes;
+  const people = data.data.people;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -132,11 +122,7 @@ const IncomeSection = ({
         <div className="flex gap-6 items-center w-full justify-between">
           <div>Income information</div>
           <div className="w-36 mr">
-            <AddIncome
-              addIncome={addIncome}
-              people={people}
-              incomes={incomes}
-            />
+            <AddIncome />
           </div>
         </div>
       }

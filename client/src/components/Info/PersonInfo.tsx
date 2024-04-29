@@ -1,3 +1,4 @@
+import { useInfo } from "../../useData";
 import Input from "../Inputs/Input";
 import Section from "../Section";
 
@@ -5,10 +6,10 @@ interface Props {
   title: string;
   subtitle: string;
   person: Person;
-  setPerson: (person: Person) => void;
 }
 
-const PersonInfo = ({ title, person, setPerson }: Props) => {
+const PersonInfo = ({ title, person }: Props) => {
+  const { setPerson } = useInfo();
   return (
     <Section>
       <div className="">
@@ -33,6 +34,23 @@ const PersonInfo = ({ title, person, setPerson }: Props) => {
         </div>
       </div>
     </Section>
+  );
+};
+
+export const PeopleInfo = () => {
+  const { data } = useInfo();
+
+  return (
+    <div className="flex gap-6">
+      {data.data.people.map((person, i) => (
+        <PersonInfo
+          title={`Person ${i + 1}`}
+          key={i}
+          subtitle="Details about how this works"
+          person={person}
+        />
+      ))}
+    </div>
   );
 };
 

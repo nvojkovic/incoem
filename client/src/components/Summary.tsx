@@ -16,19 +16,13 @@ import {
 
 import SortableItem from "./Sortable/SortableItem";
 import ScenarioTab from "./ScenarioTab";
+import { useInfo } from "../useData";
 const Summary = ({
-  data,
-  clientId,
-  store,
-  scenarios,
   settings,
   setSettings,
   hideNav,
 }: {
-  data: IncomeMapData;
-  clientId: any;
-  scenarios: ScenarioSettings[];
-  store: any;
+  // data: IncomeMapData;
   hideNav: any;
   settings: ScenarioSettings;
   setSettings: any;
@@ -45,6 +39,9 @@ const Summary = ({
     id: 0,
     type: "none",
   });
+
+  const { data, storeScenarios } = useInfo();
+  const scenarios = data.scenarios;
 
   const openFullScreen = () => {
     var elem = document.documentElement as any;
@@ -78,7 +75,7 @@ const Summary = ({
     const oldIndex = scenarios.findIndex((s) => s.id === active.id);
     const newIndex = scenarios.findIndex((s) => s.id === over.id);
     if (oldIndex !== newIndex) {
-      store(arrayMove([...scenarios], oldIndex, newIndex));
+      storeScenarios(arrayMove([...scenarios], oldIndex, newIndex));
     }
   };
 
@@ -138,7 +135,7 @@ const Summary = ({
                       setActive={() => setTab(sc.id)}
                       id={i}
                       store={(name: string) => {
-                        store(
+                        storeScenarios(
                           scenarios.map((s, j) =>
                             i == j ? { ...s, name } : s,
                           ),
@@ -154,13 +151,16 @@ const Summary = ({
 
         {tab == -1 ? (
           <Live
-            data={data}
+            data={data.data}
             settings={settings}
             setSettings={setSettings}
             fullScreen={fullScreen}
-            clientId={clientId}
+            clientId={data.id}
             addScenario={(data: any) => {
-              store([...scenarios, { ...data, id: scenarios.length + 1 }]);
+              storeScenarios([
+                ...scenarios,
+                { ...data, id: scenarios.length + 1 },
+              ]);
             }}
             changeFullScreen={() =>
               fullScreen ? closeFullscreen() : openFullScreen()
@@ -172,13 +172,13 @@ const Summary = ({
           />
         ) : (
           <ResultTable
-            clientId={clientId}
+            clientId={data.id}
             settings={scenarios.find(({ id }) => id === tab) as any}
             fullScreen={fullScreen}
             id={tab}
             removeScenario={() => {
               const newScenarios = scenarios.filter((sc) => sc.id != tab);
-              store(newScenarios);
+              storeScenarios(newScenarios);
               setTab(-1);
             }}
             data={scenarios.find(({ id }) => id === tab)?.data as any}

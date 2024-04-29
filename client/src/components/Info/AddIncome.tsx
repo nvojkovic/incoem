@@ -3,14 +3,14 @@ import { newIncome } from "../../createIncome";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import { useInfo } from "../../useData";
 
-interface AddIncomeProps {
-  addIncome: (income: Income) => void;
-  people: Person[];
-  incomes: Income[];
-}
+interface AddIncomeProps {}
 
-const AddIncome = ({ addIncome, people, incomes }: AddIncomeProps) => {
+const AddIncome = ({}: AddIncomeProps) => {
+  const { addIncome, data } = useInfo();
+  const people = data.data.people;
+  const incomes = data.data.incomes;
   const addItem = useMemo(() => {
     return (type: string, title: string, person: Person) => (
       <div className="px-1 py-1" key={type + person.name}>
@@ -35,13 +35,6 @@ const AddIncome = ({ addIncome, people, incomes }: AddIncomeProps) => {
       </div>
     );
   }, []);
-  console.log(
-    incomes?.find(
-      (item) => item.personId === 0 && item.type === "social-security",
-    ),
-    incomes,
-    "test",
-  );
 
   return (
     <Button

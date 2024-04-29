@@ -88,7 +88,7 @@ const ResultTable = ({
             {name || " "}
           </div>
           <div className="hidden print:block"></div>
-          <div className="flex gap-5 ">
+          <div className="flex gap-5 items-end">
             {data.people.length > 1 &&
               data.people.map(
                 (person, i) =>
@@ -147,7 +147,7 @@ const ResultTable = ({
                 setValue={() => {}}
               />
             </div>
-            <div>
+            <div className="print:hidden">
               <Button type="secondary" onClick={changeFullScreen}>
                 <div className="flex gap-3">
                   <div className="flex items-center">
@@ -160,7 +160,7 @@ const ResultTable = ({
                 </div>
               </Button>
             </div>
-            <div>
+            <div className="print:hidden">
               <Button type="secondary" onClick={print}>
                 <div className="flex gap-2">
                   <PrinterIcon className="h-6 w-6" />
@@ -169,10 +169,12 @@ const ResultTable = ({
               </Button>
             </div>
             <div className="flex items-center print:hidden">
-              <TrashIcon
-                className="h-6 w-6 text-[#FF6C47] cursor-pointer "
-                onClick={() => setRemoveOpen(true)}
-              />
+              <Button type="secondary">
+                <TrashIcon
+                  className="h-6 w-6 text-[#FF6C47] cursor-pointer "
+                  onClick={() => setRemoveOpen(true)}
+                />
+              </Button>
               <Confirm
                 isOpen={removeOpen}
                 onClose={() => setRemoveOpen(false)}
