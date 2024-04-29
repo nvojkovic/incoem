@@ -39,7 +39,7 @@ export const createSubsctiption = async (req: Request, res: Response) => {
 
   const session = await cl.checkout.sessions.create({
     customer: customer.id,
-    payment_method_types: ["card", "us_bank_account", "paypal"],
+    payment_method_types: ["card", "us_bank_account"],
     line_items: [
       {
         price: "price_1OtrExCvn63ZLyAkvgIxNTAb",
@@ -47,6 +47,9 @@ export const createSubsctiption = async (req: Request, res: Response) => {
       },
     ],
     mode: "subscription",
+    subscription_data: {
+      trial_period_days: 14,
+    },
     success_url: process.env.APP_URL,
     cancel_url: process.env.APP_URL,
   });
@@ -107,7 +110,11 @@ export const stripeWebhook = async (req: Request, res: Response) => {
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
   let event: stripe.Event = payload;
   console.log("stripe webhook", payload, sig, endpointSecret);
-  if (event.type === "customer.subscription.updated") {
+  if (
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.deleted"
+  ) {
     console.log("customer.subscription.updated", event.data.object);
     const subscription = event.data.object as stripe.Subscription;
     const info = await prisma.userInfo.findFirst({

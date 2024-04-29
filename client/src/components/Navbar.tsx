@@ -41,7 +41,7 @@ const Navbar = ({
   // const { user } = useUser();
 
   return (
-    <div className="max-w-[1280px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
+    <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
       <div className=" flex justify-between items-center h bg-white w-full">
         <div className="flex items-center justify-start w-full">
           <Link to="/clients">
@@ -94,10 +94,11 @@ const Navbar = ({
                     {({ active }) => (
                       <Link to="/profile">
                         <button
-                          className={`${active
+                          className={`${
+                            active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Settings
                         </button>
@@ -109,8 +110,9 @@ const Navbar = ({
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? "bg-main-orange text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         onClick={async () => {
                           await Session.signOut();
                           navigate("/login");

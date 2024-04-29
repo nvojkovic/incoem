@@ -1,4 +1,9 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowsPointingInIcon,
+  ArrowsPointingOutIcon,
+  PrinterIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import Input from "./Inputs/Input";
@@ -6,6 +11,8 @@ import { splitDate } from "../utils";
 import Confirm from "./Confirm";
 import { useState } from "react";
 import StackedChart from "./Chart";
+import Button from "./Inputs/Button";
+import { Spinner } from "flowbite-react";
 
 const yearRange: (start: number, end: number) => number[] = (start, end) => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -16,7 +23,7 @@ const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const print = (a: number | string) => {
+const printNumber = (a: number | string) => {
   if (typeof a === "number") {
     return `${formatter.format(a)}`;
   }
@@ -25,16 +32,19 @@ const print = (a: number | string) => {
 
 const ResultTable = ({
   data,
+  clientId,
   settings,
   removeScenario,
   fullScreen,
   name,
   selectedYear,
+  changeFullScreen,
   setSelectedYear,
   setSelectedColumn,
   selectedColumn,
 }: {
   data: IncomeMapData;
+  clientId: any;
   settings: ScenarioSettings;
   removeScenario: any;
   name?: string;
@@ -43,18 +53,38 @@ const ResultTable = ({
   selectedYear: number;
   setSelectedYear: any;
   selectedColumn: SelectedColumn;
+  changeFullScreen: any;
   setSelectedColumn: any;
 }) => {
   if (!data) return null;
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [printing, setPrinting] = useState(false);
+
+  const print = async () => {
+    setPrinting(true);
+    let pdfFile;
+    pdfFile = await fetch(
+      import.meta.env.VITE_API_URL +
+        "print/client/pdf/" +
+        clientId +
+        "/" +
+        Math.max(settings.id, 0).toString(),
+    ).then((res) => res.json());
+    setPrinting(false);
+    window.open(
+      import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file,
+      "_blank",
+    );
+  };
+
   return (
     <div className="rounded-xl border-[#EAECF0] border">
       {name && (
         <div
           className={`flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32`}
         >
-          <div className="text-[#101828] font-semibold text-[18px] print:hidden">
+          <div className="text-[#101828] font-semibold text-[18px]">
             {name || " "}
           </div>
           <div className="hidden print:block"></div>
@@ -70,7 +100,7 @@ const ResultTable = ({
                         disabled
                         label={`${person.name}'s death`}
                         value={settings.deathYears[i]?.toString()}
-                        setValue={() => { }}
+                        setValue={() => {}}
                       />
                     </div>
                   ),
@@ -90,23 +120,23 @@ const ResultTable = ({
                         label={`${data.people[1 - i].name}' survivor SS age`}
                         tooltip={`Age when ${data.people[1 - i].name} starts receiving ${person.name}'s Social Security as a survivor`}
                         value={settings.deathYears[1 - i]?.toString()}
-                        setValue={() => { }}
+                        setValue={() => {}}
                       />
                     </div>
                   ),
               )}
-            <div className="w-36">
+            <div className="">
               <Input
                 label="Years"
                 subtype="number"
-                size="md"
+                size="xs"
                 vertical
                 disabled
                 value={settings.maxYearsShown?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
-            <div className="w-36">
+            <div className="">
               <Input
                 label="Inflation"
                 disabled
@@ -114,12 +144,33 @@ const ResultTable = ({
                 vertical
                 subtype="percent"
                 value={settings.inflation?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
-            <div className="flex items-center">
+            <div>
+              <Button type="secondary" onClick={changeFullScreen}>
+                <div className="flex gap-3">
+                  <div className="flex items-center">
+                    {fullScreen ? (
+                      <ArrowsPointingInIcon className="h-6 w-6" />
+                    ) : (
+                      <ArrowsPointingOutIcon className="h-6 w-6" />
+                    )}
+                  </div>
+                </div>
+              </Button>
+            </div>
+            <div>
+              <Button type="secondary" onClick={print}>
+                <div className="flex gap-2">
+                  <PrinterIcon className="h-6 w-6" />
+                  {printing && <Spinner className="h-5" />}
+                </div>
+              </Button>
+            </div>
+            <div className="flex items-center print:hidden">
               <TrashIcon
-                className="h-6 w-6 text-[#FF6C47] cursor-pointer print:hidden"
+                className="h-6 w-6 text-[#FF6C47] cursor-pointer "
                 onClick={() => setRemoveOpen(true)}
               />
               <Confirm
@@ -141,7 +192,7 @@ const ResultTable = ({
       )}
       <table className=" w-full">
         <thead
-          className={`text-xs  cursor-pointer bg-[#F9FAFB] text-[#475467] font-medium text-left sticky z-50 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+          className={`text-xs  cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
         >
           <td
             className="px-6 py-3"
@@ -168,7 +219,7 @@ const ResultTable = ({
               className="px-6 py-3"
               onClick={() =>
                 selectedColumn.type === "income" &&
-                  selectedColumn.id == income.id
+                selectedColumn.id == income.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn({ type: "income", id: income.id })
               }
@@ -220,7 +271,7 @@ const ResultTable = ({
                   <td
                     className={`px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
                   >
-                    {print(
+                    {printNumber(
                       calculate({
                         people: data.people,
                         income,
@@ -236,7 +287,7 @@ const ResultTable = ({
                   </td>
                 ))}
                 <td
-                  className={`font-medium px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
+                  className={`font-medium px-6 py-[0.6rem] text-black ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
                 >
                   {formatter.format(
                     data?.incomes

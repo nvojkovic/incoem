@@ -68,7 +68,10 @@ const Settings = () => {
                   <Button
                     type="secondary"
                     onClick={async () => {
-                      if (user?.info?.subsciptionStatus === "active") {
+                      if (
+                        user?.info?.subsciptionStatus === "active" ||
+                        user?.info?.subsciptionStatus === "trialing"
+                      ) {
                         const d = await fetch(
                           import.meta.env.VITE_API_URL + "stripeRedirect",
                         ).then((a) => a.json());

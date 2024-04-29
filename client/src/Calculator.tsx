@@ -88,7 +88,7 @@ function Calculator() {
       household={data.title}
     >
       <div>
-        <div className="mt-6 max-w-[1280px] m-auto mb-32 px-10">
+        <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
           {tab == "data" ? (
             <div className="flex flex-col gap-6">
               <MapSection

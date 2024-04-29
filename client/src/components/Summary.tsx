@@ -1,8 +1,6 @@
 import { useLayoutEffect, useState } from "react";
 import Live from "./Live";
 import ResultTable from "./ResultTable";
-import save from "../assets/save.png";
-import Button from "./Inputs/Button";
 import {
   DndContext,
   closestCenter,
@@ -16,16 +14,8 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 
-import {
-  ArrowsPointingOutIcon,
-  PrinterIcon,
-} from "@heroicons/react/24/outline";
-import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
-import ModalInput from "./Inputs/ModalInput";
-import Input from "./Inputs/Input";
 import SortableItem from "./Sortable/SortableItem";
 import ScenarioTab from "./ScenarioTab";
-import { Spinner } from "flowbite-react";
 const Summary = ({
   data,
   clientId,
@@ -51,7 +41,6 @@ const Summary = ({
     }),
   );
   const [tab, setTab] = useState(-1);
-  const [saveOpen, setSaveOpen] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
     id: 0,
     type: "none",
@@ -106,132 +95,18 @@ const Summary = ({
   }, []);
 
   const [selectedYear, setSelectedYear] = useState(0);
-  const [printing, setPrinting] = useState(false);
-  const print = async () => {
-    setPrinting(true);
-    let pdfFile;
-    if (tab === -1) {
-      pdfFile = await fetch(
-        import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        clientId +
-        "/?data=" +
-        JSON.stringify(settings),
-      ).then((res) => res.json());
-    } else {
-      pdfFile = await fetch(
-        import.meta.env.VITE_API_URL +
-        "print/client/pdf/" +
-        clientId +
-        "/" +
-        Math.max(tab, 0).toString(),
-      ).then((res) => res.json());
-    }
-    setPrinting(false);
-    window.open(
-      import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file,
-      "_blank",
-    );
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <div className="font-semibold text-[30px] print:hidden">
-          Income Map Overview
-        </div>
         <div className="font-semibold text-[30px] hidden print:block">
           {scenarios.find((_, i) => i == tab)?.name}
-        </div>
-        <div className="flex gap-3 print:hidden">
-          <div>
-            <Button type="secondary" onClick={() => print()}>
-              <div className="flex gap-2">
-                <PrinterIcon className="h-5 w-5" />
-                <div className="text-sm">Print</div>
-                {printing && <Spinner className="h-5" />}
-              </div>
-            </Button>
-          </div>
-          <ModalInput
-            isOpen={saveOpen}
-            onClose={() => {
-              setSaveOpen(false);
-              setSettings({
-                ...settings,
-                name: "",
-              });
-            }}
-            onConfirm={() => {
-              setSaveOpen(false);
-              setSettings({
-                ...settings,
-                name: "",
-              });
-              store([
-                ...scenarios,
-                { ...settings, id: scenarios.length + 1, data: { ...data } },
-              ]);
-            }}
-          >
-            <div className="py-3">
-              <Input
-                label="Scenario name"
-                value={settings.name}
-                setValue={(name) => setSettings({ ...settings, name })}
-                onKeyDown={(e: any) => {
-                  if (e.key === "Enter") {
-                    setSaveOpen(false);
-                    setSettings({
-                      ...settings,
-                      name: "",
-                    });
-                    store([
-                      ...scenarios,
-                      {
-                        ...settings,
-                        id: scenarios.length + 1,
-                        data: { ...data },
-                      },
-                    ]);
-                  }
-                }}
-                size="full"
-                vertical
-              />
-            </div>
-          </ModalInput>
-          <div>
-            <Button type="secondary" onClick={() => setSaveOpen(true)}>
-              <div className="flex gap-2">
-                <img src={save} className="w-5 h-5" />
-                <div className="text-sm">Save scenario</div>
-              </div>
-            </Button>
-          </div>
-          <div>
-            <Button
-              type="secondary"
-              onClick={fullScreen ? closeFullscreen : openFullScreen}
-            >
-              <div className="flex gap-3">
-                <div className="flex items-center">
-                  {fullScreen ? (
-                    <ArrowsPointingInIcon className="h-5 w-5" />
-                  ) : (
-                    <ArrowsPointingOutIcon className="h-5 w-5" />
-                  )}
-                </div>
-                <div className="text-sm">Presentation mode</div>
-              </div>
-            </Button>
-          </div>
         </div>
       </div>
       <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
         <div
-          className={`border-b border-[#EAECF0] mb-10 flex print:hidden sticky z-50 ${fullScreen ? "top-[0px]" : "top-[72px]"
-            } bg-white`}
+          className={`flex print:hidden sticky z-50 ${
+            fullScreen ? "top-[0px]" : "top-[72px]"
+          } bg-white`}
         >
           <DndContext
             sensors={sensors}
@@ -249,7 +124,7 @@ const Summary = ({
                   active={tab == -1}
                   setActive={() => setTab(-1)}
                   live
-                  store={() => { }}
+                  store={() => {}}
                 />
                 {scenarios.map((sc, i) => (
                   <SortableItem
@@ -283,6 +158,13 @@ const Summary = ({
             settings={settings}
             setSettings={setSettings}
             fullScreen={fullScreen}
+            clientId={clientId}
+            addScenario={(data: any) => {
+              store([...scenarios, { ...data, id: scenarios.length + 1 }]);
+            }}
+            changeFullScreen={() =>
+              fullScreen ? closeFullscreen() : openFullScreen()
+            }
             selectedYear={selectedYear}
             setSelectedYear={setSelectedYear}
             selectedColumn={selectedColumn}
@@ -290,6 +172,7 @@ const Summary = ({
           />
         ) : (
           <ResultTable
+            clientId={clientId}
             settings={scenarios.find(({ id }) => id === tab) as any}
             fullScreen={fullScreen}
             id={tab}
@@ -302,6 +185,9 @@ const Summary = ({
             name={scenarios.find(({ id }) => id === tab)?.name}
             selectedYear={selectedYear}
             setSelectedYear={setSelectedYear}
+            changeFullScreen={() =>
+              fullScreen ? closeFullscreen() : openFullScreen()
+            }
             selectedColumn={selectedColumn}
             setSelectedColumn={setSelectedColumn}
           />
