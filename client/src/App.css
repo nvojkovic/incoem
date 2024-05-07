@@ -38,3 +38,18 @@ tr:last-of-type td:last-of-type {
   background-color: #f0f !important;
   display: none !important;
 }
+
+@media print {
+  .apexcharts-legend-marker:before {
+    content: "\25CF";
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+  .apexcharts-legend-marker {
+    padding-right: 1rem;
+    border-radius: 0.55rem;
+    -webkit-print-color-adjust: exact;
+  }
+}
