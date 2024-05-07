@@ -45,10 +45,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        clientId +
-        "/?data=" +
-        JSON.stringify(settings),
+      "print/client/pdf-live/" +
+      clientId +
+      "/?data=" +
+      JSON.stringify(settings),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -58,7 +58,7 @@ const Live = ({
   };
 
   return (
-    <div className="rounded-xl border-[#EAECF0] border">
+    <div className="rounded-xl border-[#EAECF0] border print:border-transparent">
       <div
         className={`flex items-center h-32 sticky ${fullScreen ? "top-[45px]" : "top-[116px]"} z-[5000] bg-white`}
       >
@@ -258,7 +258,7 @@ const Live = ({
         changeFullScreen={changeFullScreen}
         settings={settings}
         data={data}
-        removeScenario={() => {}}
+        removeScenario={() => { }}
         fullScreen={fullScreen}
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}

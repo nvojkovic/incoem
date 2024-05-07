@@ -40,16 +40,14 @@ tr:last-of-type td:last-of-type {
 }
 
 @media print {
-  .apexcharts-legend-marker:before {
-    content: "\25CF";
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-  }
   .apexcharts-legend-marker {
-    padding-right: 1rem;
-    border-radius: 0.55rem;
+    height: 16px !important;
+    width: 12px !important;
+    left: 0px !important;
+    top: 4px !important;
+    border-width: 0px;
+    border-color: rgb(255, 255, 255);
+    border-radius: 12px;
     -webkit-print-color-adjust: exact;
   }
 }

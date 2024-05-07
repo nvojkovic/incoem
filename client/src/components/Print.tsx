@@ -10,13 +10,9 @@ const Print = ({ client, scenario }: PrintProps) => {
   return (
     <div className="mx-auto mt-10 px-10">
       <div className="mb-10 flex justify-between">
-        <div className="font-semibold text-3xl">{client.title}</div>
+        <div className="font-semibold text-[18px]">{client.title}</div>
         <div className="flex gap-6 items-center">
-          <div>
-            <div className="font-semibold text-2xl">
-              {client?.userdata.firmName}
-            </div>
-          </div>
+          <div></div>
           <div>
             <img
               src={
@@ -34,14 +30,14 @@ const Print = ({ client, scenario }: PrintProps) => {
         <ResultTable
           clientId={client.id}
           settings={scenario}
-          changeFullScreen={() => {}}
+          changeFullScreen={() => { }}
           fullScreen={true}
           id={scenario.id}
-          removeScenario={() => {}}
+          removeScenario={() => { }}
           selectedYear={0}
-          setSelectedYear={() => {}}
+          setSelectedYear={() => { }}
           selectedColumn={{ id: 0, type: "none" }}
-          setSelectedColumn={() => {}}
+          setSelectedColumn={() => { }}
           data={scenario.data as any}
           name={scenario.name}
         />

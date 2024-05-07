@@ -67,10 +67,10 @@ const ResultTable = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf/" +
-        clientId +
-        "/" +
-        Math.max(settings.id, 0).toString(),
+      "print/client/pdf/" +
+      clientId +
+      "/" +
+      Math.max(settings.id, 0).toString(),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -80,7 +80,7 @@ const ResultTable = ({
   };
 
   return (
-    <div className="rounded-xl border-[#EAECF0] border">
+    <div className="rounded-xl border-[#EAECF0] border print:border-transparent">
       {name && (
         <div
           className={`flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32`}
@@ -101,12 +101,12 @@ const ResultTable = ({
                         disabled
                         label={`${person.name}'s death`}
                         value={settings.deathYears[i]?.toString()}
-                        setValue={() => {}}
+                        setValue={() => { }}
                       />
                     </div>
                   ),
               )}
-            {data.people.length > 1 &&
+            {/*data.people.length > 1 &&
               data.people.map(
                 (person, i) =>
                   settings.whoDies == i &&
@@ -121,11 +121,11 @@ const ResultTable = ({
                         label={`${data.people[1 - i].name}' survivor SS age`}
                         tooltip={`Age when ${data.people[1 - i].name} starts receiving ${person.name}'s Social Security as a survivor`}
                         value={settings.deathYears[1 - i]?.toString()}
-                        setValue={() => {}}
+                        setValue={() => { }}
                       />
                     </div>
                   ),
-              )}
+              )*/}
             <div className="">
               <Input
                 label="Years"
@@ -134,7 +134,7 @@ const ResultTable = ({
                 vertical
                 disabled
                 value={settings.maxYearsShown?.toString()}
-                setValue={() => {}}
+                setValue={() => { }}
               />
             </div>
             <div className="print:mr-[-20px]">
@@ -145,7 +145,7 @@ const ResultTable = ({
                 vertical
                 subtype="percent"
                 value={settings.inflation?.toString()}
-                setValue={() => {}}
+                setValue={() => { }}
               />
             </div>
             <div className="print:hidden">
@@ -195,7 +195,7 @@ const ResultTable = ({
       )}
       <table className=" w-full">
         <thead
-          className={`text-xs  cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+          className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-b-black print:border-4 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
         >
           <td
             className="px-6 py-3"
@@ -222,7 +222,7 @@ const ResultTable = ({
               className="px-6 py-3"
               onClick={() =>
                 selectedColumn.type === "income" &&
-                selectedColumn.id == income.id
+                  selectedColumn.id == income.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn({ type: "income", id: income.id })
               }
