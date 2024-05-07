@@ -24,10 +24,11 @@ app.get("/", async (req, res) => {
     executablePath: "/usr/bin/google-chrome",
     ignoreDefaultArgs: ["--disable-extensions"],
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    defaultViewport: null,
   });
   console.log("url", url);
   const page = await browser.newPage();
-  await page.setViewport({ width: 1920, height: 1080 });
+  // await page.setViewport({ width: 1920, height: 1080 });
   await page.goto(url as any, {
     waitUntil: ["networkidle0", "load", "domcontentloaded"],
   });
