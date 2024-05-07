@@ -39,13 +39,7 @@ const StackedChart = ({ years, incomes }: any) => {
   };
 
   return (
-    <Chart
-      options={options as any}
-      series={incomes}
-      type="area"
-      height={500}
-      width={1100}
-    />
+    <Chart options={options as any} series={incomes} type="area" height={500} />
   );
 };
 

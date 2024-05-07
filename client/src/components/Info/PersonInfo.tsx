@@ -42,7 +42,7 @@ const PersonInfo = ({ title, person }: Props) => {
             subtype="text"
             size="lg"
             value={calculateAge(new Date(person.birthday))}
-            setValue={(_) => {}}
+            setValue={(_) => { }}
             disabled
           />
         </div>
@@ -72,7 +72,7 @@ export const PeopleInfo = () => {
           </div>
           <div className="flex flex-col gap-4 mt-6">
             <Input
-              label="First Name"
+              label="Household Name"
               value={data.title}
               size="lg"
               subtype="text"

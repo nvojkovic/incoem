@@ -6,7 +6,7 @@ export const newEmploymentIncome = (): any => ({
   personId: 0,
   annualIncome: null,
   startAge: null,
-  firstYearProratePercent: null,
+  firstYearProratePercent: 100,
   yearlyIncreasePercent: null,
   retirementAgeYear: null,
   retirementAgeMonth: null,
