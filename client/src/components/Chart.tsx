@@ -10,6 +10,11 @@ const StackedChart = ({ years, incomes }: any) => {
     chart: {
       type: "area",
       stacked: true,
+      events: {
+        mounted: (chart: any) => {
+          chart.windowResizeHandler();
+        },
+      },
     },
     plotOptions: {
       bar: {
