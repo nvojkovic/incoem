@@ -41,10 +41,10 @@ tr:last-of-type td:last-of-type {
 
 @media print {
   .apexcharts-legend-marker {
-    height: 16px !important;
+    height: 12px !important;
     width: 12px !important;
     left: 0px !important;
-    top: 4px !important;
+    top: 2px !important;
     border-width: 0px;
     border-color: rgb(255, 255, 255);
     border-radius: 12px;
