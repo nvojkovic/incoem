@@ -80,7 +80,7 @@ const ResultTable = ({
   };
 
   return (
-    <div className="rounded-xl border-[#EAECF0] border print:border-transparent">
+    <div className="rounded-xl border-[#EAECF0] border print:border-0">
       {name && (
         <div
           className={`flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32`}
@@ -195,7 +195,7 @@ const ResultTable = ({
       )}
       <table className=" w-full">
         <thead
-          className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-black print:border-4 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+          className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-black print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
         >
           <td
             className="px-6 py-3"

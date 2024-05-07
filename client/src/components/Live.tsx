@@ -58,7 +58,7 @@ const Live = ({
   };
 
   return (
-    <div className="rounded-xl border-[#EAECF0] border print:border-transparent">
+    <div className="rounded-xl border-[#EAECF0] border print:border-0">
       <div
         className={`flex items-center h-32 sticky ${fullScreen ? "top-[45px]" : "top-[116px]"} z-[5000] bg-white`}
       >

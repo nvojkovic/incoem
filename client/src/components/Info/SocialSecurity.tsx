@@ -74,21 +74,21 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 }
               />
               {!pension.alreadyReceiving && (
-                <MonthPicker
-                  label="Start age month"
-                  selected={pension.startAgeMonth}
-                  setSelected={(name) =>
-                    setIncome({ ...pension, startAgeMonth: name.id })
-                  }
-                />
-              )}
-              {!pension.alreadyReceiving && (
                 <Input
                   label="Start age year"
                   subtype="number"
                   value={pension.startAgeYear}
                   setValue={(name) =>
                     setIncome({ ...pension, startAgeYear: name })
+                  }
+                />
+              )}
+              {!pension.alreadyReceiving && (
+                <MonthPicker
+                  label="Start age month"
+                  selected={pension.startAgeMonth}
+                  setSelected={(name) =>
+                    setIncome({ ...pension, startAgeMonth: name.id })
                   }
                 />
               )}
