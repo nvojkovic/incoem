@@ -54,7 +54,7 @@ const Input = ({
         value={value}
         decimalsLimit={2}
         disabled={disabled}
-        className={`${basic} ${size == "sm" && "w-full"}`}
+        className={`${basic} ${size == "sm" && "w-full"} ${calcSize(size)}`}
         onValueChange={(_, __, values) => setValue(values?.float)}
         {...props}
       />
@@ -150,17 +150,21 @@ const Input = ({
         )}
       </div>
       {tooltip ? (
-        <Tooltip
-          content={tooltip}
-          placement="right-end"
-          style="light"
-        // className="border-black border"
-        >
-          <div className="relative cursor-pointer">
-            <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />
-            {input}
-          </div>
-        </Tooltip>
+        <div className={calcSize(size)}>
+          <Tooltip
+            content={tooltip}
+            theme={{ target: "" }}
+            placement="right-end"
+            style="light"
+
+          // className="border-black border"
+          >
+            <div className="relative cursor-pointer">
+              <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />
+              {input}
+            </div>
+          </Tooltip>
+        </div>
       ) : (
         input
       )}

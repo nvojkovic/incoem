@@ -1,6 +1,7 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import MonthPicker from "../Inputs/MonthPicker";
+import { calculateAge } from "./PersonInfo";
 
 interface Props {
   income: SocialSecurityIncome;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
+  const canRecieve =
+    calculateAge(new Date(people[pension.personId].birthday)) >= 62;
   return (
     <>
       <div className="flex-grow">
@@ -72,8 +75,10 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 label="Already receiving"
                 subtype="toggle"
                 size="lg"
+                tooltip="Person must be at least 62 years old"
                 value={pension.alreadyReceiving}
                 setValue={(name) =>
+                  canRecieve &&
                   setIncome({ ...pension, alreadyReceiving: name })
                 }
               />

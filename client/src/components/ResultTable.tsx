@@ -67,10 +67,10 @@ const ResultTable = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf/" +
-      clientId +
-      "/" +
-      Math.max(settings.id, 0).toString(),
+        "print/client/pdf/" +
+        clientId +
+        "/" +
+        Math.max(settings.id, 0).toString(),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -94,14 +94,14 @@ const ResultTable = ({
               data.people.map(
                 (person, i) =>
                   settings.whoDies == i && (
-                    <div className="w-36">
+                    <div className="w-36" key={person.id}>
                       <Input
                         subtype="number"
                         vertical
                         disabled
                         label={`${person.name}'s death`}
                         value={settings.deathYears[i]?.toString()}
-                        setValue={() => { }}
+                        setValue={() => {}}
                       />
                     </div>
                   ),
@@ -134,7 +134,7 @@ const ResultTable = ({
                 vertical
                 disabled
                 value={settings.maxYearsShown?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
             <div className="print:mr-[-20px]">
@@ -145,7 +145,7 @@ const ResultTable = ({
                 vertical
                 subtype="percent"
                 value={settings.inflation?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
             <div className="print:hidden">
@@ -222,7 +222,7 @@ const ResultTable = ({
               className="px-6 py-3"
               onClick={() =>
                 selectedColumn.type === "income" &&
-                  selectedColumn.id == income.id
+                selectedColumn.id == income.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn({ type: "income", id: income.id })
               }

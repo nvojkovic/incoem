@@ -7,7 +7,7 @@ interface Props {
   subtitle: string;
   person: Person;
 }
-function calculateAge(birthday: Date) {
+export function calculateAge(birthday: Date) {
   // birthday is a date
   var ageDifMs = Date.now() - (birthday as any);
   var ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -42,7 +42,7 @@ const PersonInfo = ({ title, person }: Props) => {
             subtype="text"
             size="lg"
             value={calculateAge(new Date(person.birthday))}
-            setValue={(_) => { }}
+            setValue={(_) => {}}
             disabled
           />
         </div>

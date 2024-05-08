@@ -45,10 +45,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf-live/" +
-      clientId +
-      "/?data=" +
-      JSON.stringify({ ...settings, data }),
+        "print/client/pdf-live/" +
+        clientId +
+        "/?data=" +
+        JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -81,6 +81,7 @@ const Live = ({
                   {data.people.map((person, i) => (
                     <WhoDies
                       active={settings.whoDies == i}
+                      key={person.id}
                       setWhoDies={(i: number) =>
                         setSettings({
                           ...settings,
@@ -99,7 +100,7 @@ const Live = ({
             <div className="flex gap-5">
               {data.people.length > 1 &&
                 data.people.map((person, i) => (
-                  <div className="w-36">
+                  <div className="w-36" key={person.id}>
                     <Input
                       subtype="number"
                       vertical
@@ -258,7 +259,7 @@ const Live = ({
         changeFullScreen={changeFullScreen}
         settings={settings}
         data={data}
-        removeScenario={() => { }}
+        removeScenario={() => {}}
         fullScreen={fullScreen}
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
