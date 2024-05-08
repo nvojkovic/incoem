@@ -118,7 +118,7 @@ export const calculateOwnSocialSecurity = (
 export const calculateSurvivorSocialSecurity = (
   info: CalculationInfo<SocialSecurityIncome>,
 ) => {
-  const { income, people, currentYear, startYear, deathYears } = info;
+  const { income, people, currentYear, deathYears } = info;
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
   let deathYear = deathYears[income.personId];
