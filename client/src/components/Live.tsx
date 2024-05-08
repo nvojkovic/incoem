@@ -48,7 +48,7 @@ const Live = ({
       "print/client/pdf-live/" +
       clientId +
       "/?data=" +
-      JSON.stringify(settings),
+      JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
