@@ -25,7 +25,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               )}
               <Select
                 options={[
-                  { name: "Manual", id: "Manual" },
+                  { name: "Manual", id: "manual" },
                   { name: "PIA", id: "pia" },
                 ]}
                 selected={{
