@@ -29,6 +29,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="Annual Income"
         subtype="money"
+        size="lg"
         value={income.annualIncome}
         setValue={(name) => setIncome({ ...income, annualIncome: name })}
         tooltip="The amount of income earned annually."
@@ -36,6 +37,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="Yearly increase"
         subtype="percent"
+        size="lg"
         value={income.yearlyIncreasePercent}
         setValue={(name) =>
           setIncome({ ...income, yearlyIncreasePercent: name })
@@ -45,6 +47,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="Start Age"
         subtype="number"
+        size="lg"
         value={income.startAge}
         setValue={(name) => setIncome({ ...income, startAge: name })}
         tooltip="The age at which the person starts earning income."
@@ -52,6 +55,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="First-Year Prorate"
         subtype="percent"
+        size="lg"
         value={income.firstYearProratePercent}
         setValue={(name) =>
           setIncome({ ...income, firstYearProratePercent: name })
@@ -61,6 +65,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="Retirement Age"
         subtype="text"
+        size="lg"
         value={income.retirementAgeYear}
         setValue={(name) => setIncome({ ...income, retirementAgeYear: name })}
         tooltip="The age at which the person retires."

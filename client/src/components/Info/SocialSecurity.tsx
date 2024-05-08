@@ -41,6 +41,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 <Input
                   label="Monthly PIA"
                   subtype="money"
+                  size="lg"
                   value={pension.pia}
                   setValue={(name) => setIncome({ ...pension, pia: name })}
                   tooltip="Primary Insurance Amount"
@@ -50,6 +51,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 <Input
                   label="Annual amount"
                   subtype="money"
+                  size="lg"
                   value={pension.annualAmount}
                   tooltip="Annual amount"
                   setValue={(name) =>
@@ -60,6 +62,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               <Input
                 label="COLA"
                 subtype="percent"
+                size="lg"
                 tooltip="Cost of Living Adjustment"
                 value={pension.cola}
                 setValue={(name) => setIncome({ ...pension, cola: name })}
@@ -68,6 +71,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               <Input
                 label="Already receiving"
                 subtype="toggle"
+                size="lg"
                 value={pension.alreadyReceiving}
                 setValue={(name) =>
                   setIncome({ ...pension, alreadyReceiving: name })
@@ -77,6 +81,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 <Input
                   label="Start age year"
                   subtype="number"
+                  size="lg"
                   value={pension.startAgeYear}
                   setValue={(name) =>
                     setIncome({ ...pension, startAgeYear: name })

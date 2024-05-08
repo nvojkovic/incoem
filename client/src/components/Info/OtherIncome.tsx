@@ -37,6 +37,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         <Input
           label="Income amount"
           subtype="money"
+          size="lg"
           value={pension.amount}
           setValue={(name) => setIncome({ ...pension, amount: name })}
         />
@@ -56,6 +57,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         />
         <Input
           label="Start year"
+          size="lg"
           subtype="number"
           tooltip="Year when the income starts"
           value={pension.startYear}
@@ -64,6 +66,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         <Input
           label="End year"
           subtype="number"
+          size="lg"
           tooltip="Year when the income ends"
           value={pension.endYear}
           setValue={(name) => setIncome({ ...pension, endYear: name })}
@@ -71,6 +74,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         <Input
           label="Yearly increase"
           subtype="percent"
+          size="lg"
           tooltip="Yearly increase in the income amount"
           value={pension.yearlyIncreasePercent}
           setValue={(name) =>
@@ -80,6 +84,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         {people.length > 1 && pension.personId != -1 && (
           <Input
             label="Survivor"
+            size="lg"
             subtype="percent"
             tooltip="Percentage of the income that the survivor will receive"
             value={pension.survivorPercent}
@@ -91,6 +96,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         <Input
           label="First-Year Prorate"
           subtype="percent"
+          size="lg"
           tooltip="Percentage of the income you will receive in the first year"
           value={pension.firstYearProRatePercent}
           setValue={(name) =>

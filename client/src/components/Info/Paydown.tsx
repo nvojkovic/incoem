@@ -45,6 +45,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
       <Input
         label="Start Amount"
         subtype="money"
+        size="lg"
         value={paydown.total}
         tooltip="The total amount of the paydown"
         setValue={(name) => setIncome({ ...paydown, total: name })}
@@ -52,6 +53,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
       <Input
         label="Interest Rate"
         subtype="percent"
+        size="lg"
         tooltip="The interest rate of the paydown"
         value={paydown.interestRate}
         setValue={(name) => setIncome({ ...paydown, interestRate: name })}
@@ -71,6 +73,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
       <Input
         label="Start Year"
         subtype="number"
+        size="lg"
         tooltip="The year the paydown starts"
         value={paydown.startYear}
         setValue={(name) => setIncome({ ...paydown, startYear: name })}
@@ -78,6 +81,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
       <Input
         label="Length (years)"
         subtype="number"
+        size="lg"
         tooltip="The length of the paydown"
         value={paydown.length}
         setValue={(name) =>
@@ -90,6 +94,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
       <Input
         label="Calculated Payment"
         subtype="money"
+        size="lg"
         disabled
         value={
           Number.isNaN(amount) || amount == Infinity ? 0 : amount.toFixed(2)

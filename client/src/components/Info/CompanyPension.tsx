@@ -30,6 +30,7 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
           <Input
             label="Annual amount"
             subtype="money"
+            size="lg"
             value={pension.annualAmount}
             setValue={(name) => setIncome({ ...pension, annualAmount: name })}
           />
@@ -37,6 +38,7 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             <Input
               label="Survivor"
               subtype="percent"
+              size="lg"
               value={pension.survivorPercent}
               setValue={(name) =>
                 setIncome({ ...pension, survivorPercent: name })
@@ -46,6 +48,7 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
           <Input
             label="Yearly increase"
             subtype="percent"
+            size="lg"
             value={pension.yearlyIncreasePercent}
             setValue={(name) =>
               setIncome({ ...pension, yearlyIncreasePercent: name })
@@ -54,12 +57,14 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
           <Input
             label="Start Age"
             subtype="number"
+            size="lg"
             value={pension.startAge}
             setValue={(name) => setIncome({ ...pension, startAge: name })}
           />
           <Input
             label="First-Year Prorate"
             subtype="percent"
+            size="lg"
             value={pension.firstYearProRatePercent}
             setValue={(name) =>
               setIncome({
