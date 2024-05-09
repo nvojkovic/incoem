@@ -89,9 +89,12 @@ export const calculateOwnSocialSecurity = (
       ownAmount = income.annualAmount;
     }
   } else {
+    const prorate =
+      age === income.startAgeYear ? (12 - startAgeMonth + 1) / 12 : 1;
     ownAmount =
       (income.pia *
         12 *
+        prorate *
         ssPercent(person.birthday, income.startAgeYear, startAgeMonth)) /
       100;
     // ownAmount = ssPercent(

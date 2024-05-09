@@ -71,17 +71,19 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                 setValue={(name) => setIncome({ ...pension, cola: name })}
               />
 
-              <Input
-                label="Already receiving"
-                subtype="toggle"
-                size="lg"
-                tooltip="Person must be at least 62 years old"
-                value={pension.alreadyReceiving}
-                setValue={(name) =>
-                  canRecieve &&
-                  setIncome({ ...pension, alreadyReceiving: name })
-                }
-              />
+              {pension.calculationMethod === "manual" && (
+                <Input
+                  label="Already receiving"
+                  subtype="toggle"
+                  size="lg"
+                  tooltip="Person must be at least 62 years old"
+                  value={pension.alreadyReceiving}
+                  setValue={(name) =>
+                    canRecieve &&
+                    setIncome({ ...pension, alreadyReceiving: name })
+                  }
+                />
+              )}
               {!pension.alreadyReceiving && (
                 <Input
                   label="Start age year"
