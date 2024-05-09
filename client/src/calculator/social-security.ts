@@ -30,14 +30,6 @@ export const calculateSocialSecurity = (
         ...info,
         income: spouse,
       };
-      if (currentYear == 2043)
-        console.log(
-          "calculating survivor",
-          currentYear,
-          ownAmount,
-          newInfo,
-          calculateSurvivorSocialSecurity(newInfo as any),
-        );
       ownAmount = Math.max(
         ownAmount,
         calculateSurvivorSocialSecurity(newInfo as any),
