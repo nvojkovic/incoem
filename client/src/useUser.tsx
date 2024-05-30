@@ -11,7 +11,9 @@ const useUser = () => {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
-        if (
+        if (userData?.info?.subsciptionStatus == "paused") {
+          navigate("/paused");
+        } else if (
           userData?.info?.subsciptionStatus !== "active" &&
           userData?.info?.subsciptionStatus !== "trialing"
         ) {

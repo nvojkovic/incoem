@@ -13,12 +13,19 @@ export const updateUser = async (req: SessionRequest, res: Response) => {
 
 export const getUser = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
+
+  let user = await prisma.emailpassword_users.findFirst({
+    where: {
+      user_id: userId,
+      app_id: "public",
+    },
+  });
   const info = await prisma.userInfo.upsert({
     where: { id: userId },
     update: {},
     create: { id: userId },
   });
-  res.json({ userId, info });
+  res.json({ userId, info: { ...info, email: user?.email } });
 };
 
 export const uploadLogo = async (req: any, res: Response) => {

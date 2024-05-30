@@ -110,7 +110,29 @@ export const stripeWebhook = async (req: Request, res: Response) => {
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
   let event: stripe.Event = payload;
   console.log("stripe webhook", payload, sig, endpointSecret);
-  if (
+  if (event.type === "customer.created") {
+    console.log("customer.created", event.data.object);
+    const customer = event.data.object as stripe.Customer;
+    if (!customer.email) {
+      return res.status(400).send(`Webhook Error: customer email is required`);
+    }
+    const user = await prisma.emailpassword_users.findFirst({
+      where: {
+        email: customer.email,
+      },
+    });
+    if (!user) {
+      return res.status(400).send(`Webhook Error: user not found`);
+    }
+    await prisma.userInfo.update({
+      where: {
+        id: user.user_id,
+      },
+      data: {
+        customerId: customer.id,
+      },
+    });
+  } else if (
     event.type === "customer.subscription.updated" ||
     event.type === "customer.subscription.created" ||
     event.type === "customer.subscription.deleted"

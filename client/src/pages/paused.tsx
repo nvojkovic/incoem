@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-const Subscribe = () => {
+const Paused = () => {
   const { user, fetchUser } = useUser();
   const navigate = useNavigate();
 
@@ -35,12 +35,7 @@ const Subscribe = () => {
       fetchUser();
     }
   }, [windowFocused]);
-  // const subscribe = async () => {
-  //   const d = await fetch(
-  //     import.meta.env.VITE_API_URL + "stripeSubscribe",
-  //   ).then((a) => a.json());
-  //   window.open(d.url, "_blank");
-  // };
+
   return (
     <div className="w-full flex justify-center">
       <div className="m-auto w-auto relative">
@@ -59,14 +54,21 @@ const Subscribe = () => {
           <div className="flex flex-col items-center justify-start w-[360px]">
             <img src={logo} alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] text-center mb-6">
-              Choose a plan to start using Income Mapper
+              Your trial has finished, please add a payment method to continue
             </div>
-            <stripe-pricing-table
-              pricing-table-id="prctbl_1PM7BlCvn63ZLyAkjIxohYiu"
-              customer-email={user?.info.email}
-              publishable-key="pk_test_51OhD1JCvn63ZLyAkZdNRqGbKeYA1FNUL8dftp0sAH0zT17Epf36GCDTuldslvnVyQaogTZd2haOzLIMX8R8XbaEc000Y9Jng6t"
-            ></stripe-pricing-table>
             <div className="mb-4"></div>
+            <Button
+              type="primary"
+              onClick={async () => {
+                const d = await fetch(
+                  import.meta.env.VITE_API_URL + "stripeRedirect",
+                ).then((a) => a.json());
+                window.open(d.url, "_blank");
+              }}
+            >
+              Billing settings
+            </Button>
+            <div className="mb-5"></div>
             <Button
               type="secondary"
               onClick={async () => {
@@ -85,4 +87,4 @@ const Subscribe = () => {
   );
 };
 
-export default Subscribe;
+export default Paused;
