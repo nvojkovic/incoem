@@ -13,6 +13,7 @@ import { useState } from "react";
 import StackedChart from "./Chart";
 import Button from "./Inputs/Button";
 import { Spinner } from "flowbite-react";
+import IncomeModal from "./Info/IncomeModal";
 
 const yearRange: (start: number, end: number) => number[] = (start, end) => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -61,16 +62,18 @@ const ResultTable = ({
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
   const incomes = data.incomes.filter((inc) => inc.enabled);
+  const [openModal, setOpenModal] = useState(-1);
+  const [timer, setTimer] = useState<any>(0);
 
   const print = async () => {
     setPrinting(true);
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf/" +
-        clientId +
-        "/" +
-        Math.max(settings.id, 0).toString(),
+      "print/client/pdf/" +
+      clientId +
+      "/" +
+      Math.max(settings.id, 0).toString(),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -99,33 +102,14 @@ const ResultTable = ({
                         subtype="number"
                         vertical
                         disabled
-                        label={`${person.name}'s death`}
+                        label={`${person.name}'s Death`}
                         value={settings.deathYears[i]?.toString()}
-                        setValue={() => {}}
-                      />
-                    </div>
-                  ),
-              )}
-            {/*data.people.length > 1 &&
-              data.people.map(
-                (person, i) =>
-                  settings.whoDies == i &&
-                  incomes.find(
-                    (inc) => inc.type == "social-security" && inc.personId == i,
-                  ) && (
-                    <div className="w-44">
-                      <Input
-                        subtype="number"
-                        vertical
-                        disabled={true}
-                        label={`${data.people[1 - i].name}' survivor SS age`}
-                        tooltip={`Age when ${data.people[1 - i].name} starts receiving ${person.name}'s Social Security as a survivor`}
-                        value={settings.deathYears[1 - i]?.toString()}
                         setValue={() => { }}
                       />
                     </div>
                   ),
-              )*/}
+              )}
+
             <div className="">
               <Input
                 label="Years"
@@ -134,7 +118,7 @@ const ResultTable = ({
                 vertical
                 disabled
                 value={settings.maxYearsShown?.toString()}
-                setValue={() => {}}
+                setValue={() => { }}
               />
             </div>
             <div className="print:mr-[-20px]">
@@ -145,7 +129,7 @@ const ResultTable = ({
                 vertical
                 subtype="percent"
                 value={settings.inflation?.toString()}
-                setValue={() => {}}
+                setValue={() => { }}
               />
             </div>
             <div className="print:hidden">
@@ -193,6 +177,14 @@ const ResultTable = ({
           </div>
         </div>
       )}
+      {incomes.map((income, i) => (
+        <IncomeModal
+          income={income}
+          setOpen={() => setOpenModal(-1)}
+          open={openModal === i}
+          i={i}
+        />
+      ))}
       <table className=" w-full">
         <thead
           className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-black print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
@@ -219,13 +211,27 @@ const ResultTable = ({
           </td>
           {incomes.map((income, i) => (
             <td
-              className="px-6 py-3"
-              onClick={() =>
-                selectedColumn.type === "income" &&
-                selectedColumn.id == income.id
-                  ? setSelectedColumn({ type: "none", id: 0 })
-                  : setSelectedColumn({ type: "income", id: income.id })
-              }
+              className="px-6 py-3 select-none"
+              onClick={(e) => {
+                if (e.detail === 1) {
+                  setTimer(
+                    setTimeout(() => {
+                      selectedColumn.type === "income" &&
+                        selectedColumn.id == income.id
+                        ? setSelectedColumn({ type: "none", id: 0 })
+                        : setSelectedColumn({ type: "income", id: income.id });
+                    }, 200),
+                  );
+                }
+                if (e.detail === 2) {
+                  clearTimeout(timer);
+                  setOpenModal(i);
+                }
+              }}
+              onDoubleClick={() => {
+                clearTimeout(timer);
+                setOpenModal(i);
+              }}
             >
               {title(incomes, data.people, i)
                 .split("|")

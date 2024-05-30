@@ -36,14 +36,14 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             setValue={(name) => setIncome({ ...pension, name })}
           />
           <Input
-            label="Annual amount"
+            label="Annual Amount"
             subtype="money"
             size="lg"
             value={pension.annualAmount}
             setValue={(name) => setIncome({ ...pension, annualAmount: name })}
           />
           <Input
-            label="Years of deferral"
+            label="Years of Deferral"
             subtype="number"
             size="lg"
             value={pension.yearsOfDeferral}
@@ -65,7 +65,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             />
           )}
           <Input
-            label="Yearly increase"
+            label="Yearly Increase"
             subtype="percent"
             size="lg"
             value={pension.yearlyIncreasePercent}

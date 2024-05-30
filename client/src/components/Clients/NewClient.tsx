@@ -37,6 +37,7 @@ const newPerson = (id: number) => ({
   birthday: null as any,
   id,
 });
+
 const NewClient = () => {
   const [step, setStep] = useState(1);
   const [newOpen, setNewOpen] = useState(false);

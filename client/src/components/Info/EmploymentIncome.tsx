@@ -35,7 +35,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
         tooltip="The amount of income earned annually."
       />
       <Input
-        label="Yearly increase"
+        label="Yearly Increase"
         subtype="percent"
         size="lg"
         value={income.yearlyIncreasePercent}
@@ -50,7 +50,7 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
         size="lg"
         value={income.startAge}
         setValue={(name) => setIncome({ ...income, startAge: name })}
-        tooltip="The age at which the person starts earning income."
+        tooltip="Leave blank if already receiving"
       />
       <Input
         label="First-Year Prorate"

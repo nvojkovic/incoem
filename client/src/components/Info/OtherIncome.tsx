@@ -35,7 +35,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           setValue={(name) => setIncome({ ...pension, name })}
         />
         <Input
-          label="Income amount"
+          label="Income Amount"
           subtype="money"
           size="lg"
           value={pension.amount}
@@ -53,26 +53,26 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             id: pension.frequency,
           }}
           setSelected={(i) => setIncome({ ...pension, frequency: i.id })}
-          label="Income frequency"
+          label="Income Frequency"
         />
         <Input
-          label="Start year"
+          label="Start Year"
           size="lg"
           subtype="number"
-          tooltip="Year when the income starts"
+          tooltip="Calendar year (e.g., 2030) income begins. Leave blank if already receiving"
           value={pension.startYear}
           setValue={(name) => setIncome({ ...pension, startYear: name })}
         />
         <Input
-          label="End year"
+          label="End Year"
           subtype="number"
           size="lg"
-          tooltip="Year when the income ends"
+          tooltip="Calendar year (e.g., 2040) that income ends. Leave blank if ends at death"
           value={pension.endYear}
           setValue={(name) => setIncome({ ...pension, endYear: name })}
         />
         <Input
-          label="Yearly increase"
+          label="Yearly Increase"
           subtype="percent"
           size="lg"
           tooltip="Yearly increase in the income amount"

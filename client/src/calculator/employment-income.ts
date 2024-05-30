@@ -12,7 +12,7 @@ export const calculateEmploymentIncome = (
   if (
     income.startAge > age ||
     isDead(info, income.personId) ||
-    age > income.retirementAgeYear
+    (age > income.retirementAgeYear && income.retirementAgeYear != 0)
   ) {
     return 0;
   }

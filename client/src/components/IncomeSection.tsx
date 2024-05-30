@@ -31,12 +31,15 @@ interface Props {
   defaultOpen?: boolean;
 }
 
-const incomeComponents = (
-  income: Income,
-  i: number,
-  people: Person[],
-  setIncome: (index: number, income: Income) => void,
-) => {
+export const IncomeComponent = ({
+  income,
+  i,
+}: {
+  income: Income;
+  i: number;
+}) => {
+  const { data, setIncome } = useInfo();
+  const people = data.data.people;
   if (income.type === "employment-income")
     return (
       <EmploymentIncome
@@ -165,7 +168,7 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
                     </div>
                     <div className="flex justify-between">
                       <div className="flex gap-4 items-center w-full">
-                        {[incomeComponents(item, i, people, setIncome)]}
+                        <IncomeComponent income={item} i={i} />
                       </div>
                       <Confirm
                         isOpen={removeOpen == i}

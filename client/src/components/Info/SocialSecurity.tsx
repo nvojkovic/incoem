@@ -52,7 +52,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {pension.calculationMethod == "manual" && (
                 <Input
-                  label="Annual amount"
+                  label="Annual Amount"
                   subtype="money"
                   size="lg"
                   value={pension.annualAmount}
@@ -73,7 +73,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
 
               {pension.calculationMethod === "manual" && (
                 <Input
-                  label="Already receiving"
+                  label="Already Receiving"
                   subtype="toggle"
                   size="lg"
                   tooltip="Person must be at least 62 years old"
@@ -86,7 +86,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {!pension.alreadyReceiving && (
                 <Input
-                  label="Start age year"
+                  label="Start Age Year"
                   subtype="number"
                   size="lg"
                   value={pension.startAgeYear}
@@ -97,7 +97,7 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {!pension.alreadyReceiving && (
                 <MonthPicker
-                  label="Start age month"
+                  label="Start Age Month"
                   selected={pension.startAgeMonth}
                   setSelected={(name) =>
                     setIncome({ ...pension, startAgeMonth: name.id })

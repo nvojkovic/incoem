@@ -28,11 +28,20 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             setValue={(name) => setIncome({ ...pension, name })}
           />
           <Input
-            label="Annual amount"
+            label="Annual Amount"
             subtype="money"
             size="lg"
             value={pension.annualAmount}
             setValue={(name) => setIncome({ ...pension, annualAmount: name })}
+          />
+          <Input
+            label="Yearly Increase"
+            subtype="percent"
+            size="lg"
+            value={pension.yearlyIncreasePercent}
+            setValue={(name) =>
+              setIncome({ ...pension, yearlyIncreasePercent: name })
+            }
           />
           {people.length > 1 && (
             <Input
@@ -46,20 +55,12 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             />
           )}
           <Input
-            label="Yearly increase"
-            subtype="percent"
-            size="lg"
-            value={pension.yearlyIncreasePercent}
-            setValue={(name) =>
-              setIncome({ ...pension, yearlyIncreasePercent: name })
-            }
-          />
-          <Input
             label="Start Age"
             subtype="number"
             size="lg"
             value={pension.startAge}
             setValue={(name) => setIncome({ ...pension, startAge: name })}
+            tooltip="Leave blank if already receiving"
           />
           <Input
             label="First-Year Prorate"
