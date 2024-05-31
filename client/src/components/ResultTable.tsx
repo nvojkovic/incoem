@@ -94,89 +94,116 @@ const ResultTable = ({
             {name || " "}
           </div>
           <div className="hidden print:block"></div>
-          <div className="flex gap-5 items-end">
-            {data.people.length > 1 &&
-              data.people.map(
-                (person, i) =>
-                  settings.whoDies == i && (
-                    <div className="w-36" key={person.id}>
-                      <Input
-                        subtype="number"
-                        vertical
-                        disabled
-                        label={`${person.name}'s Death`}
-                        value={settings.deathYears[i]?.toString()}
-                        setValue={() => {}}
-                      />
-                    </div>
-                  ),
-              )}
+          {toPrint && (
+            <div>
+              <table className="border border-gray-400">
+                <tbody>
+                  <tr className="border-b border-gray-400">
+                    <td className="border border-gray-400 p-2">Inflation</td>
+                    <td className="p-2">{settings.inflation.toString()}%</td>
+                  </tr>
 
-            <div className="">
-              <Input
-                label="Years"
-                subtype="number"
-                size="xs"
-                vertical
-                disabled
-                value={settings.maxYearsShown?.toString()}
-                setValue={() => {}}
-              />
-            </div>
-            <div className="print:mr-[-20px]">
-              <Input
-                label="Inflation"
-                disabled
-                size="xs"
-                vertical
-                subtype="percent"
-                value={settings.inflation?.toString()}
-                setValue={() => {}}
-              />
-            </div>
-            <div className="print:hidden">
-              <Button type="secondary" onClick={changeFullScreen}>
-                <div className="flex gap-3">
-                  <div className="flex items-center">
-                    {fullScreen ? (
-                      <ArrowsPointingInIcon className="h-6 w-6" />
-                    ) : (
-                      <ArrowsPointingOutIcon className="h-6 w-6" />
+                  {data.people.length > 1 &&
+                    data.people.map(
+                      (person, i) =>
+                        settings.whoDies == i && (
+                          <tr>
+                            <td className="border border-gray-400 p-2">{`${person.name}'s Death`}</td>
+                            <td className="p-2">
+                              {settings.deathYears[i]?.toString()}
+                            </td>
+                          </tr>
+                        ),
                     )}
-                  </div>
-                </div>
-              </Button>
+                </tbody>
+              </table>
             </div>
-            <div className="print:hidden">
-              <Button type="secondary" onClick={print}>
-                <div className="flex gap-2">
-                  <PrinterIcon className="h-6 w-6" />
-                  {printing && <Spinner className="h-5" />}
-                </div>
-              </Button>
-            </div>
-            <div className="flex items-center print:hidden">
-              <Button type="secondary">
-                <TrashIcon
-                  className="h-6 w-6 text-[#FF6C47] cursor-pointer "
-                  onClick={() => setRemoveOpen(true)}
+          )}
+          {!toPrint && (
+            <div className="flex gap-5 items-end">
+              {data.people.length > 1 &&
+                data.people.map(
+                  (person, i) =>
+                    settings.whoDies == i && (
+                      <div className="w-36" key={person.id}>
+                        <Input
+                          subtype="number"
+                          vertical
+                          disabled
+                          label={`${person.name}'s Death`}
+                          value={settings.deathYears[i]?.toString()}
+                          setValue={() => {}}
+                        />
+                      </div>
+                    ),
+                )}
+
+              <div className="">
+                <Input
+                  label="Years"
+                  subtype="number"
+                  size="xs"
+                  vertical
+                  disabled
+                  value={settings.maxYearsShown?.toString()}
+                  setValue={() => {}}
                 />
-              </Button>
-              <Confirm
-                isOpen={removeOpen}
-                onClose={() => setRemoveOpen(false)}
-                onConfirm={() => {
-                  removeScenario();
-                  setRemoveOpen(false);
-                }}
-              >
-                <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
-                <div className="mb-5">
-                  Are you sure you want to delete this scenario?
-                </div>
-              </Confirm>
+              </div>
+              <div className="print:mr-[-20px]">
+                <Input
+                  label="Inflation"
+                  disabled
+                  size="xs"
+                  vertical
+                  subtype="percent"
+                  value={settings.inflation?.toString()}
+                  setValue={() => {}}
+                />
+              </div>
+              <div className="print:hidden">
+                <Button type="secondary" onClick={changeFullScreen}>
+                  <div className="flex gap-3">
+                    <div className="flex items-center">
+                      {fullScreen ? (
+                        <ArrowsPointingInIcon className="h-6 w-6" />
+                      ) : (
+                        <ArrowsPointingOutIcon className="h-6 w-6" />
+                      )}
+                    </div>
+                  </div>
+                </Button>
+              </div>
+              <div className="print:hidden">
+                <Button type="secondary" onClick={print}>
+                  <div className="flex gap-2">
+                    <PrinterIcon className="h-6 w-6" />
+                    {printing && <Spinner className="h-5" />}
+                  </div>
+                </Button>
+              </div>
+              <div className="flex items-center print:hidden">
+                <Button type="secondary">
+                  <TrashIcon
+                    className="h-6 w-6 text-[#FF6C47] cursor-pointer "
+                    onClick={() => setRemoveOpen(true)}
+                  />
+                </Button>
+                <Confirm
+                  isOpen={removeOpen}
+                  onClose={() => setRemoveOpen(false)}
+                  onConfirm={() => {
+                    removeScenario();
+                    setRemoveOpen(false);
+                  }}
+                >
+                  <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                  <div className="mb-5">
+                    Are you sure you want to delete this scenario?
+                  </div>
+                </Confirm>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
       {!toPrint &&
@@ -260,7 +287,7 @@ const ResultTable = ({
           {yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
             (currentYear, i) => (
               <tr
-                className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border border-[#EAECF0] hover:bg-slate-100 ${selectedYear === currentYear && "!bg-slate-200"}`}
+                className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === currentYear && "!bg-slate-200"}`}
                 onClick={() =>
                   currentYear == selectedYear
                     ? setSelectedYear(0)
@@ -268,12 +295,12 @@ const ResultTable = ({
                 }
               >
                 <td
-                  className={`font-medium px-6 py-[0.6rem] ${selectedColumn.type == "year" ? "bg-slate-200" : ""}`}
+                  className={`font-medium px-6 py-[0.45rem] ${selectedColumn.type == "year" ? "bg-slate-200" : ""}`}
                 >
                   {currentYear}
                 </td>
                 <td
-                  className={`font-medium px-6 py-[0.6rem] ${selectedColumn.type == "age" ? "bg-slate-200" : ""}`}
+                  className={`font-medium px-6 py-[0.45rem] ${selectedColumn.type == "age" ? "bg-slate-200" : ""}`}
                 >
                   {data.people
                     .map((p) => currentYear - splitDate(p.birthday).year)
@@ -281,7 +308,7 @@ const ResultTable = ({
                 </td>
                 {incomes.map((income) => (
                   <td
-                    className={`px-6 py-[0.6rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
+                    className={`px-6 py-[0.45rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
                   >
                     {printNumber(
                       calculate({
@@ -299,7 +326,7 @@ const ResultTable = ({
                   </td>
                 ))}
                 <td
-                  className={`font-medium px-6 py-[0.6rem] text-black ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
+                  className={`font-medium px-6 py-[0.45rem] text-black ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
                 >
                   {formatter.format(
                     incomes

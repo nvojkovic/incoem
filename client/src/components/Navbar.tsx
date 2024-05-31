@@ -105,6 +105,21 @@ const Navbar = ({
                       </Link>
                     )}
                   </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link to="/help">
+                        <button
+                          className={`${
+                            active
+                              ? "bg-main-orange text-white"
+                              : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                          Help Center
+                        </button>
+                      </Link>
+                    )}
+                  </Menu.Item>
                 </div>
                 <div className="px-1 py-1">
                   <Menu.Item>

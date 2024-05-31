@@ -19,6 +19,7 @@ import VerifyEmailConfirm from "./pages/verify-email-confim";
 import Subscribe from "./pages/subscribe";
 import PrintLivePage from "./pages/print-live";
 import Paused from "./pages/paused";
+import HelpCenter from "./pages/help";
 
 SuperTokens.init({
   appInfo: {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: "/paused",
         element: <Paused />,
+      },
+      {
+        path: "/help",
+        element: <HelpCenter />,
       },
     ],
   },
