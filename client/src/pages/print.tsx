@@ -16,6 +16,7 @@ const PrintPage = () => {
 
   const scenario = client?.scenarios?.find((s: any) => s.id == scenarioId);
   console.log(scenario, client);
+  if (!client) return <div>Loading...</div>;
   if (!scenario) return null;
   return <Print client={client} scenario={scenario} />;
 };
