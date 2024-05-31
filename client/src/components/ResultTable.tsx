@@ -43,6 +43,7 @@ const ResultTable = ({
   setSelectedYear,
   setSelectedColumn,
   selectedColumn,
+  toPrint,
 }: {
   data: IncomeMapData;
   clientId: any;
@@ -56,6 +57,7 @@ const ResultTable = ({
   selectedColumn: SelectedColumn;
   changeFullScreen: any;
   setSelectedColumn: any;
+  toPrint?: boolean;
 }) => {
   if (!data) return null;
   const startYear = new Date().getFullYear();
@@ -70,10 +72,10 @@ const ResultTable = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf/" +
-      clientId +
-      "/" +
-      Math.max(settings.id, 0).toString(),
+        "print/client/pdf/" +
+        clientId +
+        "/" +
+        Math.max(settings.id, 0).toString(),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -104,7 +106,7 @@ const ResultTable = ({
                         disabled
                         label={`${person.name}'s Death`}
                         value={settings.deathYears[i]?.toString()}
-                        setValue={() => { }}
+                        setValue={() => {}}
                       />
                     </div>
                   ),
@@ -118,7 +120,7 @@ const ResultTable = ({
                 vertical
                 disabled
                 value={settings.maxYearsShown?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
             <div className="print:mr-[-20px]">
@@ -129,7 +131,7 @@ const ResultTable = ({
                 vertical
                 subtype="percent"
                 value={settings.inflation?.toString()}
-                setValue={() => { }}
+                setValue={() => {}}
               />
             </div>
             <div className="print:hidden">
@@ -177,14 +179,15 @@ const ResultTable = ({
           </div>
         </div>
       )}
-      {incomes.map((income, i) => (
-        <IncomeModal
-          income={income}
-          setOpen={() => setOpenModal(-1)}
-          open={openModal === i}
-          i={i}
-        />
-      ))}
+      {!toPrint &&
+        incomes?.map((income, i) => (
+          <IncomeModal
+            income={income}
+            setOpen={() => setOpenModal(-1)}
+            open={openModal === i}
+            i={i}
+          />
+        ))}
       <table className=" w-full">
         <thead
           className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-black print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
@@ -217,7 +220,7 @@ const ResultTable = ({
                   setTimer(
                     setTimeout(() => {
                       selectedColumn.type === "income" &&
-                        selectedColumn.id == income.id
+                      selectedColumn.id == income.id
                         ? setSelectedColumn({ type: "none", id: 0 })
                         : setSelectedColumn({ type: "income", id: income.id });
                     }, 200),

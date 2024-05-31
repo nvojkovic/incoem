@@ -3,6 +3,7 @@ import Modal from "../Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import title from "../../calculator/title";
 import { useInfo } from "../../useData";
+
 const IncomeModal = ({
   income,
   i,
@@ -14,9 +15,11 @@ const IncomeModal = ({
   open: boolean;
   setOpen: any;
 }) => {
+  console.log("income", income);
   const { data } = useInfo();
   const incomes = data.data.incomes;
   const people = data.data.people;
+  if (!data) return;
   return (
     <Modal
       isOpen={open}

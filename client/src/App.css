@@ -51,3 +51,7 @@ tr:last-of-type td:last-of-type {
     -webkit-print-color-adjust: exact;
   }
 }
+
+html {
+  -webkit-print-color-adjust: exact;
+}

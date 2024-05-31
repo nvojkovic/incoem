@@ -36,7 +36,11 @@ app.get("/", async (req, res) => {
   console.log("waiting");
   await new Promise((r) => setTimeout(r, 1000));
   console.log("done waiting");
-  const pdf = await page.pdf({ format: "letter", landscape: true });
+  const pdf = await page.pdf({
+    format: "letter",
+    landscape: true,
+    printBackground: true,
+  });
   await browser.close();
   res.contentType("application/pdf");
   res.send(pdf);

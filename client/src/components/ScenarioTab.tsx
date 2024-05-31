@@ -45,7 +45,6 @@ const ScenarioTab = ({
             onKeyDown={(e) => {
               if (e.key === "Escape") {
                 e.preventDefault();
-                alert();
                 finish(name);
               }
               if (e.key === "Enter") {

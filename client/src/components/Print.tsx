@@ -30,14 +30,15 @@ const Print = ({ client, scenario }: PrintProps) => {
         <ResultTable
           clientId={client.id}
           settings={scenario}
-          changeFullScreen={() => { }}
+          changeFullScreen={() => {}}
           fullScreen={true}
           id={scenario.id}
-          removeScenario={() => { }}
+          toPrint={true}
+          removeScenario={() => {}}
           selectedYear={0}
-          setSelectedYear={() => { }}
+          setSelectedYear={() => {}}
           selectedColumn={{ id: 0, type: "none" }}
-          setSelectedColumn={() => { }}
+          setSelectedColumn={() => {}}
           data={scenario.data as any}
           name={scenario.name}
         />
