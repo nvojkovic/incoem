@@ -7,15 +7,9 @@ import {
 import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import Input from "./Inputs/Input";
-import {
-  formatter,
-  printNumber,
-  printReport,
-  splitDate,
-  yearRange,
-} from "../utils";
+import { printNumber, printReport, splitDate, yearRange } from "../utils";
 import Confirm from "./Confirm";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import StackedChart from "./Chart";
 import Button from "./Inputs/Button";
 import { Spinner } from "flowbite-react";
@@ -83,36 +77,43 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium px-6 py-[0.45rem] ${selectedColumn.type == data.column.type &&
-          selectedColumn.id == data.column.id
+      className={`font-medium  ${
+        selectedColumn.type == data.column.type &&
+        selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-        }`}
+      }`}
       colSpan={header.colSpan}
       ref={setNodeRef}
       style={style}
-      onClick={(e) => {
-        if (e.detail === 1) {
-          setTimer(
-            setTimeout(() => {
-              selectedColumn.type === data.column.type &&
-                selectedColumn.id == data.column.id
-                ? setSelectedColumn({ type: "none", id: 0 })
-                : setSelectedColumn(data.column);
-            }, 200),
-          );
-        }
-        if (e.detail === 2) {
-          clearTimeout(timer);
-          setOpenModal(data.index);
-        }
-      }}
       onDoubleClick={() => {
+        console.log("double");
         clearTimeout(timer);
         setOpenModal(data.index);
       }}
     >
-      <div className="flex flex-col items-start" {...attributes} {...listeners}>
+      <div
+        className="flex flex-col items-start px-6 py-[0.45rem]"
+        {...attributes}
+        {...listeners}
+        onClick={(e) => {
+          console.log("clcc", e.detail);
+          if (e.detail === 1) {
+            setTimer(
+              setTimeout(() => {
+                selectedColumn.type === data.column.type &&
+                selectedColumn.id == data.column.id
+                  ? setSelectedColumn({ type: "none", id: 0 })
+                  : setSelectedColumn(data.column);
+              }, 200),
+            );
+          }
+          if (e.detail === 2) {
+            clearTimeout(timer);
+            setOpenModal(data.index);
+          }
+        }}
+      >
         {header.isPlaceholder ? null : data.value}
       </div>
     </td>
@@ -122,9 +123,11 @@ const DragAlongCell = ({
   cell,
   selectedColumn,
   selectedYear,
+  setSelectedYear,
 }: {
   cell: Cell<any, unknown>;
   selectedColumn: SelectedColumn;
+  setSelectedYear: any;
   selectedYear: number;
 }) => {
   const data = cell.getValue() as any;
@@ -148,9 +151,9 @@ const DragAlongCell = ({
       className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} px-6 py-[0.45rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
       ref={setNodeRef}
       onClick={() => {
-        console.log(data);
-        alert();
-        // setSelectedYear(column.year);
+        console.log(data.year, cell);
+        if (selectedYear === data.year) setSelectedYear(0);
+        else setSelectedYear(data.year);
       }}
       style={style}
     >
@@ -196,8 +199,15 @@ const ResultTable = ({
   const incomes = data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
 
+  const columns = React.useMemo<ColumnDef<any>[]>(
+    () => generateColumns(incomes, data, selectedColumn),
+    [selectedColumn, settings, selectedYear],
+  );
+  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
+    columns.map((c) => c.id!),
+  );
+
   const { updateIncomes } = useInfo();
-  const [timer, setTimer] = useState<any>(0);
 
   const print = async () => {
     setPrinting(true);
@@ -211,74 +221,57 @@ const ResultTable = ({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {}),
   );
-  const columns = React.useMemo<ColumnDef<any>[]>(
-    () => generateColumns(incomes, data, selectedColumn),
-    [selectedColumn, settings, selectedYear],
+
+  const tableData = useMemo(
+    () =>
+      yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
+        (currentYear) => ({
+          year: currentYear,
+          selectedColumn,
+          age: data.people
+            .map((p) => currentYear - splitDate(p.birthday).year)
+            .join("/"),
+          ...Object.fromEntries(
+            incomes.map((income, i) => [
+              title(incomes, data.people, i),
+              printNumber(
+                calculate({
+                  people: data.people,
+                  income,
+                  startYear,
+                  currentYear,
+                  deathYears: settings.deathYears as any,
+                  dead: settings.whoDies,
+                  inflation: settings.inflation,
+                  incomes: incomes,
+                  ssSurvivorAge: settings.ssSurvivorAge,
+                }),
+              ),
+            ]),
+          ),
+          total: printNumber(
+            incomes
+              .map((income) =>
+                calculate({
+                  people: data.people,
+                  income,
+                  startYear,
+                  currentYear,
+                  deathYears: settings.deathYears as any,
+                  dead: settings.whoDies,
+                  inflation: settings.inflation,
+                  incomes: incomes,
+                  ssSurvivorAge: settings.ssSurvivorAge,
+                }),
+              )
+              .filter((t) => typeof t === "number")
+              .reduce((a, b) => a + b, 0),
+          ),
+        }),
+      ),
+    [settings],
   );
-  const tableData = yearRange(
-    startYear,
-    startYear + settings.maxYearsShown - 1,
-  ).map((currentYear) => ({
-    year: currentYear,
-    selectedColumn,
-    age: data.people
-      .map((p) => currentYear - splitDate(p.birthday).year)
-      .join("/"),
-    ...Object.fromEntries(
-      incomes.map((income, i) => [
-        title(incomes, data.people, i),
-        printNumber(
-          calculate({
-            people: data.people,
-            income,
-            startYear,
-            currentYear,
-            deathYears: settings.deathYears as any,
-            dead: settings.whoDies,
-            inflation: settings.inflation,
-            incomes: incomes,
-            ssSurvivorAge: settings.ssSurvivorAge,
-          }),
-        ),
-      ]),
-    ),
-    total: printNumber(
-      incomes
-        .map((income) =>
-          calculate({
-            people: data.people,
-            income,
-            startYear,
-            currentYear,
-            deathYears: settings.deathYears as any,
-            dead: settings.whoDies,
-            inflation: settings.inflation,
-            incomes: incomes,
-            ssSurvivorAge: settings.ssSurvivorAge,
-          }),
-        )
-        .filter((t) => typeof t === "number")
-        .reduce((a, b) => a + b, 0),
-    ),
-  }));
   console.log("rerender", selectedYear);
-
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map((c) => c.id!),
-  );
-
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    state: {
-      columnOrder,
-    },
-    onColumnOrderChange: setColumnOrder,
-    // debugTable: true,
-    // debugHeaders: true,
-    // debugColumns: true,
-  });
 
   const handleDragEnd = (moved: any) => {
     console.log("move", moved);
@@ -318,6 +311,7 @@ const ResultTable = ({
       }
     }
   };
+
   return (
     <DndContext
       collisionDetection={closestCenter}
@@ -372,7 +366,7 @@ const ResultTable = ({
                             disabled
                             label={`${person.name}'s Death`}
                             value={settings.deathYears[i]?.toString()}
-                            setValue={() => { }}
+                            setValue={() => {}}
                           />
                         </div>
                       ),
@@ -386,7 +380,7 @@ const ResultTable = ({
                     vertical
                     disabled
                     value={settings.maxYearsShown?.toString()}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:mr-[-20px]">
@@ -397,7 +391,7 @@ const ResultTable = ({
                     vertical
                     subtype="percent"
                     value={settings.inflation?.toString()}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:hidden">
@@ -456,197 +450,18 @@ const ResultTable = ({
               i={i}
             />
           ))}
-
-        <table className=" w-full">
-          <thead
-            className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                <SortableContext
-                  items={columnOrder}
-                  strategy={horizontalListSortingStrategy}
-                >
-                  {headerGroup.headers.map((header) => (
-                    <DraggableTableHeader
-                      key={header.id}
-                      header={header}
-                      timer={timer}
-                      setTimer={setTimer}
-                      setOpenModal={setOpenModal}
-                      setSelectedColumn={setSelectedColumn}
-                    />
-                  ))}
-                </SortableContext>
-              </tr>
-            ))}
-          </thead>
-          <tbody className="text-sm">
-            {table.getRowModel().rows.map((row, i) => (
-              <tr
-                key={row.id}
-                className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <SortableContext
-                    key={cell.id}
-                    items={columnOrder}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    <DragAlongCell
-                      key={cell.id}
-                      cell={cell}
-                      selectedColumn={selectedColumn}
-                      selectedYear={selectedYear}
-                    />
-                  </SortableContext>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <table className=" w-full">
-          <thead
-            className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
-          >
-            <td
-              className="px-6 py-3"
-              onClick={() =>
-                selectedColumn.type === "year"
-                  ? setSelectedColumn({ type: "none", id: 0 })
-                  : setSelectedColumn({ type: "year", id: 0 })
-              }
-            >
-              Year
-            </td>
-            <td
-              className="px-6 py-3"
-              onClick={() =>
-                selectedColumn.type === "age"
-                  ? setSelectedColumn({ type: "none", id: 0 })
-                  : setSelectedColumn({ type: "age", id: 0 })
-              }
-            >
-              Age
-            </td>
-            {incomes.map((income, i) => (
-              <td
-                className="px-6 py-3 select-none"
-                onClick={(e) => {
-                  if (e.detail === 1) {
-                    setTimer(
-                      setTimeout(() => {
-                        selectedColumn.type === "income" &&
-                          selectedColumn.id == income.id
-                          ? setSelectedColumn({ type: "none", id: 0 })
-                          : setSelectedColumn({
-                            type: "income",
-                            id: income.id,
-                          });
-                      }, 200),
-                    );
-                  }
-                  if (e.detail === 2) {
-                    clearTimeout(timer);
-                    setOpenModal(i);
-                  }
-                }}
-                onDoubleClick={() => {
-                  clearTimeout(timer);
-                  setOpenModal(i);
-                }}
-              >
-                {title(incomes, data.people, i)
-                  .split("|")
-                  .map((i) => (
-                    <span>
-                      {i} <br />
-                    </span>
-                  ))}
-              </td>
-            ))}
-            <td
-              className="px-6 py-3"
-              onClick={() =>
-                selectedColumn.type === "total"
-                  ? setSelectedColumn({ type: "none", id: 0 })
-                  : setSelectedColumn({ type: "total", id: 0 })
-              }
-            >
-              Total
-            </td>
-          </thead>
-          <tbody className="text-sm">
-            {yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (currentYear, i) => (
-                <tr
-                  className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === currentYear && "!bg-slate-200"}`}
-                  onClick={() =>
-                    currentYear == selectedYear
-                      ? setSelectedYear(0)
-                      : setSelectedYear(currentYear)
-                  }
-                >
-                  <td
-                    className={`font-medium px-6 py-[0.45rem] ${selectedColumn.type == "year" ? "bg-slate-200" : ""}`}
-                  >
-                    {currentYear}
-                  </td>
-                  <td
-                    className={`font-medium px-6 py-[0.45rem] ${selectedColumn.type == "age" ? "bg-slate-200" : ""}`}
-                  >
-                    {data.people
-                      .map((p) => currentYear - splitDate(p.birthday).year)
-                      .join("/")}
-                  </td>
-                  {incomes.map((income) => (
-                    <td
-                      className={`px-6 py-[0.45rem] text-[#475467] ${selectedColumn.type == "income" && selectedColumn.id == income.id ? "bg-slate-200" : ""}`}
-                    >
-                      {printNumber(
-                        calculate({
-                          people: data.people,
-                          income,
-                          startYear,
-                          currentYear,
-                          deathYears: settings.deathYears as any,
-                          dead: settings.whoDies,
-                          inflation: settings.inflation,
-                          incomes: incomes,
-                          ssSurvivorAge: settings.ssSurvivorAge,
-                        }),
-                      )}
-                    </td>
-                  ))}
-                  <td
-                    className={`font-medium px-6 py-[0.45rem] text-black ${selectedColumn.type == "total" ? "bg-slate-200" : ""}`}
-                  >
-                    {formatter.format(
-                      incomes
-                        .map(
-                          (income) =>
-                            calculate({
-                              people: data.people,
-                              income,
-                              startYear,
-                              currentYear,
-                              deathYears: settings.deathYears as any,
-                              dead: settings.whoDies,
-                              inflation: settings.inflation,
-                              incomes: incomes,
-                              ssSurvivorAge: settings.ssSurvivorAge,
-                            }) as any,
-                        )
-                        .filter((t) => typeof t === "number")
-                        .reduce((a, b) => a + b, 0)
-                        .toFixed(0),
-                    )}
-                  </td>
-                </tr>
-              ),
-            )}
-          </tbody>
-        </table>
+        <DraggableTable
+          columns={columns}
+          setSelectedYear={setSelectedYear}
+          fullScreen={fullScreen}
+          tableData={tableData}
+          selectedYear={selectedYear}
+          columnOrder={columnOrder}
+          setColumnOrder={setColumnOrder}
+          setSelectedColumn={setSelectedColumn}
+          selectedColumn={selectedColumn}
+          setOpenModal={setOpenModal}
+        />
         <div className="break-after-page"></div>
         <div className="mt-10"></div>
         <StackedChart
@@ -679,3 +494,91 @@ const ResultTable = ({
 };
 
 export default ResultTable;
+
+const DraggableTable = ({
+  fullScreen,
+  tableData,
+  columns,
+  columnOrder,
+  setColumnOrder,
+  selectedYear,
+  setSelectedColumn,
+  selectedColumn,
+  setSelectedYear,
+  setOpenModal,
+}: {
+  fullScreen: boolean;
+  tableData: any;
+  columns: any[];
+  columnOrder: string[];
+  setColumnOrder: any;
+  selectedYear: number;
+  setSelectedColumn: any;
+  setSelectedYear: any;
+  selectedColumn: SelectedColumn;
+  setOpenModal: any;
+}) => {
+  const table = useReactTable({
+    data: tableData,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnOrder,
+    },
+    onColumnOrderChange: setColumnOrder,
+  });
+
+  const [timer, setTimer] = useState<any>(0);
+
+  return (
+    <table className="w-full">
+      <thead
+        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+      >
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id}>
+            <SortableContext
+              items={columnOrder}
+              strategy={horizontalListSortingStrategy}
+            >
+              {headerGroup.headers.map((header) => (
+                <DraggableTableHeader
+                  key={header.id}
+                  header={header}
+                  timer={timer}
+                  setTimer={setTimer}
+                  setOpenModal={setOpenModal}
+                  setSelectedColumn={setSelectedColumn}
+                />
+              ))}
+            </SortableContext>
+          </tr>
+        ))}
+      </thead>
+      <tbody className="text-sm">
+        {table.getRowModel().rows.map((row, i) => (
+          <tr
+            key={row.id}
+            className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
+          >
+            {row.getVisibleCells().map((cell) => (
+              <SortableContext
+                key={cell.id}
+                items={columnOrder}
+                strategy={horizontalListSortingStrategy}
+              >
+                <DragAlongCell
+                  key={cell.id}
+                  cell={cell}
+                  selectedColumn={selectedColumn}
+                  selectedYear={selectedYear}
+                  setSelectedYear={setSelectedYear}
+                />
+              </SortableContext>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
