@@ -47,18 +47,23 @@ export const IncomeProvider = ({
     console.log("setting data", data.data.incomes);
     setLocal((data) => {
       const result = fn(data);
+      console.log("result", result.data.incomes);
       updateRemote(result.id, result.title, result.data);
       return result;
     });
   };
   const updateIncomes = (incomes: Income[]) => {
-    setData((data) => ({
-      ...data,
-      data: {
-        ...data.data,
-        incomes,
-      },
-    }));
+    console.log("updating incomes", incomes, data.data.incomes);
+    setData((data) => {
+      console.log("whtf", incomes);
+      return {
+        ...data,
+        data: {
+          ...data.data,
+          incomes,
+        },
+      };
+    });
   };
 
   const setTitle = (title: string) => {

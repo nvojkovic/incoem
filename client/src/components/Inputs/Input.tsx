@@ -13,14 +13,14 @@ interface Props {
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-  | "money"
-  | "percent"
-  | "text"
-  | "number"
-  | "date"
-  | "toggle"
-  | "password"
-  | "textarea";
+    | "money"
+    | "percent"
+    | "text"
+    | "number"
+    | "date"
+    | "toggle"
+    | "password"
+    | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
 }
@@ -129,7 +129,9 @@ const Input = ({
     );
   }
   return (
-    <div className={`flex ${vertical && "flex-col"} gap-1 w-full`}>
+    <div
+      className={`flex ${vertical && "flex-col"} gap-1 w-full lg:flex-row flex-col`}
+    >
       <div
         className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}
       >
@@ -157,7 +159,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-          // className="border-black border"
+            // className="border-black border"
           >
             <div className="relative cursor-pointer">
               <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />

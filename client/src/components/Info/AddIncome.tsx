@@ -44,14 +44,12 @@ const AddIncome = ({}: AddIncomeProps) => {
       }}
     >
       <Menu as="div" className="relative inline-block text-left">
-        <div>
-          <Menu.Button className="flex items-center gap-2">
-            Add income
-            <div className="text-sm">
-              <PlusIcon className="h-5 w-5" />
-            </div>
-          </Menu.Button>
-        </div>
+        <Menu.Button className="h-5">
+          <div className="flex items-center gap-2 ">
+            <PlusIcon className="w-5" />
+            <div>Add income</div>
+          </div>
+        </Menu.Button>
         <Transition
           as={Fragment}
           enter="transition ease-out duration-100"

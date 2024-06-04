@@ -14,8 +14,8 @@ function Select({ label, vertical, options, selected, setSelected }: Props) {
   return (
     <div
       className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
-        vertical ? "items-start" : "items-center"
-      }`}
+        vertical ? "items-start" : "lg:items-center"
+      } lg:flex-row flex-col`}
     >
       <label htmlFor={label} className="text-sm text-[#344054] w-36">
         {label}

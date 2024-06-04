@@ -89,7 +89,7 @@ const DraggableTableHeader = ({
       onDoubleClick={() => {
         console.log("double");
         clearTimeout(timer);
-        setOpenModal(data.index);
+        setOpenModal(data.incomeId);
       }}
     >
       <div
@@ -303,7 +303,12 @@ const ResultTable = ({
           (x) => x.id == over.id,
         );
         const incomes = arrayMove(settings.data.incomes, oldIndex, newIndex);
-        console.log("new ", oldIndex, newIndex, incomes);
+        console.log(
+          "new ",
+          oldIndex,
+          newIndex,
+          incomes.map((i) => i.id),
+        );
         updateIncomes(incomes);
         setSettings({
           ...settings,
@@ -334,11 +339,13 @@ const ResultTable = ({
             <div className="hidden print:block"></div>
             {toPrint && (
               <div>
-                <table className="border border-gray-400">
+                <table className="border border-gray-400 text-xs">
                   <tbody>
                     <tr className="border-b border-gray-400">
-                      <td className="border border-gray-400 p-2">Inflation</td>
-                      <td className="p-2">{settings.inflation.toString()}%</td>
+                      <td className="border border-gray-400 px-2">Inflation</td>
+                      <td className="px-2 py-1">
+                        {settings.inflation.toString()}%
+                      </td>
                     </tr>
 
                     {data.people.length > 1 &&
@@ -346,8 +353,8 @@ const ResultTable = ({
                         (person, i) =>
                           settings.whoDies == i && (
                             <tr>
-                              <td className="border border-gray-400 p-2">{`${person.name}'s Death`}</td>
-                              <td className="p-2">
+                              <td className="border border-gray-400 px-2">{`${person.name}'s Death`}</td>
+                              <td className="px-2 py-1">
                                 {settings.deathYears[i]?.toString()}
                               </td>
                             </tr>
@@ -446,12 +453,12 @@ const ResultTable = ({
         )}
         {!toPrint &&
           !removeScenario &&
-          incomes?.map((income, i) => (
+          incomes?.map((income) => (
             <IncomeModal
               income={income}
               setOpen={() => setOpenModal(-1)}
-              open={openModal === i}
-              i={i}
+              open={openModal === income.id}
+              i={income.id}
             />
           ))}
         <DraggableTable

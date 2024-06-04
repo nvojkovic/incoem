@@ -47,11 +47,13 @@ export const generateColumns = (
     accessorFn: (row: any) => ({
       value: row[title(incomes, data.people, i)],
       year: row.year,
+      incomeId: income.id,
       selectedColumn,
       column: { type: "income", id: incomes[i].id },
     }),
     id: income.id.toString(),
     header: () => ({
+      incomeId: income.id,
       value: title(incomes, data.people, i)
         .split("|")
         .map((i) => (
