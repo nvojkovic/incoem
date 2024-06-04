@@ -7,6 +7,9 @@ import Session from "supertokens-web-js/recipe/session";
 import useUser from "../useUser";
 import { useEffect } from "react";
 
+const KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
+const TABLE = import.meta.env.VITE_STRIPE_PRICING_TABLE_ID;
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -64,7 +67,7 @@ const Subscribe = () => {
             <stripe-pricing-table
               pricing-table-id="prctbl_1PM7BlCvn63ZLyAkjIxohYiu"
               customer-email={user?.info.email}
-              publishable-key="pk_test_51OhD1JCvn63ZLyAkZdNRqGbKeYA1FNUL8dftp0sAH0zT17Epf36GCDTuldslvnVyQaogTZd2haOzLIMX8R8XbaEc000Y9Jng6t"
+              publishable-key={KEY}
             ></stripe-pricing-table>
             <div className="mb-4"></div>
             <Button
