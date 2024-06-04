@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
 import fs from "fs";
+import supertokens from "supertokens-node";
 
 const prisma = new PrismaClient();
 
@@ -14,18 +15,13 @@ export const updateUser = async (req: SessionRequest, res: Response) => {
 export const getUser = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
 
-  let user = await prisma.emailpassword_users.findFirst({
-    where: {
-      user_id: userId,
-      app_id: "public",
-    },
-  });
+  let userInfo = await supertokens.getUser(userId);
   const info = await prisma.userInfo.upsert({
     where: { id: userId },
     update: {},
     create: { id: userId },
   });
-  res.json({ userId, info: { ...info, email: user?.email } });
+  res.json({ userId, info: { ...info, email: userInfo?.emails[0] } });
 };
 
 export const uploadLogo = async (req: any, res: Response) => {
