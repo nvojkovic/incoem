@@ -39,11 +39,15 @@ function Calculator() {
   }, []);
 
   const [data, setData] = useState<Client | null>(null);
-  const [settings, setSettings] = useState<ScenarioSettings>({} as any);
+  const [settings, sett] = useState<ScenarioSettings>({} as any);
+  const setSettings = (settings: ScenarioSettings) => {
+    console.log("setSettings", settings);
+    sett(settings);
+  };
 
   if (!data)
     return (
-      <Layout page="data" onTabChange={() => {}}>
+      <Layout page="data" onTabChange={() => { }}>
         <Spinner />
       </Layout>
     );

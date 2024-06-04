@@ -45,10 +45,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        clientId +
-        "/?data=" +
-        JSON.stringify({ ...settings, data }),
+      "print/client/pdf-live/" +
+      clientId +
+      "/?data=" +
+      JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -259,12 +259,13 @@ const Live = ({
         changeFullScreen={changeFullScreen}
         settings={settings}
         data={data}
-        removeScenario={() => {}}
+        removeScenario={null}
         fullScreen={fullScreen}
         selectedYear={selectedYear}
         setSelectedYear={setSelectedYear}
         selectedColumn={selectedColumn}
         setSelectedColumn={setSelectedColumn}
+        setSettings={setSettings}
         id={-1}
       />
     </div>

@@ -15,7 +15,6 @@ const IncomeModal = ({
   open: boolean;
   setOpen: any;
 }) => {
-  console.log("income", income);
   const { data } = useInfo();
   const incomes = data.data.incomes;
   const people = data.data.people;
