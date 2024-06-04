@@ -1,5 +1,7 @@
 const API = import.meta.env.VITE_API_URL;
 
+export const helpUrl = `${API}/help`;
+
 const fetchApi = async (url: string, options: any) => {
   try {
     const resp = await window.fetch(url, options);

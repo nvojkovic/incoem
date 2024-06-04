@@ -63,6 +63,12 @@ app.post("/stripe/webhook", stripeWebhook);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", getLogo);
 app.get("/report/", verifySession(), getReport);
+app.get("/help", async (req, res) => {
+  const url =
+    "https://docs.google.com/document/d/e/2PACX-1vTFKe6zajevHL1gSpflZDJ1aYSwbYSVUbgYRXVErnzRvf3z2-2XoVpISBAT2EHiTOHyGDOI99DI8gPB/pub?embedded=true";
+  const data = await fetch(url);
+  res.send(await data.text());
+});
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
