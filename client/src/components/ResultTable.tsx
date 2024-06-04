@@ -94,8 +94,6 @@ const DraggableTableHeader = ({
     >
       <div
         className="flex flex-col items-start px-6 py-[0.45rem]"
-        {...attributes}
-        {...listeners}
         onClick={(e) => {
           console.log("clcc", e.detail);
           if (e.detail === 1) {
@@ -113,6 +111,8 @@ const DraggableTableHeader = ({
             setOpenModal(data.index);
           }
         }}
+        {...attributes}
+        {...listeners}
       >
         {header.isPlaceholder ? null : data.value}
       </div>
@@ -217,7 +217,11 @@ const ResultTable = ({
   };
 
   const sensors = useSensors(
-    useSensor(MouseSensor, {}),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 1,
+      },
+    }),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {}),
   );
@@ -269,7 +273,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings],
+    [settings, data],
   );
   console.log("rerender", selectedYear);
 
