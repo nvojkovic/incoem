@@ -65,7 +65,7 @@ const Subscribe = () => {
               Choose a plan to start using Income Mapper
             </div>
             <stripe-pricing-table
-              pricing-table-id="prctbl_1PM7BlCvn63ZLyAkjIxohYiu"
+              pricing-table-id={TABLE}
               customer-email={user?.info.email}
               publishable-key={KEY}
             ></stripe-pricing-table>
