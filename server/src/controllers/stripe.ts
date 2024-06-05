@@ -5,62 +5,6 @@ import supertokens from "supertokens-node";
 
 const prisma = new PrismaClient();
 
-// export const createSubsctiption = async (req: Request, res: Response) => {
-//   let userId = (req as any).session!.getUserId();
-//   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
-//   const info = await prisma.userInfo.findUnique({
-//     where: {
-//       id: userId,
-//     },
-//   });
-//   let user = await prisma.emailpassword_users.findFirst({
-//     where: {
-//       user_id: userId,
-//       app_id: "public",
-//     },
-//   });
-//   let customer: any;
-//   if (!info?.customerId) {
-//     const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
-//     customer = await cl.customers.create({
-//       email: user?.email,
-//     });
-//     console.log(customer);
-//     await prisma.userInfo.update({
-//       where: {
-//         id: userId,
-//       },
-//       data: {
-//         customerId: customer.id,
-//       },
-//     });
-//   } else {
-//     customer = await cl.customers.retrieve(info.customerId);
-//   }
-//
-//   const session = await cl.checkout.sessions.create({
-//     customer: customer.id,
-//     payment_method_types: ["card", "us_bank_account"],
-//     line_items: [
-//       {
-//         price: "price_1OtrExCvn63ZLyAkvgIxNTAb",
-//         quantity: 1,
-//       },
-//     ],
-//     mode: "subscription",
-//     subscription_data: {
-//       trial_period_days: 14,
-//     },
-//     success_url: process.env.APP_URL,
-//     cancel_url: process.env.APP_URL,
-//   });
-//
-//   ///redirect to session.url
-//   return res.json({ url: session.url });
-//
-//   res.json(session);
-// };
-//
 export const createPortalSession = async (req: Request, res: Response) => {
   let userId = (req as any).session!.getUserId();
   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");

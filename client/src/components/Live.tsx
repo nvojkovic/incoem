@@ -120,36 +120,6 @@ const Live = ({
                   </div>
                 ))}
 
-              {/*data.people.length > 1 &&
-                data.people.map(
-                  (person, i) =>
-                    settings.whoDies == i &&
-                    data.incomes.find(
-                      (inc) =>
-                        inc.type == "social-security" && inc.personId == i,
-                    ) && (
-                      <div className="w-44">
-                        <Input
-                          subtype="number"
-                          vertical
-                          disabled={i !== settings.whoDies}
-                          label={`${data.people[1 - i].name}' survivor SS age`}
-                          tooltip={`Age when ${data.people[1 - i].name} starts receiving ${person.name}'s Social Security as a survivor`}
-                          value={settings.deathYears[1 - i]?.toString()}
-                          setValue={(e) =>
-                            setSettings({
-                              ...settings,
-                              ssSurvivorAge: updateAtIndex(
-                                settings.ssSurvivorAge,
-                                1 - i,
-                                parseInt(e),
-                              ),
-                            })
-                          }
-                        />
-                      </div>
-                    ),
-                )*/}
               <div className="">
                 <Input
                   label="Years"
