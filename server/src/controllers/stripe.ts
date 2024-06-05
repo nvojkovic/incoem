@@ -102,7 +102,7 @@ export const createPortalSession = async (req: Request, res: Response) => {
 };
 
 export const stripeWebhook = async (req: Request, res: Response) => {
-  const payload = req.body;
+  const payload = (req as any).rawBody;
   const sig = req.headers["stripe-signature"] || "";
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
   let event: stripe.Event = payload;

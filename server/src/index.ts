@@ -29,6 +29,18 @@ import {
 const port = 3000;
 
 let app = express();
+app.use(function(req, res, next) {
+  var data = "";
+  req.setEncoding("utf8");
+  req.on("data", function(chunk) {
+    data += chunk;
+  });
+  req.on("end", function() {
+    (req as any).rawBody = data;
+  });
+  next();
+});
+
 app.use(express.json());
 app.use(
   cors({
