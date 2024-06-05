@@ -1,65 +1,66 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import stripe from "stripe";
+import supertokens from "supertokens-node";
 
 const prisma = new PrismaClient();
 
-export const createSubsctiption = async (req: Request, res: Response) => {
-  let userId = (req as any).session!.getUserId();
-  const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
-  const info = await prisma.userInfo.findUnique({
-    where: {
-      id: userId,
-    },
-  });
-  let user = await prisma.emailpassword_users.findFirst({
-    where: {
-      user_id: userId,
-      app_id: "public",
-    },
-  });
-  let customer: any;
-  if (!info?.customerId) {
-    const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
-    customer = await cl.customers.create({
-      email: user?.email,
-    });
-    console.log(customer);
-    await prisma.userInfo.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        customerId: customer.id,
-      },
-    });
-  } else {
-    customer = await cl.customers.retrieve(info.customerId);
-  }
-
-  const session = await cl.checkout.sessions.create({
-    customer: customer.id,
-    payment_method_types: ["card", "us_bank_account"],
-    line_items: [
-      {
-        price: "price_1OtrExCvn63ZLyAkvgIxNTAb",
-        quantity: 1,
-      },
-    ],
-    mode: "subscription",
-    subscription_data: {
-      trial_period_days: 14,
-    },
-    success_url: process.env.APP_URL,
-    cancel_url: process.env.APP_URL,
-  });
-
-  ///redirect to session.url
-  return res.json({ url: session.url });
-
-  res.json(session);
-};
-
+// export const createSubsctiption = async (req: Request, res: Response) => {
+//   let userId = (req as any).session!.getUserId();
+//   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
+//   const info = await prisma.userInfo.findUnique({
+//     where: {
+//       id: userId,
+//     },
+//   });
+//   let user = await prisma.emailpassword_users.findFirst({
+//     where: {
+//       user_id: userId,
+//       app_id: "public",
+//     },
+//   });
+//   let customer: any;
+//   if (!info?.customerId) {
+//     const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
+//     customer = await cl.customers.create({
+//       email: user?.email,
+//     });
+//     console.log(customer);
+//     await prisma.userInfo.update({
+//       where: {
+//         id: userId,
+//       },
+//       data: {
+//         customerId: customer.id,
+//       },
+//     });
+//   } else {
+//     customer = await cl.customers.retrieve(info.customerId);
+//   }
+//
+//   const session = await cl.checkout.sessions.create({
+//     customer: customer.id,
+//     payment_method_types: ["card", "us_bank_account"],
+//     line_items: [
+//       {
+//         price: "price_1OtrExCvn63ZLyAkvgIxNTAb",
+//         quantity: 1,
+//       },
+//     ],
+//     mode: "subscription",
+//     subscription_data: {
+//       trial_period_days: 14,
+//     },
+//     success_url: process.env.APP_URL,
+//     cancel_url: process.env.APP_URL,
+//   });
+//
+//   ///redirect to session.url
+//   return res.json({ url: session.url });
+//
+//   res.json(session);
+// };
+//
 export const createPortalSession = async (req: Request, res: Response) => {
   let userId = (req as any).session!.getUserId();
   const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
@@ -68,17 +69,13 @@ export const createPortalSession = async (req: Request, res: Response) => {
       id: userId,
     },
   });
-  let user = await prisma.emailpassword_users.findFirst({
-    where: {
-      user_id: userId,
-      app_id: "public",
-    },
-  });
+
+  let user = await supertokens.getUser(userId);
   let customer: any;
   if (!info?.customerId) {
     const cl = new stripe(process.env.STRIPE_SECRET_KEY || "");
     const customer = await cl.customers.create({
-      email: user?.email,
+      email: user?.emails[0],
     });
     console.log(customer);
     await prisma.userInfo.update({
@@ -116,17 +113,16 @@ export const stripeWebhook = async (req: Request, res: Response) => {
     if (!customer.email) {
       return res.status(400).send(`Webhook Error: customer email is required`);
     }
-    const user = await prisma.emailpassword_users.findFirst({
-      where: {
-        email: customer.email,
-      },
+
+    let user = await supertokens.listUsersByAccountInfo("public", {
+      email: customer.email,
     });
-    if (!user) {
+    if (!user.length) {
       return res.status(400).send(`Webhook Error: user not found`);
     }
     await prisma.userInfo.update({
       where: {
-        id: user.user_id,
+        id: user[0].id,
       },
       data: {
         customerId: customer.id,
