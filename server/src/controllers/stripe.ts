@@ -105,7 +105,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
   const payload = (req as any).rawBody;
   const sig = req.headers["stripe-signature"] || "";
   const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
-  let event: stripe.Event = payload;
+  let event: stripe.Event = JSON.parse(payload.toString());
   console.log("stripe webhook", payload, sig, endpointSecret);
   if (event.type === "customer.created") {
     console.log("customer.created", event.data.object);
