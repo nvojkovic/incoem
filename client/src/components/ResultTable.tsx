@@ -200,7 +200,7 @@ const ResultTable = ({
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => generateColumns(incomes, data, selectedColumn),
-    [selectedColumn, settings, selectedYear],
+    [selectedColumn, settings, selectedYear, data],
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     columns.map((c) => c.id!),
