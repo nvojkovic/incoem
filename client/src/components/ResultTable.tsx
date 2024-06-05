@@ -295,13 +295,9 @@ const ResultTable = ({
         settings.data.incomes.map((i) => i.id),
       );
       if (setSettings) {
-        const oldIndex = settings.data.incomes.findIndex(
-          (x) => x.id == active.id,
-        );
-        const newIndex = settings.data.incomes.findIndex(
-          (x) => x.id == over.id,
-        );
-        const incomes = arrayMove(settings.data.incomes, oldIndex, newIndex);
+        const oldIndex = data.incomes.findIndex((x) => x.id == active.id);
+        const newIndex = data.incomes.findIndex((x) => x.id == over.id);
+        const incomes = arrayMove(data.incomes, oldIndex, newIndex);
         console.log(
           "new ",
           oldIndex,
@@ -309,13 +305,6 @@ const ResultTable = ({
           incomes.map((i) => i.id),
         );
         updateIncomes(incomes);
-        setSettings({
-          ...settings,
-          data: {
-            ...settings.data,
-            incomes,
-          },
-        });
       }
     }
   };
