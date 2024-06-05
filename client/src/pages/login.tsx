@@ -119,6 +119,14 @@ const Login = () => {
                 Sign up
               </Link>
             </div>
+            <div className="text-[14px] text-[#475467] mt-3">
+              <Link
+                to="/reset-password"
+                className="text-[#FF6C47] font-semibold"
+              >
+                Reset Password
+              </Link>
+            </div>
           </div>
         </div>
       </div>

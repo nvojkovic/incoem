@@ -20,6 +20,8 @@ import Subscribe from "./pages/subscribe";
 import PrintLivePage from "./pages/print-live";
 import Paused from "./pages/paused";
 import HelpCenter from "./pages/help";
+import ResetPassword from "./pages/reset-password";
+import ResetPasswordConfirm from "./pages/reset-password-confirm";
 
 SuperTokens.init({
   appInfo: {
@@ -85,6 +87,14 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/auth/reset-password",
+    element: <ResetPasswordConfirm />,
   },
   {
     path: "/signup",
