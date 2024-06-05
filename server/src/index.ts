@@ -29,17 +29,6 @@ import {
 const port = 3000;
 
 let app = express();
-app.use(function(req, res, next) {
-  var data = "";
-  req.setEncoding("utf8");
-  req.on("data", function(chunk) {
-    data += chunk;
-  });
-  req.on("end", function() {
-    (req as any).rawBody = data;
-  });
-  next();
-});
 
 app.use(express.json());
 app.use(
@@ -66,7 +55,7 @@ app.post("/clients", verifySession(), createClient);
 app.post("/settings", verifySession(), updateUser);
 app.get("/user", verifySession(), getUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
-app.post("/stripe/webhook", stripeWebhook);
+app.post("/stripe/webhook", express.raw(), stripeWebhook);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", getLogo);
 app.get("/report/", verifySession(), getReport);
