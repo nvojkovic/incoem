@@ -55,7 +55,7 @@ app.post("/clients", verifySession(), createClient);
 app.post("/settings", verifySession(), updateUser);
 app.get("/user", verifySession(), getUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
-app.post("/stripe/webhook", express.raw(), stripeWebhook);
+app.post("/stripe/webhook", stripeWebhook);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", getLogo);
 app.get("/report/", verifySession(), getReport);

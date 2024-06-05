@@ -102,11 +102,11 @@ export const createPortalSession = async (req: Request, res: Response) => {
 };
 
 export const stripeWebhook = async (req: Request, res: Response) => {
-  const payload = (req as any).rawBody;
-  const sig = req.headers["stripe-signature"] || "";
-  const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
-  let event: stripe.Event = JSON.parse(payload.toString());
-  console.log("stripe webhook", payload, sig, endpointSecret);
+  const payload = req.body;
+  // const sig = req.headers["stripe-signature"] || "";
+  // const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET || "";
+  let event: stripe.Event = payload;
+  // console.log("stripe webhook", payload, sig, endpointSecret);
   if (event.type === "customer.created") {
     console.log("customer.created", event.data.object);
     const customer = event.data.object as stripe.Customer;
@@ -160,11 +160,11 @@ export const stripeWebhook = async (req: Request, res: Response) => {
     });
   }
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (err) {
-    return res.status(400).send(`Webhook Error: ${(err as any).message}`);
-  }
+  // try {
+  //   event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  // } catch (err) {
+  //   return res.status(400).send(`Webhook Error: ${(err as any).message}`);
+  // }
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as stripe.Checkout.Session;
