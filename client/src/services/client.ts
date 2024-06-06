@@ -89,12 +89,14 @@ export const getUser = () => {
 };
 
 export const updateSettings = (settings: any) => {
-  return fetch(API + "settings", {
+  const result = settings;
+  delete result.email;
+  fetch(API + "settings", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(settings),
+    body: JSON.stringify(result),
   });
 };
 
