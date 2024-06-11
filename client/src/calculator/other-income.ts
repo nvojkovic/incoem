@@ -1,8 +1,7 @@
-import { adjustCompoundInterest, isDead } from "./utils";
+import { adjustForInflation, isDead } from "./utils";
 
 export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
   const { income, currentYear } = info;
-  // const startYear = currentYear + info.startYear;
   const current = currentYear;
   const startYear = income.startYear || info.startYear;
 
@@ -17,11 +16,7 @@ export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
     income.amount *
     (1 + income.yearlyIncreasePercent / 100) ** (current - startYear);
 
-  yearAmount = adjustCompoundInterest(
-    yearAmount,
-    -(current - (startYear || info.startYear)),
-    info.inflation,
-  );
+  yearAmount = adjustForInflation(info, yearAmount, info.startYear);
 
   if (income.frequency === "monthly") {
     yearAmount = yearAmount * 12;
