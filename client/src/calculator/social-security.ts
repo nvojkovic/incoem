@@ -21,6 +21,7 @@ export const calculateSocialSecurity = (
   if (isDead(info, income.personId)) return 0;
 
   //find spousal
+  //
   const spouse = incomes.find(
     (i) => i.type === "social-security" && i.personId === 1 - income.personId,
   ) as SocialSecurityIncome;
@@ -37,6 +38,7 @@ export const calculateSocialSecurity = (
       );
     }
   }
+
   if (!income.alreadyReceiving && income.startAgeYear > age)
     return reduceByIncome(info, ownAmount);
 
@@ -60,12 +62,14 @@ export const calculateSocialSecurity = (
     }
   }
 
+  console.log("asdf", currentYear, ownAmount);
   return reduceByIncome(info, ownAmount);
 };
 
 export const calculateOwnSocialSecurity = (
   info: CalculationInfo<SocialSecurityIncome>,
 ) => {
+  //if (info.currentYear !== 2029) return 0;
   const { income, people, currentYear } = info;
   // income.startAgeMonth = income.startAgeMonth == 0 ? 1 : income.startAgeMonth;
   const startAgeMonth = income.startAgeMonth == 0 ? 1 : income.startAgeMonth;
@@ -77,13 +81,15 @@ export const calculateOwnSocialSecurity = (
     if (income.alreadyReceiving) {
       ownAmount = income.annualAmount;
     } else if (income.startAgeYear == age) {
-      ownAmount = (income.annualAmount * (12 - startAgeMonth + 1)) / 12;
+      //console.log("hehe", income.annualAmount, "month", startAgeMonth);
+      ownAmount = (income.annualAmount * (12 - (startAgeMonth || 1) + 1)) / 12;
     } else if (income.startAgeYear < age) {
       ownAmount = income.annualAmount;
     }
   } else {
     const prorate =
       age === income.startAgeYear ? (12 - startAgeMonth + 1) / 12 : 1;
+    console.log("prorate", prorate, age, income.startAgeYear, startAgeMonth);
     ownAmount =
       (income.pia *
         12 *
@@ -96,6 +102,13 @@ export const calculateOwnSocialSecurity = (
     //   startAgeMonth,
     // );
   }
+  // console.log(
+  //   "hehehe",
+  //   currentYear,
+  //   ownAmount,
+  //   income.startAgeYear > age,
+  //   !income.alreadyReceiving && income.startAgeYear > age,
+  // );
   if (!income.alreadyReceiving && income.startAgeYear > age) return 0;
 
   // calculate reduction
@@ -104,11 +117,12 @@ export const calculateOwnSocialSecurity = (
     (income.alreadyReceiving
       ? info.startYear
       : income.startAgeYear + birthYear);
-  // console.log("before", info.currentYear, ownAmount);
+  //console.log("before", info.currentYear, ownAmount);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
   // console.log("after", info.currentYear, ownAmount);
   ownAmount = adjustForInflation(info, ownAmount, info.startYear);
   // console.log("after2", info.currentYear, ownAmount);
+  //console.log("hehehe2", currentYear, ownAmount);
   return ownAmount;
 };
 
@@ -133,7 +147,6 @@ export const calculateSurvivorSocialSecurity = (
     };
     ownAmount = calculateOwnSocialSecurity(newInfo);
   }
-  console.log("hehe", ownAmount, currentYear);
 
   const years = currentYear - (deathYear + birthYear);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
