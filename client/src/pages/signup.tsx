@@ -118,7 +118,7 @@ const Signup = () => {
             <img src={logo} alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] ">Create an account</div>
             <div className="text-[#475467] mb-10">
-              Start your 30-day free trial
+              Start your 7-day free trial
             </div>
             {error && (
               <div className="bg-[#ffd6cc] border border-red-500 px-10 py-3 rounded-md mb-10">
