@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
-import useUser from "../useUser";
+import { useUser } from "../useUser";
 import { useEffect } from "react";
 
 const KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
@@ -66,7 +66,7 @@ const Subscribe = () => {
             </div>
             <stripe-pricing-table
               pricing-table-id={TABLE}
-              customer-email={user?.info.email}
+              customer-email={user?.info?.email}
               publishable-key={KEY}
             ></stripe-pricing-table>
             <div className="mb-4"></div>

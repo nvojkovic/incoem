@@ -1,17 +1,36 @@
-import { useState, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "./services/client";
 
-const useUser = () => {
-  const [user, setUser] = useState(null as any);
+interface User {
+  info?: {
+    subsciptionStatus?: string;
+    logo?: string;
+    email: string;
+  };
+  // Add other user properties as needed
+}
+
+interface UserContextType {
+  user: User | null;
+  fetchUser: () => Promise<void>;
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
+
   const fetchUser = async () => {
     try {
       const response = await getUser();
       if (response.ok) {
-        const userData = await response.json();
+        const userData: User = await response.json();
         setUser(userData);
-        if (userData?.info?.subsciptionStatus == "paused") {
+        if (userData?.info?.subsciptionStatus === "paused") {
           navigate("/paused");
         } else if (
           userData?.info?.subsciptionStatus !== "active" &&
@@ -20,7 +39,6 @@ const useUser = () => {
           navigate("/subscribe");
         }
       } else if (response.status === 401) {
-        // Redirect to login if unauthorized
         console.log("Unauthorized");
         navigate("/login");
       } else {
@@ -28,7 +46,6 @@ const useUser = () => {
       }
     } catch (error) {
       console.error("Error fetching user:", error);
-      // Handle other errors as needed
     }
   };
 
@@ -36,7 +53,17 @@ const useUser = () => {
     fetchUser();
   }, []);
 
-  return { user, fetchUser };
+  return (
+    <UserContext.Provider value={{ user, fetchUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-export default useUser;
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};

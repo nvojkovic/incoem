@@ -5,7 +5,7 @@ import NewClient from "./components/Clients/NewClient";
 import { deleteClient, getClients } from "./services/client";
 import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
-import useUser from "./useUser";
+import { useUser } from "./useUser";
 
 const Clients = () => {
   const { } = useUser();

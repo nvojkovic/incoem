@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Input from "../components/Inputs/Input";
 import Layout from "../components/Layout";
 import MapSection from "../components/MapSection";
-import useUser from "../useUser";
+import { useUser } from "../useUser";
 import Button from "../components/Inputs/Button";
 import { updateSettings, uploadLogo } from "../services/client";
 import Spinner from "../components/Spinner";
@@ -21,7 +21,7 @@ const Settings = () => {
     fetchUser();
   };
   return (
-    <Layout page="settings" onTabChange={() => {}}>
+    <Layout page="settings" onTabChange={() => { }}>
       {settings ? (
         <div className="px-10">
           <MapSection title="Settings" defaultOpen>

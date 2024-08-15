@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
-import useUser from "../useUser";
+import { useUser } from "../useUser";
 import { useEffect } from "react";
 
 declare global {

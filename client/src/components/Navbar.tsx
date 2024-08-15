@@ -4,7 +4,7 @@ import logo from "../assets/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
-import useUser from "../useUser";
+import { useUser } from "../useUser";
 
 const NavItem = ({
   name,
@@ -25,10 +25,6 @@ const NavItem = ({
   );
 };
 
-// user?.info?.logo
-//   ? import.meta.env.VITE_API_URL +
-//   "logo?logo=" +
-//   user?.info?.logo
 const Navbar = ({
   active,
   onTabChange,

@@ -1,9 +1,12 @@
 import { Outlet } from "react-router-dom";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
+import { UserProvider } from "../useUser";
 const Root = () => {
   return (
     <SessionAuth>
-      <Outlet />
+      <UserProvider>
+        <Outlet />
+      </UserProvider>
     </SessionAuth>
   );
 };
