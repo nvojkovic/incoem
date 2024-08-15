@@ -4,6 +4,7 @@ import logo from "../assets/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
+import useUser from "../useUser";
 
 const NavItem = ({
   name,
@@ -38,7 +39,7 @@ const Navbar = ({
   household?: string;
 }) => {
   const navigate = useNavigate();
-  // const { user } = useUser();
+  const { user } = useUser();
 
   return (
     <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
@@ -46,7 +47,10 @@ const Navbar = ({
         <div className="flex items-center justify-start w-full">
           <Link to="/clients">
             <div className="flex items-center cursor-pointer">
-              <img src={logo} className="w-9 h-9 mr-2" />
+              <img
+                src={`${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`}
+                className="w-9 h-9 mr-2"
+              />
               <div className="font-bold text-[20px] leading-5">
                 Income Mapper
               </div>
@@ -94,11 +98,10 @@ const Navbar = ({
                     {({ active }) => (
                       <Link to="/profile">
                         <button
-                          className={`${
-                            active
+                          className={`${active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Settings
                         </button>
@@ -109,11 +112,10 @@ const Navbar = ({
                     {({ active }) => (
                       <Link to="/help">
                         <button
-                          className={`${
-                            active
+                          className={`${active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Help Center
                         </button>
@@ -125,9 +127,8 @@ const Navbar = ({
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${
-                          active ? "bg-main-orange text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         onClick={async () => {
                           await Session.signOut();
                           navigate("/login");
