@@ -49,9 +49,11 @@ const Navbar = ({
             <div className="flex items-center cursor-pointer">
               <img
                 src={
-                  user?.info?.logo
-                    ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
-                    : logo
+                  user?.info
+                    ? user?.info?.logo
+                      ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
+                      : logo
+                    : ""
                 }
                 className="w-9 h-9 mr-2"
               />
