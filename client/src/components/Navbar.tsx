@@ -47,16 +47,18 @@ const Navbar = ({
         <div className="flex items-center justify-start w-full">
           <Link to="/clients">
             <div className="flex items-center cursor-pointer">
-              <img
-                src={
-                  user?.info
-                    ? user?.info?.logo
+              {user?.info ? (
+                <img
+                  src={
+                    user?.info?.logo
                       ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
                       : logo
-                    : ""
-                }
-                className="w-9 h-9 mr-2"
-              />
+                  }
+                  className="w-9 h-9 mr-2"
+                />
+              ) : (
+                <div className="w-9 h-9"></div>
+              )}
               <div className="font-bold text-[20px] leading-5">
                 Income Mapper
               </div>
