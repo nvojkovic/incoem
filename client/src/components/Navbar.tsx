@@ -49,7 +49,7 @@ const Navbar = ({
             <div className="flex items-center cursor-pointer">
               <img
                 src={
-                  user.info.logo
+                  user?.info?.logo
                     ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
                     : logo
                 }
