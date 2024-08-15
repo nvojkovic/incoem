@@ -55,9 +55,14 @@ const Navbar = ({
               ) : (
                 <div className="w-9 h-9"></div>
               )}
-              <div className="font-bold text-[20px] leading-5">
-                Income Mapper
-              </div>
+
+              {user?.info ? (
+                <div className="font-bold text-[20px] leading-5">
+                  {user?.info?.logo ? "" : "Income Mapper"}
+                </div>
+              ) : (
+                <div className="w-9 h-9"></div>
+              )}
             </div>
           </Link>
           {active == "data" || active == "calculator" ? (
