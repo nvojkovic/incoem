@@ -54,7 +54,7 @@ const Navbar = ({
                       ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
                       : logo
                   }
-                  className="w-9 h-9 mr-2"
+                  className="h-9 mr-2"
                 />
               ) : (
                 <div className="w-9 h-9"></div>
