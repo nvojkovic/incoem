@@ -158,10 +158,10 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
                             }
                           />
                           <div
-                            className="bg-[#ffebe5] p-3 rounded-full cursor-pointer"
+                            className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
                             onClick={() => setRemoveOpen(i)}
                           >
-                            <TrashIcon className="text-main-orange w-5 " />
+                            <TrashIcon className="text-red-500 w-5" />
                           </div>
                         </div>
                       </div>

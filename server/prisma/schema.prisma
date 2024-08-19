@@ -31,7 +31,7 @@ model UserInfo {
   disclosures       String?
   subsciptionStatus String?
   subscriptionPlan  String?
-  primaryColor      String? @default("#FF7957")
+  primaryColor      String? @default("#FF6C47")
 }
 
 model all_auth_recipe_users {
