@@ -7,6 +7,7 @@ interface User {
     subsciptionStatus?: string;
     logo?: string;
     email: string;
+    primaryColor: string;
   };
   // Add other user properties as needed
 }
@@ -14,6 +15,7 @@ interface User {
 interface UserContextType {
   user: User | null;
   fetchUser: () => Promise<void>;
+  updatePrimaryColor: (color: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -49,12 +51,35 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const updatePrimaryColor = async (color: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}settings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ primaryColor: color }),
+      });
+
+      if (response.ok) {
+        setUser((prevUser) => ({
+          ...prevUser!,
+          info: { ...prevUser!.info!, primaryColor: color },
+        }));
+      } else {
+        throw new Error("Failed to update primary color");
+      }
+    } catch (error) {
+      console.error("Error updating primary color:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, fetchUser }}>
+    <UserContext.Provider value={{ user, fetchUser, updatePrimaryColor }}>
       {children}
     </UserContext.Provider>
   );

@@ -14,7 +14,7 @@ function Toggle({ enabled, setEnabled, size = "lg" }: ToggleProps) {
         <Switch
           checked={enabled}
           onChange={setEnabled}
-          className={`${enabled ? "bg-[#ff6c47]" : "bg-gray-200"
+          className={`${enabled ? "bg-main-orange" : "bg-gray-200"
             } relative inline-flex h-4 w-7 items-center rounded-full`}
         >
           <span className="sr-only">Enable notifications</span>
@@ -27,7 +27,7 @@ function Toggle({ enabled, setEnabled, size = "lg" }: ToggleProps) {
         <Switch
           checked={enabled}
           onChange={setEnabled}
-          className={`${enabled ? "bg-[#ff6c47]" : "bg-gray-200"
+          className={`${enabled ? "bg-main-orange" : "bg-gray-200"
             } relative inline-flex h-6 w-11 items-center rounded-full`}
         >
           <span className="sr-only">Enable notifications</span>

@@ -417,7 +417,7 @@ const ResultTable = ({
                 <div className="flex items-center print:hidden">
                   <Button type="secondary">
                     <TrashIcon
-                      className="h-6 w-6 text-[#FF6C47] cursor-pointer "
+                      className="h-6 w-6 text-red-500 cursor-pointer "
                       onClick={() => setRemoveOpen(true)}
                     />
                   </Button>

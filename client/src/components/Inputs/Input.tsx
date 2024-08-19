@@ -13,14 +13,14 @@ interface Props {
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-    | "money"
-    | "percent"
-    | "text"
-    | "number"
-    | "date"
-    | "toggle"
-    | "password"
-    | "textarea";
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
 }
@@ -46,7 +46,7 @@ const Input = ({
 }: Props) => {
   let input = null as any;
   const basic =
-    "focus:outline-none focus:border-[#FF6C47] focus:ring-1 focus:ring-[#FF6C47] rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100";
+    "focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100";
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -159,7 +159,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-            // className="border-black border"
+          // className="border-black border"
           >
             <div className="relative cursor-pointer">
               <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />

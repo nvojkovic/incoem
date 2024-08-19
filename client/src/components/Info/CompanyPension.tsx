@@ -45,7 +45,7 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
           />
           {people.length > 1 && (
             <Input
-              label="Survivor"
+              label="Survivor %"
               subtype="percent"
               size="lg"
               value={pension.survivorPercent}
@@ -60,13 +60,14 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             size="lg"
             value={pension.startAge}
             setValue={(name) => setIncome({ ...pension, startAge: name })}
-            tooltip="Leave blank if already receiving"
+            tooltip="Age that pension income begins (e.g., 65). Leave blank if already receiving."
           />
           <Input
             label="First-Year Prorate"
             subtype="percent"
             size="lg"
             value={pension.firstYearProRatePercent}
+            tooltip="What percentage of the annuity will be paid in the first year?"
             setValue={(name) =>
               setIncome({
                 ...pension,

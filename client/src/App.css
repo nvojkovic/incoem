@@ -55,3 +55,7 @@ tr:last-of-type td:last-of-type {
 html {
   -webkit-print-color-adjust: exact;
 }
+
+:root {
+  --primary-color: #ff7957;
+}

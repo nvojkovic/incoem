@@ -77,7 +77,7 @@ export const paydown = (): any => ({
   name: "",
   startYear: null,
   length: null,
-  paymentInYear: null,
+  paymentInYear: "beginning",
   interestRate: null,
   total: null,
 });

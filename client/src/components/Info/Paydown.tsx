@@ -43,11 +43,11 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         setValue={(name) => setIncome({ ...paydown, name })}
       />
       <Input
-        label="Start Amount"
+        label="Principal"
         subtype="money"
         size="lg"
         value={paydown.total}
-        tooltip="The total amount of the paydown"
+        tooltip="The total principal amount to be paid down"
         setValue={(name) => setIncome({ ...paydown, total: name })}
       />
       <Input
@@ -74,7 +74,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         label="Start Year"
         subtype="number"
         size="lg"
-        tooltip="The year the paydown starts"
+        tooltip="The calendar year the paydown starts"
         value={paydown.startYear}
         setValue={(name) => setIncome({ ...paydown, startYear: name })}
       />
@@ -82,7 +82,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         label="Length (years)"
         subtype="number"
         size="lg"
-        tooltip="The length of the paydown"
+        tooltip="How many years (e.g., 15) will the paydown last"
         value={paydown.length}
         setValue={(name) =>
           setIncome({

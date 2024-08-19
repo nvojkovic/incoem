@@ -17,7 +17,7 @@ const NavItem = ({
 }) => {
   return (
     <div
-      className={`cursor-pointer py-2 px-3 font-semibold rounded-md ${active ? "bg-[#FF7957] text-white" : ""}`}
+      className={`cursor-pointer py-2 px-3 font-semibold rounded-md ${active ? "bg-main-orange text-white" : ""}`}
       onClick={onClick}
     >
       {name}
@@ -119,7 +119,10 @@ const Navbar = ({
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
-                      <Link to="/help">
+                      <Link
+                        to="https://intercom.help/income-mapper/en/"
+                        target="_blank"
+                      >
                         <button
                           className={`${active
                               ? "bg-main-orange text-white"

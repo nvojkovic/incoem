@@ -24,13 +24,10 @@ const ScenarioTab = ({
   };
   return (
     <div
-      className={`${
-        live ? "px-6" : "px-5"
-      } text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
-        active
-          ? "border-[#FF6C47] text-[#FF6C47] bg-[#FF79571A]"
-          : "text-[#667085]"
-      } z-50`}
+      className={`${live ? "px-6" : "px-5"
+        } text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${active ? "border-main-orange text-main-orange" : "text-[#667085]"
+        } z-50`}
+      style={{ backgroundColor: "rgba(var(--tw-bg-main-orange), 0.1);" }}
       onClick={setActive}
       onDoubleClick={() => !live && setEditing(true)}
     >

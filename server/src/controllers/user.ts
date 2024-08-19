@@ -19,7 +19,7 @@ export const getUser = async (req: SessionRequest, res: Response) => {
   const info = await prisma.userInfo.upsert({
     where: { id: userId },
     update: {},
-    create: { id: userId },
+    create: { id: userId, primaryColor: "#FF7957" },
   });
   res.json({ userId, info: { ...info, email: userInfo?.emails[0] } });
 };

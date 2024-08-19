@@ -68,7 +68,7 @@ const NewClient = () => {
   const cancel = () => {
     setNewOpen(false);
     setName("");
-    setPeople([newPerson(0)]);
+    setPeople([newPerson(0), newPerson(1)]);
     setStep(1);
   };
 

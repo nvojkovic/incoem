@@ -8,7 +8,7 @@ import { updateSettings, uploadLogo } from "../services/client";
 import Spinner from "../components/Spinner";
 
 const Settings = () => {
-  const { user, fetchUser } = useUser();
+  const { user, fetchUser, updatePrimaryColor } = useUser();
   useEffect(() => {
     setSettings(user?.info || null);
   }, [user]);
@@ -20,6 +20,11 @@ const Settings = () => {
     await uploadLogo(file);
     fetchUser();
   };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSettings({ ...settings, primaryColor: e.target.value });
+  };
+
   return (
     <Layout page="settings" onTabChange={() => { }}>
       {settings ? (
@@ -53,6 +58,21 @@ const Settings = () => {
                 size="full"
                 subtype="textarea"
               />
+              <div className="flex items-center gap-4">
+                <label
+                  htmlFor="primaryColor"
+                  className="text-sm text-[#344054]"
+                >
+                  Primary Color
+                </label>
+                <input
+                  type="color"
+                  id="primaryColor"
+                  value={settings.primaryColor}
+                  onChange={handleColorChange}
+                  className="w-10 h-10 rounded-md cursor-pointer"
+                />
+              </div>
 
               <div className="flex gap-3">
                 <Button type="secondary" onClick={() => ref.current.click()}>
@@ -64,36 +84,48 @@ const Settings = () => {
                   ref={ref}
                   onChange={upload}
                 />
-                {
+
+                {user?.info?.logo && (
                   <Button
                     type="secondary"
                     onClick={async () => {
-                      if (
-                        user?.info?.subsciptionStatus === "active" ||
-                        user?.info?.subsciptionStatus === "trialing"
-                      ) {
-                        const d = await fetch(
-                          import.meta.env.VITE_API_URL + "stripeRedirect",
-                        ).then((a) => a.json());
-                        window.open(d.url, "_blank");
-                      } else {
-                        const d = await fetch(
-                          import.meta.env.VITE_API_URL + "stripeSubscribe",
-                        ).then((a) => a.json());
-                        window.open(d.url, "_blank");
-                      }
+                      await updateSettings({ ...settings, logo: null });
+                      await fetchUser();
                     }}
                   >
-                    Billing settings
+                    Remove Logo
                   </Button>
-                }
+                )}
               </div>
+              <Button
+                type="secondary"
+                onClick={async () => {
+                  if (
+                    user?.info?.subsciptionStatus === "active" ||
+                    user?.info?.subsciptionStatus === "trialing"
+                  ) {
+                    const d = await fetch(
+                      import.meta.env.VITE_API_URL + "stripeRedirect",
+                    ).then((a) => a.json());
+                    window.open(d.url, "_blank");
+                  } else {
+                    const d = await fetch(
+                      import.meta.env.VITE_API_URL + "stripeSubscribe",
+                    ).then((a) => a.json());
+                    window.open(d.url, "_blank");
+                  }
+                }}
+              >
+                Billing settings
+              </Button>
+
               <div className="uto">
                 <Button
                   type="primary"
                   onClick={async () => {
                     setLoading(true);
                     await updateSettings(settings);
+                    await updatePrimaryColor(settings.primaryColor);
                     setLoading(false);
                   }}
                 >

@@ -14,9 +14,11 @@ export default {
       transitionProperty: {
         maxHeight: "max-height",
       },
+      colors: {
+        "main-orange": "var(--primary-color)",
+      },
     },
     colors: {
-      "main-orange": "#FF7957",
       ...colors,
     },
   },

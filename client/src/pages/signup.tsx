@@ -6,7 +6,9 @@ import Button from "../components/Inputs/Button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { sendVerificationEmail } from "supertokens-web-js/recipe/emailverification";
 import { CheckIcon } from "@heroicons/react/20/solid";
+
 const special = [
   "~",
   "`",
@@ -66,18 +68,12 @@ const Signup = () => {
           },
         ],
       });
-      setSubmitting(false);
 
       if (response.status === "FIELD_ERROR") {
-        // one of the input formFields failed validaiton
         response.formFields.forEach((formField) => {
           if (formField.id === "email") {
-            // Email validation failed (for example incorrect email syntax),
-            // or the email is not unique.
             setError(formField.error);
           } else if (formField.id === "password") {
-            // Password validation failed.
-            // Maybe it didn't match the password strength
             setError(formField.error);
           }
         });
@@ -87,7 +83,13 @@ const Signup = () => {
       } else {
         // sign up successful. The session tokens are automatically handled by
         // the frontend SDK.
-        navigate("/login/verify-email");
+        try {
+          await sendVerificationEmail();
+          navigate("/login/verify-email");
+        } catch (verificationError) {
+          console.error("Error sending verification email:", verificationError);
+          setError("Failed to send verification email. Please try again.");
+        }
       }
     } catch (err: any) {
       if (err.isSuperTokensGeneralError === true) {

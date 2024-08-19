@@ -2,6 +2,7 @@ import { adjustForInflation } from "./utils";
 
 export const calculatePaydown = (info: CalculationInfo<Paydown>) => {
   const { income, startYear, currentYear } = info;
+  income.startYear = income.startYear || currentYear;
   if (
     income.startYear > currentYear ||
     income.startYear + income.length < currentYear

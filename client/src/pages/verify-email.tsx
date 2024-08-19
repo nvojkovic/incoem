@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import bg from "../assets/login-bg.png";
 import logo from "../assets/logo.png";
 import Button from "../components/Inputs/Button";
@@ -10,22 +10,26 @@ const VerifyEmail = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const submit = async () => {
+  useEffect(() => {
+    setError(
+      "We've sent a verification email to your address. Please check your inbox and click the link to verify your email.",
+    );
+  }, []);
+
+  const resendEmail = async () => {
     setError("");
     try {
       setSubmitting(true);
       let response = await sendVerificationEmail();
       if (response.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
-        // This can happen if the info about email verification in the session was outdated.
-        // Redirect the user to the home page
         navigate("/clients");
       } else {
-        // email was sent successfully.
-        setError("Please check your email and click the link in it");
+        setError(
+          "A new verification email has been sent. Please check your inbox.",
+        );
       }
     } catch (err: any) {
       if (err.isSuperTokensGeneralError === true) {
-        // this may be a custom error message sent from the API by you.
         setError(err.message);
       } else {
         setError("Oops! Something went wrong.");
@@ -52,18 +56,11 @@ const VerifyEmail = () => {
           <div className="flex flex-col items-center justify-start w-[360px]">
             <img src={logo} alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] text-center">
-              We need to verify your email address
+              Verify your email address
             </div>
-            <div className="text-[#475467] mb-10">
-              Click the button to start verification process.
-            </div>
-            {error && (
-              <div className="bg-[#ffd6cc] border border-red-500 px-10 py-3 rounded-md mb-10">
-                {error}
-              </div>
-            )}
-            <Button type="primary" onClick={submit}>
-              {submitting ? "Sending..." : "Send email"}
+            <div className="text-[#475467] mb-10 text-center">{error}</div>
+            <Button type="primary" onClick={resendEmail}>
+              {submitting ? "Sending..." : "Resend verification email"}
             </Button>
             <div className="mb-6"></div>
           </div>
