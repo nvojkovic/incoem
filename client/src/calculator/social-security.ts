@@ -72,7 +72,7 @@ export const calculateOwnSocialSecurity = (
   //if (info.currentYear !== 2029) return 0;
   const { income, people, currentYear } = info;
   // income.startAgeMonth = income.startAgeMonth == 0 ? 1 : income.startAgeMonth;
-  const startAgeMonth = income.startAgeMonth == 0 ? 1 : income.startAgeMonth;
+  const startAgeMonth = income.startAgeMonth || 1; //
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;

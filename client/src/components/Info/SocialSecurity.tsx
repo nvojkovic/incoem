@@ -12,6 +12,10 @@ interface Props {
 const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
   const canRecieve =
     calculateAge(new Date(people[pension.personId].birthday)) >= 62;
+
+  const handleStartAgeMonthChange = (month: { id: number }) => {
+    setIncome({ ...pension, startAgeMonth: month.id || 1 }); // Set to 1 if blank or 0
+  };
   return (
     <>
       <div className="flex-grow">
@@ -98,10 +102,8 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               {!pension.alreadyReceiving && (
                 <MonthPicker
                   label="Start Age Month"
-                  selected={pension.startAgeMonth}
-                  setSelected={(name) =>
-                    setIncome({ ...pension, startAgeMonth: name.id })
-                  }
+                  selected={pension.startAgeMonth || 1} // Use 1 if startAgeMonth is 0 or undefined
+                  setSelected={handleStartAgeMonthChange}
                 />
               )}
             </div>
