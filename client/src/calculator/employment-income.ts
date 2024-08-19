@@ -4,10 +4,15 @@ import { adjustForInflation, isDead } from "./utils";
 export const calculateEmploymentIncome = (
   info: CalculationInfo<EmploymentIncome>,
 ) => {
-  const { people, income, startYear, currentYear } = info;
+  const { people, income, startYear, currentYear } = {
+    ...info,
+    income: { ...info.income },
+  };
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
+  income.startAge = income.startAge || age;
+  income.retirementAgeYear = income.retirementAgeYear || 3000;
 
   if (
     income.startAge > age ||
