@@ -151,8 +151,8 @@ export const calculateSurvivorSocialSecurity = (
   const years = currentYear - (deathYear + birthYear);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
 
-  ownAmount = adjustForInflation(info, ownAmount, info.startYear);
-  // ownAmount = adjustCompoundInterest(ownAmount, years, -(info.inflation || 0));
+  console.log("death", birthYear + deathYear);
+  ownAmount = adjustForInflation(info, ownAmount, birthYear + deathYear);
   return ownAmount;
 };
 
