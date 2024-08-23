@@ -1,10 +1,11 @@
-import { splitDate } from "../utils";
+import { printNumber, splitDate } from "../utils";
 import { calculateEmploymentIncome } from "./employment-income";
 import {
   adjustCompoundInterest,
   adjustForInflation,
   birthday,
   isDead,
+  noNote,
   retirementYear,
   ssPercent,
 } from "./utils";
@@ -18,7 +19,7 @@ export const calculateSocialSecurity = (
   const age = currentYear - birthYear;
   let ownAmount = 0;
 
-  if (isDead(info, income.personId)) return 0;
+  if (isDead(info, income.personId)) return noNote(0);
 
   //find spousal
   //
@@ -39,8 +40,17 @@ export const calculateSocialSecurity = (
     }
   }
 
-  if (!income.alreadyReceiving && income.startAgeYear > age)
-    return reduceByIncome(info, ownAmount);
+  if (!income.alreadyReceiving && income.startAgeYear > age) {
+    const amount = reduceByIncome(info, ownAmount);
+    if (amount.result != ownAmount)
+      return {
+        note: `Due to employment income of ${printNumber(amount.income)} your 
+Social Security has been reduced from ${printNumber(ownAmount)}
+to ${printNumber(amount.result)} for this year`,
+        amount: amount.result,
+      };
+    else return { note: "", amount: amount.result };
+  }
 
   // if retired
   ownAmount = Math.max(calculateOwnSocialSecurity(info), ownAmount);
@@ -57,21 +67,33 @@ export const calculateSocialSecurity = (
         ...info,
         income: spouse,
       } as CalculationInfo<SocialSecurityIncome>;
+
+      const startAgeMonth = income.startAgeMonth || 1; //
+      const prorate =
+        age === income.startAgeYear ? (12 - startAgeMonth + 1) / 12 : 1;
       const spousal = calculateOwnSocialSecurity(newInfo) / 2;
-      ownAmount = Math.max(ownAmount, spousal);
+      ownAmount = Math.max(ownAmount, spousal * prorate);
     }
   }
 
   console.log("asdf", currentYear, ownAmount);
-  return reduceByIncome(info, ownAmount);
+  const amount = reduceByIncome(info, ownAmount);
+  if (amount.result != ownAmount)
+    return {
+      note: `Due to employment income of ${printNumber(amount.income)} your 
+Social Security has been reduced from ${printNumber(ownAmount)}
+to ${printNumber(amount.result)} for this year`,
+      amount: amount.result,
+    };
+  else {
+    return noNote(amount.result);
+  }
 };
 
 export const calculateOwnSocialSecurity = (
   info: CalculationInfo<SocialSecurityIncome>,
 ) => {
-  //if (info.currentYear !== 2029) return 0;
   const { income, people, currentYear } = info;
-  // income.startAgeMonth = income.startAgeMonth == 0 ? 1 : income.startAgeMonth;
   const startAgeMonth = income.startAgeMonth || 1; //
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
@@ -96,19 +118,7 @@ export const calculateOwnSocialSecurity = (
         prorate *
         ssPercent(person.birthday, income.startAgeYear, startAgeMonth)) /
       100;
-    // ownAmount = ssPercent(
-    //   person.birthday,
-    //   income.startAgeYear,
-    //   startAgeMonth,
-    // );
   }
-  // console.log(
-  //   "hehehe",
-  //   currentYear,
-  //   ownAmount,
-  //   income.startAgeYear > age,
-  //   !income.alreadyReceiving && income.startAgeYear > age,
-  // );
   if (!income.alreadyReceiving && income.startAgeYear > age) return 0;
 
   // calculate reduction
@@ -117,12 +127,8 @@ export const calculateOwnSocialSecurity = (
     (income.alreadyReceiving
       ? info.startYear
       : income.startAgeYear + birthYear);
-  //console.log("before", info.currentYear, ownAmount);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
-  // console.log("after", info.currentYear, ownAmount);
   ownAmount = adjustForInflation(info, ownAmount, info.startYear);
-  // console.log("after2", info.currentYear, ownAmount);
-  //console.log("hehehe2", currentYear, ownAmount);
   return ownAmount;
 };
 
@@ -172,7 +178,7 @@ const reduceByIncome = (
       income: employment,
     };
 
-    const a = calculateEmploymentIncome(newInfo);
+    const a = calculateEmploymentIncome(newInfo).amount;
     let r = retirementYear(person.birthday);
     if (currentYear < r && a > 22320) {
       ownAmount = Math.max(ownAmount - (a - 22320) / 2, 0);
@@ -180,6 +186,7 @@ const reduceByIncome = (
     if (currentYear == r && a > 59520) {
       ownAmount = Math.max(ownAmount - (a - 59520) / 3, 0);
     }
+    return { result: ownAmount, income: a };
   }
-  return ownAmount;
+  return { result: ownAmount, income: 0 };
 };

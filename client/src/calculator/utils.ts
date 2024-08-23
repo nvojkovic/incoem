@@ -1,5 +1,7 @@
 import { splitDate } from "../utils";
 
+export const noNote = (amount: number) => ({ amount, note: "" });
+
 export const isDead = (info: CalculationInfo<Income>, personId: number) => {
   const { dead, deathYears, people, currentYear } = info;
   if (personId === -1 || personId === undefined) return false;

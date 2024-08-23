@@ -2,6 +2,7 @@ import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
   PrinterIcon,
+  QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import calculate from "../calculator/calculate";
@@ -12,7 +13,7 @@ import Confirm from "./Confirm";
 import { CSSProperties, useMemo, useState } from "react";
 import StackedChart from "./Chart";
 import Button from "./Inputs/Button";
-import { Spinner } from "flowbite-react";
+import { Spinner, Tooltip } from "flowbite-react";
 import IncomeModal from "./Info/IncomeModal";
 import {
   Cell,
@@ -77,11 +78,12 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium  ${selectedColumn.type == data.column.type &&
-          selectedColumn.id == data.column.id
+      className={`font-medium  ${
+        selectedColumn.type == data.column.type &&
+        selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-        }`}
+      }`}
       colSpan={header.colSpan}
       ref={setNodeRef}
       style={style}
@@ -99,7 +101,7 @@ const DraggableTableHeader = ({
             setTimer(
               setTimeout(() => {
                 selectedColumn.type === data.column.type &&
-                  selectedColumn.id == data.column.id
+                selectedColumn.id == data.column.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn(data.column);
               }, 200),
@@ -235,37 +237,56 @@ const ResultTable = ({
             .map((p) => currentYear - splitDate(p.birthday).year)
             .join("/"),
           ...Object.fromEntries(
-            incomes.map((income, i) => [
-              title(incomes, data.people, i),
-              printNumber(
-                calculate({
-                  people: data.people,
-                  income,
-                  startYear,
-                  currentYear,
-                  deathYears: settings.deathYears as any,
-                  dead: settings.whoDies,
-                  inflation: settings.inflation,
-                  incomes: incomes,
-                  ssSurvivorAge: settings.ssSurvivorAge,
-                }),
-              ),
-            ]),
+            incomes.map((income, i) => {
+              const result = calculate({
+                people: data.people,
+                income,
+                startYear,
+                currentYear,
+                deathYears: settings.deathYears as any,
+                dead: settings.whoDies,
+                inflation: settings.inflation,
+                incomes: incomes,
+                ssSurvivorAge: settings.ssSurvivorAge,
+              });
+              return [
+                title(incomes, data.people, i),
+                <div>
+                  {result.note ? (
+                    <Tooltip
+                      content={result.note}
+                      theme={{ target: "" }}
+                      placement="top"
+                      style="light"
+                      className="!z-[50000] bg-white"
+                    >
+                      <div className="cursor-pointer flex items-center gap-2">
+                        {printNumber(result.amount)}
+                        <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] " />
+                      </div>
+                    </Tooltip>
+                  ) : (
+                    printNumber(result.amount)
+                  )}
+                </div>,
+              ];
+            }),
           ),
           total: printNumber(
             incomes
-              .map((income) =>
-                calculate({
-                  people: data.people,
-                  income,
-                  startYear,
-                  currentYear,
-                  deathYears: settings.deathYears as any,
-                  dead: settings.whoDies,
-                  inflation: settings.inflation,
-                  incomes: incomes,
-                  ssSurvivorAge: settings.ssSurvivorAge,
-                }),
+              .map(
+                (income) =>
+                  calculate({
+                    people: data.people,
+                    income,
+                    startYear,
+                    currentYear,
+                    deathYears: settings.deathYears as any,
+                    dead: settings.whoDies,
+                    inflation: settings.inflation,
+                    incomes: incomes,
+                    ssSurvivorAge: settings.ssSurvivorAge,
+                  }).amount,
               )
               .filter((t) => typeof t === "number")
               .reduce((a, b) => a + b, 0),
@@ -365,7 +386,7 @@ const ResultTable = ({
                             disabled
                             label={`${person.name}'s Death`}
                             value={settings.deathYears[i]?.toString()}
-                            setValue={() => { }}
+                            setValue={() => {}}
                           />
                         </div>
                       ),
@@ -379,7 +400,7 @@ const ResultTable = ({
                     vertical
                     disabled
                     value={settings.maxYearsShown?.toString()}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:mr-[-20px]">
@@ -390,7 +411,7 @@ const ResultTable = ({
                     vertical
                     subtype="percent"
                     value={settings.inflation?.toString()}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:hidden">
@@ -482,7 +503,7 @@ const ResultTable = ({
                   inflation: settings.inflation,
                   incomes: incomes,
                   ssSurvivorAge: settings.ssSurvivorAge,
-                }),
+                }).amount,
               ),
             ),
           }))}

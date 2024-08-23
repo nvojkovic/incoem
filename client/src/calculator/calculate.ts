@@ -5,7 +5,12 @@ import { calculateOtherIncome } from "./other-income";
 import { calculatePaydown } from "./paydown";
 import { calculateSocialSecurity } from "./social-security";
 
-const calculate = (info: CalculationInfo<Income>) => {
+interface CalculationResult {
+  amount: number;
+  note: string;
+}
+
+const calculate = (info: CalculationInfo<Income>): CalculationResult => {
   if (info.income.type === "employment-income") {
     return calculateEmploymentIncome(info as CalculationInfo<EmploymentIncome>);
   } else if (info.income.type === "social-security") {
@@ -21,7 +26,7 @@ const calculate = (info: CalculationInfo<Income>) => {
   } else if (info.income.type === "annuity") {
     return calculateBasicAnnuity(info as CalculationInfo<BasicAnnuity>);
   } else {
-    return -1;
+    return { amount: -1, note: "" };
     throw new Error("Unknown income type");
   }
 };

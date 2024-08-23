@@ -1,6 +1,6 @@
 import { adjustForInflation, isDead } from "./utils";
 
-export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
+export const calculate = (info: CalculationInfo<OtherIncome>) => {
   const { income, currentYear } = info;
   const current = currentYear;
   const startYear = income.startYear || info.startYear;
@@ -35,4 +35,8 @@ export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
   }
 
   return yearAmount;
+};
+
+export const calculateOtherIncome = (info: CalculationInfo<OtherIncome>) => {
+  return { amount: calculate(info), note: "" };
 };

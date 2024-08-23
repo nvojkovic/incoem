@@ -1,6 +1,6 @@
 import { adjustForInflation, isDead } from "./utils";
 
-export const calculateBasicAnnuity = (info: CalculationInfo<BasicAnnuity>) => {
+export const calculate = (info: CalculationInfo<BasicAnnuity>) => {
   const { income, startYear, currentYear } = info;
   const start = startYear + income.yearsOfDeferral;
   let yearAmount =
@@ -21,4 +21,8 @@ export const calculateBasicAnnuity = (info: CalculationInfo<BasicAnnuity>) => {
   }
 
   return yearAmount;
+};
+
+export const calculateBasicAnnuity = (info: CalculationInfo<BasicAnnuity>) => {
+  return { amount: calculate(info), note: "" };
 };

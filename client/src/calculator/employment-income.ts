@@ -1,9 +1,7 @@
 import { splitDate } from "../utils";
 import { adjustForInflation, isDead } from "./utils";
 
-export const calculateEmploymentIncome = (
-  info: CalculationInfo<EmploymentIncome>,
-) => {
+const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   const { people, income, startYear, currentYear } = {
     ...info,
     income: { ...info.income },
@@ -11,7 +9,7 @@ export const calculateEmploymentIncome = (
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
-  income.startAge = income.startAge || age;
+  income.startAge = income.startAge;
   income.retirementAgeYear = income.retirementAgeYear || 3000;
 
   if (
@@ -32,6 +30,7 @@ export const calculateEmploymentIncome = (
   baseAmount = adjustForInflation(info, baseAmount, startYear);
 
   if (income.startAge === age) {
+    console.log("wtf", income.startAge, age);
     return (baseAmount * income.firstYearProratePercent) / 100;
   }
 
@@ -39,4 +38,10 @@ export const calculateEmploymentIncome = (
     return baseAmount * (income.retirementAgeMonth / 12);
   }
   return baseAmount;
+};
+
+export const calculateEmploymentIncome = (
+  info: CalculationInfo<EmploymentIncome>,
+) => {
+  return { amount: calculate(info), note: "" };
 };

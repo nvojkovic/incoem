@@ -1,9 +1,7 @@
 import { splitDate } from "../utils";
 import { adjustForInflation, isDead } from "./utils";
 
-export const calculateCompanyPension = (
-  info: CalculationInfo<CompanyPension>,
-) => {
+export const calculate = (info: CalculationInfo<CompanyPension>) => {
   const { people, income, startYear, currentYear } = info;
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
@@ -30,4 +28,10 @@ export const calculateCompanyPension = (
   }
 
   return yearAmount;
+};
+
+export const calculateCompanyPension = (
+  info: CalculationInfo<CompanyPension>,
+) => {
+  return { amount: calculate(info), note: "" };
 };

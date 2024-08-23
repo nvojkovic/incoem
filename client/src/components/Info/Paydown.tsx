@@ -99,7 +99,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         value={
           Number.isNaN(amount) || amount == Infinity ? 0 : amount.toFixed(2)
         }
-        setValue={() => { }}
+        setValue={() => {}}
       />
     </div>
   );
