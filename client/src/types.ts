@@ -91,7 +91,7 @@ interface Paydown extends Income {
   name: string;
   personId: number;
   total: number;
-  paymentInYear: "beggining" | "end";
+  paymentInYear: "beginning" | "end";
   startYear: number;
   length: number;
   interestRate: number;

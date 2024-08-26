@@ -17,7 +17,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
   let amount =
     (paydown.total * interest) / (1 - Math.pow(1 + interest, -paydown.length));
 
-  if (paydown.paymentInYear === "beggining") {
+  if (paydown.paymentInYear === "beginning") {
     amount = amount / (1 + interest);
   }
 

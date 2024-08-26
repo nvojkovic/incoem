@@ -17,7 +17,7 @@ export const calculate = (info: CalculationInfo<Paydown>) => {
     (income.total * interest) / (1 - Math.pow(1 + interest, -income.length));
   console.log("aaaa", income.paymentInYear);
 
-  if (income.paymentInYear === "beggining") {
+  if (income.paymentInYear === "beginning") {
     amount = amount / (1 + interest);
   }
 
