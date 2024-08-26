@@ -41,8 +41,8 @@ app.get("/", async (req, res) => {
     landscape: true,
     printBackground: true,
     margin: {
-      bottom: "20px",
-      top: "20px",
+      bottom: "30px",
+      top: "30px",
     },
   });
   await browser.close();
