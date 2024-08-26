@@ -350,8 +350,10 @@ const ResultTable = ({
               <div>
                 <table className="border border-gray-400 text-xs">
                   <tbody>
-                    <tr className="border-b border-gray-400">
-                      <td className="border border-gray-400 px-2">Inflation</td>
+                    <tr className="border-b border-gray-400 ">
+                      <td className="border border-gray-400 px-2 bg-[#f9fafb] font-medium">
+                        Inflation
+                      </td>
                       <td className="px-2 py-1">
                         {settings.inflation.toString()}%
                       </td>
@@ -362,7 +364,7 @@ const ResultTable = ({
                         (person, i) =>
                           settings.whoDies == i && (
                             <tr>
-                              <td className="border border-gray-400 px-2">{`${person.name}'s Death`}</td>
+                              <td className="border border-gray-400 px-2 bg-[#f9fafb] font-medium">{`${person.name}'s Death`}</td>
                               <td className="px-2 py-1">
                                 {settings.deathYears[i]?.toString()}
                               </td>

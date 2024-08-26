@@ -40,6 +40,10 @@ app.get("/", async (req, res) => {
     format: "letter",
     landscape: true,
     printBackground: true,
+    margin: {
+      bottom: "20px",
+      top: "20px",
+    },
   });
   await browser.close();
   res.contentType("application/pdf");

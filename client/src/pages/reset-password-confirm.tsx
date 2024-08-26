@@ -72,7 +72,7 @@ const ResetPasswordConfirm = () => {
             <img src={logo} alt="" className="w-20 h-20" />
             {done ? (
               <div className="max-w-xs  text-center mt-10 text-lg">
-                Passwod changed successfully. Please login to continue.
+                Password changed successfully. Please login to continue.
                 <div className="h-5"></div>
                 <Link to="/login">
                   <Button type="primary" onClick={submit}>
