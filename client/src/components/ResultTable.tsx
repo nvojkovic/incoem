@@ -78,12 +78,11 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium  ${
-        selectedColumn.type == data.column.type &&
-        selectedColumn.id == data.column.id
+      className={`font-medium  ${selectedColumn.type == data.column.type &&
+          selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-      }`}
+        }`}
       colSpan={header.colSpan}
       ref={setNodeRef}
       style={style}
@@ -101,7 +100,7 @@ const DraggableTableHeader = ({
             setTimer(
               setTimeout(() => {
                 selectedColumn.type === data.column.type &&
-                selectedColumn.id == data.column.id
+                  selectedColumn.id == data.column.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn(data.column);
               }, 200),
@@ -252,7 +251,7 @@ const ResultTable = ({
               return [
                 title(incomes, data.people, i),
                 <div>
-                  {result.note ? (
+                  {result.note && !toPrint ? (
                     <Tooltip
                       content={result.note}
                       theme={{ target: "" }}
@@ -388,7 +387,7 @@ const ResultTable = ({
                             disabled
                             label={`${person.name}'s Death`}
                             value={settings.deathYears[i]?.toString()}
-                            setValue={() => {}}
+                            setValue={() => { }}
                           />
                         </div>
                       ),
@@ -402,7 +401,7 @@ const ResultTable = ({
                     vertical
                     disabled
                     value={settings.maxYearsShown?.toString()}
-                    setValue={() => {}}
+                    setValue={() => { }}
                   />
                 </div>
                 <div className="print:mr-[-20px]">
@@ -413,7 +412,7 @@ const ResultTable = ({
                     vertical
                     subtype="percent"
                     value={settings.inflation?.toString()}
-                    setValue={() => {}}
+                    setValue={() => { }}
                   />
                 </div>
                 <div className="print:hidden">
