@@ -41,7 +41,21 @@ app.use(
 );
 app.use(middleware());
 
-const upload = multer({});
+const upload = multer({
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(file.originalname.toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error("Only image files are allowed!"));
+  },
+});
 
 app.get("/clients", verifySession(), allClients);
 app.get("/client/:id", verifySession(), getClient);

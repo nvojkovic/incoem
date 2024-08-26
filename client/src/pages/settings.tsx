@@ -6,6 +6,8 @@ import { useUser } from "../useUser";
 import Button from "../components/Inputs/Button";
 import { updateSettings, uploadLogo } from "../services/client";
 import Spinner from "../components/Spinner";
+import { Tooltip } from "flowbite-react";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const Settings = () => {
   const { user, fetchUser, updatePrimaryColor } = useUser();
@@ -73,11 +75,25 @@ const Settings = () => {
                   className="w-10 h-10 rounded-md cursor-pointer"
                 />
               </div>
-
               <div className="flex gap-3">
-                <Button type="secondary" onClick={() => ref.current.click()}>
-                  Upload Logo
-                </Button>
+                <Tooltip
+                  content={
+                    "You can upload image files (JPG, PNG, GIF, WebP) up to 10 MB in size."
+                  }
+                  theme={{ target: "" }}
+                  placement="right-end"
+                  style="light"
+                >
+                  <Button type="secondary" onClick={() => ref.current.click()}>
+                    <div
+                      className="flex items-center gap-3 justify-center"
+                      style={{ width: user?.info?.logo ? "220px" : "480px" }}
+                    >
+                      Upload Logo
+                      <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD]" />
+                    </div>
+                  </Button>
+                </Tooltip>
                 <input
                   type="file"
                   className="hidden"
