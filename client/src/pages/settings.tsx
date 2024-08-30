@@ -141,6 +141,7 @@ const Settings = () => {
                   onClick={async () => {
                     setLoading(true);
                     await updateSettings(settings);
+                    await fetchUser();
                     setLoading(false);
                   }}
                 >
