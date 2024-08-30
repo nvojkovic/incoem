@@ -9,7 +9,7 @@ import {
   ArrowsPointingOutIcon,
   PrinterIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ModalInput from "./Inputs/ModalInput";
 import { Spinner } from "flowbite-react";
 const Live = ({
@@ -38,6 +38,7 @@ const Live = ({
   clientId: any;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
+  const inputRef = useRef(null as any);
 
   const [printing, setPrinting] = useState(false);
   const print = async () => {
@@ -45,10 +46,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf-live/" +
-      clientId +
-      "/?data=" +
-      JSON.stringify({ ...settings, data }),
+        "print/client/pdf-live/" +
+        clientId +
+        "/?data=" +
+        JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -135,6 +136,13 @@ const Live = ({
               </div>
               <div className="">
                 <Input
+                  ref={inputRef}
+                  onFocus={(event: any) => {
+                    const input = event.target;
+                    setTimeout(() => {
+                      input.select();
+                    }, 0);
+                  }}
                   label="Inflation"
                   size="xs"
                   vertical

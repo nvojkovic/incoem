@@ -13,16 +13,17 @@ interface Props {
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-  | "money"
-  | "percent"
-  | "text"
-  | "number"
-  | "date"
-  | "toggle"
-  | "password"
-  | "textarea";
+    | "money"
+    | "percent"
+    | "text"
+    | "number"
+    | "date"
+    | "toggle"
+    | "password"
+    | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
+  [key: string]: any;
 }
 const calcSize = (s: any) => {
   if (s == "xs") return "w-20";
@@ -45,6 +46,7 @@ const Input = ({
   ...props
 }: Props) => {
   let input = null as any;
+
   const basic =
     "focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100";
   if (subtype === "money") {
@@ -159,7 +161,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-          // className="border-black border"
+            // className="border-black border"
           >
             <div className="relative cursor-pointer">
               <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />
