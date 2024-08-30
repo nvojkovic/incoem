@@ -10,7 +10,7 @@ import { Tooltip } from "flowbite-react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const Settings = () => {
-  const { user, fetchUser, updatePrimaryColor } = useUser();
+  const { user, fetchUser } = useUser();
   useEffect(() => {
     setSettings(user?.info || null);
   }, [user]);
