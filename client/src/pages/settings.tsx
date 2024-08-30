@@ -141,7 +141,6 @@ const Settings = () => {
                   onClick={async () => {
                     setLoading(true);
                     await updateSettings(settings);
-                    await updatePrimaryColor(settings.primaryColor);
                     setLoading(false);
                   }}
                 >
