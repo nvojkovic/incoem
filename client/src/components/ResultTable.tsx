@@ -396,11 +396,11 @@ const ResultTable = ({
                 <div className="">
                   <Input
                     label="Years"
-                    subtype="number"
+                    subtype="text"
                     size="xs"
                     vertical
                     disabled
-                    value={settings.maxYearsShown?.toString()}
+                    value={settings.maxYearsShown}
                     setValue={() => { }}
                   />
                 </div>
@@ -410,8 +410,8 @@ const ResultTable = ({
                     disabled
                     size="xs"
                     vertical
-                    subtype="percent"
-                    value={settings.inflation?.toString()}
+                    subtype="text"
+                    value={`${settings.inflation?.toString()}%`}
                     setValue={() => { }}
                   />
                 </div>
