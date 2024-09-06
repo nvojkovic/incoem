@@ -1,6 +1,6 @@
 import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
-import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+import ThirdPartyEmailPassword from "supertokens-node/recipe/emailpassword";
 import EmailVerification from "supertokens-node/recipe/emailverification";
 import Dashboard from "supertokens-node/recipe/dashboard";
 
