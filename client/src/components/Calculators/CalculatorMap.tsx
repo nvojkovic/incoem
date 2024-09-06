@@ -12,8 +12,7 @@ const calculators: CalculatorCard[] = [
   {
     id: "versatile",
     title: "Versatile Calculator",
-    description:
-      "Plan for your retirement by estimating your savings and expenses.",
+    description: "Calculate projections and estimate necessary rate of return",
     icon: (
       <svg
         className="w-6 h-6"

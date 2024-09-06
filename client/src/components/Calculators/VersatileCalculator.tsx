@@ -207,6 +207,7 @@ const VersatileCalculator: React.FC = () => {
               label="Final Balance"
               subtype="text"
               value={printNumber(
+                calculations.length &&
                 calculations[calculations.length - 1].endingBalance,
               )}
               size="full"
