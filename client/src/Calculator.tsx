@@ -9,10 +9,11 @@ import Layout from "./components/Layout";
 import { getClient } from "./services/client";
 import Spinner from "./components/Spinner";
 import { IncomeProvider } from "./useData";
+import CalculatorMap from "./components/Calculators/CalculatorMap";
 
 function Calculator() {
   const { id } = useParams();
-  const [tab, setTab] = useState<"data" | "calculator">("data");
+  const [tab, setTab] = useState<"data" | "calculator" | "map">("data");
   const [fullScreen, setFullScreen] = useState(false);
 
   const fetchData = () => {
@@ -61,7 +62,7 @@ function Calculator() {
       >
         <div>
           <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
-            {tab == "data" ? (
+            {tab == "data" && (
               <div className="flex flex-col gap-6">
                 <MapSection
                   title="Basic information"
@@ -72,13 +73,15 @@ function Calculator() {
                 </MapSection>
                 <IncomeSection defaultOpen={true} />
               </div>
-            ) : (
+            )}
+            {tab == "map" && (
               <Summary
                 settings={settings}
                 setSettings={setSettings}
                 hideNav={setFullScreen}
               />
             )}
+            {tab == "calculator" && <CalculatorMap />}
           </div>
         </div>
       </Layout>

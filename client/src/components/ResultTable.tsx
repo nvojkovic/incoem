@@ -43,6 +43,7 @@ import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 import { useInfo } from "../useData";
 import { generateColumns } from "./tableData";
+import { useUser } from "../useUser";
 
 const DraggableTableHeader = ({
   header,
@@ -196,8 +197,10 @@ const ResultTable = ({
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
+  const [incomeToShow, setIncomeToShow] = useState("all");
   const incomes = data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
+  const { user } = useUser();
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => generateColumns(incomes, data, selectedColumn),
@@ -225,6 +228,19 @@ const ResultTable = ({
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {}),
   );
+
+  const calculateOne = (income: Income, currentYear: number) =>
+    calculate({
+      people: data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: incomes,
+      ssSurvivorAge: settings.ssSurvivorAge,
+    });
 
   const tableData = useMemo(
     () =>
@@ -271,24 +287,42 @@ const ResultTable = ({
               ];
             }),
           ),
-          total: printNumber(
-            incomes
-              .map(
-                (income) =>
-                  calculate({
-                    people: data.people,
-                    income,
-                    startYear,
-                    currentYear,
-                    deathYears: settings.deathYears as any,
-                    dead: settings.whoDies,
-                    inflation: settings.inflation,
-                    incomes: incomes,
-                    ssSurvivorAge: settings.ssSurvivorAge,
-                  }).amount,
-              )
-              .filter((t) => typeof t === "number")
-              .reduce((a, b) => a + b, 0),
+          total: (
+            <div className="flex gap-2">
+              <div className="w-20 !z-[5000]">
+                <Tooltip
+                  content={`${Math.round(
+                    (incomes
+                      .filter((item) => item.stable)
+                      .map((income) => calculateOne(income, currentYear).amount)
+                      .filter((t) => typeof t === "number")
+                      .reduce((a, b) => a + b, 0) /
+                      incomes
+                        .map(
+                          (income) => calculateOne(income, currentYear).amount,
+                        )
+                        .filter((t) => typeof t === "number")
+                        .reduce((a, b) => a + b, 0)) *
+                    100,
+                  )}% of income is stable`}
+                  theme={{ target: "" }}
+                  placement="left"
+                  style="light"
+                  className={`!z-[50000] bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
+                >
+                  <div className="cursor-pointer flex items-center gap-2">
+                    {printNumber(
+                      incomes
+                        .map(
+                          (income) => calculateOne(income, currentYear).amount,
+                        )
+                        .filter((t) => typeof t === "number")
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
           ),
         }),
       ),
@@ -485,29 +519,88 @@ const ResultTable = ({
         />
         <div className="break-after-page"></div>
         <div className="mt-10"></div>
+        {user?.info?.stabilityRatioFlag && (
+          <div className="print:hidden flex text-sm">
+            <div
+              onClick={() => setIncomeToShow("all")}
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "all"
+                  ? "border-main-orange text-main-orange"
+                  : "text-[#667085]"
+                } z-50`}
+              style={{
+                backgroundColor:
+                  incomeToShow === "all"
+                    ? "rgba(var(--primary-color-segment),0.1)"
+                    : "",
+              }}
+            >
+              Show All Income
+            </div>
+
+            <div
+              onClick={() => setIncomeToShow("stable")}
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "stable"
+                  ? "border-main-orange text-main-orange"
+                  : "text-[#667085]"
+                } z-50`}
+              style={{
+                backgroundColor:
+                  incomeToShow === "stable"
+                    ? "rgba(var(--primary-color-segment),0.1)"
+                    : "",
+              }}
+            >
+              Show Stable Income
+            </div>
+            <div
+              onClick={() => setIncomeToShow("unstable")}
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "unstable"
+                  ? "border-main-orange text-main-orange"
+                  : "text-[#667085]"
+                } z-50`}
+              style={{
+                backgroundColor:
+                  incomeToShow === "unstable"
+                    ? "rgba(var(--primary-color-segment),0.1)"
+                    : "",
+              }}
+            >
+              Show Unstable Income
+            </div>
+          </div>
+        )}
         <StackedChart
           years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
-          incomes={incomes.map((income, i) => ({
-            name: title(incomes, data.people, i),
-            data: yearRange(
-              startYear,
-              startYear + settings.maxYearsShown - 1,
-            ).map((year) =>
-              Math.round(
-                calculate({
-                  people: data.people,
-                  income,
-                  startYear,
-                  currentYear: year,
-                  deathYears: settings.deathYears as any,
-                  dead: settings.whoDies,
-                  inflation: settings.inflation,
-                  incomes: incomes,
-                  ssSurvivorAge: settings.ssSurvivorAge,
-                }).amount,
+          incomes={incomes
+
+            .map((income, i) => ({
+              name: title(incomes, data.people, i),
+              stable: income.stable,
+              data: yearRange(
+                startYear,
+                startYear + settings.maxYearsShown - 1,
+              ).map((year) =>
+                Math.round(
+                  calculate({
+                    people: data.people,
+                    income,
+                    startYear,
+                    currentYear: year,
+                    deathYears: settings.deathYears as any,
+                    dead: settings.whoDies,
+                    inflation: settings.inflation,
+                    incomes: incomes,
+                    ssSurvivorAge: settings.ssSurvivorAge,
+                  }).amount,
+                ),
               ),
-            ),
-          }))}
+            }))
+            .filter(
+              (item) =>
+                !user?.info?.stabilityRatioFlag ||
+                incomeToShow === "all" ||
+                (item.stable ? "stable" : "unstable") === incomeToShow,
+            )}
         />
       </div>
     </DndContext>
@@ -603,3 +696,18 @@ const DraggableTable = ({
     </table>
   );
 };
+
+// <div className="!z-[5000]">
+//   <Tooltip
+//     content={`${Math.random()}% income is stable`}
+//     theme={{ target: "" }}
+//     placement="bottom"
+//     style="light"
+//     className="!z-[50] bg-white print:hidden"
+//   >
+//     <div
+//       className="pie-chart"
+//       style={{ "--percentage": Math.random() * 100 } as any}
+//     ></div>
+//   </Tooltip>
+// </div>

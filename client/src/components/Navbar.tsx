@@ -65,12 +65,17 @@ const Navbar = ({
               )}
             </div>
           </Link>
-          {active == "data" || active == "calculator" ? (
+          {active == "data" || active == "calculator" || active == "map" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
                 name="Data"
                 active={active == "data"}
                 onClick={() => onTabChange("data")}
+              />
+              <NavItem
+                name="Map"
+                active={active == "map"}
+                onClick={() => onTabChange("map")}
               />
               <NavItem
                 name="Calculator"

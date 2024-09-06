@@ -59,3 +59,14 @@ html {
 :root {
   --primary-color: #ff7957;
 }
+
+.pie-chart {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #3498db 0deg,
+    #3498db calc(var(--percentage) * 3.6deg),
+    #ecf0f1 calc(var(--percentage) * 3.6deg)
+  );
+}

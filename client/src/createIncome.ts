@@ -26,6 +26,7 @@ export const newSocialSecurityIncome = (
   calculationMethod: "pia",
   startAgeYear: null as any,
   startAgeMonth: null as any,
+  stable: false,
 });
 
 export const newPensionIncome = (): any => ({

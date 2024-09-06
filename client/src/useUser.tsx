@@ -5,6 +5,7 @@ import { getUser } from "./services/client";
 interface User {
   info?: {
     subsciptionStatus?: string;
+    stabilityRatioFlag: boolean;
     logo?: string;
     email: string;
     primaryColor: string;

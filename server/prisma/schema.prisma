@@ -23,15 +23,16 @@ model Client {
 }
 
 model UserInfo {
-  id                String  @id
-  name              String?
-  firmName          String?
-  customerId        String?
-  logo              String?
-  disclosures       String?
-  subsciptionStatus String?
-  subscriptionPlan  String?
-  primaryColor      String? @default("#FF6C47")
+  id                 String  @id
+  name               String?
+  firmName           String?
+  customerId         String?
+  logo               String?
+  disclosures        String?
+  stabilityRatioFlag Boolean @default(false)
+  subsciptionStatus  String?
+  subscriptionPlan   String?
+  primaryColor       String? @default("#FF6C47")
 }
 
 model all_auth_recipe_users {

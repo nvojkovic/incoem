@@ -22,6 +22,7 @@ import Paused from "./pages/paused";
 import HelpCenter from "./pages/help";
 import ResetPassword from "./pages/reset-password";
 import ResetPasswordConfirm from "./pages/reset-password-confirm";
+import VersatileCalculator from "./components/Calculators/VersatileCalculator";
 
 SuperTokens.init({
   appInfo: {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/client/:id",
         element: <Calculator />,
+      },
+      {
+        path: "/client/:id/calculator/versatile",
+        element: <VersatileCalculator />,
       },
       {
         path: "/profile",
