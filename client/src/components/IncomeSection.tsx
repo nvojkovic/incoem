@@ -26,6 +26,8 @@ import {
 } from "@dnd-kit/sortable";
 import SortableItem from "./Sortable/SortableItem";
 import { useInfo } from "../useData";
+import { useUser } from "../useUser";
+import Input from "./Inputs/Input";
 
 interface Props {
   defaultOpen?: boolean;
@@ -99,6 +101,7 @@ export const IncomeComponent = ({
 const IncomeSection = ({ defaultOpen = false }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
+  const { user } = useUser();
   const incomes = data.data.incomes;
   const people = data.data.people;
 
@@ -167,8 +170,21 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
                       </div>
                     </div>
                     <div className="flex justify-between">
-                      <div className="flex gap-4 items-center w-full">
+                      <div className="">
                         <IncomeComponent income={item} i={i} />
+                        {user?.info?.stabilityRatioFlag && (
+                          <div className="mt-3">
+                            <Input
+                              label="Stable Income"
+                              subtype="toggle"
+                              size="lg"
+                              value={item.stable}
+                              setValue={(stable) =>
+                                setIncome(i, { ...item, stable })
+                              }
+                            />
+                          </div>
+                        )}
                       </div>
                       <Confirm
                         isOpen={removeOpen == i}
@@ -189,7 +205,7 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
               </SortableItem>
             ))}
           </SortableContext>
-        </DndContext>{" "}
+        </DndContext>
       </div>
     </MapSection>
   );

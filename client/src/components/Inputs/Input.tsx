@@ -13,14 +13,14 @@ interface Props {
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-    | "money"
-    | "percent"
-    | "text"
-    | "number"
-    | "date"
-    | "toggle"
-    | "password"
-    | "textarea";
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   setValue: (value: any) => void;
   [key: string]: any;
@@ -77,7 +77,7 @@ const Input = ({
     input = (
       <CurrencyInput
         suffix="%"
-        defaultValue={value}
+        value={value}
         disabled={disabled}
         decimalsLimit={2}
         className={`${basic}  ${size == "sm" && "w-full"} ${calcSize(size)}`}
@@ -161,7 +161,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-            // className="border-black border"
+          // className="border-black border"
           >
             <div className="relative cursor-pointer">
               <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />

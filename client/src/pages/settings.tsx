@@ -75,6 +75,15 @@ const Settings = () => {
                   className="w-10 h-10 rounded-md cursor-pointer"
                 />
               </div>
+              <Input
+                value={settings.stabilityRatioFlag}
+                setValue={(e) =>
+                  setSettings({ ...settings, stabilityRatioFlag: e })
+                }
+                label="Calculate Stability Ratio?"
+                size="full"
+                subtype="toggle"
+              />
               <div className="flex gap-3">
                 <Tooltip
                   content={

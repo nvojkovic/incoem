@@ -19,6 +19,7 @@ interface Income {
   personId: number;
   type: IncomeType;
   enabled: boolean;
+  stable: boolean;
 }
 
 type IncomeType =

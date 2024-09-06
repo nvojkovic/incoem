@@ -19,7 +19,7 @@ function Select({ label, vertical, options, selected, setSelected }: Props) {
       <label htmlFor={label} className="text-sm text-[#344054] w-36">
         {label}
       </label>
-      <div className="min-w-48 ">
+      <div className="min-w-48">
         <Listbox value={selected} onChange={setSelected}>
           <div className="relative">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[8px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD]">
