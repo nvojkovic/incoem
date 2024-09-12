@@ -40,30 +40,34 @@ interface CalculatorSettings {
   };
 }
 
+const initialSettings = {
+  user: {
+    startAge: 0,
+    presentValue: 0,
+    endYear: 10,
+  },
+  payment: {
+    amount: 0,
+    timing: "beginning" as const,
+    increase: 0,
+    startYear: 0,
+    years: {},
+    type: "simple" as const,
+  },
+  other: {
+    rateOfReturn: 0,
+    taxRate: 0,
+    inflation: 0,
+  },
+};
+
 const VersatileCalculator: React.FC = () => {
   const [openYears, setOpenYears] = useState(false);
-  const [settings, setSettings] = useState<CalculatorSettings>({
-    user: {
-      startAge: 60,
-      presentValue: 1000000,
-      endYear: 38,
-    },
-    payment: {
-      amount: 147500,
-      timing: "end",
-      increase: 5,
-      startYear: 11,
-      years: {},
-      type: "simple",
-    },
-    other: {
-      rateOfReturn: 6.85,
-      taxRate: 0,
-      inflation: 0,
-    },
-  });
-
+  const [selectedCol, setSelectedCol] = useState(null as any);
+  const [selectedRow, setSelectedRow] = useState(null as any);
+  const [settings, setSettings] = useState<CalculatorSettings>(initialSettings);
   const [calculations, setCalculations] = useState<CalculationRow[]>([]);
+  console.log("init", initialSettings.other);
 
   useEffect(() => {
     const rows = calculateProjection(settings);
@@ -129,7 +133,6 @@ const VersatileCalculator: React.FC = () => {
     }
     return rows;
   };
-  console.log("ss", settings.other);
 
   const handleSolveRateOfReturn = () => {
     const targetEndingBalance = 0;
@@ -140,7 +143,7 @@ const VersatileCalculator: React.FC = () => {
     const maxIterations = 100;
     const tolerance = 100;
 
-    const testSettings = { ...settings };
+    const testSettings = structuredClone(settings);
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
       testSettings.other.rateOfReturn = mid;
@@ -311,9 +314,20 @@ const VersatileCalculator: React.FC = () => {
               value={settings.other.inflation}
               setValue={(value) => updateSettings("other", "inflation", value)}
             />
-            <Button type="primary" onClick={handleSolveRateOfReturn}>
-              Solve Rate of Return
-            </Button>
+            <div className="flex gap-4">
+              <Button type="primary" onClick={handleSolveRateOfReturn}>
+                Solve Rate of Return
+              </Button>
+              <Button
+                type="secondary"
+                onClick={() => {
+                  console.log("setting to", initialSettings.other);
+                  setSettings(initialSettings);
+                }}
+              >
+                Reset
+              </Button>
+            </div>
           </div>
         </div>
         <div className="">
@@ -322,35 +336,138 @@ const VersatileCalculator: React.FC = () => {
               className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[72px]`}
             >
               <tr>
-                <th className="px-4 py-2">Age/Year</th>
-                <th className="px-4 py-2">Beginning</th>
-                <th className="px-4 py-2">Total Payments</th>
-                <th className="px-4 py-2">Return</th>
-                <th className="px-4 py-2">Growth</th>
-                <th className="px-4 py-2">Taxes</th>
-                <th className="px-4 py-2">Ending Balance</th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "age"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("age")
+                  }
+                >
+                  Age/Year
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "beginning"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("beginning")
+                  }
+                >
+                  Beginning
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "total"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("total")
+                  }
+                >
+                  Total Payments
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "return"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("return")
+                  }
+                >
+                  Return
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "growth"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("growth")
+                  }
+                >
+                  Growth
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "taxes"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("taxes")
+                  }
+                >
+                  Taxes
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "end"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("end")
+                  }
+                >
+                  Ending Balance
+                </th>
               </tr>
             </thead>
             <tbody>
               {calculations.map((row, index) => (
-                <tr key={index}>
-                  <td className="border px-4 py-2">{`${row.age}/${row.year}`}</td>
-                  <td className="border px-4 py-2 w-10">
+                <tr
+                  key={index}
+                  className={` ${selectedRow === index ? "bg-slate-200" : "hover:bg-slate-100"}`}
+                >
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "age" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >{`${row.age}/${row.year}`}</td>
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "beginning" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
                     {printNumber(row.beginning)}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "total" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
                     {printNumber(row.totalPayments)}
                   </td>
 
-                  <td className="border px-4 py-2">
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
                     {printNumber(row.return)}
                   </td>
 
-                  <td className="border px-4 py-2">
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "growth" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
                     {printNumber(row.growth)}
                   </td>
-                  <td className="border px-4 py-2">{printNumber(row.taxes)}</td>
-                  <td className="border px-4 py-2">
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
+                    {printNumber(row.taxes)}
+                  </td>
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
                     {printNumber(row.endingBalance)}
                   </td>
                 </tr>
@@ -365,7 +482,10 @@ const VersatileCalculator: React.FC = () => {
           <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
             {[
               ...Array(
-                settings.user.endYear - settings.payment.startYear,
+                Math.max(
+                  (settings.user.endYear || 0) - settings.payment.startYear,
+                ),
+                0,
               ).keys(),
             ].map((i) => (
               <Input

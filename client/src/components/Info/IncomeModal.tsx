@@ -3,6 +3,8 @@ import Modal from "../Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import title from "../../calculator/title";
 import { useInfo } from "../../useData";
+import { useUser } from "../../useUser";
+import Input from "../Inputs/Input";
 
 const IncomeModal = ({
   income,
@@ -15,7 +17,8 @@ const IncomeModal = ({
   open: boolean;
   setOpen: any;
 }) => {
-  const { data } = useInfo();
+  const { user } = useUser();
+  const { data, setIncome } = useInfo();
   const incomes = data.data.incomes;
   const people = data.data.people;
   const index = incomes.findIndex((inc) => inc.id === i);
@@ -38,8 +41,19 @@ const IncomeModal = ({
       </div>
 
       <div className="flex justify-between">
-        <div className="flex gap-4 items-center w-full text-left">
+        <div className="flex flex-col gap-4 items-center w-full text-left">
           <IncomeComponent income={income} i={index} />
+          {user?.info?.stabilityRatioFlag && (
+            <Input
+              label="Stable Income"
+              subtype="toggle"
+              size="lg"
+              value={income.stable}
+              setValue={(stable) => {
+                setIncome(index, { ...income, stable });
+              }}
+            />
+          )}
         </div>
       </div>
     </Modal>

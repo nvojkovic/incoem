@@ -7,6 +7,7 @@ const StackedChart = ({ years, incomes }: any) => {
   const options = {
     width: "1000px",
     redrawOnWindowResize: true,
+    // colors: ["#2E93fA", "#66DA26", "#546E7A", "#E91E63", "#FF9800"],
     chart: {
       type: "area",
       stacked: true,
@@ -43,6 +44,7 @@ const StackedChart = ({ years, incomes }: any) => {
     },
   };
 
+  console.log("drawing", incomes);
   return (
     <Chart options={options as any} series={incomes} type="area" height={500} />
   );

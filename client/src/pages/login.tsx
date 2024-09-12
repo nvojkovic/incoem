@@ -5,7 +5,7 @@ import Input from "../components/Inputs/Input";
 import Button from "../components/Inputs/Button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { emailPasswordSignIn } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { signIn } from "supertokens-web-js/recipe/emailpassword";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,7 @@ const Login = () => {
     setError("");
     try {
       setSubmitting(true);
-      let response = await emailPasswordSignIn({
+      let response = await signIn({
         formFields: [
           {
             id: "email",

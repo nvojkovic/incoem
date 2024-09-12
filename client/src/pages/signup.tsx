@@ -5,7 +5,7 @@ import Input from "../components/Inputs/Input";
 import Button from "../components/Inputs/Button";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { emailPasswordSignUp } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { signUp } from "supertokens-web-js/recipe/emailpassword";
 import { sendVerificationEmail } from "supertokens-web-js/recipe/emailverification";
 import { CheckIcon } from "@heroicons/react/20/solid";
 
@@ -56,7 +56,7 @@ const Signup = () => {
     setError("");
     try {
       setSubmitting(true);
-      let response = await emailPasswordSignUp({
+      let response = await signUp({
         formFields: [
           {
             id: "email",
