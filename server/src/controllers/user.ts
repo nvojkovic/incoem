@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
 import fs from "fs";
+import crypto from "crypto";
 import supertokens from "supertokens-node";
 
 const prisma = new PrismaClient();
@@ -15,13 +16,26 @@ export const updateUser = async (req: SessionRequest, res: Response) => {
 export const getUser = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
 
+  const secretKey = process.env.INTERCOM_SECRET as any;
+  const userIdentifier = userId.toString(); // IMPORTANT: a UUID to identify your user
+
+  const hash = crypto
+    .createHmac("sha256", secretKey)
+    .update(userIdentifier)
+    .digest("hex");
+
   let userInfo = await supertokens.getUser(userId);
   const info = await prisma.userInfo.upsert({
     where: { id: userId },
     update: {},
     create: { id: userId, primaryColor: "#FF7957" },
   });
-  res.json({ userId, info: { ...info, email: userInfo?.emails[0] } });
+  res.json({
+    userId,
+    info: { ...info, email: userInfo?.emails[0] },
+    createdAt: userInfo?.timeJoined,
+    intercomHash: hash,
+  });
 };
 
 export const uploadLogo = async (req: any, res: Response) => {

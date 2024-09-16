@@ -7,19 +7,33 @@ interface Props {
   selected: any;
   vertical?: boolean;
   label?: string;
+  labelLength?: number;
   setSelected: (s: any) => void;
 }
 
-function Select({ label, vertical, options, selected, setSelected }: Props) {
+function Select({
+  label,
+  vertical,
+  options,
+  selected,
+  setSelected,
+  labelLength = 0,
+}: Props) {
   return (
     <div
       className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
         } lg:flex-row flex-col`}
     >
-      <label htmlFor={label} className="text-sm text-[#344054] w-36">
-        {label}
-      </label>
-      <div className="min-w-48">
+      {label && (
+        <label
+          htmlFor={label}
+          className="text-sm text-[#344054] w-36"
+          style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
+        >
+          {label}
+        </label>
+      )}
+      <div className={labelLength === 0 ? "min-w-48" : "w-full"}>
         <Listbox value={selected} onChange={setSelected}>
           <div className="relative">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[8px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD]">

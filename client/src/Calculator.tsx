@@ -10,6 +10,7 @@ import { getClient } from "./services/client";
 import Spinner from "./components/Spinner";
 import { IncomeProvider } from "./useData";
 import CalculatorMap from "./components/Calculators/CalculatorMap";
+import { initialVersatileSettings } from "./components/Calculators/versatileTypes";
 
 function Calculator() {
   const { id } = useParams();
@@ -41,6 +42,9 @@ function Calculator() {
 
   const [data, setData] = useState<Client | null>(null);
   const [settings, sett] = useState<ScenarioSettings>({} as any);
+  const [versatileCalculatorData, setVersatileData] = useState(
+    initialVersatileSettings,
+  );
   const setSettings = (settings: ScenarioSettings) => {
     console.log("setSettings", settings);
     sett(settings);
@@ -81,7 +85,12 @@ function Calculator() {
                 hideNav={setFullScreen}
               />
             )}
-            {tab == "calculator" && <CalculatorMap />}
+            {tab == "calculator" && (
+              <CalculatorMap
+                data={versatileCalculatorData}
+                setData={setVersatileData}
+              />
+            )}
           </div>
         </div>
       </Layout>
