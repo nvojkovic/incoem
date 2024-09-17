@@ -61,7 +61,7 @@ const VersatileCalculator: React.FC<any> = ({
     const rows: CalculationRow[] = [];
     let balance = settings.user.presentValue;
 
-    for (let year = 1; year <= settings.user.endYear; year++) {
+    for (let year = 0; year <= settings.user.endYear; year++) {
       const beginning = balance;
 
       let payment = 0;
@@ -185,9 +185,9 @@ const VersatileCalculator: React.FC<any> = ({
                 setValue={(value) => updateSettings("user", "startAge", value)}
               />
               <Input
-                label="End Year"
+                label="Years"
                 subtype="number"
-                labelLength={80}
+                labelLength={60}
                 value={settings.user.endYear}
                 setValue={(value) => updateSettings("user", "endYear", value)}
               />
@@ -316,7 +316,7 @@ const VersatileCalculator: React.FC<any> = ({
         <div className="flex justify-between w-full mb-10">
           <div className="flex gap-12">
             <Input
-              label="Ending balance"
+              label="Ending Balance"
               labelLength={110}
               value={printNumber(
                 calculations.length &&
@@ -328,7 +328,7 @@ const VersatileCalculator: React.FC<any> = ({
               setValue={() => { }}
             />
             <Input
-              label="Total payment"
+              label="Total Payments"
               size="lg"
               labelLength={105}
               value={printNumber(
@@ -379,7 +379,7 @@ const VersatileCalculator: React.FC<any> = ({
                       : setSelectedCol("beginning")
                   }
                 >
-                  Beginning
+                  Beginning Balance
                 </th>
                 <th
                   className="px-4 py-2"
@@ -389,7 +389,7 @@ const VersatileCalculator: React.FC<any> = ({
                       : setSelectedCol("total")
                   }
                 >
-                  Total Payments
+                  Payment
                 </th>
                 <th
                   className="px-4 py-2"
@@ -512,55 +512,51 @@ const VersatileCalculator: React.FC<any> = ({
                   0,
                 ),
               ).keys(),
-            ]
-              .slice(1)
-              .map((i) => (
-                <div className="flex gap-3">
-                  <Input
-                    label={`Year ${i + settings.payment.startYear}`}
-                    subtype="money"
-                    value={
-                      settings.payment.years[i + settings.payment.startYear]
-                    }
-                    setValue={(value) =>
-                      updateSettings("payment", "years", {
-                        ...settings.payment.years,
-                        [i + settings.payment.startYear]: value,
-                      })
-                    }
-                  />
-                  <div className="w-12">
-                    <Button
-                      type="secondary"
-                      onClick={() => {
-                        updateSettings(
-                          "payment",
-                          "years",
-                          Object.fromEntries(
-                            [
-                              ...Array(
-                                Math.max(
-                                  (settings.user.endYear || 0) -
-                                  settings.payment.startYear +
-                                  1,
-                                ),
-                              ).keys(),
-                            ].map((k) => {
-                              console.log(k);
-                              if (k > i) return [k, settings.payment.years[i]];
-                              else return [k, settings.payment.years[k]];
-                            }),
-                          ) as any,
-                        );
-                      }}
-                    >
-                      <div className="flex items-center justify-center h-6">
-                        <ArrowDownIcon className="w-4 h-4" />
-                      </div>
-                    </Button>
-                  </div>
+            ].map((i) => (
+              <div className="flex gap-3">
+                <Input
+                  label={`Year ${i + settings.payment.startYear}`}
+                  subtype="money"
+                  value={settings.payment.years[i + settings.payment.startYear]}
+                  setValue={(value) =>
+                    updateSettings("payment", "years", {
+                      ...settings.payment.years,
+                      [i + settings.payment.startYear]: value,
+                    })
+                  }
+                />
+                <div className="w-12">
+                  <Button
+                    type="secondary"
+                    onClick={() => {
+                      updateSettings(
+                        "payment",
+                        "years",
+                        Object.fromEntries(
+                          [
+                            ...Array(
+                              Math.max(
+                                (settings.user.endYear || 0) -
+                                settings.payment.startYear +
+                                1,
+                              ),
+                            ).keys(),
+                          ].map((k) => {
+                            console.log(k);
+                            if (k > i) return [k, settings.payment.years[i]];
+                            else return [k, settings.payment.years[k]];
+                          }),
+                        ) as any,
+                      );
+                    }}
+                  >
+                    <div className="flex items-center justify-center h-6">
+                      <ArrowDownIcon className="w-4 h-4" />
+                    </div>
+                  </Button>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
       </Modal>
