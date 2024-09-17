@@ -88,7 +88,7 @@ const VersatileCalculator: React.FC<any> = ({
       ending += growth;
 
       rows.push({
-        age: settings.user.startAge + year - 1,
+        age: settings.user.startAge + year,
         year,
         beginning,
         totalPayments: payment,
