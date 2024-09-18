@@ -9,7 +9,7 @@ import Login from "./pages/login";
 import Root from "./components/Root";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import Session from "supertokens-auth-react/recipe/session";
-import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/thirdpartyemailpassword";
+import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import EmailVerification from "supertokens-auth-react/recipe/emailverification";
 import Signup from "./pages/signup";
 import Settings from "./pages/settings";

@@ -3,7 +3,7 @@ import bg from "../assets/login-bg.png";
 import logo from "../assets/logo.png";
 import Input from "../components/Inputs/Input";
 import Button from "../components/Inputs/Button";
-import { submitNewPassword } from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { submitNewPassword } from "supertokens-web-js/recipe/emailpassword";
 import { Link } from "react-router-dom";
 
 const ResetPasswordConfirm = () => {

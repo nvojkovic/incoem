@@ -291,7 +291,7 @@ const ResultTable = ({
             <div className="flex gap-2">
               <div className="w-20 !z-[5000]">
                 <Tooltip
-                  content={`${Math.round(
+                  content={`Stability Ratio: ${Math.round(
                     (incomes
                       .filter((item) => item.stable)
                       .map((income) => calculateOne(income, currentYear).amount)
@@ -304,13 +304,14 @@ const ResultTable = ({
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0)) *
                     100,
-                  )}% of income is stable`}
+                  )}% `}
                   theme={{ target: "" }}
                   placement="left"
                   style="light"
-                  className={`!z-[50000] bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
+                  arrow={false}
+                  className={`!z-[50000] border-2 border-main-orange bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
                 >
-                  <div className="cursor-pointer flex items-center gap-2">
+                  <div className="cursor-pointer flex items-center gap-2 ">
                     {printNumber(
                       incomes
                         .map(

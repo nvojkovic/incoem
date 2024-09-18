@@ -12,8 +12,7 @@ const calculators: CalculatorCard[] = [
   {
     id: "versatile",
     title: "Versatile Calculator",
-    description:
-      "Plan for your retirement by estimating your savings and expenses.",
+    description: "Calculate projections and estimate necessary rate of return",
     icon: (
       <svg
         className="w-6 h-6"
@@ -33,9 +32,10 @@ const calculators: CalculatorCard[] = [
   },
 ];
 
-const CalculatorMap: React.FC = () => {
+const CalculatorMap: React.FC<any> = ({ data, setData }: any) => {
   const [calculator, setCalculator] = useState("");
-  if (calculator === "versatile") return <VersatileCalculator />;
+  if (calculator === "versatile")
+    return <VersatileCalculator data={data} setData={setData} />;
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Financial Calculators</h1>

@@ -1,6 +1,7 @@
 const id = () => Math.floor(Math.random() * 1000000);
 export const newEmploymentIncome = (): any => ({
   id: id(),
+  stable: false,
   enabled: true,
   type: "employment-income",
   personId: 0,
@@ -19,6 +20,7 @@ export const newSocialSecurityIncome = (
   enabled: true,
   type: "social-security",
   personId: person.id,
+  stable: true,
   annualAmount: 0,
   cola: 0,
   alreadyReceiving: false,
@@ -32,6 +34,7 @@ export const newSocialSecurityIncome = (
 export const newPensionIncome = (): any => ({
   id: id(),
   enabled: true,
+  stable: true,
   type: "company-pension",
   name: "",
   annualAmount: null,
@@ -48,6 +51,7 @@ export const newBasicAnnuity = (): any => ({
   type: "annuity",
   name: "",
   personId: 0,
+  stable: true,
   annualAmount: null,
   yearsOfDeferral: 0,
   yearlyIncreasePercent: null,
@@ -60,6 +64,7 @@ export const otherIncome = (): any => ({
   enabled: true,
   type: "other-income",
   personId: 0,
+  stable: false,
   startYear: null,
   amount: null,
   endYear: null,
@@ -76,6 +81,7 @@ export const paydown = (): any => ({
   type: "paydown",
   personId: 0,
   name: "",
+  stable: false,
   startYear: null,
   length: null,
   paymentInYear: "beginning",

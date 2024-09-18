@@ -10,6 +10,7 @@ interface Props {
   vertical?: boolean;
   tooltip?: string;
   toggleable?: boolean;
+  labelLength?: number;
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
@@ -41,6 +42,7 @@ const Input = ({
   value,
   toggleable = false,
   setValue,
+  labelLength = 0,
   tooltip,
   disabled = false,
   ...props
@@ -139,7 +141,8 @@ const Input = ({
       >
         <label
           htmlFor={label}
-          className={`text-sm text-[#344054] ${!vertical && "min-w-36"}`}
+          className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"}`}
+          style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
         >
           {label}
         </label>

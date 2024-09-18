@@ -78,7 +78,7 @@ const Navbar = ({
                 onClick={() => onTabChange("map")}
               />
               <NavItem
-                name="Calculator"
+                name="Calculators"
                 active={active == "calculator"}
                 onClick={() => onTabChange("calculator")}
               />

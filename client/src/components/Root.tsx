@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { UserProvider, useUser } from "../useUser";
 import { useEffect } from "react";
+import IntercomMessanger from "../intercom";
 const Root = () => {
   return (
     <SessionAuth>
@@ -34,8 +35,21 @@ const Tmp = () => {
       );
     }
   }, [user]);
+  if (!user || !user.info) return null;
 
-  return <Outlet />;
+  const u = {
+    name: user?.info?.name || "",
+    id: user?.userId,
+    email: user?.info?.email,
+    createdAt: Math.floor(user?.createdAt / 1000),
+    hash: user.intercomHash,
+  };
+  console.log(u);
+  return (
+    <IntercomMessanger user={u}>
+      <Outlet />
+    </IntercomMessanger>
+  );
 };
 
 export default Root;

@@ -46,10 +46,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        clientId +
-        "/?data=" +
-        JSON.stringify({ ...settings, data }),
+      "print/client/pdf-live/" +
+      clientId +
+      "/?data=" +
+      JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -147,10 +147,8 @@ const Live = ({
                   size="xs"
                   vertical
                   subtype="percent"
-                  value={settings.inflation?.toString()}
-                  setValue={(e) =>
-                    setSettings({ ...settings, inflation: parseFloat(e) })
-                  }
+                  value={settings.inflation}
+                  setValue={(e) => setSettings({ ...settings, inflation: e })}
                 />
               </div>
             </div>

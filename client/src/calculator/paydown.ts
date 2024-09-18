@@ -1,4 +1,4 @@
-import { adjustForInflation } from "./utils";
+import { adjustForInflation, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<Paydown>) => {
   const { income, startYear, currentYear } = {
@@ -6,6 +6,8 @@ export const calculate = (info: CalculationInfo<Paydown>) => {
     income: { ...info.income },
   };
   income.startYear = income.startYear || currentYear;
+  if (info.income.personId !== -1 && isDead(info, info.income.personId))
+    return 0;
   if (
     income.startYear > currentYear ||
     income.startYear + income.length <= currentYear

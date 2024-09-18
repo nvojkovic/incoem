@@ -8,8 +8,13 @@ interface User {
     stabilityRatioFlag: boolean;
     logo?: string;
     email: string;
+    name?: string;
+
     primaryColor: string;
   };
+  createdAt: number;
+  intercomHash: string;
+  userId: string;
   // Add other user properties as needed
 }
 
