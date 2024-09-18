@@ -26,13 +26,15 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const UserProvider: React.FC<{
+  children: React.ReactNode;
+  ignoreLogin?: boolean;
+}> = ({ children, ignoreLogin = false }) => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
   const fetchUser = async () => {
+    if (ignoreLogin) return setUser({} as any);
     try {
       const response = await getUser();
       if (response.ok) {
