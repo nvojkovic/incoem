@@ -150,73 +150,81 @@ const TimeValueCalculator: React.FC = () => {
         }
       />
 
-      {state.calculatorType !== "Future Value" && (
-        <Input
-          vertical
-          label="Future Value"
-          value={state.futureValue}
-          setValue={(value) => handleInputChange("futureValue", Number(value))}
-          subtype="money"
-        />
-      )}
+      <div className="flex gap-4 mt-4">
+        <div className="flex-1">
+          {state.calculatorType !== "Future Value" && (
+            <Input
+              vertical
+              label="Future Value"
+              value={state.futureValue}
+              setValue={(value) => handleInputChange("futureValue", Number(value))}
+              subtype="money"
+            />
+          )}
 
-      {state.calculatorType !== "Present Value" && (
-        <Input
-          vertical
-          label="Present Value"
-          value={state.presentValue}
-          setValue={(value) => handleInputChange("presentValue", Number(value))}
-          subtype="money"
-        />
-      )}
+          {state.calculatorType !== "Present Value" && (
+            <Input
+              vertical
+              label="Present Value"
+              value={state.presentValue}
+              setValue={(value) => handleInputChange("presentValue", Number(value))}
+              subtype="money"
+            />
+          )}
 
-      {state.calculatorType !== "Interest Rate" && (
-        <Input
-          vertical
-          label="Interest Rate (%)"
-          value={state.interestRate}
-          setValue={(value) => handleInputChange("interestRate", Number(value))}
-          subtype="percent"
-        />
-      )}
+          {state.calculatorType !== "Interest Rate" && (
+            <Input
+              vertical
+              label="Interest Rate (%)"
+              value={state.interestRate}
+              setValue={(value) => handleInputChange("interestRate", Number(value))}
+              subtype="percent"
+            />
+          )}
+        </div>
 
-      {state.calculatorType !== "Annual Payment" && (
-        <Input
+        <div className="flex-1">
+          {state.calculatorType !== "Annual Payment" && (
+            <Input
+              vertical
+              label="Annual Payment"
+              value={state.annualPayment}
+              setValue={(value) =>
+                handleInputChange("annualPayment", Number(value))
+              }
+              subtype="money"
+            />
+          )}
+
+          {state.calculatorType !== "Time Period" && (
+            <Input
+              vertical
+              label="Time Period (years)"
+              value={state.timePeriod}
+              setValue={(value) => handleInputChange("timePeriod", Number(value))}
+              subtype="number"
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <Select
+          label="Timing"
           vertical
-          label="Annual Payment"
-          value={state.annualPayment}
-          setValue={(value) =>
-            handleInputChange("annualPayment", Number(value))
+          options={[
+            { id: "Beginning of Year", name: "Beginning of Year" },
+            { id: "End of Year", name: "End of Year" },
+          ]}
+          selected={{ id: state.timing, name: state.timing }}
+          setSelected={(option) =>
+            handleInputChange(
+              "timing",
+              option.id as "Beginning of Year" | "End of Year",
+            )
           }
-          subtype="money"
         />
-      )}
-
-      {state.calculatorType !== "Time Period" && (
-        <Input
-          vertical
-          label="Time Period (years)"
-          value={state.timePeriod}
-          setValue={(value) => handleInputChange("timePeriod", Number(value))}
-          subtype="number"
-        />
-      )}
-
-      <Select
-        label="Timing"
-        vertical
-        options={[
-          { id: "Beginning of Year", name: "Beginning of Year" },
-          { id: "End of Year", name: "End of Year" },
-        ]}
-        selected={{ id: state.timing, name: state.timing }}
-        setSelected={(option) =>
-          handleInputChange(
-            "timing",
-            option.id as "Beginning of Year" | "End of Year",
-          )
-        }
-      />
+      </div>
 
       <div className="flex gap-2 mt-4">
         <button
