@@ -61,32 +61,65 @@ const TimeValueCalculator: React.FC = () => {
       compounding,
     } = state;
 
-    const rate = interestRate / 100;
     const n = compounding === "Annual" ? 1 : 12;
     const t = timePeriod;
-    const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
+
+    const calculateFV = (r: number) => {
+      const rate = r / 100;
+      const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
+      return presentValue * Math.pow(1 + rate / n, n * t) +
+        annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n);
+    };
 
     switch (calculatorType) {
       case "Future Value":
-        return presentValue * Math.pow(1 + rate / n, n * t) +
-          annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n);
+        return calculateFV(interestRate);
       case "Present Value":
+        const rate = interestRate / 100;
+        const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
         return futureValue / Math.pow(1 + rate / n, n * t) -
           annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n * Math.pow(1 + rate / n, n * t));
       case "Interest Rate":
-        // Note: This is an approximation and may not be accurate for all cases
-        const pmt = annualPayment * paymentFactor;
-        const pv = presentValue;
-        const fv = futureValue;
-        return n * (Math.pow((fv + pmt * n * t) / (pv + pmt * n * t), 1 / (n * t)) - 1);
+        // Bisection method to find interest rate
+        let low = 0;
+        let high = 100;
+        const tolerance = 0.0001;
+        const maxIterations = 100;
+
+        for (let i = 0; i < maxIterations; i++) {
+          const mid = (low + high) / 2;
+          const calculatedFV = calculateFV(mid);
+          
+          if (Math.abs(calculatedFV - futureValue) < tolerance) {
+            return mid;
+          }
+
+          if (calculatedFV > futureValue) {
+            high = mid;
+          } else {
+            low = mid;
+          }
+        }
+        return (low + high) / 2;
       case "Annual Payment":
-        return (futureValue - presentValue * Math.pow(1 + rate / n, n * t)) /
-          (paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n));
+        const r = interestRate / 100;
+        const pf = timing === "Beginning of Year" ? (1 + r / n) : 1;
+        return (futureValue - presentValue * Math.pow(1 + r / n, n * t)) /
+          (pf * (Math.pow(1 + r / n, n * t) - 1) / (r / n));
       case "Time Period":
-        // Note: This is an approximation and may not be accurate for all cases
-        const a = Math.log(futureValue / presentValue);
-        const b = Math.log(1 + rate / n);
-        return a / (n * b);
+        // Newton-Raphson method for time period
+        let guess = t;
+        const maxIterations2 = 100;
+        for (let i = 0; i < maxIterations2; i++) {
+          const fv = calculateFV(interestRate);
+          const derivative = (calculateFV(interestRate + 0.0001) - fv) / 0.0001;
+          const newGuess = guess - (fv - futureValue) / derivative;
+          if (Math.abs(newGuess - guess) < tolerance) {
+            return newGuess;
+          }
+          guess = newGuess;
+        }
+        return guess;
       default:
         return 0;
     }
