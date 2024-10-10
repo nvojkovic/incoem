@@ -66,9 +66,12 @@ const TimeValueCalculator: React.FC = () => {
 
     const calculateFV = (r: number) => {
       const rate = r / 100;
-      const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
-      return presentValue * Math.pow(1 + rate / n, n * t) +
-        annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n);
+      const paymentFactor = timing === "Beginning of Year" ? 1 + rate / n : 1;
+      return (
+        presentValue * Math.pow(1 + rate / n, n * t) +
+        (annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1)) /
+          (rate / n)
+      );
     };
 
     switch (calculatorType) {
@@ -76,9 +79,14 @@ const TimeValueCalculator: React.FC = () => {
         return calculateFV(interestRate);
       case "Present Value":
         const rate = interestRate / 100;
-        const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
-        return futureValue / Math.pow(1 + rate / n, n * t) -
-          annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n * Math.pow(1 + rate / n, n * t));
+        const paymentFactor = timing === "Beginning of Year" ? 1 + rate / n : 1;
+        return (
+          futureValue / Math.pow(1 + rate / n, n * t) -
+          (annualPayment *
+            paymentFactor *
+            (Math.pow(1 + rate / n, n * t) - 1)) /
+            ((rate / n) * Math.pow(1 + rate / n, n * t))
+        );
       case "Interest Rate":
         // Bisection method to find interest rate
         let low = 0;
@@ -89,7 +97,7 @@ const TimeValueCalculator: React.FC = () => {
         for (let i = 0; i < maxIterations; i++) {
           const mid = (low + high) / 2;
           const calculatedFV = calculateFV(mid);
-          
+
           if (Math.abs(calculatedFV - futureValue) < tolerance) {
             return mid;
           }
@@ -103,9 +111,11 @@ const TimeValueCalculator: React.FC = () => {
         return (low + high) / 2;
       case "Annual Payment":
         const r = interestRate / 100;
-        const pf = timing === "Beginning of Year" ? (1 + r / n) : 1;
-        return (futureValue - presentValue * Math.pow(1 + r / n, n * t)) /
-          (pf * (Math.pow(1 + r / n, n * t) - 1) / (r / n));
+        const pf = timing === "Beginning of Year" ? 1 + r / n : 1;
+        return (
+          (futureValue - presentValue * Math.pow(1 + r / n, n * t)) /
+          ((pf * (Math.pow(1 + r / n, n * t) - 1)) / (r / n))
+        );
       case "Time Period":
         // Newton-Raphson method for time period
         let guess = t;
@@ -129,6 +139,7 @@ const TimeValueCalculator: React.FC = () => {
     <div className="bg-gray-100 p-4 rounded-lg">
       <Select
         label="Calculator"
+        vertical
         options={calculatorOptions.map((option) => ({
           id: option,
           name: option,
@@ -141,44 +152,49 @@ const TimeValueCalculator: React.FC = () => {
 
       {state.calculatorType !== "Future Value" && (
         <Input
+          vertical
           label="Future Value"
           value={state.futureValue}
           setValue={(value) => handleInputChange("futureValue", Number(value))}
-          subtype="number"
+          subtype="money"
         />
       )}
 
       {state.calculatorType !== "Present Value" && (
         <Input
+          vertical
           label="Present Value"
           value={state.presentValue}
           setValue={(value) => handleInputChange("presentValue", Number(value))}
-          subtype="number"
+          subtype="money"
         />
       )}
 
       {state.calculatorType !== "Interest Rate" && (
         <Input
+          vertical
           label="Interest Rate (%)"
           value={state.interestRate}
           setValue={(value) => handleInputChange("interestRate", Number(value))}
-          subtype="number"
+          subtype="percent"
         />
       )}
 
       {state.calculatorType !== "Annual Payment" && (
         <Input
+          vertical
           label="Annual Payment"
           value={state.annualPayment}
           setValue={(value) =>
             handleInputChange("annualPayment", Number(value))
           }
-          subtype="number"
+          subtype="money"
         />
       )}
 
       {state.calculatorType !== "Time Period" && (
         <Input
+          vertical
           label="Time Period (years)"
           value={state.timePeriod}
           setValue={(value) => handleInputChange("timePeriod", Number(value))}
@@ -188,6 +204,7 @@ const TimeValueCalculator: React.FC = () => {
 
       <Select
         label="Timing"
+        vertical
         options={[
           { id: "Beginning of Year", name: "Beginning of Year" },
           { id: "End of Year", name: "End of Year" },
@@ -233,13 +250,13 @@ const TimeValueCalculator: React.FC = () => {
           }
           switch (state.calculatorType) {
             case "Interest Rate":
-              return (result * 100).toFixed(2) + "%";
+              return result.toFixed(2) + "%";
             case "Time Period":
               return result.toFixed(2) + " years";
             default:
               return result.toLocaleString(undefined, {
                 minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                maximumFractionDigits: 2,
               });
           }
         })()}
