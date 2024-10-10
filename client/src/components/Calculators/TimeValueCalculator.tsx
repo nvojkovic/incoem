@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
+import { formatter } from "../../utils";
+import Button from "../Inputs/Button";
 
 type CalculatorType =
   | "Future Value"
@@ -63,6 +65,7 @@ const TimeValueCalculator: React.FC = () => {
 
     const n = compounding === "Annual" ? 1 : 12;
     const t = timePeriod;
+    const tolerance = 0.0001;
 
     const calculateFV = (r: number) => {
       const rate = r / 100;
@@ -91,7 +94,6 @@ const TimeValueCalculator: React.FC = () => {
         // Bisection method to find interest rate
         let low = 0;
         let high = 100;
-        const tolerance = 0.0001;
         const maxIterations = 100;
 
         for (let i = 0; i < maxIterations; i++) {
@@ -135,139 +137,146 @@ const TimeValueCalculator: React.FC = () => {
     }
   };
 
-  return (
-    <div className="bg-gray-100 p-4 rounded-lg">
-      <Select
-        label="Calculator"
+  const inputs = [
+    <Select
+      label="Calculator"
+      vertical
+      options={calculatorOptions.map((option) => ({
+        id: option,
+        name: option,
+      }))}
+      selected={{ id: state.calculatorType, name: state.calculatorType }}
+      setSelected={(option) =>
+        handleInputChange("calculatorType", option.id as CalculatorType)
+      }
+    />,
+    state.calculatorType !== "Future Value" && (
+      <Input
         vertical
-        options={calculatorOptions.map((option) => ({
-          id: option,
-          name: option,
-        }))}
-        selected={{ id: state.calculatorType, name: state.calculatorType }}
+        label="Future Value"
+        size="lg"
+        value={state.futureValue}
+        setValue={(value) => handleInputChange("futureValue", Number(value))}
+        subtype="money"
+      />
+    ),
+    state.calculatorType !== "Present Value" && (
+      <Input
+        vertical
+        size="lg"
+        label="Present Value"
+        value={state.presentValue}
+        setValue={(value) => handleInputChange("presentValue", Number(value))}
+        subtype="money"
+      />
+    ),
+    state.calculatorType !== "Interest Rate" && (
+      <Input
+        vertical
+        size="lg"
+        label="Interest Rate (%)"
+        value={state.interestRate}
+        setValue={(value) => handleInputChange("interestRate", Number(value))}
+        subtype="percent"
+      />
+    ),
+    <div>
+      <Select
+        label="Timing"
+        vertical
+        options={[
+          { id: "Beginning of Year", name: "Beginning of Year" },
+          { id: "End of Year", name: "End of Year" },
+        ]}
+        selected={{ id: state.timing, name: state.timing }}
         setSelected={(option) =>
-          handleInputChange("calculatorType", option.id as CalculatorType)
+          handleInputChange(
+            "timing",
+            option.id as "Beginning of Year" | "End of Year",
+          )
         }
       />
+    </div>,
 
-      <div className="flex gap-4 mt-4">
-        <div className="flex-1">
-          {state.calculatorType !== "Future Value" && (
-            <Input
-              vertical
-              label="Future Value"
-              value={state.futureValue}
-              setValue={(value) => handleInputChange("futureValue", Number(value))}
-              subtype="money"
-            />
-          )}
+    state.calculatorType !== "Annual Payment" && (
+      <Input
+        vertical
+        label="Annual Payment"
+        size="lg"
+        value={state.annualPayment}
+        setValue={(value) => handleInputChange("annualPayment", Number(value))}
+        subtype="money"
+      />
+    ),
+    state.calculatorType !== "Time Period" && (
+      <Input
+        vertical
+        label="Time Period (years)"
+        size="lg"
+        value={state.timePeriod}
+        setValue={(value) => handleInputChange("timePeriod", Number(value))}
+        subtype="number"
+      />
+    ),
+  ].filter((i) => i);
 
-          {state.calculatorType !== "Present Value" && (
-            <Input
-              vertical
-              label="Present Value"
-              value={state.presentValue}
-              setValue={(value) => handleInputChange("presentValue", Number(value))}
-              subtype="money"
-            />
-          )}
-
-          {state.calculatorType !== "Interest Rate" && (
-            <Input
-              vertical
-              label="Interest Rate (%)"
-              value={state.interestRate}
-              setValue={(value) => handleInputChange("interestRate", Number(value))}
-              subtype="percent"
-            />
-          )}
+  return (
+    <div className="bg-gray-100 p-4 rounded-lg">
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex gap-6 justify-center">
+          <div className="flex flex-col gap-2">
+            {inputs.slice(0, 4).map((i) => i)}
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="mb0 mt-[-4px]">
+              <label className="text-sm text-[#344054] w-36 ">Compunding</label>
+              <div className="flex gap-2 mt-[6px]">
+                <button
+                  className={`flex-1 py-[7px] px-4 rounded ${
+                    state.compounding === "Annual"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                  onClick={() => handleInputChange("compounding", "Annual")}
+                >
+                  Annual
+                </button>
+                <button
+                  className={`flex-1 py-1 px-4 rounded ${
+                    state.compounding === "Monthly"
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200"
+                  }`}
+                  onClick={() => handleInputChange("compounding", "Monthly")}
+                >
+                  Monthly
+                </button>
+              </div>
+            </div>
+            {inputs.slice(4, 7).map((i) => i)}
+            <div className="mt-[25px]">
+              <Button type="primary">Clear</Button>
+            </div>
+          </div>
         </div>
 
-        <div className="flex-1">
-          {state.calculatorType !== "Annual Payment" && (
-            <Input
-              vertical
-              label="Annual Payment"
-              value={state.annualPayment}
-              setValue={(value) =>
-                handleInputChange("annualPayment", Number(value))
-              }
-              subtype="money"
-            />
-          )}
-
-          {state.calculatorType !== "Time Period" && (
-            <Input
-              vertical
-              label="Time Period (years)"
-              value={state.timePeriod}
-              setValue={(value) => handleInputChange("timePeriod", Number(value))}
-              subtype="number"
-            />
-          )}
+        <div className="mt-3 p-2  rounded">
+          <span className="font-bold">{state.calculatorType}:</span>{" "}
+          {(() => {
+            const result = calculateResult();
+            if (isNaN(result) || !isFinite(result)) {
+              return "Invalid input or calculation error";
+            }
+            switch (state.calculatorType) {
+              case "Interest Rate":
+                return result.toFixed(2) + "%";
+              case "Time Period":
+                return result.toFixed(2) + " years";
+              default:
+                return formatter.format(result);
+            }
+          })()}
         </div>
-      </div>
-
-      <div className="mt-4">
-        <Select
-          label="Timing"
-          vertical
-          options={[
-            { id: "Beginning of Year", name: "Beginning of Year" },
-            { id: "End of Year", name: "End of Year" },
-          ]}
-          selected={{ id: state.timing, name: state.timing }}
-          setSelected={(option) =>
-            handleInputChange(
-              "timing",
-              option.id as "Beginning of Year" | "End of Year",
-            )
-          }
-        />
-      </div>
-
-      <div className="flex gap-2 mt-4">
-        <button
-          className={`flex-1 py-2 px-4 rounded ${
-            state.compounding === "Annual"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200"
-          }`}
-          onClick={() => handleInputChange("compounding", "Annual")}
-        >
-          Annual
-        </button>
-        <button
-          className={`flex-1 py-2 px-4 rounded ${
-            state.compounding === "Monthly"
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200"
-          }`}
-          onClick={() => handleInputChange("compounding", "Monthly")}
-        >
-          Monthly
-        </button>
-      </div>
-
-      <div className="mt-4 p-2 bg-green-100 rounded">
-        <span className="font-bold">{state.calculatorType}:</span>{" "}
-        {(() => {
-          const result = calculateResult();
-          if (isNaN(result) || !isFinite(result)) {
-            return "Invalid input or calculation error";
-          }
-          switch (state.calculatorType) {
-            case "Interest Rate":
-              return result.toFixed(2) + "%";
-            case "Time Period":
-              return result.toFixed(2) + " years";
-            default:
-              return result.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              });
-          }
-        })()}
       </div>
     </div>
   );
