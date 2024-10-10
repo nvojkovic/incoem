@@ -30,10 +30,10 @@ export const printReport = async (clientId: number, scenarioId: number) => {
   let pdfFile;
   pdfFile = await fetch(
     import.meta.env.VITE_API_URL +
-    "print/client/pdf/" +
-    clientId +
-    "/" +
-    Math.max(scenarioId, 0).toString(),
+      "print/client/pdf/" +
+      clientId +
+      "/" +
+      Math.max(scenarioId, 0).toString(),
   ).then((res) => res.json());
   return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
 };
