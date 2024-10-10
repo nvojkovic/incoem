@@ -34,7 +34,7 @@ const calculators: CalculatorCard[] = [
   {
     id: "all-in-one",
     title: "All-In-One Calculator",
-    description: "Three time value of money calculators side by side",
+    description: "Time value of money calculator",
     icon: (
       <svg
         className="w-6 h-6"
