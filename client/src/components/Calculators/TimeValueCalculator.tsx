@@ -60,6 +60,36 @@ const TimeValueCalculator: React.FC = () => {
       timing,
       compounding,
     } = state;
+
+    const rate = interestRate / 100;
+    const n = compounding === "Annual" ? 1 : 12;
+    const t = timePeriod;
+    const paymentFactor = timing === "Beginning of Year" ? (1 + rate / n) : 1;
+
+    switch (calculatorType) {
+      case "Future Value":
+        return presentValue * Math.pow(1 + rate / n, n * t) +
+          annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n);
+      case "Present Value":
+        return futureValue / Math.pow(1 + rate / n, n * t) -
+          annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n * Math.pow(1 + rate / n, n * t));
+      case "Interest Rate":
+        // Note: This is an approximation and may not be accurate for all cases
+        const pmt = annualPayment * paymentFactor;
+        const pv = presentValue;
+        const fv = futureValue;
+        return n * (Math.pow((fv + pmt * n * t) / (pv + pmt * n * t), 1 / (n * t)) - 1);
+      case "Annual Payment":
+        return (futureValue - presentValue * Math.pow(1 + rate / n, n * t)) /
+          (paymentFactor * (Math.pow(1 + rate / n, n * t) - 1) / (rate / n));
+      case "Time Period":
+        // Note: This is an approximation and may not be accurate for all cases
+        const a = Math.log(futureValue / presentValue);
+        const b = Math.log(1 + rate / n);
+        return a / (n * b);
+      default:
+        return 0;
+    }
   };
 
   return (
@@ -163,7 +193,23 @@ const TimeValueCalculator: React.FC = () => {
 
       <div className="mt-4 p-2 bg-green-100 rounded">
         <span className="font-bold">{state.calculatorType}:</span>{" "}
-        {calculateResult().toFixed(2)}
+        {(() => {
+          const result = calculateResult();
+          if (isNaN(result) || !isFinite(result)) {
+            return "Invalid input or calculation error";
+          }
+          switch (state.calculatorType) {
+            case "Interest Rate":
+              return (result * 100).toFixed(2) + "%";
+            case "Time Period":
+              return result.toFixed(2) + " years";
+            default:
+              return result.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              });
+          }
+        })()}
       </div>
     </div>
   );
