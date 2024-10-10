@@ -6,6 +6,17 @@ import Select from "../Inputs/Select";
 import { formatter } from "../../utils";
 import Button from "../Inputs/Button";
 
+const initialState: CalculatorState = {
+  futureValue: 0,
+  presentValue: 0,
+  interestRate: 0,
+  annualPayment: 0,
+  timePeriod: 0,
+  calculatorType: "Future Value",
+  timing: "End of Year",
+  compounding: "Annual",
+};
+
 type CalculatorType =
   | "Future Value"
   | "Present Value"
@@ -25,16 +36,7 @@ interface CalculatorState {
 }
 
 const TimeValueCalculator: React.FC = () => {
-  const [state, setState] = useState<CalculatorState>({
-    futureValue: 0,
-    presentValue: 0,
-    interestRate: 0,
-    annualPayment: 0,
-    timePeriod: 0,
-    calculatorType: "Future Value",
-    timing: "End of Year",
-    compounding: "Annual",
-  });
+  const [state, setState] = useState<CalculatorState>(initialState);
 
   const calculatorOptions: CalculatorType[] = [
     "Future Value",
@@ -49,6 +51,10 @@ const TimeValueCalculator: React.FC = () => {
     value: number | string,
   ) => {
     setState((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleClear = () => {
+    setState(initialState);
   };
 
   const calculateResult = () => {
@@ -255,7 +261,7 @@ const TimeValueCalculator: React.FC = () => {
             </div>
             {inputs.slice(4, 7).map((i) => i)}
             <div className="mt-[25px]">
-              <Button type="primary">Clear</Button>
+              <Button type="primary" onClick={handleClear}>Clear</Button>
             </div>
           </div>
         </div>
