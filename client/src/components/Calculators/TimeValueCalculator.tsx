@@ -227,7 +227,7 @@ const TimeValueCalculator: React.FC = () => {
   ].filter((i) => i);
 
   return (
-    <div className="bg-gray-100 p-4 rounded-lg">
+    <div className="border p-4 rounded-lg">
       <div className="flex flex-col gap-4 mt-4">
         <div className="flex gap-6 justify-center">
           <div className="flex flex-col gap-2">
