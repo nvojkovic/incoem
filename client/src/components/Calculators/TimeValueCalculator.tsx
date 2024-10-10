@@ -1,6 +1,6 @@
 // src/components/Calculators/TimeValueCalculator.tsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 import { formatter } from "../../utils";
@@ -240,7 +240,7 @@ const TimeValueCalculator: React.FC = () => {
                 <button
                   className={`flex-1 py-[7px] px-4 rounded ${
                     state.compounding === "Annual"
-                      ? "bg-blue-500 text-white"
+                      ? "bg-main-orange text-white"
                       : "bg-gray-200"
                   }`}
                   onClick={() => handleInputChange("compounding", "Annual")}
@@ -250,7 +250,7 @@ const TimeValueCalculator: React.FC = () => {
                 <button
                   className={`flex-1 py-1 px-4 rounded ${
                     state.compounding === "Monthly"
-                      ? "bg-blue-500 text-white"
+                      ? "bg-main-orange text-white"
                       : "bg-gray-200"
                   }`}
                   onClick={() => handleInputChange("compounding", "Monthly")}
@@ -261,17 +261,18 @@ const TimeValueCalculator: React.FC = () => {
             </div>
             {inputs.slice(4, 7).map((i) => i)}
             <div className="mt-[25px]">
-              <Button type="primary" onClick={handleClear}>Clear</Button>
+              <Button type="secondary" onClick={handleClear}>
+                Clear
+              </Button>
             </div>
           </div>
         </div>
-
-        <div className="mt-3 p-2  rounded">
+        <div className="mt-3 p-2 rounded text-center">
           <span className="font-bold">{state.calculatorType}:</span>{" "}
           {(() => {
             const result = calculateResult();
             if (isNaN(result) || !isFinite(result)) {
-              return "Invalid input or calculation error";
+              return "N/A";
             }
             switch (state.calculatorType) {
               case "Interest Rate":
