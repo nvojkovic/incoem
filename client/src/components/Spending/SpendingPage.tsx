@@ -40,7 +40,8 @@ const SpendingPage = ({ settings, setSettings }: any) => {
     const inflationRate = (inflation: any) => {
       if (inflation.type == "none") return 0;
       else if (inflation.type == "custom") return inflation.percent / 100;
-      else if (inflation.type == "general") return settings.inflation || 0;
+      else if (inflation.type == "general")
+        return settings.inflation / 100 || 0;
       else return -10e9;
     };
     const inflateAmount = (amount: number, inflation: number) => {
@@ -568,8 +569,9 @@ const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
-              }`}
+            className={`flex-1 py-[7px] px-4 rounded ${
+              value === item ? "bg-main-orange text-white" : "bg-gray-200"
+            }`}
             onClick={() => setValue(item)}
           >
             {item}
