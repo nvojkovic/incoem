@@ -115,6 +115,7 @@ interface Client {
   createdAt: string;
   id: number;
   data: IncomeMapData;
+  spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
 }
 
@@ -127,4 +128,36 @@ interface ScenarioSettings {
   inflation: number;
   whoDies: number;
   data: IncomeMapData;
+}
+
+type YearlyIncrease =
+  | { type: "general" }
+  | { type: "none" }
+  | { type: "custom"; percent: number };
+
+interface RetirementSpendingSettings {
+  currentSpending: number;
+  yearlyIncrease: YearlyIncrease;
+  decreaseAtDeath: [number, number];
+  preTaxRate: number;
+  postTaxRate: number;
+  retirementYear: number;
+  preSpending: CurrentSpending[];
+  postSpending: NewSpending[];
+}
+
+interface CurrentSpending {
+  category: string;
+  amount: number;
+  endYear: number;
+  increase: YearlyIncrease;
+}
+
+interface NewSpending {
+  category: string;
+  amount: number;
+  startYear: number;
+  endYear: number;
+  increase: YearlyIncrease;
+  changeAtDeath: [number, number];
 }

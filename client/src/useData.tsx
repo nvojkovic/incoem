@@ -5,14 +5,15 @@ import { updateAtIndex } from "./utils";
 
 const IncomeContext = React.createContext({
   data: {} as Client,
-  addIncome: (_: Income) => {},
-  removeIncome: (_: number) => {},
-  updateIncomes: (_: Income[]) => {},
-  setIncome: ((_: number, __: Income) => {}) as any,
-  storeScenarios: (_: ScenarioSettings[]) => {},
-  addScenario: (_: ScenarioSettings) => {},
-  setPerson: (_: Person) => {},
-  setTitle: (_: string) => {},
+  addIncome: (_: Income) => { },
+  removeIncome: (_: number) => { },
+  updateIncomes: (_: Income[]) => { },
+  setIncome: ((_: number, __: Income) => { }) as any,
+  storeScenarios: (_: ScenarioSettings[]) => { },
+  addScenario: (_: ScenarioSettings) => { },
+  setPerson: (_: Person) => { },
+  setTitle: (_: string) => { },
+  setSpending: (_: RetirementSpendingSettings) => { },
 });
 
 const debounce = (callback: Function, wait: number) => {
@@ -44,11 +45,11 @@ export const IncomeProvider = ({
     setLocal(initialData);
   }, [initialData]);
   const setData = (fn: (data: Client) => Client) => {
-    console.log("setting data", data.data.incomes);
+    console.log("setting data", data);
     setLocal((data) => {
       const result = fn(data);
-      console.log("result", result.data.incomes);
-      updateRemote(result.id, result.title, result.data);
+      console.log("result", result);
+      updateRemote(result.id, result.title, result.data, result.spending);
       return result;
     });
   };
@@ -124,6 +125,16 @@ export const IncomeProvider = ({
     }));
   };
 
+  const setSpending = (spending: RetirementSpendingSettings) => {
+    setData((data) => ({
+      ...data,
+      data: {
+        ...data.data,
+      },
+      spending,
+    }));
+  };
+
   const addScenario = (scenario: ScenarioSettings) => {
     storeScenarios([...data.scenarios, scenario]);
   };
@@ -138,6 +149,7 @@ export const IncomeProvider = ({
     addScenario,
     setPerson,
     setTitle,
+    setSpending,
   };
 
   return (

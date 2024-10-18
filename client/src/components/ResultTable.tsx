@@ -44,6 +44,7 @@ import React from "react";
 import { useInfo } from "../useData";
 import { generateColumns } from "./tableData";
 import { useUser } from "../useUser";
+import StackedAreaChart from "./NewChart";
 
 const DraggableTableHeader = ({
   header,
@@ -570,6 +571,7 @@ const ResultTable = ({
             </div>
           </div>
         )}
+
         <StackedChart
           years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
           incomes={incomes
@@ -603,6 +605,36 @@ const ResultTable = ({
                 (item.stable ? "stable" : "unstable") === incomeToShow,
             )}
         />
+        <StackedAreaChart
+          years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
+          lineData={yearRange(
+            startYear,
+            startYear + settings.maxYearsShown - 1,
+          ).map((_) => 50000 + Math.random() * 30000)}
+          stackedData={incomes.map((income, i) => ({
+            name: title(incomes, data.people, i),
+            stable: income.stable,
+            values: yearRange(
+              startYear,
+              startYear + settings.maxYearsShown - 1,
+            ).map((year) =>
+              Math.round(
+                calculate({
+                  people: data.people,
+                  income,
+                  startYear,
+                  currentYear: year,
+                  deathYears: settings.deathYears as any,
+                  dead: settings.whoDies,
+                  inflation: settings.inflation,
+                  incomes: incomes,
+                  ssSurvivorAge: settings.ssSurvivorAge,
+                }).amount,
+              ),
+            ),
+          }))}
+        />
+        <div className="h-12"></div>
       </div>
     </DndContext>
   );

@@ -39,8 +39,8 @@ const Navbar = ({
 
   return (
     <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
-      <div className=" flex justify-between items-center h bg-white w-full">
-        <div className="flex items-center justify-start w-full">
+      <div className=" flex justify-between items-center h bg-white w-full flex-1">
+        <div className="flex items-center justify-start w-full flex-1">
           <Link to="/clients">
             <div className="flex items-center cursor-pointer">
               {user?.info ? (
@@ -65,12 +65,20 @@ const Navbar = ({
               )}
             </div>
           </Link>
-          {active == "data" || active == "calculator" || active == "map" ? (
+          {active == "data" ||
+            active == "calculator" ||
+            active == "map" ||
+            active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
                 name="Data"
                 active={active == "data"}
                 onClick={() => onTabChange("data")}
+              />
+              <NavItem
+                name="Retirement Spending"
+                active={active == "spending"}
+                onClick={() => onTabChange("spending")}
               />
               <NavItem
                 name="Map"
@@ -86,7 +94,7 @@ const Navbar = ({
           ) : null}
         </div>
       </div>
-      <div className="flex gap-6 items-center">
+      <div className="flex gap-6 items-center max-w-[100px]">
         <div className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange">
           {household ? ` ${household}` : ""}
         </div>

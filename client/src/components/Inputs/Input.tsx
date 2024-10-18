@@ -23,6 +23,7 @@ interface Props {
   | "password"
   | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
+  width?: string;
   setValue: (value: any) => void;
   [key: string]: any;
 }
@@ -45,12 +46,12 @@ const Input = ({
   labelLength = 0,
   tooltip,
   disabled = false,
+  width,
   ...props
 }: Props) => {
   let input = null as any;
 
-  const basic =
-    "focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100";
+  const basic = `focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 ${width}`;
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -141,7 +142,7 @@ const Input = ({
       >
         <label
           htmlFor={label}
-          className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"}`}
+          className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"} ${width}`}
           style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
         >
           {label}

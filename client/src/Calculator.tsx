@@ -11,10 +11,13 @@ import Spinner from "./components/Spinner";
 import { IncomeProvider } from "./useData";
 import CalculatorMap from "./components/Calculators/CalculatorMap";
 import { initialVersatileSettings } from "./components/Calculators/versatileTypes";
+import SpendingPage from "./components/Spending/SpendingPage";
 
 function Calculator() {
   const { id } = useParams();
-  const [tab, setTab] = useState<"data" | "calculator" | "map">("data");
+  const [tab, setTab] = useState<"data" | "calculator" | "map" | "spending">(
+    "data",
+  );
   const [fullScreen, setFullScreen] = useState(false);
 
   const fetchData = () => {
@@ -44,6 +47,17 @@ function Calculator() {
   const [settings, sett] = useState<ScenarioSettings>({} as any);
   const [versatileCalculatorData, setVersatileData] = useState(
     initialVersatileSettings,
+  );
+  const initialSpendingSettings = {
+    inflationType: "Real",
+    taxType: "Post-Tax",
+    deathYears: [undefined, undefined],
+    whoDies: -1,
+    startYear: 2024,
+    endYear: 2090,
+  };
+  const [spendingSettings, setSpendingSettings] = useState(
+    initialSpendingSettings,
   );
   const setSettings = (settings: ScenarioSettings) => {
     console.log("setSettings", settings);
@@ -90,6 +104,12 @@ function Calculator() {
               <CalculatorMap
                 data={versatileCalculatorData}
                 setData={setVersatileData}
+              />
+            )}
+            {tab == "spending" && (
+              <SpendingPage
+                settings={spendingSettings}
+                setSettings={setSpendingSettings}
               />
             )}
           </div>
