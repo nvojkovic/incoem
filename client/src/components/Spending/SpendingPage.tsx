@@ -5,7 +5,6 @@ import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
 import { formatter, splitDate, yearRange } from "../../utils";
-import { retirementYear } from "../../calculator/utils";
 import StackedAreaChart from "../NewChart";
 import { calculateAge } from "../Info/PersonInfo";
 
@@ -522,7 +521,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
                           settings.startYear + (tableInd + 1) * 16 - 1,
                           settings.endYear,
                         ),
-                      ).map((line, index) => (
+                      ).map((line) => (
                         <tr className="">
                           <td className="px-2 py-1 w-[500px] font-bold">
                             {line}

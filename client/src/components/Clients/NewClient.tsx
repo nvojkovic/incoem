@@ -56,7 +56,7 @@ const NewClient = () => {
       },
       scenarios: [],
     };
-    const d = await createClient(client);
+    const d = await createClient(client as any);
     const js = await d.json();
     setNewOpen(false);
     setName("");

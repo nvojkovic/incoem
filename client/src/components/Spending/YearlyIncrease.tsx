@@ -19,7 +19,10 @@ const YearlyIncrease = ({ increase, setYearlyIncrease, labels }: Props) => {
             { value: "none", name: "None" },
             { value: "custom", name: "Custom" },
           ]}
-          selected={{ name: increase.type?.capitalize(), value: increase.type }}
+          selected={{
+            name: (increase.type as any)?.capitalize(),
+            value: increase.type,
+          }}
           setSelected={(type) =>
             setYearlyIncrease({ ...increase, type: type.value })
           }
