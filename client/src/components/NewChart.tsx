@@ -70,10 +70,13 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Sort stackedData to put unstable incomes on top
-    stackedData.sort((a: any, b: any) =>
-      a.stable === b.stable ? 0 : a.stable ? -1 : 1,
-    );
+    // Sort stackedData to put unstable incomes on top, then by name
+    stackedData.sort((a: any, b: any) => {
+      if (a.stable === b.stable) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.stable ? -1 : 1;
+    });
 
     // Process data
     const processedData = years.map((year: any, index: any) => {
