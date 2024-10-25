@@ -107,7 +107,10 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .range([height, 0]);
 
     // Updated color scale using only colorArray
-    const color = d3.scaleOrdinal().domain(keys).range(colorArray);
+    const color = d3
+      .scaleOrdinal()
+      .domain(stackedData.map((d: any) => d.name) as any)
+      .range(colorArray);
 
     const stackGenerator = d3.stack().keys(keys);
     const layers = stackGenerator(processedData);
@@ -295,9 +298,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .on("mouseleave", mouseleave);
 
     // Remove any existing legend containers
-    d3.select(containerRef.current)
-      .selectAll(".legend-container")
-      .remove();
+    d3.select(containerRef.current).selectAll(".legend-container").remove();
 
     // Add legend container
     const legendContainer = d3
@@ -314,43 +315,46 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .style("bottom", "-90px");
 
     // Add legend items
-    keys.forEach((key) => {
-      const legendItem = legendContainer
-        .append("div")
-        .style("display", "flex")
-        .style("align-items", "center")
-        .style("gap", "5px");
 
-      legendItem
-        .append("div")
-        .style("width", "10px")
-        .style("height", "10px")
-        .style("background-color", color(key))
-        .style("border-radius", "50%")
-        .style(
-          "opacity",
-          stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
-        );
+    stackedData
+      .map((d: any) => d.name)
+      .forEach((key) => {
+        const legendItem = legendContainer
+          .append("div")
+          .style("display", "flex")
+          .style("align-items", "center")
+          .style("gap", "5px");
 
-      legendItem
-        .append("span")
-        .style("font-size", "12px")
-        .style(
-          "text-decoration",
-          hiddenSeries.has(key) ? "line-through" : "none",
-        )
-        .style("cursor", "pointer")
-        .text(key)
-        .on("click", () => {
-          const newHiddenSeries = new Set(hiddenSeries);
-          if (hiddenSeries.has(key)) {
-            newHiddenSeries.delete(key);
-          } else {
-            newHiddenSeries.add(key);
-          }
-          setHiddenSeries(newHiddenSeries);
-        });
-    });
+        legendItem
+          .append("div")
+          .style("width", "10px")
+          .style("height", "10px")
+          .style("background-color", color(key))
+          .style("border-radius", "50%")
+          .style(
+            "opacity",
+            stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
+          );
+
+        legendItem
+          .append("span")
+          .style("font-size", "12px")
+          .style(
+            "text-decoration",
+            hiddenSeries.has(key) ? "line-through" : "none",
+          )
+          .style("cursor", "pointer")
+          .text(key)
+          .on("click", () => {
+            const newHiddenSeries = new Set(hiddenSeries);
+            if (hiddenSeries.has(key)) {
+              newHiddenSeries.delete(key);
+            } else {
+              newHiddenSeries.add(key);
+            }
+            setHiddenSeries(newHiddenSeries);
+          });
+      });
 
     // Add line to legend if lineData exists
     if (lineData?.length) {
