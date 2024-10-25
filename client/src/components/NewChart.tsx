@@ -20,7 +20,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
   // ];
   const color = d3.scaleSequential(d3.interpolateSinebow);
   const colorArray = [
-    color(0.5),
+    "#ff000066",
     color(0.3),
     color(0.2),
     color(0.1),
