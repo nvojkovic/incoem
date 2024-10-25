@@ -290,66 +290,60 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
 
-    // Add centered legend
-    const cumulativeSum = (
-      (sum) => (value: any) =>
-        (sum += value)
-    )(0);
-    const lens = keys.map((k: any) => k.length * 6.5 + 20).map(cumulativeSum);
+    // Add legend container
+    const legendContainer = d3
+      .select(containerRef.current)
+      .append("div")
+      .style("display", "flex")
+      .style("justify-content", "center")
+      .style("flex-wrap", "wrap")
+      .style("gap", "20px")
+      .style("margin-top", "10px")
+      .style("position", "absolute")
+      .style("width", "100%")
+      .style("bottom", "20px");
 
-    const legend = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${(width - lens[lens.length - 1]) / 2}, ${height + 50})`,
-      );
-
-    (keys as any[]).forEach((key, index) => {
-      const legendItem = legend
+    // Add legend items
+    keys.forEach((key) => {
+      const legendItem = legendContainer
         .append("div")
-        .attr("transform", `translate(${lens[index - 1]}, 0)`);
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("gap", "5px");
 
       legendItem
-        .append("rect")
-        .attr("width", 10)
-        .attr("y", -4)
-        .attr("height", 10)
-        .attr("fill", color(key as any) as any)
-        .attr(
-          "opacity",
-          stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
-        );
+        .append("div")
+        .style("width", "10px")
+        .style("height", "10px")
+        .style("background-color", color(key))
+        .style("border-radius", "50%")
+        .style("opacity", stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5);
 
       legendItem
-        .append("text")
-        .attr("x", 15)
-        .attr("y", 5)
-        .text(key)
+        .append("span")
         .style("font-size", "12px")
-        .attr("alignment-baseline", "middle");
+        .text(key);
     });
 
-    // Add line to legend
+    // Add line to legend if lineData exists
     if (lineData?.length) {
-      const lineItem = legend
-        .append("g")
-        .attr("transform", `translate(${lens[lens.length - 1]}, 0)`);
+      const lineItem = legendContainer
+        .append("div")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("gap", "5px");
 
       lineItem
-        .append("rect")
-        .attr("width", 10)
-        .attr("height", 10)
-        .attr("y", -4)
-        .attr("border-radius", "50%")
-        .attr("fill", "red");
+        .append("div")
+        .style("width", "10px")
+        .style("height", "10px")
+        .style("background-color", "red")
+        .style("border-radius", "50%");
 
       lineItem
-        .append("text")
-        .attr("x", 15)
-        .attr("y", 5)
-        .text("Line")
+        .append("span")
         .style("font-size", "12px")
-        .attr("alignment-baseline", "middle");
+        .text("Spending");
     }
   }, [dimensions, years, stackedData, lineData]);
 
