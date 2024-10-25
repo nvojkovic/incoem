@@ -59,6 +59,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
 
+    svgRef.current.innerHtml = "";
     d3.select(svgRef.current).selectAll("*").remove();
 
     const svg = d3
@@ -202,12 +203,12 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function(_: any, __: any) {
+    const mouseover = function (_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function(event: any, _: any) {
+    const mousemove = function (event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -230,9 +231,15 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
               </div>`,
             )
             .join("") +
-          `<div style="display: flex; align-items: center;">
+          `<div style="font-size:12px;display:flex;justify-content:space-between;align-items: center;">
+            <div>
             <span style="display: inline-block; font-size: 12px; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-            Spending: ${formatCurrency.format(lineData[years.indexOf(year)])}
+            </div>
+            <div style="">
+          <div style="font-size:12px;display:flex;justify-content:space-between;align-items: center;width:100%">
+            <b>Spending</b>: ${formatCurrency.format(lineData[years.indexOf(year)])}
+            </div>
+            </div>
           </div>`;
 
         tooltip.html(`<strong>Year: ${year}</strong><br>${tooltipContent}`);
@@ -265,7 +272,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       }
     };
 
-    const mouseleave = function(_: any, __: any) {
+    const mouseleave = function (_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };

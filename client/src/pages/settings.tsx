@@ -28,7 +28,7 @@ const Settings = () => {
   };
 
   return (
-    <Layout page="settings" onTabChange={() => { }}>
+    <Layout page="settings" onTabChange={() => {}}>
       {settings ? (
         <div className="px-10">
           <MapSection title="Settings" defaultOpen>
@@ -81,6 +81,13 @@ const Settings = () => {
                   setSettings({ ...settings, stabilityRatioFlag: e })
                 }
                 label="Calculate Stability Ratio?"
+                size="full"
+                subtype="toggle"
+              />
+              <Input
+                value={settings.needsFlag}
+                setValue={(e) => setSettings({ ...settings, needsFlag: e })}
+                label="Needs"
                 size="full"
                 subtype="toggle"
               />

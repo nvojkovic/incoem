@@ -126,7 +126,9 @@ interface ScenarioSettings {
   deathYears: (number | null)[];
   ssSurvivorAge: (number | null)[];
   inflation: number;
+  inflationType: "Real" | "Nominal";
   whoDies: number;
+  spending?: RetirementSpendingSettings;
   data: IncomeMapData;
 }
 

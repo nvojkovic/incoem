@@ -12,6 +12,7 @@ import {
 import { useRef, useState } from "react";
 import ModalInput from "./Inputs/ModalInput";
 import { Spinner } from "flowbite-react";
+import { MultiToggle } from "./Spending/SpendingPage";
 const Live = ({
   data,
   settings,
@@ -24,6 +25,7 @@ const Live = ({
   changeFullScreen,
   addScenario,
   clientId,
+  spending,
 }: {
   data: IncomeMapData;
   settings: ScenarioSettings;
@@ -36,6 +38,7 @@ const Live = ({
   changeFullScreen: any;
   addScenario: any;
   clientId: any;
+  spending?: RetirementSpendingSettings;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
   const inputRef = useRef(null as any);
@@ -46,10 +49,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf-live/" +
-      clientId +
-      "/?data=" +
-      JSON.stringify({ ...settings, data }),
+        "print/client/pdf-live/" +
+        clientId +
+        "/?data=" +
+        JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -134,6 +137,16 @@ const Live = ({
                   }
                 />
               </div>
+              <div className="mt-[-3px]">
+                <MultiToggle
+                  options={["Real", "Nominal"]}
+                  label="Inflation"
+                  value={settings.inflationType}
+                  setValue={(v: any) =>
+                    setSettings({ ...settings, inflationType: v })
+                  }
+                />
+              </div>
               <div className="">
                 <Input
                   ref={inputRef}
@@ -143,7 +156,7 @@ const Live = ({
                       input.select();
                     }, 0);
                   }}
-                  label="Inflation"
+                  label="Inflation (%)"
                   size="xs"
                   vertical
                   subtype="percent"
@@ -243,6 +256,7 @@ const Live = ({
         setSelectedColumn={setSelectedColumn}
         setSettings={setSettings}
         id={-1}
+        spending={spending}
       />
     </div>
   );

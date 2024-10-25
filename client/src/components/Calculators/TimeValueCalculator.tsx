@@ -5,6 +5,7 @@ import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 import { formatter } from "../../utils";
 import Button from "../Inputs/Button";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const initialState: CalculatorState = {
   futureValue: 0,
@@ -266,7 +267,13 @@ const TimeValueCalculator: React.FC = () => {
               </Button>
             </div>
           </div>
+          <div className="">
+            <div className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer">
+              <TrashIcon className="text-red-500 w-5" />
+            </div>
+          </div>
         </div>
+
         <div className="mt-3 p-2 rounded text-center">
           <span className="font-bold">{state.calculatorType}:</span>{" "}
           {(() => {

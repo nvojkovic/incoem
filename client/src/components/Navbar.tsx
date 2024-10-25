@@ -66,20 +66,22 @@ const Navbar = ({
             </div>
           </Link>
           {active == "data" ||
-            active == "calculator" ||
-            active == "map" ||
-            active == "spending" ? (
+          active == "calculator" ||
+          active == "map" ||
+          active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
                 name="Data"
                 active={active == "data"}
                 onClick={() => onTabChange("data")}
               />
-              <NavItem
-                name="Retirement Spending"
-                active={active == "spending"}
-                onClick={() => onTabChange("spending")}
-              />
+              {user?.info?.needsFlag && (
+                <NavItem
+                  name="Needs"
+                  active={active == "spending"}
+                  onClick={() => onTabChange("spending")}
+                />
+              )}
               <NavItem
                 name="Map"
                 active={active == "map"}
@@ -120,10 +122,11 @@ const Navbar = ({
                     {({ active }) => (
                       <Link to="/profile">
                         <button
-                          className={`${active
+                          className={`${
+                            active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Settings
                         </button>
@@ -137,10 +140,11 @@ const Navbar = ({
                         target="_blank"
                       >
                         <button
-                          className={`${active
+                          className={`${
+                            active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Help Center
                         </button>
@@ -152,8 +156,9 @@ const Navbar = ({
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? "bg-main-orange text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         onClick={async () => {
                           await Session.signOut();
                           navigate("/login");

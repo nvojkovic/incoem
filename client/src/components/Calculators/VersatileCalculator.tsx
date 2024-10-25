@@ -5,7 +5,7 @@ import Select from "../Inputs/Select";
 import { printNumber as printNumberOld } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
-import { ArrowDownIcon } from "@heroicons/react/24/outline";
+import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 const printNumber = (s: number) =>
   s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
@@ -24,11 +24,13 @@ interface CalculationRow {
 const VersatileCalculator: React.FC<any> = ({
   data: settings,
   setData: setSettings,
+  back,
 }: {
   data: typeof initialVersatileSettings;
   setData: React.Dispatch<
     React.SetStateAction<typeof initialVersatileSettings>
   >;
+  back: any;
 }) => {
   const [openYears, setOpenYears] = useState(false);
   const [selectedCol, setSelectedCol] = useState(null as any);
@@ -148,7 +150,15 @@ const VersatileCalculator: React.FC<any> = ({
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Versatile Calculator</h1>
+        <div className="flex gap-3 items-center mb-8">
+          <div
+            className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer"
+            onClick={back}
+          >
+            <ArrowLeftIcon className="h-5 text-gray-500" />
+          </div>
+          <h1 className="text-3xl font-bold">Versatile Calculator</h1>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="flex flex-col gap-4">
             <div className="col-span-3">
@@ -311,12 +321,12 @@ const VersatileCalculator: React.FC<any> = ({
               labelLength={110}
               value={printNumber(
                 calculations.length &&
-                calculations[calculations.length - 1].endingBalance,
+                  calculations[calculations.length - 1].endingBalance,
               )}
               size="md"
               disabled
               subtype="text"
-              setValue={() => { }}
+              setValue={() => {}}
             />
             <Input
               label="Total Payments"
@@ -331,7 +341,7 @@ const VersatileCalculator: React.FC<any> = ({
               )}
               disabled
               subtype="text"
-              setValue={() => { }}
+              setValue={() => {}}
             />
           </div>
           <div className="w-40">
@@ -528,8 +538,8 @@ const VersatileCalculator: React.FC<any> = ({
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                settings.payment.startYear +
-                                1,
+                                  settings.payment.startYear +
+                                  1,
                               ),
                             ).keys(),
                           ].map((k) => {

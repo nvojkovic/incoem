@@ -6,6 +6,7 @@ interface User {
   info?: {
     subsciptionStatus?: string;
     stabilityRatioFlag: boolean;
+    needsFlag: boolean;
     logo?: string;
     email: string;
     name?: string;

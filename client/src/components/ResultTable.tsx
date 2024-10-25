@@ -8,7 +8,13 @@ import {
 import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import Input from "./Inputs/Input";
-import { printNumber, printReport, splitDate, yearRange } from "../utils";
+import {
+  formatter,
+  printNumber,
+  printReport,
+  splitDate,
+  yearRange,
+} from "../utils";
 import Confirm from "./Confirm";
 import { CSSProperties, useMemo, useState } from "react";
 import StackedChart from "./Chart";
@@ -45,6 +51,7 @@ import { useInfo } from "../useData";
 import { generateColumns } from "./tableData";
 import { useUser } from "../useUser";
 import StackedAreaChart from "./NewChart";
+import { calculateSpendingYear } from "./Spending/SpendingPage";
 
 const DraggableTableHeader = ({
   header,
@@ -80,11 +87,12 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium  ${selectedColumn.type == data.column.type &&
-          selectedColumn.id == data.column.id
+      className={`font-medium  ${
+        selectedColumn.type == data.column.type &&
+        selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-        }`}
+      }`}
       colSpan={header.colSpan}
       ref={setNodeRef}
       style={style}
@@ -102,7 +110,7 @@ const DraggableTableHeader = ({
             setTimer(
               setTimeout(() => {
                 selectedColumn.type === data.column.type &&
-                  selectedColumn.id == data.column.id
+                selectedColumn.id == data.column.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn(data.column);
               }, 200),
@@ -178,6 +186,7 @@ const ResultTable = ({
   selectedColumn,
   setSettings,
   toPrint,
+  spending,
 }: {
   data: IncomeMapData;
   clientId: any;
@@ -193,6 +202,7 @@ const ResultTable = ({
   setSelectedColumn: any;
   toPrint?: boolean;
   setSettings?: (data: any) => void;
+  spending?: RetirementSpendingSettings;
 }) => {
   if (!data) return null;
   const startYear = new Date().getFullYear();
@@ -292,20 +302,55 @@ const ResultTable = ({
             <div className="flex gap-2">
               <div className="w-20 !z-[5000]">
                 <Tooltip
-                  content={`Stability Ratio: ${Math.round(
-                    (incomes
+                  content={(() => {
+                    const needs = calculateSpendingYear(
+                      data,
+                      spending,
+                      settings,
+                      currentYear,
+                    );
+                    const income = incomes
+                      .map((income) => calculateOne(income, currentYear).amount)
+                      .filter((t) => typeof t === "number")
+                      .reduce((a, b) => a + b, 0);
+                    const stableIncome = incomes
                       .filter((item) => item.stable)
                       .map((income) => calculateOne(income, currentYear).amount)
                       .filter((t) => typeof t === "number")
-                      .reduce((a, b) => a + b, 0) /
-                      incomes
-                        .map(
-                          (income) => calculateOne(income, currentYear).amount,
-                        )
-                        .filter((t) => typeof t === "number")
-                        .reduce((a, b) => a + b, 0)) *
-                    100,
-                  )}% `}
+                      .reduce((a, b) => a + b, 0);
+                    const gap = income - needs;
+                    const stabilityRatio = Math.round(
+                      (stableIncome / income) * 100,
+                    );
+                    const needsStable = Math.round(
+                      (stableIncome / needs) * 100,
+                    );
+                    return (
+                      <div>
+                        {spending && (
+                          <>
+                            <div>
+                              Needs: {spending && formatter.format(needs)}
+                            </div>
+
+                            <div>
+                              Gap:{" "}
+                              <span className={gap < 0 ? "text-red-500" : ""}>
+                                {formatter.format(gap)}
+                              </span>{" "}
+                            </div>
+                          </>
+                        )}
+                        {!isNaN(stabilityRatio) && (
+                          <div>
+                            Stability Ratio:{" "}
+                            {Math.round((stableIncome / income) * 100)}%
+                          </div>
+                        )}
+                        {spending && <div>Needs Stable: {needsStable}%</div>}
+                      </div>
+                    );
+                  })()}
                   theme={{ target: "" }}
                   placement="left"
                   style="light"
@@ -423,7 +468,7 @@ const ResultTable = ({
                             disabled
                             label={`${person.name}'s Death`}
                             value={settings.deathYears[i]?.toString()}
-                            setValue={() => { }}
+                            setValue={() => {}}
                           />
                         </div>
                       ),
@@ -437,7 +482,7 @@ const ResultTable = ({
                     vertical
                     disabled
                     value={settings.maxYearsShown}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:mr-[-20px]">
@@ -448,7 +493,7 @@ const ResultTable = ({
                     vertical
                     subtype="text"
                     value={`${settings.inflation?.toString()}%`}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
                 <div className="print:hidden">
@@ -525,10 +570,11 @@ const ResultTable = ({
           <div className="print:hidden flex text-sm">
             <div
               onClick={() => setIncomeToShow("all")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "all"
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
+                incomeToShow === "all"
                   ? "border-main-orange text-main-orange"
                   : "text-[#667085]"
-                } z-50`}
+              } z-50`}
               style={{
                 backgroundColor:
                   incomeToShow === "all"
@@ -541,10 +587,11 @@ const ResultTable = ({
 
             <div
               onClick={() => setIncomeToShow("stable")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "stable"
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
+                incomeToShow === "stable"
                   ? "border-main-orange text-main-orange"
                   : "text-[#667085]"
-                } z-50`}
+              } z-50`}
               style={{
                 backgroundColor:
                   incomeToShow === "stable"
@@ -556,10 +603,11 @@ const ResultTable = ({
             </div>
             <div
               onClick={() => setIncomeToShow("unstable")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "unstable"
+              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
+                incomeToShow === "unstable"
                   ? "border-main-orange text-main-orange"
                   : "text-[#667085]"
-                } z-50`}
+              } z-50`}
               style={{
                 backgroundColor:
                   incomeToShow === "unstable"
@@ -610,7 +658,9 @@ const ResultTable = ({
           lineData={yearRange(
             startYear,
             startYear + settings.maxYearsShown - 1,
-          ).map((_) => 50000 + Math.random() * 30000)}
+          ).map((currentYear) =>
+            calculateSpendingYear(data, spending, settings, currentYear),
+          )}
           stackedData={incomes.map((income, i) => ({
             name: title(incomes, data.people, i),
             stable: income.stable,

@@ -58,9 +58,16 @@ const CalculatorMap: React.FC<any> = ({ data, setData }: any) => {
   const [calculator, setCalculator] = useState("");
 
   if (calculator === "versatile")
-    return <VersatileCalculator data={data} setData={setData} />;
+    return (
+      <VersatileCalculator
+        data={data}
+        setData={setData}
+        back={() => setCalculator("")}
+      />
+    );
 
-  if (calculator === "all-in-one") return <AllInOneCalculator />;
+  if (calculator === "all-in-one")
+    return <AllInOneCalculator back={() => setCalculator("")} />;
 
   return (
     <div className="container mx-auto px-4 py-8">

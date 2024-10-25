@@ -36,6 +36,8 @@ function Calculator() {
           whoDies: -1,
           name: "",
           data,
+          spending: data.spending,
+          inflationType: "Real",
         });
       });
   };
@@ -48,25 +50,13 @@ function Calculator() {
   const [versatileCalculatorData, setVersatileData] = useState(
     initialVersatileSettings,
   );
-  const initialSpendingSettings = {
-    inflationType: "Real",
-    taxType: "Post-Tax",
-    deathYears: [undefined, undefined],
-    whoDies: -1,
-    startYear: 2024,
-    endYear: 2090,
-  };
-  const [spendingSettings, setSpendingSettings] = useState(
-    initialSpendingSettings,
-  );
   const setSettings = (settings: ScenarioSettings) => {
-    console.log("setSettings", settings);
     sett(settings);
   };
 
   if (!data)
     return (
-      <Layout page="data" onTabChange={() => { }}>
+      <Layout page="data" onTabChange={() => {}}>
         <Spinner />
       </Layout>
     );
@@ -107,10 +97,7 @@ function Calculator() {
               />
             )}
             {tab == "spending" && (
-              <SpendingPage
-                settings={spendingSettings}
-                setSettings={setSpendingSettings}
-              />
+              <SpendingPage settings={settings} setSettings={setSettings} />
             )}
           </div>
         </div>
