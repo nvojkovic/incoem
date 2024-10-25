@@ -402,7 +402,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
           </tbody>
         </table>
       </MapSection>
-      <MapSection title="Map" toggleabble defaultOpen>
+      <MapSection title="Spending Needs" toggleabble defaultOpen>
         <div className="flex gap-6">
           <div className="border rounded-lg p-3 h-[96px]">
             <div className="flex gap-4">
