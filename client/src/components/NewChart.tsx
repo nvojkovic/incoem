@@ -111,10 +111,20 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       ])
       .range([height, 0]);
 
-    // Updated color scale using only colorArray
+    // Create sorted domain for consistent color mapping
+    const sortedDomain = [...stackedData]
+      .sort((a, b) => {
+        if (a.stable === b.stable) {
+          return a.name.localeCompare(b.name);
+        }
+        return a.stable ? -1 : 1;
+      })
+      .map(d => d.name);
+
+    // Updated color scale using sorted domain
     const color = d3
       .scaleOrdinal()
-      .domain(stackedData.map((d: any) => d.name) as any)
+      .domain(sortedDomain)
       .range(colorArray);
 
     const stackGenerator = d3.stack().keys(keys);
@@ -321,9 +331,8 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
 
     // Add legend items
 
-    stackedData
-      .map((d: any) => d.name)
-      .forEach((key) => {
+    // Use sortedDomain for legend order
+    sortedDomain.forEach((key) => {
         const legendItem = legendContainer
           .append("div")
           .style("display", "flex")
