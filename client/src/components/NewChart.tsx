@@ -298,10 +298,10 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .style("justify-content", "center")
       .style("flex-wrap", "wrap")
       .style("gap", "20px")
-      .style("margin-top", "10px")
+      .style("margin-top", "150px")
       .style("position", "absolute")
       .style("width", "100%")
-      .style("bottom", "20px");
+      .style("bottom", "-90px");
 
     // Add legend items
     keys.forEach((key) => {
@@ -317,12 +317,12 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
         .style("height", "10px")
         .style("background-color", color(key))
         .style("border-radius", "50%")
-        .style("opacity", stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5);
+        .style(
+          "opacity",
+          stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
+        );
 
-      legendItem
-        .append("span")
-        .style("font-size", "12px")
-        .text(key);
+      legendItem.append("span").style("font-size", "12px").text(key);
     });
 
     // Add line to legend if lineData exists
@@ -340,17 +340,19 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
         .style("background-color", "red")
         .style("border-radius", "50%");
 
-      lineItem
-        .append("span")
-        .style("font-size", "12px")
-        .text("Spending");
+      lineItem.append("span").style("font-size", "12px").text("Spending");
     }
   }, [dimensions, years, stackedData, lineData]);
 
   return (
     <div
       ref={containerRef}
-      style={{ width: "100%", height: "450px", position: "relative" }}
+      style={{
+        width: "100%",
+        height: "450px",
+        position: "relative",
+        marginBottom: 100,
+      }}
     >
       <svg ref={svgRef}></svg>
     </div>
