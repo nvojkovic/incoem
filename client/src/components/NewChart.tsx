@@ -189,6 +189,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .style("opacity", 0);
 
     // Add hover functionality
+    //
     const tooltip = d3
       .select(containerRef.current)
       .append("div")
@@ -294,6 +295,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .on("mouseleave", mouseleave);
 
     // Add legend container
+    //
     const legendContainer = d3
       .select(containerRef.current)
       .append("div")
@@ -328,7 +330,10 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       legendItem
         .append("span")
         .style("font-size", "12px")
-        .style("text-decoration", hiddenSeries.has(key) ? "line-through" : "none")
+        .style(
+          "text-decoration",
+          hiddenSeries.has(key) ? "line-through" : "none",
+        )
         .style("cursor", "pointer")
         .text(key)
         .on("click", () => {
