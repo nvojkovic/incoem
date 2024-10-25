@@ -32,11 +32,9 @@ export const calculateSpendingYear = (
     .reduce((a, b) => a + b, 0);
 
   const uninflatedPre = spending.preSpending
-    .filter((item) => year < item.endYear)
     .map((item) => item.amount)
     .reduce((a, b) => a + b, 0);
   const inflatedPre = spending.preSpending
-    .filter((item) => year < item.endYear)
     .map((item) => inflateAmount(item.amount, inflationRate(item.increase)))
     .reduce((a, b) => a + b, 0);
   const post = spending.postSpending
