@@ -94,9 +94,12 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .scaleLinear()
       .domain([
         0,
-        (d3 as any).max(processedData as any, (d: any) => {
-          return d3.sum(keys, (key: any) => d[key]);
-        }) * 1.1,
+        Math.max(
+          (d3 as any).max(processedData as any, (d: any) => {
+            return d3.sum(keys, (key: any) => d[key]);
+          }),
+          lineData ? Math.max(...lineData) : 0,
+        ) * 1.1,
       ])
       .range([height, 0]);
 
@@ -303,7 +306,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
 
     (keys as any[]).forEach((key, index) => {
       const legendItem = legend
-        .append("g")
+        .append("div")
         .attr("transform", `translate(${lens[index - 1]}, 0)`);
 
       legendItem
