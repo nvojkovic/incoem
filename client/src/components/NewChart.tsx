@@ -71,7 +71,15 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
 
-    // Process data
+    // First sort the stackedData array
+    stackedData.sort((a: any, b: any) => {
+      if (a.stable === b.stable) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.stable ? -1 : 1;
+    });
+
+    // Process data after sorting
     const processedData = years.map((year: any, index: any) => {
       const yearData = { year } as any;
       stackedData.forEach((item: any) => {
@@ -80,15 +88,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       return yearData;
     });
 
-    // First sort the full stackedData array
-    stackedData.sort((a: any, b: any) => {
-      if (a.stable === b.stable) {
-        return a.name.localeCompare(b.name);
-      }
-      return a.stable ? -1 : 1;
-    });
-
-    // Then filter and map to get keys
+    // Get keys from sorted data
     const keys = stackedData
       .filter((d: any) => !hiddenSeries.has(d.name))
       .map((d: any) => d.name) as any;
