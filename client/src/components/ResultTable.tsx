@@ -105,7 +105,6 @@ const DraggableTableHeader = ({
       <div
         className="flex flex-col items-start px-6 py-[0.45rem]"
         onClick={(e) => {
-          console.log("clcc", e.detail);
           if (e.detail === 1) {
             setTimer(
               setTimeout(() => {
@@ -149,11 +148,11 @@ const DragAlongCell = ({
 
   const style: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
-    position: "relative",
+    // position: "relative",
     transform: fixed ? "" : CSS.Translate.toString(transform),
     transition: "width transform 0.2s ease-in-out",
     width: cell.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
+    // zIndex: isDragging ? 1 : 0,
   };
 
   return (
@@ -300,7 +299,7 @@ const ResultTable = ({
           ),
           total: (
             <div className="flex gap-2">
-              <div className="w-20 !z-[5000]">
+              <div className="w-20 relative">
                 <Tooltip
                   content={(() => {
                     const needs = calculateSpendingYear(
@@ -326,7 +325,7 @@ const ResultTable = ({
                       (stableIncome / needs) * 100,
                     );
                     return (
-                      <div>
+                      <div className="z-[5000000] bg-white  sticky">
                         {spending && (
                           <>
                             <div>
@@ -355,9 +354,9 @@ const ResultTable = ({
                   placement="left"
                   style="light"
                   arrow={false}
-                  className={`!z-[50000] border-2 border-main-orange bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
+                  className={`border-2 border-main-orange bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
                 >
-                  <div className="cursor-pointer flex items-center gap-2 ">
+                  <div className="cursor-pointer flex items-center gap-2 z-5000 ">
                     {printNumber(
                       incomes
                         .map(
@@ -566,7 +565,7 @@ const ResultTable = ({
         />
         <div className="break-after-page"></div>
         <div className="mt-10"></div>
-        {user?.info?.stabilityRatioFlag && (
+        {false && user?.info?.stabilityRatioFlag && (
           <div className="print:hidden flex text-sm">
             <div
               onClick={() => setIncomeToShow("all")}
@@ -620,7 +619,7 @@ const ResultTable = ({
           </div>
         )}
 
-        <StackedChart
+        {/*     <StackedChart
           years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
           incomes={incomes
 
@@ -652,9 +651,10 @@ const ResultTable = ({
                 incomeToShow === "all" ||
                 (item.stable ? "stable" : "unstable") === incomeToShow,
             )}
-        />
+        />*/}
         <StackedAreaChart
           years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
+          spending={false}
           lineData={yearRange(
             startYear,
             startYear + settings.maxYearsShown - 1,
@@ -779,18 +779,3 @@ const DraggableTable = ({
     </table>
   );
 };
-
-// <div className="!z-[5000]">
-//   <Tooltip
-//     content={`${Math.random()}% income is stable`}
-//     theme={{ target: "" }}
-//     placement="bottom"
-//     style="light"
-//     className="!z-[50] bg-white print:hidden"
-//   >
-//     <div
-//       className="pie-chart"
-//       style={{ "--percentage": Math.random() * 100 } as any}
-//     ></div>
-//   </Tooltip>
-// </div>

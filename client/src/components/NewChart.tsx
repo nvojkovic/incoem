@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import PropTypes from "prop-types";
 
-const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
+const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
   const [dimensions, setDimensions] = useState({ width: 0, height: 500 });
@@ -70,7 +70,6 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-
     // First sort the stackedData array
     stackedData.sort((a: any, b: any) => {
       if (a.stable === b.stable) {
@@ -119,13 +118,11 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
         }
         return a.stable ? -1 : 1;
       })
-      .map(d => d.name);
+      .map((d) => d.name);
+    console.log("sorted domain", sortedDomain);
 
     // Updated color scale using sorted domain
-    const color = d3
-      .scaleOrdinal()
-      .domain(sortedDomain)
-      .range(colorArray);
+    const color = d3.scaleOrdinal().domain(sortedDomain).range(colorArray);
 
     const stackGenerator = d3.stack().keys(keys);
     const layers = stackGenerator(processedData);
@@ -154,7 +151,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .y((d: any) => y(d))
       .curve(d3.curveBumpX);
 
-    if (lineData)
+    if (lineData && !spending)
       svg
         .append("path")
         .datum(lineData)
@@ -239,12 +236,26 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       const selectedData = processedData.find((d: any) => d.year === year);
 
       if (selectedData) {
-        const tooltipContent =
-          keys
-            .map(
-              (key: any) =>
-                `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+        let tooltipContent;
+        if (spending) {
+          tooltipContent = `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                            <div>
+                              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                              <b>Needs: </b>
+                            </div>
+                            <div>
+                              <b>${formatCurrency.format(selectedData["Spending"])}</b>
+                            </div>
+                          </div>
+                        </div>`;
+        } else {
+          tooltipContent =
+            keys
+              .map(
+                (key: any) =>
+                  `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)}; margin-right: 5px;"></span>
                     ${key}: 
@@ -254,20 +265,47 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
                   </div>
                 </div>
               </div>`,
-            )
-            .join("") +
-          `<div style="font-size:12px;display:flex;justify-content:space-between;align-items: center;">
-            <div>
-            <span style="display: inline-block; font-size: 12px; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-            </div>
-            <div style="">
-          <div style="font-size:12px;display:flex;justify-content:space-between;align-items: center;width:100%">
-            <b>Spending</b>: ${formatCurrency.format(lineData[years.indexOf(year)])}
-            </div>
-            </div>
-          </div>`;
+              )
+              .join("") +
+            `
 
-        tooltip.html(`<strong>Year: ${year}</strong><br>${tooltipContent}`);
+                     <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                  <div class="ml-5">
+                    <b>Total Income: </b>
+                  </div>
+                  <div>
+                    <b>${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0))}</b>
+                  </div>
+                </div>
+              </div>
+                     <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                  <div>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                    <b>Needs: </b>
+                  </div>
+                  <div>
+                    <b>${formatCurrency.format(lineData[years.indexOf(year)])}</b>
+                  </div>
+                </div>
+              </div>
+              <div class="h-[1px] bg-black my-1"/>
+<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-1 ">
+                  <div class="ml-5">
+                    <b>Gap: </b>
+                  </div>
+                  <div>
+                    <b style="color:${keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)] < 0 ? "red" : ""}">${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)])}</b>
+                  </div>
+                </div>
+              </div>
+            `;
+        }
+        tooltip.html(
+          `<div class="mb-4"><strong>Year: ${year}</strong><br>${tooltipContent}</div>`,
+        );
 
         // Calculate tooltip dimensions
         const tooltipNode = tooltip.node() as any;
@@ -333,45 +371,45 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
 
     // Use sortedDomain for legend order
     sortedDomain.forEach((key) => {
-        const legendItem = legendContainer
-          .append("div")
-          .style("display", "flex")
-          .style("align-items", "center")
-          .style("gap", "5px");
+      const legendItem = legendContainer
+        .append("div")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("gap", "5px");
 
-        legendItem
-          .append("div")
-          .style("width", "10px")
-          .style("height", "10px")
-          .style("background-color", color(key))
-          .style("border-radius", "50%")
-          .style(
-            "opacity",
-            stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
-          );
+      legendItem
+        .append("div")
+        .style("width", "10px")
+        .style("height", "10px")
+        .style("background-color", color(key as any) as any)
+        .style("border-radius", "50%")
+        .style(
+          "opacity",
+          stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
+        );
 
-        legendItem
-          .append("span")
-          .style("font-size", "12px")
-          .style(
-            "text-decoration",
-            hiddenSeries.has(key) ? "line-through" : "none",
-          )
-          .style("cursor", "pointer")
-          .text(key)
-          .on("click", () => {
-            const newHiddenSeries = new Set(hiddenSeries);
-            if (hiddenSeries.has(key)) {
-              newHiddenSeries.delete(key);
-            } else {
-              newHiddenSeries.add(key);
-            }
-            setHiddenSeries(newHiddenSeries);
-          });
-      });
+      legendItem
+        .append("span")
+        .style("font-size", "12px")
+        .style(
+          "text-decoration",
+          hiddenSeries.has(key) ? "line-through" : "none",
+        )
+        .style("cursor", "pointer")
+        .text(key)
+        .on("click", () => {
+          const newHiddenSeries = new Set(hiddenSeries);
+          if (hiddenSeries.has(key)) {
+            newHiddenSeries.delete(key);
+          } else {
+            newHiddenSeries.add(key);
+          }
+          setHiddenSeries(newHiddenSeries);
+        });
+    });
 
     // Add line to legend if lineData exists
-    if (lineData?.length) {
+    if (lineData?.length && !spending) {
       const lineItem = legendContainer
         .append("div")
         .style("display", "flex")
@@ -414,6 +452,7 @@ StackedAreaChart.propTypes = {
     }),
   ).isRequired,
   lineData: PropTypes.arrayOf(PropTypes.number),
+  spending: PropTypes.bool.isRequired,
 };
 
 export default StackedAreaChart;

@@ -71,7 +71,7 @@ const Navbar = ({
           active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
-                name="Data"
+                name="Income"
                 active={active == "data"}
                 onClick={() => onTabChange("data")}
               />

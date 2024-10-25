@@ -84,7 +84,7 @@ export const calculateSpendingYear = (
     result = calculatePV(result, (settings.inflation || 0) / 100, years);
   }
 
-  return Math.round(result);
+  return Math.round(isNaN(result) ? 0 : result);
 };
 
 const currentYear = new Date().getFullYear();
@@ -544,6 +544,10 @@ const SpendingPage = ({ settings, setSettings }: any) => {
         </div>
         <StackedAreaChart
           years={yearRange(currentYear, currentYear + settings.maxYearsShown)}
+          lineData={yearRange(
+            currentYear,
+            currentYear + settings.maxYearsShown,
+          ).map((_) => 0)}
           stackedData={[
             {
               name: "Spending",
@@ -556,6 +560,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
               ),
             },
           ]}
+          spending={true}
         />
 
         <div className="flex gap-4 mt-10">
