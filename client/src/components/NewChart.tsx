@@ -294,11 +294,16 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
 
+    // Remove any existing legend containers
+    d3.select(containerRef.current)
+      .selectAll(".legend-container")
+      .remove();
+
     // Add legend container
-    //
     const legendContainer = d3
       .select(containerRef.current)
       .append("div")
+      .attr("class", "legend-container")
       .style("display", "flex")
       .style("justify-content", "center")
       .style("flex-wrap", "wrap")
