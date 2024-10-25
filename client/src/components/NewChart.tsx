@@ -6,6 +6,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
   const [dimensions, setDimensions] = useState({ width: 0, height: 500 });
+  const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
   // Custom color array (removed gray array)
   // const colorArray = [
@@ -83,7 +84,9 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
       return yearData;
     });
 
-    const keys = stackedData.map((d: any) => d.name) as any;
+    const keys = stackedData
+      .filter((d: any) => !hiddenSeries.has(d.name))
+      .map((d: any) => d.name) as any;
 
     const x = d3
       .scaleLinear()
@@ -322,7 +325,21 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
           stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
         );
 
-      legendItem.append("span").style("font-size", "12px").text(key);
+      legendItem
+        .append("span")
+        .style("font-size", "12px")
+        .style("text-decoration", hiddenSeries.has(key) ? "line-through" : "none")
+        .style("cursor", "pointer")
+        .text(key)
+        .on("click", () => {
+          const newHiddenSeries = new Set(hiddenSeries);
+          if (hiddenSeries.has(key)) {
+            newHiddenSeries.delete(key);
+          } else {
+            newHiddenSeries.add(key);
+          }
+          setHiddenSeries(newHiddenSeries);
+        });
     });
 
     // Add line to legend if lineData exists
@@ -342,7 +359,7 @@ const StackedAreaChart = ({ years, stackedData, lineData }: any) => {
 
       lineItem.append("span").style("font-size", "12px").text("Spending");
     }
-  }, [dimensions, years, stackedData, lineData]);
+  }, [dimensions, years, stackedData, lineData, hiddenSeries]);
 
   return (
     <div
