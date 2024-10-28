@@ -197,7 +197,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       .curve(d3.curveBumpX);
 
     if (lineData && !spending)
-      svg
+      mainG
         .append("path")
         .datum(lineData)
         .attr("fill", "none")
@@ -206,7 +206,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
         .attr("d", line);
 
     // Update x-axis
-    svg
+    mainG
       .append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x).ticks(years.length).tickFormat(d3.format("d")))
@@ -222,7 +222,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       );
 
     // Update y-axis
-    svg
+    mainG
       .append("g")
       .call(
         d3
@@ -240,7 +240,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       );
 
     // Add vertical guideline
-    const guideline = svg
+    const guideline = mainG
       .append("line")
       .attr("class", "guideline")
       .style("stroke", "#999")
@@ -385,7 +385,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       guideline.style("opacity", 0);
     };
 
-    svg
+    mainG
       .append("rect")
       .attr("width", width)
       .attr("height", height)
