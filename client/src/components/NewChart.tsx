@@ -59,7 +59,25 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
     const svg = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("height", height + margin.top + margin.bottom);
+
+    // Define the diagonal stripe pattern
+    const defs = svg.append("defs");
+    const pattern = defs
+      .append("pattern")
+      .attr("id", "diagonalStripes")
+      .attr("patternUnits", "userSpaceOnUse")
+      .attr("width", 8)
+      .attr("height", 8);
+
+    pattern
+      .append("path")
+      .attr("d", "M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .attr("opacity", 0.3);
+
+    const mainG = svg
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -127,16 +145,21 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       .y1((d) => y(d[1]))
       .curve(d3.curveBumpX);
 
-    (svg as any)
+    (mainG as any)
       .selectAll("path.area")
       .data(layers)
       .join("path")
       .attr("class", "area")
-      .attr("fill", (d: any) => color(d.key))
+      .attr("fill", (d: any) => {
+        const item = stackedData.find((item: any) => item.name === d.key);
+        return item.stable ? color(d.key) : `url(#diagonalStripes)`;
+      })
       .attr("opacity", (d: any) =>
         stackedData.find((item: any) => item.name === d.key).stable ? 1 : 0.9,
       )
-      .attr("d", area);
+      .attr("d", area)
+      .style("stroke", (d: any) => color(d.key))
+      .style("stroke-width", 1);
 
     const line = d3
       .line()
