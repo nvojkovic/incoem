@@ -154,10 +154,10 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
         const item = stackedData.find((item: any) => item.name === d.key);
         const baseColor = color(d.key);
         if (item.stable) return baseColor;
-        
+
         // Create a unique pattern ID for each unstable series
-        const patternId = `diagonalStripes-${d.key.replace(/\s+/g, '-')}`;
-        
+        const patternId = `diagonalStripes-${d.key.replace(/\s+/g, "-")}`;
+
         // Create a new pattern for this specific color
         const pattern = defs
           .append("pattern")
