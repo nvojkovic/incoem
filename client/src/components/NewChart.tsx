@@ -10,26 +10,19 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
 
   // Custom color array (removed gray array)
   // const colorArray = [
-  //   "#77AADD",
-  //   "#EE8866",
-  //   "#EEDD88",
-  //   "#FFAABB",
-  //   "#99DDFF",
-  //   "#44BB99",
-  //   "#BBCC33",
-  //   "#AAAA00",
+
   // ];
   const color = d3.scaleSequential(d3.interpolateSinebow);
   const colorArray = [
     "#ff000066",
-    color(0.3),
-    color(0.2),
-    color(0.1),
-    color(0.4),
-    color(0.6),
-    color(0.7),
-    color(0.8),
-    color(0.9),
+    "#77AADD",
+    "#EE8866",
+    "#EEDD88",
+    "#FFAABB",
+    "#99DDFF",
+    "#44BB99",
+    "#BBCC33",
+    "#AAAA00",
   ];
 
   useEffect(() => {
@@ -225,12 +218,12 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function (_: any, __: any) {
+    const mouseover = function(_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function (event: any, _: any) {
+    const mousemove = function(event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -335,7 +328,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       }
     };
 
-    const mouseleave = function (_: any, __: any) {
+    const mouseleave = function(_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };
