@@ -2,6 +2,7 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import Toggle from "./Toggle";
 import CurrencyInput from "react-currency-input-field";
 import { Tooltip } from "flowbite-react";
+import { useEffect, useState } from "react";
 
 interface Props {
   label: string;
@@ -51,6 +52,12 @@ const Input = ({
 }: Props) => {
   let input = null as any;
 
+  const [internalValue, setInternalValue] = useState("");
+  useEffect(() => {
+    // Update internal string value when external numeric value changes
+    setInternalValue(value?.toString());
+  }, [value]);
+
   const basic = `focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 ${width}`;
   if (subtype === "money") {
     input = (
@@ -80,11 +87,15 @@ const Input = ({
     input = (
       <CurrencyInput
         suffix="%"
-        value={value}
+        value={internalValue}
         disabled={disabled}
-        decimalsLimit={2}
+        decimalsLimit={3}
         className={`${basic}  ${size == "sm" && "w-full"} ${calcSize(size)}`}
-        onValueChange={(_, __, values) => setValue(values?.float)}
+        // onValueChange={(_, __, values) => setValue(values?.float)}
+        onValueChange={(value, __, values) => {
+          setInternalValue(value || "");
+          setValue(values?.float);
+        }}
         {...props}
       />
     );

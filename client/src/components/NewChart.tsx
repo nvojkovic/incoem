@@ -12,7 +12,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
   // const colorArray = [
 
   // ];
-  const color = d3.scaleSequential(d3.interpolateSinebow);
+  // const color = d3.scaleSequential(d3.interpolateSinebow);
   const colorArray = [
     "#ff000066",
     "#77AADD",
@@ -29,7 +29,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         setDimensions({
-          width: entry.contentRect.width,
+          width: entry.contentRect.width - 10,
           height: 500,
         });
       }
@@ -171,7 +171,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
           .append("rect")
           .attr("width", 8)
           .attr("height", 8)
-          .attr("fill", baseColor);
+          .attr("fill", baseColor as any);
 
         // Add white diagonal stripes
         pattern
@@ -201,8 +201,8 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
         .append("path")
         .datum(lineData)
         .attr("fill", "none")
-        .attr("stroke", "red")
-        .attr("stroke-width", 5)
+        .attr("stroke", "#ED4337")
+        .attr("stroke-width", 3)
         .attr("d", line);
 
     // Update x-axis
@@ -408,8 +408,9 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       .style("flex-wrap", "wrap")
       .style("gap", "20px")
       .style("margin-top", "150px")
+      .style("margin-right", "100px")
       .style("position", "absolute")
-      .style("width", "100%")
+      .style("width", "calc(100%-20px)")
       .style("bottom", "-90px");
 
     // Add legend items
@@ -424,8 +425,8 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
 
       legendItem
         .append("div")
-        .style("width", "10px")
-        .style("height", "10px")
+        .style("width", "15px")
+        .style("height", "15px")
         .style("background-color", color(key as any) as any)
         .style("border-radius", "50%")
         .style(
@@ -463,8 +464,8 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
 
       lineItem
         .append("div")
-        .style("width", "10px")
-        .style("height", "10px")
+        .style("width", "15px")
+        .style("height", "15px")
         .style("background-color", "red")
         .style("border-radius", "50%");
 
@@ -480,6 +481,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
         height: "450px",
         position: "relative",
         marginBottom: 100,
+        marginLeft: 15,
       }}
     >
       <svg ref={svgRef}></svg>

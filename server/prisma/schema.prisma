@@ -13,7 +13,7 @@ model Client {
   title     String
   userId    String
   data      Json     @default("{}")
-  scenarios Json     @default("{}")
+  scenarios Json     @default("[]")
   spending  Json     @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
 }
 

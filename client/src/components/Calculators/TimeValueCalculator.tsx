@@ -1,6 +1,4 @@
-// src/components/Calculators/TimeValueCalculator.tsx
-
-import React, { useState } from "react";
+import React from "react";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 import { formatter } from "../../utils";
@@ -36,9 +34,7 @@ interface CalculatorState {
   compounding: "Annual" | "Monthly";
 }
 
-const TimeValueCalculator: React.FC = () => {
-  const [state, setState] = useState<CalculatorState>(initialState);
-
+const TimeValueCalculator: React.FC<any> = ({ data, setData, remove }) => {
   const calculatorOptions: CalculatorType[] = [
     "Future Value",
     "Present Value",
@@ -51,11 +47,11 @@ const TimeValueCalculator: React.FC = () => {
     field: keyof CalculatorState,
     value: number | string,
   ) => {
-    setState((prev) => ({ ...prev, [field]: value }));
+    setData((prev: any) => ({ ...prev, [field]: value }));
   };
 
   const handleClear = () => {
-    setState(initialState);
+    setData(() => initialState);
   };
 
   const calculateResult = () => {
@@ -68,7 +64,7 @@ const TimeValueCalculator: React.FC = () => {
       calculatorType,
       timing,
       compounding,
-    } = state;
+    } = data;
 
     const n = compounding === "Annual" ? 1 : 12;
     const t = timePeriod;
@@ -80,7 +76,7 @@ const TimeValueCalculator: React.FC = () => {
       return (
         presentValue * Math.pow(1 + rate / n, n * t) +
         (annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1)) /
-          (rate / n)
+        (rate / n)
       );
     };
 
@@ -95,7 +91,7 @@ const TimeValueCalculator: React.FC = () => {
           (annualPayment *
             paymentFactor *
             (Math.pow(1 + rate / n, n * t) - 1)) /
-            ((rate / n) * Math.pow(1 + rate / n, n * t))
+          ((rate / n) * Math.pow(1 + rate / n, n * t))
         );
       case "Interest Rate":
         // Bisection method to find interest rate
@@ -150,39 +146,46 @@ const TimeValueCalculator: React.FC = () => {
       vertical
       options={calculatorOptions.map((option) => ({
         id: option,
-        name: option,
+        name:
+          option === "Annual Payment" ? `${data.compounding} Payment` : option,
       }))}
-      selected={{ id: state.calculatorType, name: state.calculatorType }}
+      selected={{
+        id: data.calculatorType,
+        name:
+          data.calculatorType === "Annual Payment"
+            ? `${data.compounding} Payment`
+            : data.calculatorType,
+      }}
       setSelected={(option) =>
         handleInputChange("calculatorType", option.id as CalculatorType)
       }
     />,
-    state.calculatorType !== "Future Value" && (
+    data.calculatorType !== "Future Value" && (
       <Input
         vertical
         label="Future Value"
         size="lg"
-        value={state.futureValue}
+        value={data.futureValue}
         setValue={(value) => handleInputChange("futureValue", Number(value))}
         subtype="money"
       />
     ),
-    state.calculatorType !== "Present Value" && (
+    data.calculatorType !== "Present Value" && (
       <Input
         vertical
         size="lg"
         label="Present Value"
-        value={state.presentValue}
+        value={data.presentValue}
         setValue={(value) => handleInputChange("presentValue", Number(value))}
         subtype="money"
       />
     ),
-    state.calculatorType !== "Interest Rate" && (
+    data.calculatorType !== "Interest Rate" && (
       <Input
         vertical
         size="lg"
         label="Interest Rate (%)"
-        value={state.interestRate}
+        value={data.interestRate}
         setValue={(value) => handleInputChange("interestRate", Number(value))}
         subtype="percent"
       />
@@ -195,7 +198,7 @@ const TimeValueCalculator: React.FC = () => {
           { id: "Beginning of Year", name: "Beginning of Year" },
           { id: "End of Year", name: "End of Year" },
         ]}
-        selected={{ id: state.timing, name: state.timing }}
+        selected={{ id: data.timing, name: data.timing }}
         setSelected={(option) =>
           handleInputChange(
             "timing",
@@ -205,22 +208,22 @@ const TimeValueCalculator: React.FC = () => {
       />
     </div>,
 
-    state.calculatorType !== "Annual Payment" && (
+    data.calculatorType !== "Annual Payment" && (
       <Input
         vertical
-        label="Annual Payment"
+        label="Payment"
         size="lg"
-        value={state.annualPayment}
+        value={data.annualPayment}
         setValue={(value) => handleInputChange("annualPayment", Number(value))}
         subtype="money"
       />
     ),
-    state.calculatorType !== "Time Period" && (
+    data.calculatorType !== "Time Period" && (
       <Input
         vertical
         label="Time Period (years)"
         size="lg"
-        value={state.timePeriod}
+        value={data.timePeriod}
         setValue={(value) => handleInputChange("timePeriod", Number(value))}
         subtype="number"
       />
@@ -239,21 +242,19 @@ const TimeValueCalculator: React.FC = () => {
               <label className="text-sm text-[#344054] w-36 ">Compunding</label>
               <div className="flex gap-2 mt-[6px]">
                 <button
-                  className={`flex-1 py-[7px] px-4 rounded ${
-                    state.compounding === "Annual"
+                  className={`flex-1 py-[7px] px-4 rounded ${data.compounding === "Annual"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                  }`}
+                    }`}
                   onClick={() => handleInputChange("compounding", "Annual")}
                 >
                   Annual
                 </button>
                 <button
-                  className={`flex-1 py-1 px-4 rounded ${
-                    state.compounding === "Monthly"
+                  className={`flex-1 py-1 px-4 rounded ${data.compounding === "Monthly"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                  }`}
+                    }`}
                   onClick={() => handleInputChange("compounding", "Monthly")}
                 >
                   Monthly
@@ -268,20 +269,28 @@ const TimeValueCalculator: React.FC = () => {
             </div>
           </div>
           <div className="">
-            <div className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer">
+            <div
+              className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
+              onClick={remove}
+            >
               <TrashIcon className="text-red-500 w-5" />
             </div>
           </div>
         </div>
 
         <div className="mt-3 p-2 rounded text-center">
-          <span className="font-bold">{state.calculatorType}:</span>{" "}
+          <span className="font-bold">
+            {data.calculatorType === "Annual Payment"
+              ? `${data.compounding} Payment`
+              : data.calculatorType}
+            :
+          </span>{" "}
           {(() => {
             const result = calculateResult();
             if (isNaN(result) || !isFinite(result)) {
               return "N/A";
             }
-            switch (state.calculatorType) {
+            switch (data.calculatorType) {
               case "Interest Rate":
                 return result.toFixed(2) + "%";
               case "Time Period":

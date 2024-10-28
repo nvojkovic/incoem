@@ -50,13 +50,25 @@ function Calculator() {
   const [versatileCalculatorData, setVersatileData] = useState(
     initialVersatileSettings,
   );
+  const [allInOneData, setAllInOneData] = useState([
+    {
+      futureValue: 0,
+      presentValue: 0,
+      interestRate: 0,
+      annualPayment: 0,
+      timePeriod: 0,
+      calculatorType: "Future Value",
+      timing: "End of Year",
+      compounding: "Annual",
+    },
+  ]);
   const setSettings = (settings: ScenarioSettings) => {
     sett(settings);
   };
 
   if (!data)
     return (
-      <Layout page="data" onTabChange={() => {}}>
+      <Layout page="data" onTabChange={() => { }}>
         <Spinner />
       </Layout>
     );
@@ -92,8 +104,14 @@ function Calculator() {
 
             {tab == "calculator" && (
               <CalculatorMap
-                data={versatileCalculatorData}
-                setData={setVersatileData}
+                data={{
+                  versatile: versatileCalculatorData,
+                  "all-in-one": allInOneData,
+                }}
+                setData={{
+                  versatile: setVersatileData,
+                  "all-in-one": setAllInOneData,
+                }}
               />
             )}
             {tab == "spending" && (

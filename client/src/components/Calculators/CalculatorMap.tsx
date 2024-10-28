@@ -60,14 +60,20 @@ const CalculatorMap: React.FC<any> = ({ data, setData }: any) => {
   if (calculator === "versatile")
     return (
       <VersatileCalculator
-        data={data}
-        setData={setData}
+        data={data.versatile}
+        setData={setData.versatile}
         back={() => setCalculator("")}
       />
     );
 
   if (calculator === "all-in-one")
-    return <AllInOneCalculator back={() => setCalculator("")} />;
+    return (
+      <AllInOneCalculator
+        back={() => setCalculator("")}
+        data={data["all-in-one"]}
+        setData={setData["all-in-one"]}
+      />
+    );
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -96,14 +96,13 @@ const Summary = ({
     <div>
       <div className="flex items-center justify-between mb-5">
         <div className="font-semibold text-[30px] hidden print:block">
-          {scenarios.find((_, i) => i == tab)?.name}
+          {scenarios?.find((_, i) => i == tab)?.name}
         </div>
       </div>
       <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
         <div
-          className={`flex print:hidden sticky z-50 ${
-            fullScreen ? "top-[0px]" : "top-[72px]"
-          } bg-white`}
+          className={`flex print:hidden sticky z-50 ${fullScreen ? "top-[0px]" : "top-[72px]"
+            } bg-white`}
         >
           <DndContext
             sensors={sensors}
@@ -121,7 +120,7 @@ const Summary = ({
                   active={tab == -1}
                   setActive={() => setTab(-1)}
                   live
-                  store={() => {}}
+                  store={() => { }}
                 />
                 {scenarios.map((sc, i) => (
                   <SortableItem

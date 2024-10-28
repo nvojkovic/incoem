@@ -38,7 +38,9 @@ export const calculateSpendingYear = (
     .map((item) => inflateAmount(item.amount, inflationRate(item.increase)))
     .reduce((a, b) => a + b, 0);
   const post = spending.postSpending
-    .filter((item) => item.endYear >= year && item.startYear <= year)
+    .filter(
+      (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
+    )
     .map((item) => {
       let amount = item.amount;
       if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
@@ -280,11 +282,10 @@ const SpendingPage = ({ settings, setSettings }: any) => {
               <th className="px-6 py-3">Starts (Cal Year)</th>
               <th className="px-6 py-3">Ends (Cal Year)</th>
               <th
-                className={`px-6 py-3 ${
-                  spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                }`}
+                className={`px-6 py-3 ${spending.postSpending.find(
+                  (i) => i.increase.type === "custom",
+                ) && "w-64"
+                  }`}
               >
                 Yearly Increase{" "}
                 {spending.postSpending.find(
@@ -501,8 +502,8 @@ const SpendingPage = ({ settings, setSettings }: any) => {
                           v == "Both Alive"
                             ? -1
                             : data.data.people.findIndex((p) =>
-                                v.includes(p.name),
-                              ),
+                              v.includes(p.name),
+                            ),
                       })
                     }
                   />
@@ -567,7 +568,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
           {[0, 1, 2, 3, 4].map(
             (tableInd) =>
               currentYear + settings.maxYearsShown >
-                currentYear + tableInd * 16 && (
+              currentYear + tableInd * 16 && (
                 <div>
                   <table className=" w-full border ">
                     <thead
@@ -626,9 +627,8 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`flex-1 py-[7px] px-4 rounded ${
-              value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            }`}
+            className={`flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
+              }`}
             onClick={() => setValue(item)}
           >
             {item}
