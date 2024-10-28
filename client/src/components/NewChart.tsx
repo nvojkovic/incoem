@@ -73,9 +73,9 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
     pattern
       .append("path")
       .attr("d", "M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 1)
-      .attr("opacity", 0.3);
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 2)
+      .attr("opacity", 0.5);
 
     const mainG = svg
       .append("g")
@@ -152,7 +152,36 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       .attr("class", "area")
       .attr("fill", (d: any) => {
         const item = stackedData.find((item: any) => item.name === d.key);
-        return item.stable ? color(d.key) : `url(#diagonalStripes)`;
+        const baseColor = color(d.key);
+        if (item.stable) return baseColor;
+        
+        // Create a unique pattern ID for each unstable series
+        const patternId = `diagonalStripes-${d.key.replace(/\s+/g, '-')}`;
+        
+        // Create a new pattern for this specific color
+        const pattern = defs
+          .append("pattern")
+          .attr("id", patternId)
+          .attr("patternUnits", "userSpaceOnUse")
+          .attr("width", 8)
+          .attr("height", 8);
+
+        // Set the background to the series color
+        pattern
+          .append("rect")
+          .attr("width", 8)
+          .attr("height", 8)
+          .attr("fill", baseColor);
+
+        // Add white diagonal stripes
+        pattern
+          .append("path")
+          .attr("d", "M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4")
+          .attr("stroke", "#fff")
+          .attr("stroke-width", 2)
+          .attr("opacity", 0.5);
+
+        return `url(#${patternId})`;
       })
       .attr("opacity", (d: any) =>
         stackedData.find((item: any) => item.name === d.key).stable ? 1 : 0.9,
