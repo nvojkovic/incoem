@@ -154,7 +154,7 @@ const Summary = ({
             settings={settings}
             setSettings={setSettings}
             fullScreen={fullScreen}
-            clientId={data.id}
+            client={data}
             addScenario={(data: any) => {
               storeScenarios([
                 ...scenarios,
@@ -172,7 +172,7 @@ const Summary = ({
           />
         ) : (
           <ResultTable
-            clientId={data.id}
+            client={data}
             settings={scenarios.find(({ id }) => id === tab) as any}
             fullScreen={fullScreen}
             id={tab}

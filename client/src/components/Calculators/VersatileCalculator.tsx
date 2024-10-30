@@ -160,7 +160,7 @@ const VersatileCalculator: React.FC<any> = ({
           <h1 className="text-3xl font-bold">Versatile Calculator</h1>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">User Settings</h2>
             </div>
@@ -194,7 +194,7 @@ const VersatileCalculator: React.FC<any> = ({
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg">
             <div className="flex gap-7 justify-between items-center mb-[16px]">
               <h2 className="text-xl font-semibold">Payment</h2>
               <div className="flex w-60 text-sm">
@@ -273,7 +273,7 @@ const VersatileCalculator: React.FC<any> = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
             </div>
@@ -321,12 +321,12 @@ const VersatileCalculator: React.FC<any> = ({
               labelLength={110}
               value={printNumber(
                 calculations.length &&
-                  calculations[calculations.length - 1].endingBalance,
+                calculations[calculations.length - 1].endingBalance,
               )}
               size="md"
               disabled
               subtype="text"
-              setValue={() => {}}
+              setValue={() => { }}
             />
             <Input
               label="Total Payments"
@@ -341,7 +341,7 @@ const VersatileCalculator: React.FC<any> = ({
               )}
               disabled
               subtype="text"
-              setValue={() => {}}
+              setValue={() => { }}
             />
           </div>
           <div className="w-40">
@@ -538,8 +538,8 @@ const VersatileCalculator: React.FC<any> = ({
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                  settings.payment.startYear +
-                                  1,
+                                settings.payment.startYear +
+                                1,
                               ),
                             ).keys(),
                           ].map((k) => {

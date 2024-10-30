@@ -16,6 +16,7 @@ export default {
       },
       colors: {
         "main-orange": "var(--primary-color)",
+        "main-orange-light": "var(--primary-color)",
       },
     },
     colors: {

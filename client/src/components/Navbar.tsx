@@ -5,6 +5,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../useUser";
+import { useInfo } from "../useData";
 
 const NavItem = ({
   name,
@@ -36,6 +37,7 @@ const Navbar = ({
 }) => {
   const navigate = useNavigate();
   const { user } = useUser();
+  const { data } = useInfo();
 
   return (
     <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
@@ -68,6 +70,7 @@ const Navbar = ({
           {active == "data" ||
             active == "calculator" ||
             active == "map" ||
+            active == "basic" ||
             active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
@@ -75,7 +78,7 @@ const Navbar = ({
                 active={active == "data"}
                 onClick={() => onTabChange("data")}
               />
-              {user?.info?.needsFlag && (
+              {data.needsFlag && (
                 <NavItem
                   name="Needs"
                   active={active == "spending"}
@@ -97,7 +100,10 @@ const Navbar = ({
         </div>
       </div>
       <div className="flex gap-6 items-center max-w-[400px]">
-        <div className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange">
+        <div
+          className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange cursor-pointer"
+          onClick={() => onTabChange("basic")}
+        >
           {household ? ` ${household}` : ""}
         </div>
         <div className="">

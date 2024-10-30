@@ -51,6 +51,7 @@ export const getClient = (id: any) => {
 };
 
 export const getPrintClient = (id: any) => {
+  // const API = "http://im-server:3000/";
   return fetch(API + `print/client/${id}`, {
     method: "GET",
     headers: {
@@ -59,18 +60,13 @@ export const getPrintClient = (id: any) => {
   });
 };
 
-export const updateData = (
-  id: any,
-  title: string,
-  data: any,
-  spending: any,
-) => {
+export const updateData = (id: any, data: any) => {
   return fetch(API + `client/${id}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, data, spending }),
+    body: JSON.stringify(data),
   });
 };
 

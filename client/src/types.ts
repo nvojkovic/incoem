@@ -117,6 +117,8 @@ interface Client {
   data: IncomeMapData;
   spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
+  stabilityRatioFlag: boolean;
+  needsFlag: boolean;
 }
 
 interface ScenarioSettings {
@@ -127,6 +129,7 @@ interface ScenarioSettings {
   ssSurvivorAge: (number | null)[];
   inflation: number;
   inflationType: "Real" | "Nominal";
+  retirementYear?: number;
   whoDies: number;
   spending?: RetirementSpendingSettings;
   data: IncomeMapData;

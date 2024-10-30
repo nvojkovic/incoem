@@ -26,7 +26,6 @@ import {
 } from "@dnd-kit/sortable";
 import SortableItem from "./Sortable/SortableItem";
 import { useInfo } from "../useData";
-import { useUser } from "../useUser";
 import Input from "./Inputs/Input";
 
 interface Props {
@@ -101,7 +100,6 @@ export const IncomeComponent = ({
 const IncomeSection = ({ defaultOpen = false }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
-  const { user } = useUser();
   const incomes = data.data.incomes;
   const people = data.data.people;
 
@@ -172,7 +170,7 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
                     <div className="flex justify-between">
                       <div className="">
                         <IncomeComponent income={item} i={i} />
-                        {user?.info?.stabilityRatioFlag && (
+                        {data.stabilityRatioFlag && (
                           <div className="mt-3">
                             <Input
                               label="Stable Income"

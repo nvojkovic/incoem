@@ -3,7 +3,7 @@ import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 import { formatter } from "../../utils";
 import Button from "../Inputs/Button";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const initialState: CalculatorState = {
   futureValue: 0,
@@ -34,7 +34,12 @@ interface CalculatorState {
   compounding: "Annual" | "Monthly";
 }
 
-const TimeValueCalculator: React.FC<any> = ({ data, setData, remove }) => {
+const TimeValueCalculator: React.FC<any> = ({
+  data,
+  setData,
+  remove,
+  duplicate,
+}) => {
   const calculatorOptions: CalculatorType[] = [
     "Future Value",
     "Present Value",
@@ -268,12 +273,22 @@ const TimeValueCalculator: React.FC<any> = ({ data, setData, remove }) => {
               </Button>
             </div>
           </div>
-          <div className="">
-            <div
-              className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
-              onClick={remove}
-            >
-              <TrashIcon className="text-red-500 w-5" />
+          <div className="flex flex-col gap-4">
+            <div className="">
+              <div
+                className="bg-gray-100 p-3 rounded-full cursor-pointer"
+                onClick={duplicate}
+              >
+                <DocumentDuplicateIcon className="w-5" />
+              </div>
+            </div>
+            <div className="">
+              <div
+                className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
+                onClick={remove}
+              >
+                <TrashIcon className="text-red-500 w-5" />
+              </div>
             </div>
           </div>
         </div>

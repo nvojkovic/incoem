@@ -1,8 +1,6 @@
 import "./App.css";
 import IncomeSection from "./components/IncomeSection";
 import { useEffect, useState } from "react";
-import { PeopleInfo } from "./components/Info/PersonInfo";
-import MapSection from "./components/MapSection";
 import { useParams } from "react-router-dom";
 import Summary from "./components/Summary";
 import Layout from "./components/Layout";
@@ -12,12 +10,13 @@ import { IncomeProvider } from "./useData";
 import CalculatorMap from "./components/Calculators/CalculatorMap";
 import { initialVersatileSettings } from "./components/Calculators/versatileTypes";
 import SpendingPage from "./components/Spending/SpendingPage";
+import ClientOverview from "./components/ClientOverview";
 
 function Calculator() {
   const { id } = useParams();
-  const [tab, setTab] = useState<"data" | "calculator" | "map" | "spending">(
-    "data",
-  );
+  const [tab, setTab] = useState<
+    "data" | "calculator" | "map" | "spending" | "basic"
+  >("data");
   const [fullScreen, setFullScreen] = useState(false);
 
   const fetchData = () => {
@@ -84,13 +83,6 @@ function Calculator() {
           <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
             {tab == "data" && (
               <div className="flex flex-col gap-6">
-                <MapSection
-                  title="Basic information"
-                  defaultOpen={false}
-                  toggleabble
-                >
-                  <PeopleInfo />
-                </MapSection>
                 <IncomeSection defaultOpen={true} />
               </div>
             )}
@@ -101,6 +93,7 @@ function Calculator() {
                 hideNav={setFullScreen}
               />
             )}
+            {tab == "basic" && <ClientOverview />}
 
             {tab == "calculator" && (
               <CalculatorMap

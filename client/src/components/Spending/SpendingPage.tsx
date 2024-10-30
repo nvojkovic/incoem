@@ -42,7 +42,7 @@ export const calculateSpendingYear = (
       (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
     )
     .map((item) => {
-      let amount = item.amount;
+      let amount = item.amount || 0;
       if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
         const age =
           calculateAge(new Date(data.people[settings.whoDies].birthday)) +
@@ -544,6 +544,8 @@ const SpendingPage = ({ settings, setSettings }: any) => {
           </div>
         </div>
         <StackedAreaChart
+          stability={data.stabilityRatioFlag}
+          needsFlag={data.needsFlag}
           years={yearRange(currentYear, currentYear + settings.maxYearsShown)}
           lineData={yearRange(
             currentYear,

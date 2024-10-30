@@ -24,7 +24,7 @@ const Live = ({
   setSelectedColumn,
   changeFullScreen,
   addScenario,
-  clientId,
+  client,
   spending,
 }: {
   data: IncomeMapData;
@@ -37,7 +37,7 @@ const Live = ({
   setSelectedColumn: any;
   changeFullScreen: any;
   addScenario: any;
-  clientId: any;
+  client: Client;
   spending?: RetirementSpendingSettings;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
@@ -49,10 +49,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        clientId +
-        "/?data=" +
-        JSON.stringify({ ...settings, data }),
+      "print/client/pdf-live/" +
+      client.id +
+      "/?data=" +
+      JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -191,6 +191,7 @@ const Live = ({
                   addScenario({
                     ...settings,
                     data: { ...data },
+                    spending: { ...spending },
                   });
                 }}
               >
@@ -210,6 +211,7 @@ const Live = ({
                         addScenario({
                           ...settings,
                           data: { ...data },
+                          spending: { ...spending },
                         });
                       }
                     }}
@@ -244,7 +246,7 @@ const Live = ({
         </div>
       </div>
       <ResultTable
-        clientId={clientId}
+        client={client}
         changeFullScreen={changeFullScreen}
         settings={settings}
         data={data}

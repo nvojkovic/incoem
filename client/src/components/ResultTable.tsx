@@ -48,9 +48,15 @@ import { CSS } from "@dnd-kit/utilities";
 import React from "react";
 import { useInfo } from "../useData";
 import { generateColumns } from "./tableData";
-import { useUser } from "../useUser";
 import StackedAreaChart from "./NewChart";
 import { calculateSpendingYear } from "./Spending/SpendingPage";
+
+const PrintCard = ({ title, subtitle }: any) => (
+  <div className="bg-gray-200 py-3 px-6 rounded-lg">
+    <div className="font-semibold text- mb-1">{title}</div>
+    <div className="text-sm">{subtitle}</div>
+  </div>
+);
 
 const DraggableTableHeader = ({
   header,
@@ -155,7 +161,7 @@ const DragAlongCell = ({
 
   return (
     <td
-      className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} px-6 py-[0.45rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
+      className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} px-6 py-[0.45rem] rint:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
       ref={setNodeRef}
       onClick={() => {
         console.log(data.year, cell);
@@ -171,7 +177,7 @@ const DragAlongCell = ({
 
 const ResultTable = ({
   data,
-  clientId,
+  client,
   settings,
   removeScenario,
   fullScreen,
@@ -186,7 +192,7 @@ const ResultTable = ({
   spending,
 }: {
   data: IncomeMapData;
-  clientId: any;
+  client: Client;
   settings: ScenarioSettings;
   removeScenario: any;
   name?: string;
@@ -205,10 +211,8 @@ const ResultTable = ({
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
-  const [incomeToShow, setIncomeToShow] = useState("all");
   const incomes = data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
-  const { user } = useUser();
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => generateColumns(incomes, data, selectedColumn),
@@ -222,7 +226,7 @@ const ResultTable = ({
 
   const print = async () => {
     setPrinting(true);
-    const url = await printReport(clientId, settings.id);
+    const url = await printReport(client.id, settings.id);
     setPrinting(false);
     window.open(url, "_blank");
   };
@@ -324,7 +328,7 @@ const ResultTable = ({
                     );
                     return (
                       <div className="z-[5000000] bg-white  sticky">
-                        {spending && (
+                        {spending && client.needsFlag && (
                           <>
                             <div>
                               Needs: {spending && formatter.format(needs)}
@@ -338,13 +342,18 @@ const ResultTable = ({
                             </div>
                           </>
                         )}
-                        {!isNaN(stabilityRatio) && (
-                          <div>
-                            Stability Ratio:{" "}
-                            {Math.round((stableIncome / income) * 100)}%
-                          </div>
-                        )}
-                        {spending && <div>Needs Stable: {needsStable}%</div>}
+                        {!isNaN(stabilityRatio) &&
+                          client.stabilityRatioFlag && (
+                            <div>
+                              Stability Ratio:{" "}
+                              {Math.round((stableIncome / income) * 100)}%
+                            </div>
+                          )}
+                        {spending &&
+                          client.stabilityRatioFlag &&
+                          client.needsFlag && (
+                            <div>Needs Stable: {needsStable}%</div>
+                          )}
                       </div>
                     );
                   })()}
@@ -352,7 +361,7 @@ const ResultTable = ({
                   placement="left"
                   style="light"
                   arrow={false}
-                  className={`border-2 border-main-orange bg-white print:hidden ${user?.info?.stabilityRatioFlag ? "" : "hidden"}`}
+                  className={`border-2 border-main-orange bg-white print:hidden ${client.stabilityRatioFlag || client.needsFlag ? "" : "hidden"}`}
                 >
                   <div className="cursor-pointer flex items-center gap-2 z-5000 ">
                     {printNumber(
@@ -372,10 +381,8 @@ const ResultTable = ({
       ),
     [settings, data],
   );
-  console.log("rerender", selectedYear);
 
   const handleDragEnd = (moved: any) => {
-    console.log("move", moved);
     const { active, over } = moved;
 
     const oldIndex = columnOrder.indexOf(active.id as string);
@@ -386,12 +393,6 @@ const ResultTable = ({
       return arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
     });
     if (active && over && active.id !== over.id) {
-      console.log(
-        "settings",
-        active.id,
-        over.id,
-        settings.data.incomes.map((i) => i.id),
-      );
       if (setSettings) {
         const oldIndex = data.incomes.findIndex((x) => x.id == active.id);
         const newIndex = data.incomes.findIndex((x) => x.id == over.id);
@@ -414,7 +415,7 @@ const ResultTable = ({
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div className="rounded-xl border-[#EAECF0] border print:border-0">
+      <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
         {name && (
           <div
             className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32`}
@@ -425,7 +426,37 @@ const ResultTable = ({
             <div className="hidden print:block"></div>
             {toPrint && (
               <div>
-                <table className="border border-gray-400 text-xs">
+                <div className="flex gap-4">
+                  <PrintCard
+                    title="Inflation"
+                    subtitle={`${settings.inflation.toString()}%`}
+                  />
+
+                  {data.people.length > 1 &&
+                    data.people.map(
+                      (person, i) =>
+                        settings.whoDies == i && (
+                          <PrintCard
+                            title={`${person.name}'s Death`}
+                            subtitle={`${settings.deathYears[i]?.toString()} years`}
+                          />
+                        ),
+                    )}
+
+                  {spending?.preTaxRate && (
+                    <PrintCard
+                      title={`Pre-Retirement Tax Rate`}
+                      subtitle={`${spending.preTaxRate} `}
+                    />
+                  )}
+                  {settings?.retirementYear && (
+                    <PrintCard
+                      title={`Retirement Year`}
+                      subtitle={settings.retirementYear}
+                    />
+                  )}
+                </div>
+                <table className="border border-gray-400 text-xs hidden">
                   <tbody>
                     <tr className="border-b border-gray-400 ">
                       <td className="border border-gray-400 px-2 bg-[#f9fafb] font-medium">
@@ -452,6 +483,7 @@ const ResultTable = ({
                 </table>
               </div>
             )}
+
             {!toPrint && (
               <div className="flex gap-5 items-end">
                 {data.people.length > 1 &&
@@ -549,79 +581,45 @@ const ResultTable = ({
               i={income.id}
             />
           ))}
-        <DraggableTable
-          columns={columns}
-          setSelectedYear={setSelectedYear}
-          fullScreen={fullScreen}
-          tableData={tableData}
-          selectedYear={selectedYear}
-          columnOrder={columnOrder}
-          setColumnOrder={setColumnOrder}
-          setSelectedColumn={setSelectedColumn}
-          selectedColumn={selectedColumn}
-          setOpenModal={setOpenModal}
-        />
-        <div className="break-after-page"></div>
-        <div className="mt-10"></div>
-        {false && user?.info?.stabilityRatioFlag && (
-          <div className="print:hidden flex text-sm">
-            <div
-              onClick={() => setIncomeToShow("all")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "all"
-                  ? "border-main-orange text-main-orange"
-                  : "text-[#667085]"
-                } z-50`}
-              style={{
-                backgroundColor:
-                  incomeToShow === "all"
-                    ? "rgba(var(--primary-color-segment),0.1)"
-                    : "",
-              }}
-            >
-              Show All Income
-            </div>
-
-            <div
-              onClick={() => setIncomeToShow("stable")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "stable"
-                  ? "border-main-orange text-main-orange"
-                  : "text-[#667085]"
-                } z-50`}
-              style={{
-                backgroundColor:
-                  incomeToShow === "stable"
-                    ? "rgba(var(--primary-color-segment),0.1)"
-                    : "",
-              }}
-            >
-              Show Stable Income
-            </div>
-            <div
-              onClick={() => setIncomeToShow("unstable")}
-              className={`${"px-5"} text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${incomeToShow === "unstable"
-                  ? "border-main-orange text-main-orange"
-                  : "text-[#667085]"
-                } z-50`}
-              style={{
-                backgroundColor:
-                  incomeToShow === "unstable"
-                    ? "rgba(var(--primary-color-segment),0.1)"
-                    : "",
-              }}
-            >
-              Show Unstable Income
-            </div>
-          </div>
-        )}
-
-        {/*     <StackedChart
-          years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
-          incomes={incomes
-
-            .map((income, i) => ({
+        <div className="flex flex-col print:flex-col-reverse">
+          <DraggableTable
+            columns={columns}
+            setSelectedYear={setSelectedYear}
+            fullScreen={fullScreen}
+            tableData={tableData}
+            selectedYear={selectedYear}
+            columnOrder={columnOrder}
+            setColumnOrder={setColumnOrder}
+            setSelectedColumn={setSelectedColumn}
+            selectedColumn={selectedColumn}
+            setOpenModal={setOpenModal}
+          />
+          <div className="break-after-page"></div>
+          <div className="mt-10"></div>
+          <StackedAreaChart
+            years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
+            spending={false}
+            lineData={
+              client.needsFlag
+                ? yearRange(
+                  startYear,
+                  startYear + settings.maxYearsShown - 1,
+                ).map((currentYear) =>
+                  calculateSpendingYear(
+                    data,
+                    spending,
+                    settings,
+                    currentYear,
+                  ),
+                )
+                : []
+            }
+            stability={client.stabilityRatioFlag}
+            needsFlag={client.needsFlag}
+            stackedData={incomes.map((income, i) => ({
               name: title(incomes, data.people, i),
               stable: income.stable,
-              data: yearRange(
+              values: yearRange(
                 startYear,
                 startYear + settings.maxYearsShown - 1,
               ).map((year) =>
@@ -639,46 +637,9 @@ const ResultTable = ({
                   }).amount,
                 ),
               ),
-            }))
-            .filter(
-              (item) =>
-                !user?.info?.stabilityRatioFlag ||
-                incomeToShow === "all" ||
-                (item.stable ? "stable" : "unstable") === incomeToShow,
-            )}
-        />*/}
-        <StackedAreaChart
-          years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
-          spending={false}
-          lineData={yearRange(
-            startYear,
-            startYear + settings.maxYearsShown - 1,
-          ).map((currentYear) =>
-            calculateSpendingYear(data, spending, settings, currentYear),
-          )}
-          stackedData={incomes.map((income, i) => ({
-            name: title(incomes, data.people, i),
-            stable: income.stable,
-            values: yearRange(
-              startYear,
-              startYear + settings.maxYearsShown - 1,
-            ).map((year) =>
-              Math.round(
-                calculate({
-                  people: data.people,
-                  income,
-                  startYear,
-                  currentYear: year,
-                  deathYears: settings.deathYears as any,
-                  dead: settings.whoDies,
-                  inflation: settings.inflation,
-                  incomes: incomes,
-                  ssSurvivorAge: settings.ssSurvivorAge,
-                }).amount,
-              ),
-            ),
-          }))}
-        />
+            }))}
+          />
+        </div>
         <div className="h-12"></div>
       </div>
     </DndContext>

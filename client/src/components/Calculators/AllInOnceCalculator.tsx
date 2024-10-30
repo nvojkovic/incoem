@@ -34,6 +34,13 @@ const AllInOneCalculator: React.FC<any> = ({ back, data, setData }) => {
               );
             }}
             remove={() => setData(data.filter((_: any, i: any) => i !== index))}
+            duplicate={() =>
+              setData(
+                data.flatMap((item: any, i: any) =>
+                  i === index ? [item, { ...item }] : [item],
+                ),
+              )
+            }
           />
         ))}
         <div
@@ -41,7 +48,12 @@ const AllInOneCalculator: React.FC<any> = ({ back, data, setData }) => {
           onClick={() => setData([...data, initialState])}
         >
           <div className="flex flex-col justify-center items-center gap-2 ">
-            <div className="text-main-orange rounded-full bg-[#ffd6cc] w-12">
+            <div
+              className="text-main-orange rounded-full w-12"
+              style={{
+                backgroundColor: "rgba(var(--primary-color-segment),0.1)",
+              }}
+            >
               <PlusIcon />
             </div>
             <div>Add another calculator</div>

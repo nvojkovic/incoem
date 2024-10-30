@@ -2,7 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import PropTypes from "prop-types";
 
-const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
+const StackedAreaChart = ({
+  years,
+  stackedData,
+  lineData,
+  spending,
+  stability,
+  needsFlag,
+}: any) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
   const [dimensions, setDimensions] = useState({ width: 0, height: 500 });
@@ -15,14 +22,14 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
   // const color = d3.scaleSequential(d3.interpolateSinebow);
   const colorArray = [
     "#ff000066",
+    "#BBCC33",
     "#77AADD",
+    "#AAAA00",
     "#EE8866",
     "#EEDD88",
     "#FFAABB",
     "#99DDFF",
     "#44BB99",
-    "#BBCC33",
-    "#AAAA00",
   ];
 
   useEffect(() => {
@@ -49,7 +56,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
     )
       return;
 
-    const margin = { top: 40, right: 30, bottom: 80, left: 60 };
+    const margin = { top: 40, right: 30, bottom: 80, left: 70 };
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
 
@@ -153,7 +160,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
       .attr("fill", (d: any) => {
         const item = stackedData.find((item: any) => item.name === d.key);
         const baseColor = color(d.key);
-        if (item.stable) return baseColor;
+        if (item.stable || !stability) return baseColor;
 
         // Create a unique pattern ID for each unstable series
         const patternId = `diagonalStripes-${d.key.replace(/\s+/g, "-")}`;
@@ -236,7 +243,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
         g
           .selectAll(".tick text")
           .attr("fill", "#666")
-          .style("font-size", "12px"),
+          .style("font-size", "13px"),
       );
 
     // Add vertical guideline
@@ -323,8 +330,9 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
                     <b>${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0))}</b>
                   </div>
                 </div>
-              </div>
-                     <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+              </div>`;
+          if (needsFlag)
+            tooltipContent += `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
@@ -441,6 +449,7 @@ const StackedAreaChart = ({ years, stackedData, lineData, spending }: any) => {
           "text-decoration",
           hiddenSeries.has(key) ? "line-through" : "none",
         )
+        .style("color", hiddenSeries.has(key) ? "#aaa" : "none")
         .style("cursor", "pointer")
         .text(key)
         .on("click", () => {
@@ -500,6 +509,8 @@ StackedAreaChart.propTypes = {
   ).isRequired,
   lineData: PropTypes.arrayOf(PropTypes.number),
   spending: PropTypes.bool.isRequired,
+  stability: PropTypes.bool.isRequired,
+  needsFlag: PropTypes.bool.isRequired,
 };
 
 export default StackedAreaChart;

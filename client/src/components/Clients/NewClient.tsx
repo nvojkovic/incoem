@@ -3,12 +3,12 @@ import Button from "../Inputs/Button";
 import { useState } from "react";
 import Modal from "../Modal";
 import Input from "../Inputs/Input";
-import Toggle from "../Inputs/Toggle";
-import user from "../../assets/user.png";
+import userImg from "../../assets/user.png";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { updateAtIndex } from "../../utils";
 import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../useUser";
 
 const PersonInfo = ({ person, setPerson }: any) => {
   return (
@@ -43,6 +43,11 @@ const NewClient = () => {
   const [newOpen, setNewOpen] = useState(false);
   const [people, setPeople] = useState<Person[]>([newPerson(0), newPerson(1)]);
   const [name, setName] = useState("");
+  const { user } = useUser();
+  const [stabilityRatio, setStabilityRatio] = useState(
+    !!user?.info?.stabilityRatioFlag,
+  );
+  const [needs, setNeeds] = useState(!!user?.info?.needsFlag);
   const navigate = useNavigate();
   const addClient = async () => {
     const client = {
@@ -55,6 +60,8 @@ const NewClient = () => {
         version: 1 as const,
       },
       scenarios: [],
+      needsFlag: needs,
+      stabilityRatioFlag: stabilityRatio,
     };
     const d = await createClient(client as any);
     const js = await d.json();
@@ -84,17 +91,30 @@ const NewClient = () => {
           placeholder="e.g. John and Katie"
         />
       </div>
-      <div className="flex flex-col mb-6 mt-6 gap-3 justify-start items-start">
-        <div className="text-sm text-[#344054]">Single mode</div>
-        <Toggle
-          enabled={people.length == 1}
-          setEnabled={(b) => {
+      <div className="flex flex-col mb-6 mt-6 gap-2 justify-start items-start">
+        <Input
+          subtype="toggle"
+          label="Single mode"
+          value={people.length === 1}
+          setValue={(b) => {
             if (b) {
               setPeople([people[0]]);
             } else {
               setPeople([people[0], newPerson(1)]);
             }
           }}
+        />
+        <Input
+          subtype="toggle"
+          label="Stability Ratio"
+          value={stabilityRatio}
+          setValue={setStabilityRatio}
+        />
+        <Input
+          subtype="toggle"
+          label="Needs"
+          value={needs}
+          setValue={setNeeds}
         />
       </div>
     </div>
@@ -117,7 +137,7 @@ const NewClient = () => {
           <div className="flex justify-between items-center mr-2 mb-6">
             <div className="flex gap-5">
               <div className="w-[48px] h-[48px] border-[#EAECF0] border rounded-md flex items-center justify-center">
-                <img src={user} alt="user" className="h-6 w-6 mx-auto" />
+                <img src={userImg} alt="user" className="h-6 w-6 mx-auto" />
               </div>
               <div className="flex flex-col items-start ">
                 <div className="font-semibold text-[18px] mb-1">

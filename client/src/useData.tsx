@@ -13,6 +13,7 @@ const IncomeContext = React.createContext({
   addScenario: (_: ScenarioSettings) => { },
   setPerson: (_: Person) => { },
   setTitle: (_: string) => { },
+  setField: (_: string) => (_: any) => { },
   setSpending: (_: RetirementSpendingSettings) => { },
 });
 
@@ -49,7 +50,7 @@ export const IncomeProvider = ({
     setLocal((data) => {
       const result = fn(data);
       console.log("result", result);
-      updateRemote(result.id, result.title, result.data, result.spending);
+      updateRemote(result.id, result);
       return result;
     });
   };
@@ -71,6 +72,13 @@ export const IncomeProvider = ({
     setData((data) => ({
       ...data,
       title,
+    }));
+  };
+
+  const setField = (key: string) => (val: any) => {
+    setData((data) => ({
+      ...data,
+      [key]: val,
     }));
   };
 
@@ -150,6 +158,7 @@ export const IncomeProvider = ({
     setPerson,
     setTitle,
     setSpending,
+    setField,
   };
 
   return (

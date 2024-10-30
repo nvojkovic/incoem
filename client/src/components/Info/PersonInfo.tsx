@@ -42,7 +42,7 @@ const PersonInfo = ({ title, person }: Props) => {
             subtype="text"
             size="lg"
             value={calculateAge(new Date(person.birthday))}
-            setValue={(_) => {}}
+            setValue={(_) => { }}
             disabled
           />
         </div>
@@ -64,7 +64,6 @@ export const PeopleInfo = () => {
           person={person}
         />
       ))}
-
       <Section>
         <div className="">
           <div className="flex flex-col pb-6 border-b border-[#EAECF0]">

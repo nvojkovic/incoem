@@ -8,13 +8,15 @@ datasource db {
 }
 
 model Client {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  title     String
-  userId    String
-  data      Json     @default("{}")
-  scenarios Json     @default("[]")
-  spending  Json     @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
+  id                 Int      @id @default(autoincrement())
+  createdAt          DateTime @default(now())
+  title              String
+  userId             String
+  data               Json     @default("{}")
+  scenarios          Json     @default("[]")
+  spending           Json     @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
+  stabilityRatioFlag Boolean  @default(false)
+  needsFlag          Boolean  @default(false)
 }
 
 model UserInfo {

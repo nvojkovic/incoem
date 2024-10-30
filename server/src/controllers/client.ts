@@ -49,6 +49,7 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     process.env.PRINTER_URL +
     "/?url=" +
     process.env.APP_URL +
+    // "http://im-client:5173" +
     "/print/" +
     req.params.id +
     "/" +
@@ -78,7 +79,7 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  let { data, title, spending } = req.body;
+  let { data, title, spending, stabilityRatioFlag, needsFlag } = req.body;
   let id = parseInt(req.params.id);
   const client = await prisma.client.update({
     where: {
@@ -89,6 +90,8 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
       data,
       title,
       spending,
+      needsFlag,
+      stabilityRatioFlag,
     },
   });
   res.json(client);
@@ -124,8 +127,10 @@ export const deleteClient = async (req: SessionRequest, res: Response) => {
 
 export const createClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  const { data, title } = req.body;
+  const { data, title, needsFlag, stabilityRatioFlag } = req.body;
 
-  const result = await prisma.client.create({ data: { data, title, userId } });
+  const result = await prisma.client.create({
+    data: { data, title, userId, needsFlag, stabilityRatioFlag },
+  });
   return res.json({ data: result });
 };
