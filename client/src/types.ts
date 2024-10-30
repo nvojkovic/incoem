@@ -106,6 +106,7 @@ interface CalculationInfo<T extends Income> {
   startYear: number;
   currentYear: number;
   deathYears: number[];
+  inflationType: string;
   ssSurvivorAge: (number | null)[];
   dead: number;
 }

@@ -16,6 +16,7 @@ export const adjustForInflation = (
   amount: number,
   startYear: number,
 ) => {
+  if (info.inflationType == "Nominal") return amount;
   return (
     amount /
     Math.pow(1 + (info.inflation || 0) / 100, info.currentYear - startYear)

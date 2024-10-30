@@ -52,7 +52,7 @@ import StackedAreaChart from "./NewChart";
 import { calculateSpendingYear } from "./Spending/SpendingPage";
 
 const PrintCard = ({ title, subtitle }: any) => (
-  <div className="bg-gray-200 py-3 px-6 rounded-lg">
+  <div className="bg-gray-100 py-3 px-6 rounded-lg">
     <div className="font-semibold text- mb-1">{title}</div>
     <div className="text-sm">{subtitle}</div>
   </div>
@@ -161,7 +161,7 @@ const DragAlongCell = ({
 
   return (
     <td
-      className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} px-6 py-[0.45rem] rint:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
+      className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} px-6 py-[0.45rem] print:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
       ref={setNodeRef}
       onClick={() => {
         console.log(data.year, cell);
@@ -252,6 +252,8 @@ const ResultTable = ({
       inflation: settings.inflation,
       incomes: incomes,
       ssSurvivorAge: settings.ssSurvivorAge,
+
+      inflationType: settings.inflationType,
     });
 
   const tableData = useMemo(
@@ -274,6 +276,7 @@ const ResultTable = ({
                 dead: settings.whoDies,
                 inflation: settings.inflation,
                 incomes: incomes,
+                inflationType: settings.inflationType,
                 ssSurvivorAge: settings.ssSurvivorAge,
               });
               return [
@@ -446,7 +449,7 @@ const ResultTable = ({
                   {spending?.preTaxRate && (
                     <PrintCard
                       title={`Pre-Retirement Tax Rate`}
-                      subtitle={`${spending.preTaxRate} `}
+                      subtitle={`${spending.preTaxRate}%`}
                     />
                   )}
                   {settings?.retirementYear && (
@@ -634,6 +637,7 @@ const ResultTable = ({
                     inflation: settings.inflation,
                     incomes: incomes,
                     ssSurvivorAge: settings.ssSurvivorAge,
+                    inflationType: settings.inflationType,
                   }).amount,
                 ),
               ),

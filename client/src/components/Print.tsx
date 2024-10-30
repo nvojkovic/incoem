@@ -10,7 +10,7 @@ interface PrintProps {
 const Print = ({ client, scenario }: PrintProps) => {
   return (
     <UserProvider ignoreLogin>
-      <div className="mx-auto mt-10 px-10">
+      <div className="mx-auto mt-5 px-10">
         <div className="mb-2 flex justify-between">
           <div className="font-semibold text-[18px]">{client.title}</div>
           <div className="flex gap-6 items-center">

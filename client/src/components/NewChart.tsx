@@ -9,6 +9,7 @@ const StackedAreaChart = ({
   spending,
   stability,
   needsFlag,
+  maxY,
 }: any) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
@@ -119,6 +120,7 @@ const StackedAreaChart = ({
       .scaleLinear()
       .domain([
         0,
+        maxY * 1.1 ||
         Math.max(
           (d3 as any).max(processedData as any, (d: any) => {
             return d3.sum(keys, (key: any) => d[key]);
@@ -511,6 +513,7 @@ StackedAreaChart.propTypes = {
   spending: PropTypes.bool.isRequired,
   stability: PropTypes.bool.isRequired,
   needsFlag: PropTypes.bool.isRequired,
+  maxY: PropTypes.number,
 };
 
 export default StackedAreaChart;

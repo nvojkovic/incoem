@@ -47,7 +47,7 @@ export const calculateSpendingYear = (
         const age =
           calculateAge(new Date(data.people[settings.whoDies].birthday)) +
           years;
-        if (age > settings.deathYears[settings.whoDies]) {
+        if (age > (settings.deathYears[settings.whoDies] as any)) {
           amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
         }
       }
@@ -64,7 +64,7 @@ export const calculateSpendingYear = (
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
     console.log("dying", age, settings.deathYears[settings.whoDies]);
-    if (age > settings.deathYears[settings.whoDies]) {
+    if (age > (settings.deathYears[settings.whoDies] as any)) {
       current *= 1 - spending.decreaseAtDeath[settings.whoDies] / 100;
     }
   }
@@ -115,9 +115,29 @@ const SpendingPage = ({ settings, setSettings }: any) => {
 
   const spending = data.spending || { yearlyIncrease: {} };
 
+  const currentYearRange = yearRange(
+    currentYear,
+    currentYear + settings.maxYearsShown,
+  );
+  const calcSett = (settings: any) =>
+    Math.max(
+      ...currentYearRange.map((year) =>
+        calculateSpendingYear(data.data, spending, settings, year),
+      ),
+    );
+
+  const maxY = Math.max(
+    ...[
+      calcSett({ ...settings, whoDies: -1 }),
+      calcSett({ ...settings, whoDies: 0 }),
+      calcSett({ ...settings, whoDies: 1 }),
+    ],
+  );
+
   return (
     <div className="flex flex-col gap-8">
       <MapSection title="Current Spending" toggleabble defaultOpen>
+        {maxY}
         <div className="flex gap-4">
           <div>
             <Input
@@ -544,6 +564,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
           </div>
         </div>
         <StackedAreaChart
+          maxY={maxY}
           stability={data.stabilityRatioFlag}
           needsFlag={data.needsFlag}
           years={yearRange(currentYear, currentYear + settings.maxYearsShown)}
