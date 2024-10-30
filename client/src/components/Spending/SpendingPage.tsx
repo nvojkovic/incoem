@@ -14,6 +14,7 @@ export const calculateSpendingYear = (
   settings: any,
   year: number,
 ) => {
+  console.log("spending", spending);
   if (!spending) return 0;
   const years = year - 2024;
   let result = 0;
@@ -302,10 +303,11 @@ const SpendingPage = ({ settings, setSettings }: any) => {
               <th className="px-6 py-3">Starts (Cal Year)</th>
               <th className="px-6 py-3">Ends (Cal Year)</th>
               <th
-                className={`px-6 py-3 ${spending.postSpending.find(
-                  (i) => i.increase.type === "custom",
-                ) && "w-64"
-                  }`}
+                className={`px-6 py-3 ${
+                  spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                }`}
               >
                 Yearly Increase{" "}
                 {spending.postSpending.find(
@@ -522,8 +524,8 @@ const SpendingPage = ({ settings, setSettings }: any) => {
                           v == "Both Alive"
                             ? -1
                             : data.data.people.findIndex((p) =>
-                              v.includes(p.name),
-                            ),
+                                v.includes(p.name),
+                              ),
                       })
                     }
                   />
@@ -591,7 +593,7 @@ const SpendingPage = ({ settings, setSettings }: any) => {
           {[0, 1, 2, 3, 4].map(
             (tableInd) =>
               currentYear + settings.maxYearsShown >
-              currentYear + tableInd * 16 && (
+                currentYear + tableInd * 16 && (
                 <div>
                   <table className=" w-full border ">
                     <thead
@@ -650,8 +652,9 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
-              }`}
+            className={`flex-1 py-[7px] px-4 rounded ${
+              value === item ? "bg-main-orange text-white" : "bg-gray-200"
+            }`}
             onClick={() => setValue(item)}
           >
             {item}
