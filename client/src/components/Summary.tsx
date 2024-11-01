@@ -17,16 +17,9 @@ import {
 import SortableItem from "./Sortable/SortableItem";
 import ScenarioTab from "./ScenarioTab";
 import { useInfo } from "../useData";
-const Summary = ({
-  settings,
-  setSettings,
-  hideNav,
-}: {
-  // data: IncomeMapData;
-  hideNav: any;
-  settings: ScenarioSettings;
-  setSettings: any;
-}) => {
+import Layout from "./Layout";
+import MapChart from "./MapChart";
+const Summary = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -40,7 +33,12 @@ const Summary = ({
     type: "none",
   });
 
-  const { data, storeScenarios } = useInfo();
+  const { data, storeScenarios, setField } = useInfo();
+
+  const settings = data.liveSettings;
+  const setSettings = setField("liveSettings");
+  console.log("setttt", settings);
+
   const scenarios = data.scenarios;
 
   const openFullScreen = () => {
@@ -83,7 +81,6 @@ const Summary = ({
   useLayoutEffect(() => {
     const fullscreenchange = () => {
       setFullScreen(!!document.fullscreenElement);
-      hideNav(!!document.fullscreenElement);
     };
     document.addEventListener("fullscreenchange", fullscreenchange);
     return () => {
@@ -93,107 +90,119 @@ const Summary = ({
 
   const [selectedYear, setSelectedYear] = useState(0);
   return (
-    <div>
-      <div className="flex items-center justify-between mb-5">
-        <div className="font-semibold text-[30px] hidden print:block">
-          {scenarios?.find((_, i) => i == tab)?.name}
+    <Layout page="map">
+      <div>
+        <div className="flex items-center justify-between mb-5">
+          <div className="font-semibold text-[30px] hidden print:block">
+            {scenarios?.find((_, i) => i == tab)?.name}
+          </div>
         </div>
-      </div>
-      <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
-        <div
-          className={`flex print:hidden sticky z-50 ${fullScreen ? "top-[0px]" : "top-[72px]"
-            } bg-white`}
-        >
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+        <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
+          <div
+            className={`flex print:hidden sticky z-[5000] ${
+              fullScreen ? "top-[0px]" : "top-[72px]"
+            } bg-[#f8f8f8]`}
           >
-            <SortableContext
-              items={scenarios}
-              strategy={horizontalListSortingStrategy}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
             >
-              <div className="flex">
-                <ScenarioTab
-                  name="Live"
-                  id={-1}
-                  active={tab == -1}
-                  setActive={() => setTab(-1)}
-                  live
-                  store={() => { }}
-                />
-                {scenarios.map((sc, i) => (
-                  <SortableItem
-                    key={sc.id}
-                    id={sc.id}
-                    onClick={() => setTab(i)}
-                  >
-                    <ScenarioTab
-                      name={sc.name}
-                      active={tab == sc.id}
-                      setActive={() => setTab(sc.id)}
-                      id={i}
-                      store={(name: string) => {
-                        storeScenarios(
-                          scenarios.map((s, j) =>
-                            i == j ? { ...s, name } : s,
-                          ),
-                        );
-                      }}
-                    />
-                  </SortableItem>
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
-        </div>
+              <SortableContext
+                items={scenarios}
+                strategy={horizontalListSortingStrategy}
+              >
+                <div className="flex">
+                  <ScenarioTab
+                    name="Live"
+                    id={-1}
+                    active={tab == -1}
+                    setActive={() => setTab(-1)}
+                    live
+                    store={() => {}}
+                  />
+                  {scenarios.map((sc, i) => (
+                    <SortableItem
+                      key={sc.id}
+                      id={sc.id}
+                      onClick={() => setTab(i)}
+                    >
+                      <ScenarioTab
+                        name={sc.name}
+                        active={tab == sc.id}
+                        setActive={() => setTab(sc.id)}
+                        id={i}
+                        store={(name: string) => {
+                          storeScenarios(
+                            scenarios.map((s, j) =>
+                              i == j ? { ...s, name } : s,
+                            ),
+                          );
+                        }}
+                      />
+                    </SortableItem>
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          </div>
 
-        {tab == -1 ? (
-          <Live
-            data={data.data}
-            settings={settings}
-            setSettings={setSettings}
-            fullScreen={fullScreen}
-            client={data}
-            addScenario={(data: any) => {
-              storeScenarios([
-                ...scenarios,
-                { ...data, id: scenarios.length + 1 },
-              ]);
-            }}
-            changeFullScreen={() =>
-              fullScreen ? closeFullscreen() : openFullScreen()
-            }
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-            selectedColumn={selectedColumn}
-            setSelectedColumn={setSelectedColumn}
-            spending={data.spending}
-          />
-        ) : (
-          <ResultTable
-            client={data}
-            settings={scenarios.find(({ id }) => id === tab) as any}
-            fullScreen={fullScreen}
-            id={tab}
-            removeScenario={() => {
-              const newScenarios = scenarios.filter((sc) => sc.id != tab);
-              storeScenarios(newScenarios);
-              setTab(-1);
-            }}
-            data={scenarios.find(({ id }) => id === tab)?.data as any}
-            name={scenarios.find(({ id }) => id === tab)?.name}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-            changeFullScreen={() =>
-              fullScreen ? closeFullscreen() : openFullScreen()
-            }
-            selectedColumn={selectedColumn}
-            setSelectedColumn={setSelectedColumn}
-          />
-        )}
+          {tab == -1 ? (
+            <Live
+              data={data.data}
+              spending={data.spending}
+              settings={settings}
+              setSettings={setSettings}
+              fullScreen={fullScreen}
+              client={data}
+              addScenario={(data: any) => {
+                storeScenarios([
+                  ...scenarios,
+                  { ...data, id: scenarios.length + 1 },
+                ]);
+              }}
+              changeFullScreen={() =>
+                fullScreen ? closeFullscreen() : openFullScreen()
+              }
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedColumn={selectedColumn}
+              setSelectedColumn={setSelectedColumn}
+            />
+          ) : (
+            <>
+              <ResultTable
+                client={data}
+                settings={scenarios.find(({ id }) => id === tab) as any}
+                fullScreen={fullScreen}
+                id={tab}
+                removeScenario={() => {
+                  const newScenarios = scenarios.filter((sc) => sc.id != tab);
+                  storeScenarios(newScenarios);
+                  setTab(-1);
+                }}
+                data={scenarios.find(({ id }) => id === tab)?.data as any}
+                name={scenarios.find(({ id }) => id === tab)?.name}
+                spending={scenarios.find(({ id }) => id === tab)?.spending}
+                selectedYear={selectedYear}
+                setSelectedYear={setSelectedYear}
+                changeFullScreen={() =>
+                  fullScreen ? closeFullscreen() : openFullScreen()
+                }
+                selectedColumn={selectedColumn}
+                setSelectedColumn={setSelectedColumn}
+              />
+              <MapChart
+                data={scenarios.find(({ id }) => id === tab)?.data as any}
+                spending={scenarios.find(({ id }) => id === tab)?.spending}
+                settings={settings}
+                client={data}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

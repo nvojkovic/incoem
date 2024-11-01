@@ -9,6 +9,7 @@ export const newEmploymentIncome = (): any => ({
   startAge: null,
   firstYearProratePercent: 100,
   yearlyIncreasePercent: null,
+  yearlyIncrease: { type: "general" },
   retirementAgeYear: null,
   retirementAgeMonth: null,
 });
@@ -23,6 +24,7 @@ export const newSocialSecurityIncome = (
   stable: true,
   annualAmount: 0,
   cola: 0,
+  yearlyIncrease: { type: "general" },
   alreadyReceiving: false,
   pia: 0,
   calculationMethod: "pia",
@@ -40,6 +42,7 @@ export const newPensionIncome = (): any => ({
   survivorPercent: 100,
   personId: 0,
   yearlyIncreasePercent: null,
+  yearlyIncrease: { type: "general" },
   firstYearProRatePercent: 100,
   startAge: null,
 });
@@ -54,6 +57,7 @@ export const newBasicAnnuity = (): any => ({
   annualAmount: null,
   yearsOfDeferral: 0,
   yearlyIncreasePercent: null,
+  yearlyIncrease: { type: "general" },
   survivorPercent: null,
   firstYearProRatePercent: 100,
 });
@@ -69,6 +73,7 @@ export const otherIncome = (): any => ({
   endYear: null,
   frequency: "annually",
   yearlyIncreasePercent: null,
+  yearlyIncrease: { type: "general" },
   survivorPercent: 100,
   firstYearProRatePercent: 100,
   name: "",

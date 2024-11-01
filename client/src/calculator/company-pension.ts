@@ -1,5 +1,5 @@
 import { splitDate } from "../utils";
-import { adjustForInflation, isDead } from "./utils";
+import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<CompanyPension>) => {
   const { people, income, startYear, currentYear } = info;
@@ -7,12 +7,14 @@ export const calculate = (info: CalculationInfo<CompanyPension>) => {
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
   const start = income.startAge ? income.startAge + birthYear : startYear;
-  let yearAmount =
-    income.annualAmount *
-    Math.pow(
-      1 + (income.yearlyIncreasePercent || 0) / 100,
-      currentYear - start,
-    );
+  // let yearAmount =
+  //   income.annualAmount *
+  //   Math.pow(
+  //     1 + (income.yearlyIncreasePercent || 0) / 100,
+  //     currentYear - start,
+  //   );
+
+  let yearAmount = adjustForIncrease(info, income.annualAmount, start);
 
   yearAmount = adjustForInflation(info, yearAmount, start);
 

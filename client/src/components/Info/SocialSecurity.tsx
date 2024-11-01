@@ -2,6 +2,7 @@ import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import MonthPicker from "../Inputs/MonthPicker";
 import { calculateAge } from "./PersonInfo";
+import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
 
 interface Props {
   income: SocialSecurityIncome;
@@ -66,13 +67,13 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                   }
                 />
               )}
-              <Input
-                label="COLA"
-                subtype="percent"
-                size="lg"
-                tooltip="Cost of Living Adjustment"
-                value={pension.cola}
-                setValue={(name) => setIncome({ ...pension, cola: name })}
+              <IncomeYearlyIncrease
+                labels={false}
+                customLabel="COLA"
+                increase={pension.yearlyIncrease}
+                setYearlyIncrease={(yearlyIncrease) =>
+                  setIncome({ ...pension, yearlyIncrease })
+                }
               />
 
               {pension.calculationMethod === "manual" && (

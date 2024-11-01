@@ -70,7 +70,7 @@ const NewClient = () => {
     setPeople([newPerson(0)]);
     setStep(1);
     // await updateClients();
-    navigate(`/client/${js.data.id}`);
+    navigate(`/client/${js.data.id}/income`);
   };
   const cancel = () => {
     setNewOpen(false);

@@ -5,7 +5,6 @@ import BasicAnnuity from "./Info/BasicAnnuity";
 import Paydown from "./Info/Paydown";
 import OtherIncome from "./Info/OtherIncome";
 import SocialSecurity from "./Info/SocialSecurity";
-import Section from "./Section";
 import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Confirm from "./Confirm";
 import { useState } from "react";
@@ -27,6 +26,7 @@ import {
 import SortableItem from "./Sortable/SortableItem";
 import { useInfo } from "../useData";
 import Input from "./Inputs/Input";
+import Layout from "./Layout";
 
 interface Props {
   defaultOpen?: boolean;
@@ -120,92 +120,97 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
     }
   };
   return (
-    <MapSection
-      toggleabble={false}
-      title={
-        <div className="flex gap-6 items-center w-full justify-between">
-          <div>Income information</div>
-          <div className="w-36 mr">
-            <AddIncome />
+    <Layout page="data">
+      <MapSection
+        toggleabble={false}
+        title={
+          <div className="flex gap-6 items-center w-full justify-between">
+            <div>Income information</div>
+            <div className="w-36 mr">
+              <AddIncome />
+            </div>
           </div>
-        </div>
-      }
-      defaultOpen={defaultOpen}
-    >
-      <div className="grid grid-cols-3 gap-4">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext items={incomes} strategy={rectSortingStrategy}>
-            {incomes.map((item, i) => (
-              <SortableItem key={item.id} id={item.id}>
-                <div style={item.enabled ? {} : { filter: "opacity(50%)" }}>
-                  <Section>
-                    <div className="flex items-center mb-6 pb-4  border-b">
-                      <div className="flex justify-start cursor-pointer mr-2">
-                        <EllipsisVerticalIcon className="text-slate-800 w-5 mr-[-15px]" />
-                        <EllipsisVerticalIcon className="text-slate-800 w-5 mr-[-15px]" />
-                        <EllipsisVerticalIcon className="text-slate-800 w-5 " />
-                      </div>
-                      <div className="font-semibold text  flex justify-between items-center flex-grow">
-                        <div>{title(incomes, people, i)}</div>
-                        <div className="flex items-center gap-3">
-                          <Toggle
-                            enabled={item.enabled}
-                            setEnabled={(enabled) =>
-                              setIncome(i, { ...item, enabled })
-                            }
-                          />
-                          <div
-                            className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
-                            onClick={() => setRemoveOpen(i)}
-                          >
-                            <TrashIcon className="text-red-500 w-5" />
-                          </div>
+        }
+        defaultOpen={defaultOpen}
+      >
+        <div className="grid grid-cols-3 gap-4">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={incomes} strategy={rectSortingStrategy}>
+              {incomes.map((item, i) => (
+                <SortableItem key={item.id} id={item.id}>
+                  <div
+                    style={item.enabled ? {} : { filter: "opacity(50%)" }}
+                    className="shadow-md h-full rounded-xl bg-white"
+                  >
+                    <div className="p-6 flex-grow">
+                      <div className="flex items-center mb-6 pb-4  border-b">
+                        <div className="flex justify-start cursor-pointer mr-2">
+                          <EllipsisVerticalIcon className="text-slate-800 w-5 mr-[-15px]" />
+                          <EllipsisVerticalIcon className="text-slate-800 w-5 mr-[-15px]" />
+                          <EllipsisVerticalIcon className="text-slate-800 w-5 " />
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div className="">
-                        <IncomeComponent income={item} i={i} />
-                        {data.stabilityRatioFlag && (
-                          <div className="mt-3">
-                            <Input
-                              label="Stable Income"
-                              subtype="toggle"
-                              size="lg"
-                              value={item.stable}
-                              setValue={(stable) =>
-                                setIncome(i, { ...item, stable })
+                        <div className="font-semibold text  flex justify-between items-center flex-grow">
+                          <div>{title(incomes, people, i)}</div>
+                          <div className="flex items-center gap-3">
+                            <Toggle
+                              enabled={item.enabled}
+                              setEnabled={(enabled) =>
+                                setIncome(i, { ...item, enabled })
                               }
                             />
+                            <div
+                              className="bg-[rgba(240,82,82,0.1)] p-3 rounded-full cursor-pointer"
+                              onClick={() => setRemoveOpen(i)}
+                            >
+                              <TrashIcon className="text-red-500 w-5" />
+                            </div>
                           </div>
-                        )}
-                      </div>
-                      <Confirm
-                        isOpen={removeOpen == i}
-                        onClose={() => setRemoveOpen(-1)}
-                        onConfirm={() => {
-                          removeIncome(i);
-                          setRemoveOpen(-1);
-                        }}
-                      >
-                        <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
-                        <div className="mb-5">
-                          Are you sure you want to delete this income?
                         </div>
-                      </Confirm>
+                      </div>
+                      <div className="flex justify-between">
+                        <div className="">
+                          <IncomeComponent income={item} i={i} />
+                          {data.stabilityRatioFlag && (
+                            <div className="mt-3">
+                              <Input
+                                label="Stable Income"
+                                subtype="toggle"
+                                size="lg"
+                                value={item.stable}
+                                setValue={(stable) =>
+                                  setIncome(i, { ...item, stable })
+                                }
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <Confirm
+                          isOpen={removeOpen == i}
+                          onClose={() => setRemoveOpen(-1)}
+                          onConfirm={() => {
+                            removeIncome(i);
+                            setRemoveOpen(-1);
+                          }}
+                        >
+                          <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                          <div className="mb-5">
+                            Are you sure you want to delete this income?
+                          </div>
+                        </Confirm>
+                      </div>
                     </div>
-                  </Section>
-                </div>
-              </SortableItem>
-            ))}
-          </SortableContext>
-        </DndContext>
-      </div>
-    </MapSection>
+                  </div>
+                </SortableItem>
+              ))}
+            </SortableContext>
+          </DndContext>
+        </div>
+      </MapSection>
+    </Layout>
   );
 };
 

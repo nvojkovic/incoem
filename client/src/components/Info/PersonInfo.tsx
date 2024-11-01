@@ -1,6 +1,5 @@
 import { useInfo } from "../../useData";
 import Input from "../Inputs/Input";
-import Section from "../Section";
 
 interface Props {
   title: string;
@@ -17,9 +16,9 @@ export function calculateAge(birthday: Date) {
 const PersonInfo = ({ title, person }: Props) => {
   const { setPerson } = useInfo();
   return (
-    <Section>
+    <div className="shadow-md w-full bg-white p-6 rounded-lg">
       <div className="">
-        <div className="flex flex-col pb-6 border-b border-[#EAECF0]">
+        <div className="flex flex-col pb-6 border-b border-[#EAECF0] ">
           <div className="font-semibold text-lg">{title}</div>
         </div>
         <div className="flex flex-col gap-4 mt-6">
@@ -47,7 +46,7 @@ const PersonInfo = ({ title, person }: Props) => {
           />
         </div>
       </div>
-    </Section>
+    </div>
   );
 };
 
@@ -64,9 +63,10 @@ export const PeopleInfo = () => {
           person={person}
         />
       ))}
-      <Section>
-        <div className="">
-          <div className="flex flex-col pb-6 border-b border-[#EAECF0]">
+
+      <div className="shadow-md w-full bg-white p-6 rounded-lg">
+        <div className="h-full">
+          <div className="flex flex-col pb-6 border-b border-[#EAECF0] ">
             <div className="font-semibold text-lg">Household</div>
           </div>
           <div className="flex flex-col gap-4 mt-6">
@@ -79,7 +79,7 @@ export const PeopleInfo = () => {
             />
           </div>
         </div>
-      </Section>
+      </div>
     </div>
   );
 };

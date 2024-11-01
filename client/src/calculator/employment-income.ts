@@ -1,5 +1,5 @@
 import { splitDate } from "../utils";
-import { adjustForInflation, isDead } from "./utils";
+import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   const { people, income, startYear, currentYear } = {
@@ -20,12 +20,19 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
     return 0;
   }
 
-  let baseAmount =
-    income.annualIncome *
-    Math.pow(
-      1 + (income.yearlyIncreasePercent || 0) / 100,
-      Math.min(age - income.startAge, currentYear - startYear),
-    );
+  // let baseAmount =
+  //   income.annualIncome *
+  //   Math.pow(
+  //     1 + (income.yearlyIncreasePercent || 0) / 100,
+  //     Math.min(age - income.startAge, currentYear - startYear),
+  //   );
+
+  let baseAmount = adjustForIncrease(
+    info,
+    income.annualIncome,
+
+    Math.min(birthYear + income.startAge),
+  );
 
   baseAmount = adjustForInflation(info, baseAmount, startYear);
 

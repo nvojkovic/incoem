@@ -13,8 +13,8 @@ const ClientOverview = ({
 }) => {
   const [deleteOpen, setDeleteOpen] = useState(false);
   return (
-    <NavLink to={`/client/${client.id}`}>
-      <div className="border rounded-xl  border-[#EAECF0] flex-grow w-full">
+    <NavLink to={`/client/${client.id}/income`}>
+      <div className="border rounded-xl  border-[#EAECF0] flex-grow w-full bg-white">
         <div className="flex flex-col p-6 gap-4">
           <div className="flex justify-between">
             <div className="flex gap-4">

@@ -1,6 +1,7 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import MonthPicker from "../Inputs/MonthPicker";
+import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
 
 interface Props {
   income: EmploymentIncome;
@@ -43,6 +44,13 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
           setIncome({ ...income, yearlyIncreasePercent: name })
         }
         tooltip="The percentage increase in income each year."
+      />
+      <IncomeYearlyIncrease
+        labels={false}
+        increase={income.yearlyIncrease}
+        setYearlyIncrease={(yearlyIncrease) =>
+          setIncome({ ...income, yearlyIncrease })
+        }
       />
       <Input
         label="Start Age"

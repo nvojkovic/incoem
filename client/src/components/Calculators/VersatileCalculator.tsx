@@ -6,6 +6,9 @@ import { printNumber as printNumberOld } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
 import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useInfo } from "../../useData";
+import Layout from "../Layout";
+import { Link } from "react-router-dom";
 
 const printNumber = (s: number) =>
   s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
@@ -21,23 +24,13 @@ interface CalculationRow {
   endingBalance: number;
 }
 
-const VersatileCalculator: React.FC<any> = ({
-  data: settings,
-  setData: setSettings,
-  back,
-}: {
-  data: typeof initialVersatileSettings;
-  setData: React.Dispatch<
-    React.SetStateAction<typeof initialVersatileSettings>
-  >;
-  back: any;
-}) => {
+const VersatileCalculator: React.FC = () => {
+  const { data: client, setField } = useInfo();
+  const settings = client.versatileCalculator;
+  console.log("calc", settings);
   const [openYears, setOpenYears] = useState(false);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
-  // const [settings, setSettings] = useState<CalculatorSettings>(
-  //   initialVersatileSettings,
-  // );
   const [calculations, setCalculations] = useState<CalculationRow[]>([]);
 
   useEffect(() => {
@@ -50,13 +43,13 @@ const VersatileCalculator: React.FC<any> = ({
     field: string,
     value: number | string,
   ) => {
-    setSettings((prevSettings) => ({
-      ...prevSettings,
+    setField("versatileCalculator")({
+      ...settings,
       [category]: {
-        ...prevSettings[category],
+        ...settings[category],
         [field]: value,
       },
-    }));
+    });
   };
 
   const calculateProjection = (settings: CalculatorSettings) => {
@@ -117,10 +110,10 @@ const VersatileCalculator: React.FC<any> = ({
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
       testSettings.other.rateOfReturn = mid;
-      setSettings((prevSettings) => ({
-        ...prevSettings,
-        other: { ...prevSettings.other, rateOfReturn: mid },
-      }));
+      setField("versatileCalculator")({
+        ...settings,
+        other: { ...settings.other, rateOfReturn: mid },
+      });
       const calculations = calculateProjection(testSettings);
 
       const lastRow = calculations[calculations.length - 1];
@@ -138,7 +131,7 @@ const VersatileCalculator: React.FC<any> = ({
 
       iteration++;
     }
-    setSettings({
+    setField("versatileCalculator")({
       ...settings,
       other: {
         ...settings.other,
@@ -148,19 +141,31 @@ const VersatileCalculator: React.FC<any> = ({
   };
 
   return (
-    <>
+    <Layout page="calculator">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex gap-3 items-center mb-8">
-          <div
-            className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer"
-            onClick={back}
-          >
-            <ArrowLeftIcon className="h-5 text-gray-500" />
+        <div className="flex gap-3 items-center mb-8 justify-between">
+          <div className="flex gap-3 items-baseline">
+            <Link to={`/client/${client.id}/calculator`}>
+              <div className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer">
+                <ArrowLeftIcon className="h-5 text-gray-500" />
+              </div>
+            </Link>
+            <h1 className="text-3xl font-bold">Versatile Calculator</h1>
           </div>
-          <h1 className="text-3xl font-bold">Versatile Calculator</h1>
+          <div className="w-40">
+            <Button
+              type="secondary"
+              onClick={() => {
+                console.log("setting to", initialVersatileSettings.other);
+                setField("versatileCalculator")(initialVersatileSettings);
+              }}
+            >
+              Reset
+            </Button>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="flex flex-col gap-4 border p-4 rounded-lg">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">User Settings</h2>
             </div>
@@ -194,18 +199,18 @@ const VersatileCalculator: React.FC<any> = ({
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 border p-4 rounded-lg">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
             <div className="flex gap-7 justify-between items-center mb-[16px]">
               <h2 className="text-xl font-semibold">Payment</h2>
               <div className="flex w-60 text-sm">
                 <div
-                  className={`w-full text-center py-1 ${settings.payment.type === "simple" ? "bg-orange-200" : ""} cursor-pointer rounded-md`}
+                  className={`w-full text-center py-1 ${settings.payment.type === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
                   onClick={() => updateSettings("payment", "type", "simple")}
                 >
                   Simple
                 </div>
                 <div
-                  className={`w-full text-center py-1 ${settings.payment.type === "detailed" ? "bg-orange-200" : ""} cursor-pointer rounded-md`}
+                  className={`w-full text-center py-1 ${settings.payment.type === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
                   onClick={() => updateSettings("payment", "type", "detailed")}
                 >
                   Detailed
@@ -273,7 +278,7 @@ const VersatileCalculator: React.FC<any> = ({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-4 border p-4 rounded-lg">
+          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
             </div>
@@ -314,54 +319,49 @@ const VersatileCalculator: React.FC<any> = ({
             </div>
           </div>
         </div>
-        <div className="flex justify-between w-full mb-10">
-          <div className="flex gap-12">
-            <Input
-              label="Ending Balance"
-              labelLength={110}
-              value={printNumber(
+        <div className="flex w-full mb-10 gap-5 justify-center">
+          <div className="flex flex-col justify-center">
+            <div className="uppercase tracking-wide text-sm w-36 text-gray-800">
+              Ending Balance
+            </div>
+            <div className="font-semibold text-lg mt-[2px]">
+              {printNumber(
                 calculations.length &&
-                calculations[calculations.length - 1].endingBalance,
+                  calculations[calculations.length - 1].endingBalance,
               )}
-              size="md"
-              disabled
-              subtype="text"
-              setValue={() => { }}
-            />
-            <Input
-              label="Total Payments"
-              size="lg"
-              labelLength={105}
-              value={printNumber(
+            </div>
+          </div>
+          <div>
+            <div className="uppercase tracking-wide text-sm w-36 text-gray-800">
+              Total Payments
+            </div>
+            <div className="font-semibold text-lg mt-[2px]">
+              {printNumber(
                 Math.abs(
                   calculations
                     .map((i) => i.totalPayments)
                     .reduce((a, b) => a + b, 0),
                 ),
-              )}
-              disabled
-              subtype="text"
-              setValue={() => { }}
-            />
-          </div>
-          <div className="w-40">
-            <Button
-              type="secondary"
-              onClick={() => {
-                console.log("setting to", initialVersatileSettings.other);
-                setSettings(initialVersatileSettings);
-              }}
-            >
-              Reset
-            </Button>
+              )}{" "}
+            </div>
           </div>
         </div>
         <div className="">
-          <table className="text-sm w-full ">
+          <table className="text-sm w-full bg-white shadow-lg">
             <thead
               className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[72px] rounded-none !border-none`}
             >
               <tr>
+                <th
+                  className="px-4 py-2 !rounded-none"
+                  onClick={() =>
+                    selectedCol === "year"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("year")
+                  }
+                >
+                  Year
+                </th>
                 <th
                   className="px-4 py-2 !rounded-none"
                   onClick={() =>
@@ -370,7 +370,7 @@ const VersatileCalculator: React.FC<any> = ({
                       : setSelectedCol("age")
                   }
                 >
-                  Age/Year
+                  Age
                 </th>
                 <th
                   className="px-4 py-2"
@@ -440,12 +440,23 @@ const VersatileCalculator: React.FC<any> = ({
                   key={index}
                   className={` ${selectedRow === index ? "bg-slate-200" : "hover:bg-slate-100"}`}
                 >
+                  {" "}
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "year" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
+                    {row.year}
+                  </td>
                   <td
                     className={`border px-4 py-2 ${selectedCol === "age" ? "bg-slate-200" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
-                  >{`${row.age}/${row.year}`}</td>
+                  >
+                    {row.age}
+                  </td>
                   <td
                     className={`border px-4 py-2 ${selectedCol === "beginning" ? "bg-slate-200" : ""}`}
                     onClick={() =>
@@ -462,7 +473,6 @@ const VersatileCalculator: React.FC<any> = ({
                   >
                     {printNumber(row.totalPayments)}
                   </td>
-
                   <td
                     className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""}`}
                     onClick={() =>
@@ -471,7 +481,6 @@ const VersatileCalculator: React.FC<any> = ({
                   >
                     {printNumber(row.return)}
                   </td>
-
                   <td
                     className={`border px-4 py-2 ${selectedCol === "growth" ? "bg-slate-200" : ""}`}
                     onClick={() =>
@@ -538,8 +547,8 @@ const VersatileCalculator: React.FC<any> = ({
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                settings.payment.startYear +
-                                1,
+                                  settings.payment.startYear +
+                                  1,
                               ),
                             ).keys(),
                           ].map((k) => {
@@ -561,7 +570,7 @@ const VersatileCalculator: React.FC<any> = ({
           </div>
         </div>
       </Modal>
-    </>
+    </Layout>
   );
 };
 

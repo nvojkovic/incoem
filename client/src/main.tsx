@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Calculator from "./Calculator";
 import Clients from "./Clients";
 import "./supertokens";
 import Login from "./pages/login";
@@ -23,6 +22,13 @@ import HelpCenter from "./pages/help";
 import ResetPassword from "./pages/reset-password";
 import ResetPasswordConfirm from "./pages/reset-password-confirm";
 import VersatileCalculator from "./components/Calculators/VersatileCalculator";
+import ClientContainer from "./components/ClientContainer";
+import IncomeSection from "./components/IncomeSection";
+import Summary from "./components/Summary";
+import CalculatorMap from "./components/Calculators/CalculatorMap";
+import SpendingPage from "./components/Spending/SpendingPage";
+import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
+import ClientOverview from "./components/ClientOverview";
 
 SuperTokens.init({
   appInfo: {
@@ -46,23 +52,41 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Clients /> },
       {
-        path: "/calculator",
-        element: <Calculator />,
-      },
-
-      {
         path: "/clients",
         element: <Clients />,
       },
-
       {
         path: "/client/:id",
-        element: <Calculator />,
+        element: <ClientContainer />,
+        children: [
+          { path: "income", element: <IncomeSection defaultOpen={true} /> },
+          {
+            path: "calculator/versatile",
+            element: <VersatileCalculator />,
+          },
+          {
+            path: "calculator/all-in-one",
+            element: <AllInOneCalculator />,
+          },
+          {
+            path: "needs",
+            element: <SpendingPage />,
+          },
+          {
+            path: "map",
+            element: <Summary />,
+          },
+          {
+            path: "basic",
+            element: <ClientOverview />,
+          },
+          {
+            path: "calculator",
+            element: <CalculatorMap />,
+          },
+        ],
       },
-      {
-        path: "/client/:id/calculator/versatile",
-        element: <VersatileCalculator />,
-      },
+
       {
         path: "/profile",
         element: <Settings />,

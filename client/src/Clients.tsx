@@ -8,7 +8,7 @@ import Input from "./components/Inputs/Input";
 import { useUser } from "./useUser";
 
 const Clients = () => {
-  const { } = useUser();
+  const {} = useUser();
   const [clients, setClients] = useState<Client[]>(null as any);
 
   const fetchClients = () => {
@@ -28,7 +28,7 @@ const Clients = () => {
   };
 
   return (
-    <Layout page="home" onTabChange={() => { }}>
+    <Layout page="home">
       <div className="flex justify-between px-10 items-center mb-10">
         <div className="font-semibold text-[30px]">Clients overview</div>
         <div className="flex h-10 gap-5">

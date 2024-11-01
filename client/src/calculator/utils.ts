@@ -22,6 +22,28 @@ export const adjustForInflation = (
     Math.pow(1 + (info.inflation || 0) / 100, info.currentYear - startYear)
   );
 };
+export const adjustForIncrease = (
+  info: CalculationInfo<
+    | BasicAnnuity
+    | EmploymentIncome
+    | SocialSecurityIncome
+    | CompanyPension
+    | OtherIncome
+  >,
+  amount: number,
+  startYear: number,
+) => {
+  // if (info.inflationType == "Nominal") return amount;
+  console.log(info.income.type);
+  const increase = info.income.yearlyIncrease;
+  let inflation = 0;
+  if (increase.type == "none") return amount;
+  else if (increase.type == "general") inflation = info.inflation || 0;
+  else if (increase.type === "custom") inflation = increase.percent || 0;
+  return (
+    amount * Math.pow(1 + (inflation || 0) / 100, info.currentYear - startYear)
+  );
+};
 
 export const adjustCompoundInterest = (
   amount: number,

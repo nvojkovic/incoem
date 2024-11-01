@@ -23,13 +23,14 @@ function Select({
 }: Props) {
   return (
     <div
-      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
-        } `}
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
+        vertical ? "items-start" : "lg:items-center"
+      } `}
     >
       {label && (
         <label
           htmlFor={label}
-          className={`text-sm text-[#344054] w-36 ${width}`}
+          className={`text-sm text-[#344054] w-36 `}
           style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
         >
           {label}
@@ -38,13 +39,13 @@ function Select({
       <div
         className={
           labelLength === 0
-            ? ` ${width ? width : "min-w-48"}`
+            ? ` ${width ? width : "min-w-[200px]"}`
             : `w-full ${width}`
         }
       >
         <Listbox value={selected} onChange={setSelected}>
           <div className="relative">
-            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[8px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD]">
+            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-[6px] pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD]">
               <span className="block truncate min-h-6 text-base">
                 {selected?.name}
               </span>
@@ -67,9 +68,10 @@ function Select({
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${active
-                          ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
-                          : "text-gray-900"
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${
+                          active
+                            ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
+                            : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -77,8 +79,9 @@ function Select({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${selected ? "font-medium" : "font-normal"
-                              }`}
+                            className={`block truncate ${
+                              selected ? "font-medium" : "font-normal"
+                            }`}
                           >
                             {person.name}
                           </span>

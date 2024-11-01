@@ -1,5 +1,6 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
+import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
 
 interface Props {
   annuity: OtherIncome;
@@ -71,14 +72,12 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           value={pension.endYear}
           setValue={(name) => setIncome({ ...pension, endYear: name })}
         />
-        <Input
-          label="Yearly Increase"
-          subtype="percent"
-          size="lg"
-          tooltip="Yearly increase in the income amount"
-          value={pension.yearlyIncreasePercent}
-          setValue={(name) =>
-            setIncome({ ...pension, yearlyIncreasePercent: name })
+
+        <IncomeYearlyIncrease
+          labels={false}
+          increase={pension.yearlyIncrease}
+          setYearlyIncrease={(yearlyIncrease) =>
+            setIncome({ ...pension, yearlyIncrease })
           }
         />
         {people.length > 1 && pension.personId != -1 && (

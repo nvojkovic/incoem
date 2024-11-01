@@ -28,9 +28,9 @@ const Settings = () => {
   };
 
   return (
-    <Layout page="settings" onTabChange={() => {}}>
+    <Layout page="settings">
       {settings ? (
-        <div className="px-10">
+        <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
           <MapSection title="Settings" defaultOpen>
             <div className="flex flex-col w-[500px] gap-6 m-auto">
               {user?.info?.logo && (
@@ -63,7 +63,7 @@ const Settings = () => {
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="primaryColor"
-                  className="text-sm text-[#344054]"
+                  className="text-sm text-[#344054] w-[132px]"
                 >
                   Primary Color
                 </label>
@@ -75,22 +75,26 @@ const Settings = () => {
                   className="w-10 h-10 rounded-md cursor-pointer"
                 />
               </div>
-              <Input
-                value={settings.stabilityRatioFlag}
-                setValue={(e) =>
-                  setSettings({ ...settings, stabilityRatioFlag: e })
-                }
-                label="Calculate Stability Ratio?"
-                size="full"
-                subtype="toggle"
-              />
-              <Input
-                value={settings.needsFlag}
-                setValue={(e) => setSettings({ ...settings, needsFlag: e })}
-                label="Needs"
-                size="full"
-                subtype="toggle"
-              />
+              <div className="w-32">
+                <Input
+                  value={settings.stabilityRatioFlag}
+                  setValue={(e) =>
+                    setSettings({ ...settings, stabilityRatioFlag: e })
+                  }
+                  label="Stability Ratio"
+                  size="full"
+                  subtype="toggle"
+                />
+              </div>
+              <div className="w-32">
+                <Input
+                  value={settings.needsFlag}
+                  setValue={(e) => setSettings({ ...settings, needsFlag: e })}
+                  label="Needs"
+                  size="full"
+                  subtype="toggle"
+                />
+              </div>
               <div className="flex gap-3">
                 <Tooltip
                   content={

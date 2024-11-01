@@ -15,14 +15,14 @@ interface Props {
   placeholder?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-  | "money"
-  | "percent"
-  | "text"
-  | "number"
-  | "date"
-  | "toggle"
-  | "password"
-  | "textarea";
+    | "money"
+    | "percent"
+    | "text"
+    | "number"
+    | "date"
+    | "toggle"
+    | "password"
+    | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
   setValue: (value: any) => void;
@@ -32,7 +32,7 @@ const calcSize = (s: any) => {
   if (s == "xs") return "w-20";
   if (s == "sm") return "w-28";
   if (s == "md") return "w-36";
-  if (s == "lg") return "w-48";
+  if (s == "lg") return "w-[200px]";
   if (s == "full") return "w-full";
 };
 const Input = ({
@@ -58,7 +58,7 @@ const Input = ({
     setInternalValue(value?.toString());
   }, [value]);
 
-  const basic = `focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 ${width}`;
+  const basic = `focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width}`;
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -176,7 +176,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-          // className="border-black border"
+            // className="border-black border"
           >
             <div className="relative cursor-pointer">
               <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />

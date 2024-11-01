@@ -16,7 +16,7 @@ export default {
       },
       colors: {
         "main-orange": "var(--primary-color)",
-        "main-orange-light": "var(--primary-color)",
+        "main-orange-light": "rgba(var(--primary-color-segment),0.1)",
       },
     },
     colors: {

@@ -3,7 +3,7 @@ import { helpUrl } from "../services/client";
 
 const HelpCenter = () => {
   return (
-    <Layout page="settings" onTabChange={() => {}}>
+    <Layout page="settings">
       <h1 className="font-bold text-3xl ml-10">Help Center</h1>
       <div className="w-full">
         <iframe

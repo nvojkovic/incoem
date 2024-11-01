@@ -9,11 +9,15 @@ const StackedAreaChart = ({
   spending,
   stability,
   needsFlag,
+  initialHeight = 500,
   maxY,
 }: any) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
-  const [dimensions, setDimensions] = useState({ width: 0, height: 500 });
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: initialHeight,
+  });
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
   // Custom color array (removed gray array)
@@ -38,7 +42,7 @@ const StackedAreaChart = ({
       for (let entry of entries) {
         setDimensions({
           width: entry.contentRect.width - 10,
-          height: 500,
+          height: initialHeight,
         });
       }
     });
@@ -121,12 +125,12 @@ const StackedAreaChart = ({
       .domain([
         0,
         maxY * 1.1 ||
-        Math.max(
-          (d3 as any).max(processedData as any, (d: any) => {
-            return d3.sum(keys, (key: any) => d[key]);
-          }),
-          lineData ? Math.max(...lineData) : 0,
-        ) * 1.1,
+          Math.max(
+            (d3 as any).max(processedData as any, (d: any) => {
+              return d3.sum(keys, (key: any) => d[key]);
+            }),
+            lineData ? Math.max(...lineData) : 0,
+          ) * 1.1,
       ])
       .range([height, 0]);
 
@@ -152,7 +156,7 @@ const StackedAreaChart = ({
       .x((d: any) => x(d.data.year))
       .y0((d) => y(d[0]))
       .y1((d) => y(d[1]))
-      .curve(d3.curveBumpX);
+      .curve(d3.curveMonotoneX);
 
     (mainG as any)
       .selectAll("path.area")
@@ -203,7 +207,7 @@ const StackedAreaChart = ({
       .line()
       .x((_, i) => x(years[i]))
       .y((d: any) => y(d))
-      .curve(d3.curveBumpX);
+      .curve(d3.curveMonotoneX);
 
     if (lineData && !spending)
       mainG
@@ -236,7 +240,7 @@ const StackedAreaChart = ({
       .call(
         d3
           .axisLeft(y)
-          .ticks(5)
+          .ticks(10)
           .tickFormat((d) => `$${d3.format(",")(d)}`),
       )
       .call((g) => g.select(".domain").attr("stroke", "#888"))
@@ -279,12 +283,12 @@ const StackedAreaChart = ({
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function(_: any, __: any) {
+    const mouseover = function (_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function(event: any, _: any) {
+    const mousemove = function (event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -306,6 +310,7 @@ const StackedAreaChart = ({
         } else {
           tooltipContent =
             keys
+              .filter((key: any) => selectedData[key])
               .map(
                 (key: any) =>
                   `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
@@ -390,7 +395,7 @@ const StackedAreaChart = ({
       }
     };
 
-    const mouseleave = function(_: any, __: any) {
+    const mouseleave = function (_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };
@@ -485,17 +490,20 @@ const StackedAreaChart = ({
   }, [dimensions, years, stackedData, lineData, hiddenSeries]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: "100%",
-        height: "450px",
-        position: "relative",
-        marginBottom: 100,
-        marginLeft: 15,
-      }}
-    >
-      <svg ref={svgRef}></svg>
+    <div className="bg-white">
+      <div
+        ref={containerRef}
+        style={{
+          width: "calc(100% - 20px)",
+          backgroundColor: "white",
+          height: `${initialHeight - 50}px`,
+          position: "relative",
+          marginBottom: 100,
+          marginLeft: 15,
+        }}
+      >
+        <svg ref={svgRef}></svg>
+      </div>
     </div>
   );
 };
@@ -514,6 +522,7 @@ StackedAreaChart.propTypes = {
   stability: PropTypes.bool.isRequired,
   needsFlag: PropTypes.bool.isRequired,
   maxY: PropTypes.number,
+  initialHeight: PropTypes.number,
 };
 
 export default StackedAreaChart;

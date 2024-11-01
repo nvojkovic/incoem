@@ -10,29 +10,28 @@ import { useInfo } from "../useData";
 const NavItem = ({
   name,
   active,
-  onClick,
+  link,
 }: {
   name: string;
   active: boolean;
-  onClick: any;
+  link: string;
 }) => {
   return (
-    <div
-      className={`cursor-pointer py-2 px-3 font-semibold rounded-md ${active ? "bg-main-orange text-white" : ""}`}
-      onClick={onClick}
-    >
-      {name}
-    </div>
+    <Link to={link}>
+      <div
+        className={`cursor-pointer py-2 px-3 font-semibold rounded-md ${active ? "bg-main-orange text-white" : ""}`}
+      >
+        {name}
+      </div>
+    </Link>
   );
 };
 
 const Navbar = ({
   active,
-  onTabChange,
   household,
 }: {
   active: string;
-  onTabChange: any;
   household?: string;
 }) => {
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ const Navbar = ({
   const { data } = useInfo();
 
   return (
-    <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40">
+    <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40 ">
       <div className=" flex justify-between items-center h bg-white w-full flex-1">
         <div className="flex items-center justify-start w-full flex-1">
           <Link to="/clients">
@@ -76,36 +75,35 @@ const Navbar = ({
               <NavItem
                 name="Income"
                 active={active == "data"}
-                onClick={() => onTabChange("data")}
+                link={`/client/${data.id}/income`}
               />
               {data.needsFlag && (
                 <NavItem
                   name="Needs"
                   active={active == "spending"}
-                  onClick={() => onTabChange("spending")}
+                  link={`/client/${data.id}/needs`}
                 />
               )}
               <NavItem
                 name="Map"
                 active={active == "map"}
-                onClick={() => onTabChange("map")}
+                link={`/client/${data.id}/map`}
               />
               <NavItem
                 name="Calculators"
                 active={active == "calculator"}
-                onClick={() => onTabChange("calculator")}
+                link={`/client/${data.id}/calculator`}
               />
             </div>
           ) : null}
         </div>
       </div>
       <div className="flex gap-6 items-center max-w-[400px]">
-        <div
-          className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange cursor-pointer"
-          onClick={() => onTabChange("basic")}
-        >
-          {household ? ` ${household}` : ""}
-        </div>
+        <Link to={`/client/${data.id}/basic`}>
+          <div className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange cursor-pointer">
+            {household ? ` ${household}` : ""}
+          </div>
+        </Link>
         <div className="">
           <Menu as="div" className="relative inline-block text-left">
             <div>

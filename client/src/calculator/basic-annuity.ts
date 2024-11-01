@@ -1,11 +1,9 @@
-import { adjustForInflation, isDead } from "./utils";
+import { adjustForInflation, adjustForIncrease, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<BasicAnnuity>) => {
   const { income, startYear, currentYear } = info;
   const start = startYear + income.yearsOfDeferral;
-  let yearAmount =
-    income.annualAmount *
-    Math.pow(1 + income.yearlyIncreasePercent / 100, currentYear - start);
+  let yearAmount = adjustForIncrease(info, income.annualAmount, start);
 
   if (currentYear < start) {
     return 0;

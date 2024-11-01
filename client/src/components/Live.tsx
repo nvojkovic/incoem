@@ -13,6 +13,7 @@ import { useRef, useState } from "react";
 import ModalInput from "./Inputs/ModalInput";
 import { Spinner } from "flowbite-react";
 import { MultiToggle } from "./Spending/SpendingPage";
+import MapChart from "./MapChart";
 const Live = ({
   data,
   settings,
@@ -49,10 +50,10 @@ const Live = ({
     let pdfFile;
     pdfFile = await fetch(
       import.meta.env.VITE_API_URL +
-      "print/client/pdf-live/" +
-      client.id +
-      "/?data=" +
-      JSON.stringify({ ...settings, data }),
+        "print/client/pdf-live/" +
+        client.id +
+        "/?data=" +
+        JSON.stringify({ ...settings, data }),
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -258,6 +259,12 @@ const Live = ({
         setSelectedColumn={setSelectedColumn}
         setSettings={setSettings}
         id={-1}
+        spending={spending}
+      />
+      <MapChart
+        data={data}
+        settings={settings}
+        client={client}
         spending={spending}
       />
     </div>

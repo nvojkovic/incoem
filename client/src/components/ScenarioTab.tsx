@@ -23,40 +23,46 @@ const ScenarioTab = ({
     store(x);
   };
   return (
-    <div
-      className={`${live ? "px-6" : "px-5"
-        } text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${active ? "border-main-orange text-main-orange" : "text-[#667085]"
-        } z-50`}
-      style={{
-        backgroundColor: active ? "rgba(var(--primary-color-segment),0.1)" : "",
-      }}
-      onClick={setActive}
-      onDoubleClick={() => !live && setEditing(true)}
-    >
-      <div className="flex gap-3">
-        {live && <ChartBarIcon className="h-5 w-5" />}
-        {editing ? (
-          <input
-            value={n}
-            onChange={(e) => setN(e.target.value)}
-            autoFocus
-            className="focus:outline-none focus:border-transparent focus:ring-1 focus:ring-transparent rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 bg-transparent"
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                e.preventDefault();
-                finish(name);
-              }
-              if (e.key === "Enter") {
+    <div className={active ? "bg-white" : "bg-[#f8f8f8]"}>
+      <div
+        className={`${
+          live ? "px-6" : "px-5"
+        } text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
+          active ? "border-main-orange text-main-orange " : "text-[#667085]"
+        } z-50 w-full`}
+        style={{
+          backgroundColor: active
+            ? "rgba(var(--primary-color-segment),0.1)"
+            : "",
+        }}
+        onClick={setActive}
+        onDoubleClick={() => !live && setEditing(true)}
+      >
+        <div className="flex gap-3">
+          {live && <ChartBarIcon className="h-5 w-5" />}
+          {editing ? (
+            <input
+              value={n}
+              onChange={(e) => setN(e.target.value)}
+              autoFocus
+              className="focus:outline-none focus:border-transparent focus:ring-1 focus:ring-transparent rounded-lg border border-[#D0D5DD] px-3 py-2 disabled:bg-gray-100 bg-transparent"
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  finish(name);
+                }
+                if (e.key === "Enter") {
+                  finish(n);
+                }
+              }}
+              onBlur={() => {
                 finish(n);
-              }
-            }}
-            onBlur={() => {
-              finish(n);
-            }}
-          />
-        ) : (
-          name
-        )}
+              }}
+            />
+          ) : (
+            name
+          )}
+        </div>
       </div>
     </div>
   );

@@ -37,6 +37,7 @@ interface EmploymentIncome extends Income {
   firstYearProratePercent: number;
   annualIncome: number;
   yearlyIncreasePercent: number;
+  yearlyIncrease: YearlyIncrease;
   retirementAgeYear: number;
   retirementAgeMonth: number;
 }
@@ -48,6 +49,7 @@ interface SocialSecurityIncome extends Income {
   annualAmount: number;
   alreadyReceiving: boolean;
   cola: number;
+  yearlyIncrease: YearlyIncrease;
   startAgeYear: number;
   startAgeMonth: number;
 }
@@ -59,6 +61,7 @@ interface CompanyPension extends Income {
   annualAmount: number;
   survivorPercent: number;
   yearlyIncreasePercent: number;
+  yearlyIncrease: YearlyIncrease;
   startAge?: number | null;
   firstYearProRatePercent: number;
 }
@@ -70,6 +73,7 @@ interface BasicAnnuity extends Income {
   annualAmount: number;
   yearsOfDeferral: number;
   yearlyIncreasePercent: number;
+  yearlyIncrease: YearlyIncrease;
   survivorPercent: number;
   firstYearProRatePercent: number;
 }
@@ -83,6 +87,7 @@ interface OtherIncome extends Income {
   startYear: number;
   endYear: number;
   yearlyIncreasePercent: number;
+  yearlyIncrease: YearlyIncrease;
   survivorPercent: number;
   firstYearProRatePercent: number;
 }
@@ -118,8 +123,12 @@ interface Client {
   data: IncomeMapData;
   spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
+  calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  allInOneCalculator: any[];
+  versatileCalculator: any;
+  liveSettings: ScenarioSettings;
 }
 
 interface ScenarioSettings {
@@ -129,6 +138,7 @@ interface ScenarioSettings {
   deathYears: (number | null)[];
   ssSurvivorAge: (number | null)[];
   inflation: number;
+  taxType: "Pre-Tax" | "Post-Tax";
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;

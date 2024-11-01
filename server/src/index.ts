@@ -31,9 +31,10 @@ const port = 3000;
 let app = express();
 
 app.use(express.json());
+
 app.use(
   cors({
-    origin: process.env.APP_URL,
+    origin: true,
     allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
     methods: ["GET", "POST", "DELETE", "OPTIONS"],
     credentials: true,

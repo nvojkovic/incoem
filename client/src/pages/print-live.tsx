@@ -16,7 +16,11 @@ const PrintLivePage = () => {
       });
   }, [id]);
 
-  const scenario = JSON.parse(searchParams.get("data") || "null");
+  const scenario = {
+    ...client.liveSettings,
+    data: client.data,
+    spending: client.spending,
+  }; //JSON.parse(searchParams.get("data") || "null");
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
   scenario.name = "Live";

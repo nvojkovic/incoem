@@ -2,6 +2,7 @@ import { printNumber, splitDate } from "../utils";
 import { calculateEmploymentIncome } from "./employment-income";
 import {
   adjustCompoundInterest,
+  adjustForIncrease,
   adjustForInflation,
   birthday,
   isDead,
@@ -122,12 +123,12 @@ export const calculateOwnSocialSecurity = (
   if (!income.alreadyReceiving && income.startAgeYear > age) return 0;
 
   // calculate reduction
-  const years =
-    info.currentYear -
-    (income.alreadyReceiving
-      ? info.startYear
-      : income.startAgeYear + birthYear);
-  ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
+  // const years =
+  //   info.currentYear -
+  //   (income.alreadyReceiving
+  //     ? info.startYear
+  //     : income.startAgeYear + birthYear);
+  ownAmount = adjustForIncrease(info, ownAmount, info.startYear);
   ownAmount = adjustForInflation(info, ownAmount, info.startYear);
   return ownAmount;
 };

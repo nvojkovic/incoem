@@ -36,14 +36,27 @@ app.get("/", async (req, res) => {
   console.log("waiting");
   await new Promise((r) => setTimeout(r, 1000));
   console.log("done waiting");
+
+  const header = await page.evaluate(() => {
+    const headerElement = document.getElementById("print-header");
+    if (!headerElement) return "";
+    return headerElement.innerHTML;
+  });
+  console.log("header", header);
   const pdf = await page.pdf({
     format: "letter",
     landscape: true,
     printBackground: true,
+    headerTemplate: header,
+    displayHeaderFooter: true,
     margin: {
       bottom: "30px",
-      top: "30px",
+      top: "60px",
     },
+  });
+
+  await page.addStyleTag({
+    content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
   });
   await browser.close();
   res.contentType("application/pdf");

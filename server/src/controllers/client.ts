@@ -48,8 +48,8 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
   const url =
     process.env.PRINTER_URL +
     "/?url=" +
-    process.env.APP_URL +
-    // "http://im-client:5173" +
+    // process.env.APP_URL +
+    "http://im-client:5173" +
     "/print/" +
     req.params.id +
     "/" +
@@ -65,21 +65,29 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
   const url =
     process.env.PRINTER_URL +
     "/?url=" +
-    process.env.APP_URL +
+    // process.env.APP_URL +
+    "http://im-client:5173" +
     "/print-live/" +
-    req.params.id +
-    "/?data=" +
-    req.query.data;
+    req.params.id;
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
-  const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
+  const file = `/storage/${req.params.id}-live.pdf`;
   fs.writeFileSync(file, Buffer.from(data));
   return res.json({ file });
 };
 
 export const updateClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  let { data, title, spending, stabilityRatioFlag, needsFlag } = req.body;
+  let {
+    data,
+    title,
+    spending,
+    stabilityRatioFlag,
+    needsFlag,
+    versatileCalculator,
+    allInOneCalculator,
+    liveSettings,
+  } = req.body;
   let id = parseInt(req.params.id);
   const client = await prisma.client.update({
     where: {
@@ -92,6 +100,9 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
       spending,
       needsFlag,
       stabilityRatioFlag,
+      allInOneCalculator,
+      versatileCalculator,
+      liveSettings,
     },
   });
   res.json(client);

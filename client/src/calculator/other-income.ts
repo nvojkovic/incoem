@@ -1,4 +1,4 @@
-import { adjustForInflation, isDead } from "./utils";
+import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<OtherIncome>) => {
   const { income, currentYear } = info;
@@ -12,9 +12,11 @@ export const calculate = (info: CalculationInfo<OtherIncome>) => {
     return 0;
   }
 
-  let yearAmount =
-    income.amount *
-    (1 + income.yearlyIncreasePercent / 100) ** (current - startYear);
+  // let yearAmount =
+  //   income.amount *
+  //   (1 + income.yearlyIncreasePercent / 100) ** (current - startYear);
+  //
+  let yearAmount = adjustForIncrease(info, income.amount, startYear);
 
   yearAmount = adjustForInflation(info, yearAmount, info.startYear);
 
