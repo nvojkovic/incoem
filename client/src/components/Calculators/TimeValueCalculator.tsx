@@ -91,7 +91,7 @@ const TimeValueCalculator: React.FC<any> = ({
       return (
         presentValue * Math.pow(1 + rate / n, n * t) +
         (annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1)) /
-          (rate / n)
+        (rate / n)
       );
     };
 
@@ -106,7 +106,7 @@ const TimeValueCalculator: React.FC<any> = ({
           (annualPayment *
             paymentFactor *
             (Math.pow(1 + rate / n, n * t) - 1)) /
-            ((rate / n) * Math.pow(1 + rate / n, n * t))
+          ((rate / n) * Math.pow(1 + rate / n, n * t))
         );
       case "Interest Rate":
         // Bisection method to find interest rate
@@ -324,21 +324,19 @@ const TimeValueCalculator: React.FC<any> = ({
               <label className="text-sm text-[#344054] w-36 ">Compunding</label>
               <div className="flex gap-2 mt-[6px]">
                 <button
-                  className={`flex-1 py-[6px] px-4 rounded ${
-                    data.compounding === "Annual"
+                  className={`flex-1 py-[6px] px-4 rounded ${data.compounding === "Annual"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                  } text-sm`}
+                    } text-sm`}
                   onClick={() => handleInputChange("compounding", "Annual")}
                 >
                   Annual
                 </button>
                 <button
-                  className={`flex-1 py-1 px-4 rounded ${
-                    data.compounding === "Monthly"
+                  className={`flex-1 py-1 px-4 rounded ${data.compounding === "Monthly"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                  } text-sm`}
+                    } text-sm`}
                   onClick={() => handleInputChange("compounding", "Monthly")}
                 >
                   Monthly
@@ -371,7 +369,11 @@ const TimeValueCalculator: React.FC<any> = ({
               case "Time Period":
                 return result.toFixed(2) + " years";
               default:
-                return formatter.format(result);
+                return (
+                  <span className={result < 0 ? "text-red-500" : ""}>
+                    formatter.format(result)
+                  </span>
+                );
             }
           })()}
         </div>
