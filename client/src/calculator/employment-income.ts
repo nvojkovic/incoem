@@ -31,7 +31,7 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
     info,
     income.annualIncome,
 
-    Math.min(birthYear + income.startAge),
+    Math.min(startYear, birthYear + income.startAge),
   );
 
   baseAmount = adjustForInflation(info, baseAmount, startYear);
