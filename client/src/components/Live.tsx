@@ -91,6 +91,17 @@ const Live = ({
                     <WhoDies
                       active={settings.whoDies == i}
                       key={person.id}
+                      age={settings.deathYears[i]}
+                      setAge={(e: any) =>
+                        setSettings({
+                          ...settings,
+                          deathYears: updateAtIndex(
+                            settings.deathYears,
+                            i,
+                            parseInt(e),
+                          ),
+                        })
+                      }
                       setWhoDies={(i: number) =>
                         setSettings({
                           ...settings,
@@ -98,7 +109,7 @@ const Live = ({
                         })
                       }
                       i={i}
-                      title={`${person.name} Dies`}
+                      title={`${person.name} Dies At`}
                     />
                   ))}
                 </div>
@@ -109,7 +120,7 @@ const Live = ({
             <div className="flex gap-5">
               {settings.data.people.length > 1 &&
                 settings.data.people.map((person, i) => (
-                  <div className="w-36" key={person.id}>
+                  <div className="w-36 hidden" key={person.id}>
                     <Input
                       subtype="number"
                       vertical

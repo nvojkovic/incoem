@@ -35,7 +35,11 @@ export const adjustForIncrease = (
 ) => {
   // if (info.inflationType == "Nominal") return amount;
   console.log(info.income.type);
-  const increase = info.income.yearlyIncrease;
+  const income = info.income as any;
+  const increase = info.income.yearlyIncrease || {
+    type: "custom",
+    percent: income.yearlyIncreasePercent || income.cola,
+  };
   let inflation = 0;
   if (increase.type == "none") return amount;
   else if (increase.type == "general") inflation = info.inflation || 0;

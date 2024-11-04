@@ -67,7 +67,12 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           )}
           <IncomeYearlyIncrease
             labels={false}
-            increase={pension.yearlyIncrease}
+            increase={
+              pension.yearlyIncrease || {
+                type: "custom",
+                percent: pension.yearlyIncreasePercent,
+              }
+            }
             setYearlyIncrease={(yearlyIncrease) =>
               setIncome({ ...pension, yearlyIncrease })
             }

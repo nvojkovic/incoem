@@ -21,7 +21,7 @@ export const calculateSpendingYear = (
   const years = year - 2024;
   let result = 0;
   const inflationRate = (inflation: any) => {
-    if (inflation.type == "none") return 0;
+    if (!inflation || inflation.type == "none") return 0;
     else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
     else if (inflation.type == "general") return settings.inflation / 100 || 0;
     else return -10e9;
@@ -30,22 +30,22 @@ export const calculateSpendingYear = (
     return amount * Math.pow(1 + inflation, years);
   };
   const pre = spending.preSpending
-    .filter((item) => year > item.endYear)
+    ?.filter((item) => year > item.endYear)
     .map((item) =>
       inflateAmount(item.amount || 0, inflationRate(item.increase)),
     )
     .reduce((a, b) => a + b, 0);
 
   const uninflatedPre = spending.preSpending
-    .map((item) => item.amount || 0)
+    ?.map((item) => item.amount || 0)
     .reduce((a, b) => a + b, 0);
   const inflatedPre = spending.preSpending
-    .map((item) =>
+    ?.map((item) =>
       inflateAmount(item.amount || 0, inflationRate(item.increase)),
     )
     .reduce((a, b) => a + b, 0);
   const post = spending.postSpending
-    .filter(
+    ?.filter(
       (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
     )
     .map((item) => {
@@ -201,9 +201,9 @@ const SpendingPage = () => {
               Add
             </Button>
           </div>
-          <table className=" w-full">
+          <table className=" w-full ">
             <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
+              className={`text-xs cursor-pointer  text-black font-medium text-left sticky z-50 border-1`}
             >
               <tr>
                 <th className="px-6 py-3">Category</th>
@@ -307,7 +307,7 @@ const SpendingPage = () => {
           </div>
           <table className=" w-full">
             <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
+              className={`text-xs cursor-pointer text-black font-medium text-left sticky z-50 border-1`}
             >
               <tr>
                 <th className="px-6 py-3">Category</th>
@@ -518,57 +518,59 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="flex gap-6 mb-10">
-            <div className="border rounded-lg p-3 bg-white">
-              <div className="flex gap-4">
-                <div className="w-[450px]">
-                  {data.data.people.length > 1 ? (
-                    <MultiToggle
-                      options={[
-                        "Both Alive",
-                        `${data.data.people[0].name} Dies`,
-                        `${data.data.people[1].name} Dies`,
-                      ]}
-                      label="Death settings"
-                      value={
-                        settings.whoDies == -1
-                          ? "Both Alive"
-                          : `${data.data.people[settings.whoDies].name} Dies`
-                      }
-                      setValue={(v: any) =>
-                        setSettings({
-                          ...settings,
-                          whoDies:
-                            v == "Both Alive"
-                              ? -1
-                              : data.data.people.findIndex((p) =>
-                                v.includes(p.name),
-                              ),
-                        })
-                      }
-                    />
-                  ) : null}
-                </div>
-                {data.data.people.map((person, ind) => (
-                  <div>
-                    <Input
-                      label={`${person.name}'s Death`}
-                      setValue={(x) =>
-                        setSettings({
-                          ...settings,
-                          deathYears: settings.deathYears.map(
-                            (v: any, i: any) => (ind == i ? x : v),
-                          ),
-                        })
-                      }
-                      value={settings.deathYears[ind]}
-                      subtype="number"
-                      vertical
-                      size="md"
-                    />
+            {data.data.people.length > 1 ? (
+              <div className="border rounded-lg p-3 bg-white">
+                <div className="flex gap-4">
+                  <div className="w-[450px]">
+                    {data.data.people.length > 1 ? (
+                      <MultiToggle
+                        options={[
+                          "Both Alive",
+                          `${data.data.people[0].name} Dies`,
+                          `${data.data.people[1].name} Dies`,
+                        ]}
+                        label="Death settings"
+                        value={
+                          settings.whoDies == -1
+                            ? "Both Alive"
+                            : `${data.data.people[settings.whoDies].name} Dies`
+                        }
+                        setValue={(v: any) =>
+                          setSettings({
+                            ...settings,
+                            whoDies:
+                              v == "Both Alive"
+                                ? -1
+                                : data.data.people.findIndex((p) =>
+                                  v.includes(p.name),
+                                ),
+                          })
+                        }
+                      />
+                    ) : null}
                   </div>
-                ))}
+                  {data.data.people.map((person, ind) => (
+                    <div>
+                      <Input
+                        label={`${person.name}'s Death`}
+                        setValue={(x) =>
+                          setSettings({
+                            ...settings,
+                            deathYears: settings.deathYears.map(
+                              (v: any, i: any) => (ind == i ? x : v),
+                            ),
+                          })
+                        }
+                        value={settings.deathYears[ind]}
+                        subtype="number"
+                        vertical
+                        size="md"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
             <div className="border rounded-lg p-3 bg-white">
               <Input
                 label="Years Shown"
@@ -582,30 +584,35 @@ const SpendingPage = () => {
               />
             </div>
           </div>
-          <StackedAreaChart
-            maxY={maxY}
-            initialHeight={800}
-            stability={data.stabilityRatioFlag}
-            needsFlag={data.needsFlag}
-            years={yearRange(currentYear, currentYear + settings.maxYearsShown)}
-            lineData={yearRange(
-              currentYear,
-              currentYear + settings.maxYearsShown,
-            ).map((_) => 0)}
-            stackedData={[
-              {
-                name: "Spending",
-                stable: true,
-                values: yearRange(
-                  currentYear,
-                  currentYear + settings.maxYearsShown,
-                ).map((year) =>
-                  calculateSpendingYear(data.data, spending, settings, year),
-                ),
-              },
-            ]}
-            spending={true}
-          />
+          <div className="bg-white pb-1">
+            <StackedAreaChart
+              maxY={maxY}
+              initialHeight={800}
+              stability={data.stabilityRatioFlag}
+              needsFlag={data.needsFlag}
+              years={yearRange(
+                currentYear,
+                currentYear + settings.maxYearsShown,
+              )}
+              lineData={yearRange(
+                currentYear,
+                currentYear + settings.maxYearsShown,
+              ).map((_) => 0)}
+              stackedData={[
+                {
+                  name: "Spending",
+                  stable: true,
+                  values: yearRange(
+                    currentYear,
+                    currentYear + settings.maxYearsShown,
+                  ).map((year) =>
+                    calculateSpendingYear(data.data, spending, settings, year),
+                  ),
+                },
+              ]}
+              spending={true}
+            />
+          </div>
 
           <SpendingTable
             settings={settings}

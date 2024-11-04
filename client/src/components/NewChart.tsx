@@ -432,6 +432,7 @@ const StackedAreaChart = ({
 
     // Use sortedDomain for legend order
     sortedDomain.forEach((key) => {
+      if (key === "Spending") return null;
       const legendItem = legendContainer
         .append("div")
         .style("display", "flex")

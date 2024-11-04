@@ -151,13 +151,15 @@ const Input = ({
       <div
         className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}
       >
-        <label
-          htmlFor={label}
-          className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"} `}
-          style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
-        >
-          {label}
-        </label>
+        {label && (
+          <label
+            htmlFor={label}
+            className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"} `}
+            style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
+          >
+            {label}
+          </label>
+        )}
         {toggleable && (
           <Toggle
             enabled={value != null}

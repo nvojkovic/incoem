@@ -9,6 +9,7 @@ interface ReportProps {
   page: any;
 }
 const Report = ({ scenario, client, page }: ReportProps) => {
+  if (!client.userdata) return null;
   if (page == "cover") return <Cover settings={scenario} client={client} />;
   if (page == "incomes") return <Print scenario={scenario} client={client} />;
   if (page == "chart")

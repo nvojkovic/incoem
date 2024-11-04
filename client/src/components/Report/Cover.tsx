@@ -16,7 +16,7 @@ interface CoverProps {
 const ReportCover = ({ settings, client }: CoverProps) => {
   return (
     <div className="w-screen h-full flex items-center p-10 ">
-      <div className="flex gap-8">
+      <div className="flex gap-8 w-full">
         <div className="w-[45%]">
           <div className="flex flex-col gap-4">
             <div>

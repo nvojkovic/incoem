@@ -37,7 +37,12 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       />
       <IncomeYearlyIncrease
         labels={false}
-        increase={income.yearlyIncrease}
+        increase={
+          income.yearlyIncrease || {
+            type: "custom",
+            percent: income.yearlyIncreasePercent,
+          }
+        }
         setYearlyIncrease={(yearlyIncrease) =>
           setIncome({ ...income, yearlyIncrease })
         }

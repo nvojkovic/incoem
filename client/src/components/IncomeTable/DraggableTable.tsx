@@ -45,7 +45,7 @@ const DraggableTable = ({
   return (
     <table className="w-full">
       <thead
-        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+        className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
       >
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -67,7 +67,7 @@ const DraggableTable = ({
           </tr>
         ))}
       </thead>
-      <tbody className="text-sm print:text-xs">
+      <tbody className="text-sm ">
         {table.getRowModel().rows.map((row, i) => (
           <tr
             key={row.id}
