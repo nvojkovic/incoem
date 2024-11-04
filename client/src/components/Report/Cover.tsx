@@ -41,7 +41,7 @@ const ReportCover = ({ settings, client }: CoverProps) => {
               <b className="mr-3">Disclosure: </b>
               <div className="text-xs max-w- italic text-gray-600">
                 {client?.userdata.disclosures
-                  .split("\n")
+                  ?.split("\n")
                   .map((i) => <p className="mb-2">{i}</p>)}
               </div>
             </div>
