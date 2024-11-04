@@ -32,9 +32,10 @@ const calculators: CalculatorCard[] = [
     ),
   },
   {
-    id: "payment",
-    title: "Payment Calculator",
-    description: "Time value of money calculator",
+    id: "time-value-of-money",
+    title: "Time Value of Money Calculator",
+    description:
+      "Create multiple TVM calculators and solve for PV, FV, N, Rate, PMT",
     icon: (
       <svg
         className="w-6 h-6"
@@ -54,7 +55,7 @@ const calculators: CalculatorCard[] = [
   },
 ];
 
-const CalculatorMap: React.FC<any> = ({ }: any) => {
+const CalculatorMap: React.FC<any> = ({}: any) => {
   return (
     <Layout page="calculator">
       <div className="container mx-auto px-4 py-8">

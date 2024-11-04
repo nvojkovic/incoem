@@ -68,7 +68,7 @@ const AllInOneCalculator: React.FC<any> = () => {
               <ArrowLeftIcon className="h-5 text-gray-500" />
             </div>
           </Link>
-          <h1 className="text-3xl font-bold">All-In-One Calculator</h1>
+          <h1 className="text-3xl font-bold">Time Value of Money Calculator</h1>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
           <DndContext
@@ -96,12 +96,12 @@ const AllInOneCalculator: React.FC<any> = () => {
                         data.flatMap((item: any, i: any) =>
                           i === index
                             ? [
-                              item,
-                              {
-                                ...item,
-                                id: Math.round(Math.random() * 100000),
-                              },
-                            ]
+                                item,
+                                {
+                                  ...item,
+                                  id: Math.round(Math.random() * 100000),
+                                },
+                              ]
                             : [item],
                         ),
                       )

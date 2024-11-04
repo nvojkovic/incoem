@@ -14,7 +14,7 @@ const WhoDies = ({ active, setWhoDies, i, title, age, setAge }: any) => {
       <span className="text-sm text-nowrap flex items-center gap-3">
         {title}
         {i != -1 &&
-          (active ? (
+          (true ? (
             <Input
               width="!w-12"
               label=""
