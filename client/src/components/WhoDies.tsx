@@ -23,7 +23,7 @@ const WhoDies = ({ active, setWhoDies, i, title, age, setAge }: any) => {
               setValue={setAge}
             />
           ) : (
-            ` ${age}`
+            ` ${age !== null && age !== undefined ? age : ""}`
           ))}
       </span>
     </div>
