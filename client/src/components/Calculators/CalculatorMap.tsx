@@ -32,8 +32,8 @@ const calculators: CalculatorCard[] = [
     ),
   },
   {
-    id: "all-in-one",
-    title: "All-In-One Calculator",
+    id: "payment",
+    title: "Payment Calculator",
     description: "Time value of money calculator",
     icon: (
       <svg

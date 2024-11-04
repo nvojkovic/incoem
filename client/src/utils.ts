@@ -19,12 +19,15 @@ export const formatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-export const printNumber = (a: number | string) => {
+export const printNumberOld = (a: number | string) => {
   if (typeof a === "number") {
     return `${formatter.format(a)}`;
   }
   return a;
 };
+
+export const printNumber = (s: number) =>
+  s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
 
 export const printReport = async (clientId: number, scenarioId: number) => {
   let pdfFile;

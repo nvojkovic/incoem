@@ -5,36 +5,36 @@ import StackedAreaChart from "./NewChart";
 import { calculateSpendingYear } from "./Spending/SpendingPage";
 
 interface MapChartProps {
-  data: IncomeMapData;
-  settings: any;
+  settings: ScenarioSettings;
   client: Client;
-  spending?: RetirementSpendingSettings;
+  print?: boolean;
 }
 
-const MapChart = ({ data, spending, settings, client }: MapChartProps) => {
-  const incomes = data.incomes.filter((inc) => inc.enabled);
+const MapChart = ({ settings, client, print }: MapChartProps) => {
+  const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
   return (
     <StackedAreaChart
       years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
       spending={false}
+      initialHeight={print ? 700 : undefined}
       lineData={
         client.needsFlag
           ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (currentYear) =>
-                calculateSpendingYear(
-                  data,
-                  spending,
-                  { ...settings, taxType: "Pre-Tax" },
-                  currentYear,
-                ),
-            )
+            (currentYear) =>
+              calculateSpendingYear(
+                settings.data,
+                settings.spending,
+                { ...settings, taxType: "Pre-Tax" },
+                currentYear,
+              ),
+          )
           : []
       }
       stability={client.stabilityRatioFlag}
       needsFlag={client.needsFlag}
       stackedData={incomes.map((income, i) => ({
-        name: title(incomes, data.people, i),
+        name: title(incomes, settings.data.people, i),
         stable: income.stable,
         values: yearRange(
           startYear,
@@ -42,7 +42,7 @@ const MapChart = ({ data, spending, settings, client }: MapChartProps) => {
         ).map((year) =>
           Math.round(
             calculate({
-              people: data.people,
+              people: settings.data.people,
               income,
               startYear,
               currentYear: year,

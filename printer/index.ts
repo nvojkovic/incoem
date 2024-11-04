@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import puppeteer from "puppeteer";
+import { PDFDocument } from "pdf-lib";
 dotenv.config();
 const port = 3002;
 
@@ -14,12 +15,36 @@ app.use(
     credentials: true,
   }),
 );
+async function mergeAllPDFs(urls: any[]) {
+  // create an empty PDFLib object of PDFDocument to do the merging into
+  const pdfDoc = await PDFDocument.create();
 
-app.get("/", async (req, res) => {
-  const { url } = req.query;
-  if (!url) {
-    return res.status(400).send("Missing url query parameter");
+  // iterate over all documents to merge
+  const numDocs = urls.length;
+  for (var i = 0; i < numDocs; i++) {
+    // download the document
+    const donorPdfBytes = urls[i];
+
+    // load/convert the document into a PDFDocument object
+    const donorPdfDoc = await PDFDocument.load(donorPdfBytes);
+
+    // iterate over the document's pages
+    const docLength = donorPdfDoc.getPageCount();
+    for (var k = 0; k < docLength; k++) {
+      // extract the page to copy
+      const [donorPage] = await pdfDoc.copyPages(donorPdfDoc, [k]);
+
+      // add the page to the overall merged document
+      pdfDoc.addPage(donorPage);
+    }
   }
+
+  // save as a Base64 URI
+  const pdfData = await pdfDoc.save();
+  return Buffer.from(pdfData);
+}
+
+const getPdf = async (url: string) => {
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
     ignoreDefaultArgs: ["--disable-extensions"],
@@ -48,7 +73,7 @@ app.get("/", async (req, res) => {
     landscape: true,
     printBackground: true,
     headerTemplate: header,
-    displayHeaderFooter: true,
+    displayHeaderFooter: !!header,
     margin: {
       bottom: "30px",
       top: "60px",
@@ -59,8 +84,23 @@ app.get("/", async (req, res) => {
     content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
   });
   await browser.close();
+  return pdf;
+};
+
+app.get("/", async (req, res) => {
+  const { url } = req.query;
+  if (!url) {
+    return res.status(400).send("Missing url query parameter");
+  }
+  const pages = await Promise.all(
+    ["cover", "chart", "incomes", "spending"].map((page) =>
+      getPdf(`${url}?page=${page}`),
+    ),
+  );
+  const result = await mergeAllPDFs(pages);
+
   res.contentType("application/pdf");
-  res.send(pdf);
+  res.send(result);
 });
 
 app.listen(port, "0.0.0.0", () => {

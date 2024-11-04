@@ -4,10 +4,11 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
-import { formatter, splitDate, yearRange } from "../../utils";
+import { yearRange } from "../../utils";
 import StackedAreaChart from "../NewChart";
 import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
+import SpendingTable from "./SpendingTable";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -65,13 +66,14 @@ export const calculateSpendingYear = (
   result += post;
 
   let current = spending.currentSpending;
-  console.log("deaths", settings.whoDies, settings.deathYears);
   if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
-    console.log("dying", age, settings.deathYears[settings.whoDies]);
+    console.log(year, result, current, uninflatedPre, inflatedPre);
     if (age > (settings.deathYears[settings.whoDies] as any)) {
-      current *= 1 - spending.decreaseAtDeath[settings.whoDies] / 100;
+      current =
+        (current + result) * 1 -
+        spending.decreaseAtDeath[settings.whoDies] / 100;
     }
   }
 
@@ -87,7 +89,6 @@ export const calculateSpendingYear = (
       result /= 1 - (spending.postTaxRate || 0) / 100;
     }
   }
-  console.log(year, result);
   if (settings.inflationType == "Real") {
     result = calculatePV(result, (settings.inflation || 0) / 100, years);
   }
@@ -213,8 +214,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-7">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-7">Increase (%)</div>
+                    )}{" "}
                 </th>
                 <th className="px-6 py-3">Actions</th>
               </tr>
@@ -314,18 +315,17 @@ const SpendingPage = () => {
                 <th className="px-6 py-3">Starts (Cal Year)</th>
                 <th className="px-6 py-3">Ends (Cal Year)</th>
                 <th
-                  className={`px-6 py-3 ${
-                    spending.postSpending.find(
-                      (i) => i.increase.type === "custom",
-                    ) && "w-64"
-                  }`}
+                  className={`px-6 py-3 ${spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                    }`}
                 >
                   Yearly Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-6">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-6">Increase (%)</div>
+                    )}{" "}
                 </th>
 
                 {data.data.people.map((i) => (
@@ -541,8 +541,8 @@ const SpendingPage = () => {
                             v == "Both Alive"
                               ? -1
                               : data.data.people.findIndex((p) =>
-                                  v.includes(p.name),
-                                ),
+                                v.includes(p.name),
+                              ),
                         })
                       }
                     />
@@ -607,57 +607,11 @@ const SpendingPage = () => {
             spending={true}
           />
 
-          <div className="flex gap-4 mt-10">
-            {[0, 1, 2, 3, 4].map(
-              (tableInd) =>
-                currentYear + settings.maxYearsShown >
-                  currentYear + tableInd * 16 && (
-                  <div>
-                    <table className=" w-full border bg-white">
-                      <thead
-                        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
-                      >
-                        <tr>
-                          <th className="px-6 py-3">Year</th>
-                          <th className="px-6 py-3">Age</th>
-                          <th className="px-6 py-3">Spending</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {yearRange(
-                          currentYear + tableInd * 16,
-                          Math.min(
-                            currentYear + (tableInd + 1) * 16 - 1,
-                            currentYear + settings.maxYearsShown,
-                          ),
-                        ).map((line) => (
-                          <tr className="">
-                            <td className="px-2 py-1 w-[500px] font-bold">
-                              {line}
-                            </td>
-                            <td className="px-2 py-1 w-[500px]">
-                              {data.data.people
-                                .map((p) => line - splitDate(p.birthday).year)
-                                .join("/")}
-                            </td>
-                            <td className="px-2 py-1 w-[500px]">
-                              {formatter.format(
-                                calculateSpendingYear(
-                                  data.data,
-                                  spending,
-                                  settings,
-                                  line,
-                                ),
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ),
-            )}
-          </div>
+          <SpendingTable
+            settings={settings}
+            spending={spending}
+            data={data.data}
+          />
         </MapSection>
       </div>
     </Layout>
@@ -671,9 +625,8 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`flex-1 py-[7px] px-4 rounded ${
-              value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            }`}
+            className={`flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
+              }`}
             onClick={() => setValue(item)}
           >
             {item}

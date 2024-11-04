@@ -5,28 +5,22 @@ import {
   QuestionMarkCircleIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import calculate from "../calculator/calculate";
-import title from "../calculator/title";
-import Input from "./Inputs/Input";
+import calculate from "src/calculator/calculate";
+import title from "src/calculator/title";
+import Input from "src/components/Inputs/Input";
 import {
   formatter,
   printNumber,
   printReport,
   splitDate,
   yearRange,
-} from "../utils";
-import Confirm from "./Confirm";
-import { CSSProperties, useMemo, useState } from "react";
-import Button from "./Inputs/Button";
+} from "src/utils";
+import Confirm from "src/components/Confirm";
+import { useMemo, useState } from "react";
+import Button from "src/components/Inputs/Button";
 import { Spinner, Tooltip } from "flowbite-react";
-import IncomeModal from "./Info/IncomeModal";
-import {
-  Cell,
-  ColumnDef,
-  Header,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import IncomeModal from "src/components/Info/IncomeModal";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   DndContext,
   KeyboardSensor,
@@ -37,142 +31,15 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import React from "react";
-import { useInfo } from "../useData";
-import { generateColumns } from "./tableData";
-import { calculateSpendingYear } from "./Spending/SpendingPage";
-
-const DraggableTableHeader = ({
-  header,
-  timer,
-  setTimer,
-  setOpenModal,
-  setSelectedColumn,
-}: {
-  header: Header<SelectedColumn, unknown>;
-  timer: any;
-  setTimer: any;
-  setOpenModal: any;
-  setSelectedColumn: any;
-}) => {
-  const data: any = (header.column.columnDef as any).header();
-  const fixed = ["age", "year", "total"].includes(data.column.type);
-  const { attributes, isDragging, listeners, setNodeRef, transform } =
-    useSortable({
-      id: header.column.id,
-      disabled: fixed,
-    });
-
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    position: "relative",
-    transform: fixed ? "" : CSS.Translate.toString(transform),
-    transition: "width transform 0.2s ease-in-out",
-    whiteSpace: "nowrap",
-    width: header.column.getSize(),
-    zIndex: isDragging ? 1 : 0,
-  };
-
-  const selectedColumn = data.selectedColumn;
-  return (
-    <td
-      className={`font-medium  ${
-        selectedColumn.type == data.column.type &&
-        selectedColumn.id == data.column.id
-          ? "bg-slate-200"
-          : ""
-      }
-
-      `}
-      colSpan={header.colSpan}
-      ref={setNodeRef}
-      style={style}
-      onDoubleClick={() => {
-        console.log("double");
-        clearTimeout(timer);
-        setOpenModal(data.incomeId);
-      }}
-    >
-      <div
-        className={`flex flex-col items-start px-2 py-[0.45rem] ${data.column.type === "year" ? "px-6" : "px-2"}`}
-        onClick={(e) => {
-          if (e.detail === 1) {
-            setTimer(
-              setTimeout(() => {
-                selectedColumn.type === data.column.type &&
-                selectedColumn.id == data.column.id
-                  ? setSelectedColumn({ type: "none", id: 0 })
-                  : setSelectedColumn(data.column);
-              }, 200),
-            );
-          }
-          if (e.detail === 2) {
-            clearTimeout(timer);
-            setOpenModal(data.index);
-          }
-        }}
-        {...attributes}
-        {...listeners}
-      >
-        {header.isPlaceholder ? null : data.value}
-      </div>
-    </td>
-  );
-};
-
-const DragAlongCell = ({
-  cell,
-  selectedColumn,
-  selectedYear,
-  setSelectedYear,
-}: {
-  cell: Cell<any, unknown>;
-  selectedColumn: SelectedColumn;
-  setSelectedYear: any;
-  selectedYear: number;
-}) => {
-  const data = cell.getValue() as any;
-  const column = (cell.getValue() as any).column;
-  const { isDragging, setNodeRef, transform } = useSortable({
-    id: cell.column.id,
-  });
-  const fixed = ["age", "year", "total"].includes(column.type);
-
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.8 : 1,
-    // position: "relative",
-    transform: fixed ? "" : CSS.Translate.toString(transform),
-    transition: "width transform 0.2s ease-in-out",
-    width: cell.column.getSize(),
-    // zIndex: isDragging ? 1 : 0,
-  };
-
-  return (
-    <td
-      className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} ${column.type === "year" ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
-      ref={setNodeRef}
-      onClick={() => {
-        console.log(data.year, cell);
-        if (selectedYear === data.year) setSelectedYear(0);
-        else setSelectedYear(data.year);
-      }}
-      style={style}
-    >
-      {(cell.getValue() as any).value}
-    </td>
-  );
-};
+import { useInfo } from "src/useData";
+import { generateColumns } from "src/components/IncomeTable/tableData";
+import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
+import DraggableTable from "./DraggableTable";
 
 const ResultTable = ({
-  data,
   client,
   settings,
   removeScenario,
@@ -184,9 +51,7 @@ const ResultTable = ({
   setSelectedColumn,
   selectedColumn,
   setSettings,
-  spending,
 }: {
-  data: IncomeMapData;
   client: Client;
   settings: ScenarioSettings;
   removeScenario: any;
@@ -199,18 +64,16 @@ const ResultTable = ({
   changeFullScreen: any;
   setSelectedColumn: any;
   setSettings?: (data: any) => void;
-  spending?: RetirementSpendingSettings;
 }) => {
-  if (!data) return null;
   const startYear = new Date().getFullYear();
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
-  const incomes = data.incomes.filter((inc) => inc.enabled);
+  const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
 
   const columns = React.useMemo<ColumnDef<any>[]>(
-    () => generateColumns(incomes, data, selectedColumn),
-    [selectedColumn, settings, selectedYear, data],
+    () => generateColumns(incomes, settings.data, selectedColumn),
+    [selectedColumn, settings, selectedYear, settings.data],
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     columns.map((c) => c.id!),
@@ -237,7 +100,7 @@ const ResultTable = ({
 
   const calculateOne = (income: Income, currentYear: number) =>
     calculate({
-      people: data.people,
+      people: settings.data.people,
       income,
       startYear,
       currentYear,
@@ -256,13 +119,13 @@ const ResultTable = ({
         (currentYear) => ({
           year: currentYear,
           selectedColumn,
-          age: data.people
+          age: settings.data.people
             .map((p) => currentYear - splitDate(p.birthday).year)
             .join("/"),
           ...Object.fromEntries(
             incomes.map((income, i) => {
               const result = calculate({
-                people: data.people,
+                people: settings.data.people,
                 income,
                 startYear,
                 currentYear,
@@ -274,7 +137,7 @@ const ResultTable = ({
                 ssSurvivorAge: settings.ssSurvivorAge,
               });
               return [
-                title(incomes, data.people, i),
+                title(incomes, settings.data.people, i),
                 <div>
                   {result.note ? (
                     <Tooltip
@@ -302,8 +165,8 @@ const ResultTable = ({
                 <Tooltip
                   content={(() => {
                     const needs = calculateSpendingYear(
-                      data,
-                      spending,
+                      settings.data,
+                      settings.spending,
                       settings,
                       currentYear,
                     );
@@ -325,10 +188,11 @@ const ResultTable = ({
                     );
                     return (
                       <div className="z-[5000000] bg-white  sticky">
-                        {spending && client.needsFlag && (
+                        {settings.spending && client.needsFlag && (
                           <>
                             <div>
-                              Needs: {spending && formatter.format(needs)}
+                              Needs:{" "}
+                              {settings.spending && formatter.format(needs)}
                             </div>
 
                             <div>
@@ -346,7 +210,7 @@ const ResultTable = ({
                               {Math.round((stableIncome / income) * 100)}%
                             </div>
                           )}
-                        {spending &&
+                        {settings.spending &&
                           client.stabilityRatioFlag &&
                           client.needsFlag && (
                             <div>Needs Stable: {needsStable}%</div>
@@ -376,7 +240,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings, data],
+    [settings, settings.data],
   );
 
   const handleDragEnd = (moved: any) => {
@@ -384,16 +248,24 @@ const ResultTable = ({
 
     const oldIndex = columnOrder.indexOf(active.id as string);
     const newIndex = columnOrder.indexOf(over.id as string);
-    if (newIndex === 0 || newIndex === 1 || newIndex == data.incomes.length + 2)
+    if (
+      newIndex === 0 ||
+      newIndex === 1 ||
+      newIndex == settings.data.incomes.length + 2
+    )
       return;
     setColumnOrder((columnOrder) => {
       return arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
     });
     if (active && over && active.id !== over.id) {
       if (setSettings) {
-        const oldIndex = data.incomes.findIndex((x) => x.id == active.id);
-        const newIndex = data.incomes.findIndex((x) => x.id == over.id);
-        const incomes = arrayMove(data.incomes, oldIndex, newIndex);
+        const oldIndex = settings.data.incomes.findIndex(
+          (x) => x.id == active.id,
+        );
+        const newIndex = settings.data.incomes.findIndex(
+          (x) => x.id == over.id,
+        );
+        const incomes = arrayMove(settings.data.incomes, oldIndex, newIndex);
         console.log(
           "new ",
           oldIndex,
@@ -415,7 +287,7 @@ const ResultTable = ({
       <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
         {name && (
           <div
-            className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32`}
+            className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32 print:hidden`}
           >
             <div className="text-[#101828] font-semibold text-[18px]">
               {name || " "}
@@ -423,8 +295,8 @@ const ResultTable = ({
             <div className="hidden print:block"></div>
 
             <div className="flex gap-5 items-end print:hidden">
-              {data.people.length > 1 &&
-                data.people.map(
+              {settings.data.people.length > 1 &&
+                settings.data.people.map(
                   (person, i) =>
                     settings.whoDies == i && (
                       <div className="w-36" key={person.id}>
@@ -434,7 +306,7 @@ const ResultTable = ({
                           disabled
                           label={`${person.name}'s Death`}
                           value={settings.deathYears[i]?.toString()}
-                          setValue={() => {}}
+                          setValue={() => { }}
                         />
                       </div>
                     ),
@@ -448,7 +320,7 @@ const ResultTable = ({
                   vertical
                   disabled
                   value={settings.maxYearsShown}
-                  setValue={() => {}}
+                  setValue={() => { }}
                 />
               </div>
               <div className="print:mr-[-20px]">
@@ -459,7 +331,7 @@ const ResultTable = ({
                   vertical
                   subtype="text"
                   value={`${settings.inflation?.toString()}%`}
-                  setValue={() => {}}
+                  setValue={() => { }}
                 />
               </div>
               <div className="print:hidden">
@@ -536,91 +408,3 @@ const ResultTable = ({
 };
 
 export default ResultTable;
-
-const DraggableTable = ({
-  fullScreen,
-  tableData,
-  columns,
-  columnOrder,
-  setColumnOrder,
-  selectedYear,
-  setSelectedColumn,
-  selectedColumn,
-  setSelectedYear,
-  setOpenModal,
-}: {
-  fullScreen: boolean;
-  tableData: any;
-  columns: any[];
-  columnOrder: string[];
-  setColumnOrder: any;
-  selectedYear: number;
-  setSelectedColumn: any;
-  setSelectedYear: any;
-  selectedColumn: SelectedColumn;
-  setOpenModal: any;
-}) => {
-  const table = useReactTable({
-    data: tableData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    state: {
-      columnOrder,
-    },
-    onColumnOrderChange: setColumnOrder,
-  });
-
-  const [timer, setTimer] = useState<any>(0);
-
-  return (
-    <table className="w-full">
-      <thead
-        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
-      >
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            <SortableContext
-              items={columnOrder}
-              strategy={horizontalListSortingStrategy}
-            >
-              {headerGroup.headers.map((header) => (
-                <DraggableTableHeader
-                  key={header.id}
-                  header={header}
-                  timer={timer}
-                  setTimer={setTimer}
-                  setOpenModal={setOpenModal}
-                  setSelectedColumn={setSelectedColumn}
-                />
-              ))}
-            </SortableContext>
-          </tr>
-        ))}
-      </thead>
-      <tbody className="text-sm ">
-        {table.getRowModel().rows.map((row, i) => (
-          <tr
-            key={row.id}
-            className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"}  border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
-          >
-            {row.getVisibleCells().map((cell) => (
-              <SortableContext
-                key={cell.id}
-                items={columnOrder}
-                strategy={horizontalListSortingStrategy}
-              >
-                <DragAlongCell
-                  key={cell.id}
-                  cell={cell}
-                  selectedColumn={selectedColumn}
-                  selectedYear={selectedYear}
-                  setSelectedYear={setSelectedYear}
-                />
-              </SortableContext>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};

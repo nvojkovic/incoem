@@ -65,7 +65,7 @@ const router = createBrowserRouter([
             element: <VersatileCalculator />,
           },
           {
-            path: "calculator/all-in-one",
+            path: "calculator/payment",
             element: <AllInOneCalculator />,
           },
           {

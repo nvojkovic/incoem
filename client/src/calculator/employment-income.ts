@@ -30,11 +30,14 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   let baseAmount = adjustForIncrease(
     info,
     income.annualIncome,
-
-    Math.min(startYear, birthYear + income.startAge),
+    Math.max(birthYear + income.startAge, startYear),
   );
 
-  baseAmount = adjustForInflation(info, baseAmount, startYear);
+  baseAmount = adjustForInflation(
+    info,
+    baseAmount,
+    Math.max(birthYear + income.startAge, startYear),
+  );
 
   if (income.startAge === age) {
     console.log("wtf", income.startAge, age);
@@ -44,6 +47,7 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   if (income.retirementAgeYear == age) {
     return baseAmount * (income.retirementAgeMonth / 12);
   }
+  birthYear + income.startAge;
   return baseAmount;
 };
 

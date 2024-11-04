@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
-import { formatter } from "../../utils";
+import { printNumber } from "../../utils";
 import Button from "../Inputs/Button";
 import {
   CheckCircleIcon,
@@ -158,7 +158,8 @@ const TimeValueCalculator: React.FC<any> = ({
   const inputs = [
     <Select
       label="Calculator"
-      width="w-42"
+      width="!w-44"
+      labelLength={110}
       options={calculatorOptions.map((option) => ({
         id: option,
         name:
@@ -168,7 +169,7 @@ const TimeValueCalculator: React.FC<any> = ({
         id: data.calculatorType,
         name:
           data.calculatorType === "Annual Payment"
-            ? `${data.compounding} Payment`
+            ? `Payment`
             : data.calculatorType,
       }}
       setSelected={(option) =>
@@ -178,7 +179,7 @@ const TimeValueCalculator: React.FC<any> = ({
     data.calculatorType !== "Future Value" && (
       <Input
         size="sm"
-        width="!w-32"
+        width="!w-44"
         labelLength={110}
         label="Future Value"
         value={data.futureValue}
@@ -190,7 +191,7 @@ const TimeValueCalculator: React.FC<any> = ({
       <Input
         size="sm"
         labelLength={110}
-        width="!w-32"
+        width="!w-44"
         label="Present Value"
         value={data.presentValue}
         setValue={(value) => handleInputChange("presentValue", Number(value))}
@@ -201,17 +202,29 @@ const TimeValueCalculator: React.FC<any> = ({
       <Input
         size="sm"
         labelLength={110}
-        width="!w-32"
+        width="!w-44"
         label="Interest Rate"
         value={data.interestRate}
         setValue={(value) => handleInputChange("interestRate", Number(value))}
         subtype="percent"
       />
     ),
+    data.calculatorType !== "Annual Payment" && (
+      <Input
+        label="Payment"
+        size="sm"
+        labelLength={110}
+        width="!w-44"
+        value={data.annualPayment}
+        setValue={(value) => handleInputChange("annualPayment", Number(value))}
+        subtype="money"
+      />
+    ),
     <div>
       <Select
         label="Timing"
-        width="w-42"
+        width="!w-44"
+        labelLength={140}
         options={[
           { id: "Beginning of Year", name: "Beginning of Year" },
           { id: "End of Year", name: "End of Year" },
@@ -226,15 +239,6 @@ const TimeValueCalculator: React.FC<any> = ({
       />
     </div>,
 
-    data.calculatorType !== "Annual Payment" && (
-      <Input
-        label="Payment"
-        size="sm"
-        value={data.annualPayment}
-        setValue={(value) => handleInputChange("annualPayment", Number(value))}
-        subtype="money"
-      />
-    ),
     data.calculatorType !== "Time Period" && (
       <Input
         label="Time Period (years)"
@@ -249,7 +253,7 @@ const TimeValueCalculator: React.FC<any> = ({
   return (
     <div className="border p-4 rounded-lg bg-white shadow-md">
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-centerw w-full mx-auto border-b pb-2">
+        <div className="flex justify-between items-center w-full mx-auto border-b mt-[-10px]">
           <div className="flex gap-1">
             <div className="flex justify-start cursor-pointer mr-2">
               <EllipsisVerticalIcon className="text-slate-800 w-5 mr-[-15px]" />
@@ -294,11 +298,11 @@ const TimeValueCalculator: React.FC<any> = ({
               </div>
             )}
           </div>
-          <div>
+          <div className="">
             <div className="flex gap-4">
               <div className="">
                 <div
-                  className="bg-gray-100 p3 rounded-full cursor-pointer"
+                  className="p3 rounded-full cursor-pointer"
                   onClick={duplicate}
                 >
                   <DocumentDuplicateIcon className="w-5" />
@@ -306,7 +310,7 @@ const TimeValueCalculator: React.FC<any> = ({
               </div>
               <div className="">
                 <div
-                  className="bg-[rgba(240,82,82,0.1)] p3 rounded-full cursor-pointer"
+                  className="p3 rounded-full cursor-pointer"
                   onClick={remove}
                 >
                   <TrashIcon className="text-red-500 w-5" />
@@ -315,11 +319,11 @@ const TimeValueCalculator: React.FC<any> = ({
             </div>
           </div>
         </div>
-        <div className="flex gap-6 justify-center">
-          <div className="flex flex-col gap-2">
+        <div className="flex gap-6 justify-center mt-2">
+          <div className="flex flex-col gap-4">
             {inputs.slice(0, 4).map((i) => i)}
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <div className="mb0 mt-[-4px] flex items-center">
               <label className="text-sm text-[#344054] w-36 ">Compunding</label>
               <div className="flex gap-2 mt-[6px]">
@@ -351,7 +355,7 @@ const TimeValueCalculator: React.FC<any> = ({
             </div>
           </div>
         </div>
-        <div className="rounded text-center bg-[#f8fafc] p-2">
+        <div className="rounded text-center bg-[#f8fafc] p-2 mt-2">
           <span className="font-bold">
             {data.calculatorType === "Annual Payment"
               ? `${data.compounding} Payment`
@@ -371,7 +375,7 @@ const TimeValueCalculator: React.FC<any> = ({
               default:
                 return (
                   <span className={result < 0 ? "text-red-500" : ""}>
-                    formatter.format(result)
+                    {printNumber(result)}
                   </span>
                 );
             }

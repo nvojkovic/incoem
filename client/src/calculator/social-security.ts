@@ -128,7 +128,13 @@ export const calculateOwnSocialSecurity = (
   //   (income.alreadyReceiving
   //     ? info.startYear
   //     : income.startAgeYear + birthYear);
-  ownAmount = adjustForIncrease(info, ownAmount, info.startYear);
+  //
+  ownAmount = adjustForIncrease(
+    info,
+    ownAmount,
+    Math.max(birthYear + income.startAgeYear, info.startYear),
+    // income.startAgeYear + birthYear,
+  );
   ownAmount = adjustForInflation(info, ownAmount, info.startYear);
   return ownAmount;
 };

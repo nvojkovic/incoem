@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
-import Print from "../components/Print";
+import Report from "src/components/Report/Report";
 
 const PrintLivePage = () => {
   const [client, setClient] = useState({} as any);
@@ -24,6 +24,12 @@ const PrintLivePage = () => {
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
   scenario.name = "Live";
-  return <Print client={client} scenario={scenario} />;
+  return (
+    <Report
+      client={client}
+      scenario={scenario}
+      page={searchParams.get("page")}
+    />
+  );
 };
 export default PrintLivePage;

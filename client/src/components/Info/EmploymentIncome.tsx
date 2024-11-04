@@ -35,16 +35,6 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
         setValue={(name) => setIncome({ ...income, annualIncome: name })}
         tooltip="The amount of income earned annually."
       />
-      <Input
-        label="Yearly Increase"
-        subtype="percent"
-        size="lg"
-        value={income.yearlyIncreasePercent}
-        setValue={(name) =>
-          setIncome({ ...income, yearlyIncreasePercent: name })
-        }
-        tooltip="The percentage increase in income each year."
-      />
       <IncomeYearlyIncrease
         labels={false}
         increase={income.yearlyIncrease}

@@ -1,6 +1,6 @@
-import logo from "../assets/logo.png";
-import ResultTable from "../components/ResultTable";
-import { UserProvider } from "../useUser";
+import logo from "src/assets/logo.png";
+import ResultTable from "src/components/IncomeTable/ResultTable";
+import { UserProvider } from "src/useUser";
 
 interface PrintProps {
   client: any;
@@ -20,7 +20,7 @@ const Print = ({ client, scenario }: PrintProps) => {
               left: 0,
               fontSize: "10px",
               color: "black",
-              backgroundColor: "#f0f0f0",
+              // backgroundColor: "#f0f0f0",
               display: "flex",
               justifyContent: "space-between",
               WebkitPrintColorAdjust: "exact",
@@ -32,8 +32,9 @@ const Print = ({ client, scenario }: PrintProps) => {
                 borderBottom: "1px solid #aaa",
                 width: "calc(100% - 50px)",
                 padding: "10px 20px",
+                paddingTop: "20px",
                 color: "black",
-                backgroundColor: "#f0f0f0",
+                // backgroundColor: "#f0f0f0",
                 display: "flex",
                 justifyContent: "space-between",
                 WebkitPrintColorAdjust: "exact",
@@ -58,53 +59,21 @@ const Print = ({ client, scenario }: PrintProps) => {
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-5 px-10">
-        <div className="mb-2 flex justify-between">
-          <div className="font-semibold text-[18px]">{client.title}</div>
-          <div className="flex gap-6 items-center">
-            <div></div>
-            <div>
-              <img
-                src={
-                  client?.userdata?.logo
-                    ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
-                    : logo
-                }
-                alt="logo"
-                className="h-10"
-              />
-            </div>
-          </div>
-        </div>
+      <div className="mx-auto px-10">
         <div>
           <ResultTable
             client={client}
             settings={scenario}
-            changeFullScreen={() => {}}
+            changeFullScreen={() => { }}
             fullScreen={true}
             id={scenario.id}
-            removeScenario={() => {}}
+            removeScenario={() => { }}
             selectedYear={0}
-            setSelectedYear={() => {}}
+            setSelectedYear={() => { }}
             selectedColumn={{ id: 0, type: "none" }}
-            setSelectedColumn={() => {}}
-            data={scenario.data as any}
-            spending={scenario.spending}
+            setSelectedColumn={() => { }}
             name={scenario.name}
           />
-        </div>
-        <div className="mt-10 mb-20 italic">
-          <div className="flex mb-10 gap-4">
-            <div>
-              <b>Prepared by: </b>
-            </div>
-            <div>
-              <div>{client?.userdata.name}</div>
-              <div>{client?.userdata.firmName}</div>
-            </div>
-          </div>
-          <b className="mr-3">Disclosure: </b>
-          {client?.userdata?.disclosures}
         </div>
       </div>
     </UserProvider>

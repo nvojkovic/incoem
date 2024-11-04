@@ -2,7 +2,7 @@ import Input from "./Inputs/Input";
 import save from "../assets/save.png";
 import WhoDies from "./WhoDies";
 import { updateAtIndex } from "../utils";
-import ResultTable from "./ResultTable";
+import ResultTable from "./IncomeTable/ResultTable";
 import Button from "./Inputs/Button";
 import {
   ArrowsPointingInIcon,
@@ -14,46 +14,50 @@ import ModalInput from "./Inputs/ModalInput";
 import { Spinner } from "flowbite-react";
 import { MultiToggle } from "./Spending/SpendingPage";
 import MapChart from "./MapChart";
+import { useInfo } from "src/useData";
 const Live = ({
-  data,
-  settings,
-  setSettings,
   fullScreen,
   selectedYear,
   setSelectedYear,
   selectedColumn,
   setSelectedColumn,
   changeFullScreen,
-  addScenario,
   client,
   spending,
 }: {
-  data: IncomeMapData;
-  settings: ScenarioSettings;
-  setSettings: any;
   fullScreen: boolean;
   selectedYear: number;
   setSelectedYear: any;
   selectedColumn: SelectedColumn;
   setSelectedColumn: any;
   changeFullScreen: any;
-  addScenario: any;
   client: Client;
   spending?: RetirementSpendingSettings;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
   const inputRef = useRef(null as any);
 
+  const { data: initial, setField, storeScenarios } = useInfo();
+  const settings = {
+    ...initial.liveSettings,
+    data: initial.data,
+    spending: initial.spending,
+  };
+  const setSettings = setField("liveSettings");
   const [printing, setPrinting] = useState(false);
+
+  const addScenario = (data: any) => {
+    storeScenarios([
+      ...initial.scenarios,
+      { ...data, id: initial.scenarios.length + 1 },
+    ]);
+  };
+
   const print = async () => {
     setPrinting(true);
     let pdfFile;
     pdfFile = await fetch(
-      import.meta.env.VITE_API_URL +
-        "print/client/pdf-live/" +
-        client.id +
-        "/?data=" +
-        JSON.stringify({ ...settings, data }),
+      import.meta.env.VITE_API_URL + "print/client/pdf-live/" + client.id,
     ).then((res) => res.json());
     setPrinting(false);
     window.open(
@@ -69,7 +73,7 @@ const Live = ({
       >
         <div className="flex justify-between items-end mb-5 z-0 px-4 w-full">
           <div className="flex items-end gap-10">
-            {data.people.length == 2 ? (
+            {settings.data.people.length == 2 ? (
               <div className="flex gap-3 border border-1 rounded-md h-10 items-end">
                 <div className={`flex items-end`}>
                   <WhoDies
@@ -83,7 +87,7 @@ const Live = ({
                     i={-1}
                     title="Both Alive"
                   />
-                  {data.people.map((person, i) => (
+                  {settings.data.people.map((person, i) => (
                     <WhoDies
                       active={settings.whoDies == i}
                       key={person.id}
@@ -103,8 +107,8 @@ const Live = ({
               <div></div>
             )}
             <div className="flex gap-5">
-              {data.people.length > 1 &&
-                data.people.map((person, i) => (
+              {settings.data.people.length > 1 &&
+                settings.data.people.map((person, i) => (
                   <div className="w-36" key={person.id}>
                     <Input
                       subtype="number"
@@ -191,7 +195,7 @@ const Live = ({
                   });
                   addScenario({
                     ...settings,
-                    data: { ...data },
+                    data: { ...settings.data },
                     spending: { ...spending },
                   });
                 }}
@@ -211,7 +215,7 @@ const Live = ({
 
                         addScenario({
                           ...settings,
-                          data: { ...data },
+                          data: { ...settings.data },
                           spending: { ...spending },
                         });
                       }
@@ -250,7 +254,6 @@ const Live = ({
         client={client}
         changeFullScreen={changeFullScreen}
         settings={settings}
-        data={data}
         removeScenario={null}
         fullScreen={fullScreen}
         selectedYear={selectedYear}
@@ -259,14 +262,8 @@ const Live = ({
         setSelectedColumn={setSelectedColumn}
         setSettings={setSettings}
         id={-1}
-        spending={spending}
       />
-      <MapChart
-        data={data}
-        settings={settings}
-        client={client}
-        spending={spending}
-      />
+      <MapChart settings={settings} client={client} />
     </div>
   );
 };

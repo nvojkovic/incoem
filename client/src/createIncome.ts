@@ -42,7 +42,7 @@ export const newPensionIncome = (): any => ({
   survivorPercent: 100,
   personId: 0,
   yearlyIncreasePercent: null,
-  yearlyIncrease: { type: "general" },
+  yearlyIncrease: { type: "none" },
   firstYearProRatePercent: 100,
   startAge: null,
 });
@@ -57,7 +57,7 @@ export const newBasicAnnuity = (): any => ({
   annualAmount: null,
   yearsOfDeferral: 0,
   yearlyIncreasePercent: null,
-  yearlyIncrease: { type: "general" },
+  yearlyIncrease: { type: "none" },
   survivorPercent: null,
   firstYearProRatePercent: 100,
 });

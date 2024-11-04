@@ -2,23 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "./services/client";
 
-interface User {
-  info?: {
-    subsciptionStatus?: string;
-    stabilityRatioFlag: boolean;
-    needsFlag: boolean;
-    logo?: string;
-    email: string;
-    name?: string;
-
-    primaryColor: string;
-  };
-  createdAt: number;
-  intercomHash: string;
-  userId: string;
-  // Add other user properties as needed
-}
-
 interface UserContextType {
   user: User | null;
   fetchUser: () => Promise<void>;

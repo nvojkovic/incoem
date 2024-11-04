@@ -12,6 +12,7 @@ const title = (income: Income[], people: Person[], i: number) => {
     .map((i) => (i as any).capitalize())
     .filter((i) => i !== "Income")
     .join(" ");
+  if (income[i].type == "company-pension") type = "Pension";
   if (
     [
       "annuity",

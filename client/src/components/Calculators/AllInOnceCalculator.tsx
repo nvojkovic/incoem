@@ -96,12 +96,12 @@ const AllInOneCalculator: React.FC<any> = () => {
                         data.flatMap((item: any, i: any) =>
                           i === index
                             ? [
-                                item,
-                                {
-                                  ...item,
-                                  id: Math.round(Math.random() * 100000),
-                                },
-                              ]
+                              item,
+                              {
+                                ...item,
+                                id: Math.round(Math.random() * 100000),
+                              },
+                            ]
                             : [item],
                         ),
                       )
@@ -112,7 +112,7 @@ const AllInOneCalculator: React.FC<any> = () => {
             </SortableContext>
           </DndContext>
           <div
-            className="border p-4 rounded-lg h-[355px] flex justify-center items-center cursor-pointer bg-white shadow-md"
+            className="border p-4 rounded-lg h-[336px] flex justify-center items-center cursor-pointer bg-white shadow-md"
             onClick={addCalculator}
           >
             <div className="flex flex-col justify-center items-center gap-2 ">

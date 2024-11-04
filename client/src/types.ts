@@ -130,6 +130,29 @@ interface Client {
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
 }
+type PrintClient = Client & {
+  userdata: UserInfo;
+};
+
+interface User {
+  info?: UserInfo;
+  createdAt: number;
+  intercomHash: string;
+  userId: string;
+  // Add other user properties as needed
+}
+
+interface UserInfo {
+  firmName: string;
+  disclosures: string;
+  subsciptionStatus?: string;
+  stabilityRatioFlag: boolean;
+  needsFlag: boolean;
+  logo?: string;
+  email: string;
+  name?: string;
+  primaryColor: string;
+}
 
 interface ScenarioSettings {
   id: number;

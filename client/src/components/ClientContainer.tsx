@@ -38,7 +38,7 @@ function ClientContainer() {
   // ]);
   if (!data)
     return (
-      <Layout page="data">
+      <Layout page="">
         <Spinner />
       </Layout>
     );
