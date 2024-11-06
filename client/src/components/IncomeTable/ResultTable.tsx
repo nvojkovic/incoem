@@ -197,7 +197,11 @@ const ResultTable = ({
 
                             <div>
                               Gap:{" "}
-                              <span className={gap < 0 ? "text-red-500" : ""}>
+                              <span
+                                className={
+                                  gap < 0 ? "text-red-500" : "text-green-500"
+                                }
+                              >
                                 {formatter.format(gap)}
                               </span>{" "}
                             </div>
@@ -306,7 +310,7 @@ const ResultTable = ({
                           disabled
                           label={`${person.name}'s Death`}
                           value={settings.deathYears[i]?.toString()}
-                          setValue={() => { }}
+                          setValue={() => {}}
                         />
                       </div>
                     ),
@@ -320,7 +324,7 @@ const ResultTable = ({
                   vertical
                   disabled
                   value={settings.maxYearsShown}
-                  setValue={() => { }}
+                  setValue={() => {}}
                 />
               </div>
               <div className="print:mr-[-20px]">
@@ -331,7 +335,7 @@ const ResultTable = ({
                   vertical
                   subtype="text"
                   value={`${settings.inflation?.toString()}%`}
-                  setValue={() => { }}
+                  setValue={() => {}}
                 />
               </div>
               <div className="print:hidden">
