@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import puppeteer from "puppeteer";
+import puppeteer, { Browser } from "puppeteer";
 import { PDFDocument } from "pdf-lib";
 dotenv.config();
 const port = 3002;
@@ -44,12 +44,7 @@ async function mergeAllPDFs(urls: any[]) {
   return Buffer.from(pdfData);
 }
 
-const getPdf = async (url: string) => {
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/google-chrome",
-    ignoreDefaultArgs: ["--disable-extensions"],
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+const getPdf = async (url: string, browser: Browser) => {
   console.log("url", url);
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 800 });
@@ -83,7 +78,6 @@ const getPdf = async (url: string) => {
   await page.addStyleTag({
     content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
   });
-  await browser.close();
   return pdf;
 };
 
@@ -92,9 +86,15 @@ app.get("/", async (req, res) => {
   if (!url) {
     return res.status(400).send("Missing url query parameter");
   }
+  const browser = await puppeteer.launch({
+    executablePath: "/usr/bin/google-chrome",
+    ignoreDefaultArgs: ["--disable-extensions"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+
   const pages = await Promise.all(
     ["cover", "chart", "incomes", "spending"].map((page) =>
-      getPdf(`${url}?page=${page}`),
+      getPdf(`${url}?page=${page}`, browser),
     ),
   );
   const result = await mergeAllPDFs(pages);
