@@ -166,7 +166,7 @@ const ResultTable = ({
                   content={(() => {
                     const needs = calculateSpendingYear(
                       settings.data,
-                      settings.spending,
+                      client.spending,
                       settings,
                       currentYear,
                     );
@@ -188,11 +188,11 @@ const ResultTable = ({
                     );
                     return (
                       <div className="z-[5000000] bg-white  sticky">
-                        {settings.spending && client.needsFlag && (
+                        {client.spending && client.needsFlag && (
                           <>
                             <div>
-                              Needs:{" "}
-                              {settings.spending && formatter.format(needs)}
+                              Spending:{" "}
+                              {client.spending && formatter.format(needs)}
                             </div>
 
                             <div>
@@ -210,10 +210,10 @@ const ResultTable = ({
                               {Math.round((stableIncome / income) * 100)}%
                             </div>
                           )}
-                        {settings.spending &&
+                        {client.spending &&
                           client.stabilityRatioFlag &&
                           client.needsFlag && (
-                            <div>Needs Stable: {needsStable}%</div>
+                            <div>Spending Stable: {needsStable}%</div>
                           )}
                       </div>
                     );

@@ -70,7 +70,7 @@ const AllInOneCalculator: React.FC<any> = () => {
           </Link>
           <h1 className="text-3xl font-bold">Time Value of Money Calculator</h1>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-6">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -96,12 +96,12 @@ const AllInOneCalculator: React.FC<any> = () => {
                         data.flatMap((item: any, i: any) =>
                           i === index
                             ? [
-                                item,
-                                {
-                                  ...item,
-                                  id: Math.round(Math.random() * 100000),
-                                },
-                              ]
+                              item,
+                              {
+                                ...item,
+                                id: Math.round(Math.random() * 100000),
+                              },
+                            ]
                             : [item],
                         ),
                       )

@@ -14,7 +14,8 @@ const Report = ({ scenario, client, page }: ReportProps) => {
   if (page == "incomes") return <Print scenario={scenario} client={client} />;
   if (page == "chart")
     return <MapChart settings={scenario} client={client} print />;
-  if (page == "spending") return <Spending scenario={scenario} />;
+  if (page == "spending")
+    return <Spending scenario={scenario} spending={client.spending} />;
   return <div></div>;
 };
 

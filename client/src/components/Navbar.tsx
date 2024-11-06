@@ -43,7 +43,9 @@ const Navbar = ({
       <div className=" flex justify-between items-center h bg-white w-full flex-1">
         <div className="flex items-center justify-start w-full flex-1">
           <Link to="/clients">
-            <div className="flex items-center cursor-pointer">
+            <div
+              className={`flex items-center cursor-pointer ${user?.info?.logo ? "" : "min-w-[200px]"}`}
+            >
               {user?.info ? (
                 <img
                   src={
@@ -51,7 +53,7 @@ const Navbar = ({
                       ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
                       : logo
                   }
-                  className="h-9 mr-2"
+                  className="h-9 mr-2 "
                 />
               ) : (
                 <div className="w-9 h-9"></div>
@@ -79,9 +81,9 @@ const Navbar = ({
               />
               {data.needsFlag && (
                 <NavItem
-                  name="Needs"
+                  name="Spending"
                   active={active == "spending"}
-                  link={`/client/${data.id}/needs`}
+                  link={`/client/${data.id}/spending`}
                 />
               )}
               <NavItem

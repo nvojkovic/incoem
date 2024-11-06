@@ -146,7 +146,7 @@ const Input = ({
   }
   return (
     <div
-      className={`flex ${vertical ? "flex-col" : "lg:flex-row "} gap-1 w-full  flex-col`}
+      className={`flex ${vertical ? "flex-col" : "lg:flex-row md:flex-row"} gap-1 w-full  flex-col`}
     >
       <div
         className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}

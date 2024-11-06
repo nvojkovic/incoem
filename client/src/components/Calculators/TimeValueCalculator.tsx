@@ -15,7 +15,7 @@ type CalculatorType =
   | "Future Value"
   | "Present Value"
   | "Interest Rate"
-  | "Annual Payment"
+  | "Payment"
   | "Time Period";
 
 interface CalculatorState {
@@ -40,7 +40,7 @@ const TimeValueCalculator: React.FC<any> = ({
     "Future Value",
     "Present Value",
     "Interest Rate",
-    "Annual Payment",
+    "Payment",
     "Time Period",
   ];
 
@@ -129,7 +129,7 @@ const TimeValueCalculator: React.FC<any> = ({
           }
         }
         return (low + high) / 2;
-      case "Annual Payment":
+      case "Payment":
         const r = interestRate / 100;
         const pf = timing === "Beginning of Year" ? 1 + r / n : 1;
         return (
@@ -162,15 +162,12 @@ const TimeValueCalculator: React.FC<any> = ({
       labelLength={110}
       options={calculatorOptions.map((option) => ({
         id: option,
-        name:
-          option === "Annual Payment" ? `${data.compounding} Payment` : option,
+        name: option,
       }))}
       selected={{
         id: data.calculatorType,
         name:
-          data.calculatorType === "Annual Payment"
-            ? `Payment`
-            : data.calculatorType,
+          data.calculatorType === "Payment" ? `Payment` : data.calculatorType,
       }}
       setSelected={(option) =>
         handleInputChange("calculatorType", option.id as CalculatorType)
@@ -209,7 +206,7 @@ const TimeValueCalculator: React.FC<any> = ({
         subtype="percent"
       />
     ),
-    data.calculatorType !== "Annual Payment" && (
+    data.calculatorType !== "Payment" && (
       <Input
         label="Payment"
         size="sm"
@@ -319,7 +316,7 @@ const TimeValueCalculator: React.FC<any> = ({
             </div>
           </div>
         </div>
-        <div className="flex gap-6 justify-center mt-2">
+        <div className="flex gap-6 md:flex-col sm:flex-col lg:flex-row justify-center mt-2">
           <div className="flex flex-col gap-4">
             {inputs.slice(0, 4).map((i) => i)}
           </div>
@@ -357,7 +354,7 @@ const TimeValueCalculator: React.FC<any> = ({
         </div>
         <div className="rounded text-center bg-[#f8fafc] p-2 mt-2">
           <span className="font-bold">
-            {data.calculatorType === "Annual Payment"
+            {data.calculatorType === "Payment"
               ? `${data.compounding} Payment`
               : data.calculatorType}
             :

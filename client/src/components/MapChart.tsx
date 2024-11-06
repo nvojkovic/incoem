@@ -24,7 +24,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
             (currentYear) =>
               calculateSpendingYear(
                 settings.data,
-                settings.spending,
+                client.spending,
                 { ...settings, taxType: "Pre-Tax" },
                 currentYear,
               ),

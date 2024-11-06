@@ -165,7 +165,6 @@ interface ScenarioSettings {
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;
-  spending?: RetirementSpendingSettings;
   data: IncomeMapData;
 }
 

@@ -16,6 +16,7 @@ export default {
       },
       colors: {
         "main-orange": "var(--primary-color)",
+        "main-orange-medium": "rgba(var(--primary-color-segment),0.7)",
         "main-orange-light": "rgba(var(--primary-color-segment),0.1)",
       },
     },
@@ -24,7 +25,7 @@ export default {
     },
   },
   plugins: [
-    function({ addVariant }) {
+    function ({ addVariant }) {
       addVariant("fullscreen", "&:fullscreen");
     },
     require("flowbite/plugin"),

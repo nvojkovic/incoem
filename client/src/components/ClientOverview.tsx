@@ -25,7 +25,7 @@ const ClientOverview = () => {
             <Input
               value={data.needsFlag}
               setValue={setField("needsFlag")}
-              label="Needs"
+              label="Spending"
               size="full"
               subtype="toggle"
             />

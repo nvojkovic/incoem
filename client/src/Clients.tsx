@@ -6,7 +6,6 @@ import { deleteClient, getClients } from "./services/client";
 import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
 import { useUser } from "./useUser";
-import { calculateAge } from "./components/Info/PersonInfo";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 const Clients = () => {
@@ -22,34 +21,33 @@ const Clients = () => {
     fetchClients();
   }, []);
 
-  const SortIcon = useMemo(
-    ({ name, key }: { name: string; key: string }) => {
-      const handleClick = () => {
-        if (sortKey === key) {
-          setSortDir(sortDir === "up" ? "down" : "up");
-        } else {
-          setSortKey(key);
-          setSortDir("up");
-        }
-      };
-
-      return (
-        <div className="w-full cursor-pointer" onClick={handleClick}>
-          {name}
-          {sortKey === key && (
-            sortDir === "up" ? 
-              <ChevronUpIcon className="w-4 inline-block ml-1 mb-[2px]" /> :
-              <ChevronDownIcon className="w-4 inline-block ml-1 mb-[2px]" />
-          )}
-        </div>
-      );
-    },
-    [sortDir, sortKey],
-  );
-
-  const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("name");
   const [sortDir, setSortDir] = useState("up");
+
+  const SortIcon = ({ name, key }: { name: string; key: string }) => {
+    const handleClick = () => {
+      if (sortKey === key) {
+        setSortDir(sortDir === "up" ? "down" : "up");
+      } else {
+        setSortKey(key);
+        setSortDir("up");
+      }
+    };
+
+    return (
+      <div className="w-full cursor-pointer" onClick={handleClick}>
+        {name}
+        {sortKey === key &&
+          (sortDir === "up" ? (
+            <ChevronUpIcon className="w-4 inline-block ml-1 mb-[2px]" />
+          ) : (
+            <ChevronDownIcon className="w-4 inline-block ml-1 mb-[2px]" />
+          ))}
+      </div>
+    );
+  };
+
+  const [search, setSearch] = useState("");
 
   const deleteCl = async (client: Client) => {
     await deleteClient(client);
@@ -94,30 +92,32 @@ const Clients = () => {
             </thead>
             <tbody className="print:text-sm">
               {clients
-                ?.filter(client => 
-                  client.title.toLowerCase().includes(search.toLowerCase())
+                ?.filter((client) =>
+                  client.title.toLowerCase().includes(search.toLowerCase()),
                 )
                 ?.sort((a, b) => {
                   if (sortKey === "name") {
-                    return sortDir === "up" 
+                    return sortDir === "up"
                       ? a.title.localeCompare(b.title)
                       : b.title.localeCompare(a.title);
                   }
                   if (sortKey === "updated_at") {
                     return sortDir === "up"
-                      ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-                      : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                      ? new Date(a.createdAt).getTime() -
+                      new Date(b.createdAt).getTime()
+                      : new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime();
                   }
                   return 0;
                 })
                 ?.map((client, i) => (
-                <ClientOverview
-                  i={i}
-                  key={client.id}
-                  client={client}
-                  onDelete={() => deleteCl(client)}
-                />
-              ))}
+                  <ClientOverview
+                    i={i}
+                    key={client.id}
+                    client={client}
+                    onDelete={() => deleteCl(client)}
+                  />
+                ))}
             </tbody>
           </table>
         ) : (

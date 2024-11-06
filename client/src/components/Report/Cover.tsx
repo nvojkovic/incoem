@@ -54,10 +54,28 @@ const ReportCover = ({ settings, client }: CoverProps) => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <PrintCard
-              title="Inflation"
-              subtitle={`${settings.inflation || 0}%`}
+              title="Inflation-Adjustment"
+              subtitle={`${settings.inflationType === "Real" ? settings.inflation || 0 : 0}%`}
             />
+            {settings?.retirementYear && (
+              <PrintCard
+                title={`Retirement Year`}
+                subtitle={settings.retirementYear}
+              />
+            )}
 
+            {client.spending?.preTaxRate && (
+              <PrintCard
+                title={`Pre-Retirement Tax Rate`}
+                subtitle={`${client.spending.preTaxRate}%`}
+              />
+            )}
+            {client.spending?.postTaxRate && (
+              <PrintCard
+                title={`Post-Retirement Tax Rate`}
+                subtitle={`${client.spending.postTaxRate}%`}
+              />
+            )}
             {settings.data.people.length > 1 &&
               settings.data.people.map(
                 (person, i) =>
@@ -68,25 +86,6 @@ const ReportCover = ({ settings, client }: CoverProps) => {
                     />
                   ),
               )}
-
-            {settings.spending?.preTaxRate && (
-              <PrintCard
-                title={`Pre-Retirement Tax Rate`}
-                subtitle={`${settings.spending.preTaxRate}%`}
-              />
-            )}
-            {settings.spending?.postTaxRate && (
-              <PrintCard
-                title={`Post-Retirement Tax Rate`}
-                subtitle={`${settings.spending.postTaxRate}%`}
-              />
-            )}
-            {settings?.retirementYear && (
-              <PrintCard
-                title={`Retirement Year`}
-                subtitle={settings.retirementYear}
-              />
-            )}
           </div>
         </div>
       </div>

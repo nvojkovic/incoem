@@ -300,7 +300,7 @@ const StackedAreaChart = ({
                           <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                             <div>
                               <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-                              <b>Needs: </b>
+                              <b>Spending: </b>
                             </div>
                             <div>
                               <b>${formatCurrency.format(selectedData["Spending"])}</b>

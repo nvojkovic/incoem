@@ -455,6 +455,7 @@ const SpendingPage = () => {
                 <div className="mt-1">
                   <Input
                     label="Amount"
+                    width="!w-16"
                     value={settings.inflation}
                     setValue={(v: any) =>
                       setSettings({ ...settings, inflation: v })
@@ -584,10 +585,10 @@ const SpendingPage = () => {
               />
             </div>
           </div>
-          <div className="bg-white pb-1">
+          <div className="bg-white pb-[2px]">
             <StackedAreaChart
               maxY={maxY}
-              initialHeight={800}
+              initialHeight={window.innerHeight - 400}
               stability={data.stabilityRatioFlag}
               needsFlag={data.needsFlag}
               years={yearRange(

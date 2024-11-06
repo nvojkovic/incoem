@@ -69,7 +69,7 @@ const router = createBrowserRouter([
             element: <AllInOneCalculator />,
           },
           {
-            path: "needs",
+            path: "spending",
             element: <SpendingPage />,
           },
           {

@@ -164,7 +164,7 @@ const VersatileCalculator: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">User Settings</h2>
@@ -327,7 +327,7 @@ const VersatileCalculator: React.FC = () => {
             <div className="font-semibold text-lg mt-[2px]">
               {printNumber(
                 calculations.length &&
-                  calculations[calculations.length - 1].endingBalance,
+                calculations[calculations.length - 1].endingBalance,
               )}
             </div>
           </div>
@@ -547,8 +547,8 @@ const VersatileCalculator: React.FC = () => {
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                  settings.payment.startYear +
-                                  1,
+                                settings.payment.startYear +
+                                1,
                               ),
                             ).keys(),
                           ].map((k) => {

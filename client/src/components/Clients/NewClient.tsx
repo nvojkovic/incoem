@@ -112,7 +112,7 @@ const NewClient = () => {
         />
         <Input
           subtype="toggle"
-          label="Needs"
+          label="Spending"
           value={needs}
           setValue={setNeeds}
         />
