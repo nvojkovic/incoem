@@ -20,8 +20,8 @@ const ClientOverview = ({
       className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} cursor-pointer border-y border-[#EAECF0] hover:bg-slate-100`}
       onClick={() => na(`/client/${client.id}/income`)}
     >
-      <td className="px-2 py-3 w-[500px]">{client.title}</td>
-      <td className="px-2 py-1 w-[500px]">
+      <td className="px-2 py-3 ">{client.title}</td>
+      <td className="px-2 py-1 text-sm text-gray-600">
         {new Date(client.createdAt).toLocaleDateString()}
       </td>
       <td className="px-2 py-1 w-[500px]">

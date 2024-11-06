@@ -125,12 +125,12 @@ const StackedAreaChart = ({
       .domain([
         0,
         maxY * 1.1 ||
-        Math.max(
-          (d3 as any).max(processedData as any, (d: any) => {
-            return d3.sum(keys, (key: any) => d[key]);
-          }),
-          lineData ? Math.max(...lineData) : 0,
-        ) * 1.1,
+          Math.max(
+            (d3 as any).max(processedData as any, (d: any) => {
+              return d3.sum(keys, (key: any) => d[key]);
+            }),
+            lineData ? Math.max(...lineData) : 0,
+          ) * 1.1,
       ])
       .range([height, 0]);
 
@@ -283,12 +283,12 @@ const StackedAreaChart = ({
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function(_: any, __: any) {
+    const mouseover = function (_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function(event: any, _: any) {
+    const mousemove = function (event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -357,7 +357,7 @@ const StackedAreaChart = ({
                     <b>Gap: </b>
                   </div>
                   <div>
-                    <b style="color:${keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)] < 0 ? "red" : ""}">${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)])}</b>
+                    <b style="color:${keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)] < 0 ? "red" : "green"}">${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)])}</b>
                   </div>
                 </div>
               </div>
@@ -395,7 +395,7 @@ const StackedAreaChart = ({
       }
     };
 
-    const mouseleave = function(_: any, __: any) {
+    const mouseleave = function (_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };

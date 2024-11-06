@@ -6,6 +6,7 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../useUser";
 import { useInfo } from "../useData";
+import { calculateAge } from "./Info/PersonInfo";
 
 const NavItem = ({
   name,
@@ -27,13 +28,7 @@ const NavItem = ({
   );
 };
 
-const Navbar = ({
-  active,
-  household,
-}: {
-  active: string;
-  household?: string;
-}) => {
+const Navbar = ({ active, client }: { active: string; client?: Client }) => {
   const navigate = useNavigate();
   const { user } = useUser();
   const { data } = useInfo();
@@ -69,10 +64,10 @@ const Navbar = ({
             </div>
           </Link>
           {active == "data" ||
-            active == "calculator" ||
-            active == "map" ||
-            active == "basic" ||
-            active == "spending" ? (
+          active == "calculator" ||
+          active == "map" ||
+          active == "basic" ||
+          active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
                 name="Income"
@@ -103,7 +98,9 @@ const Navbar = ({
       <div className="flex gap-6 items-center max-w-[400px]">
         <Link to={`/client/${data.id}/basic`}>
           <div className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange cursor-pointer">
-            {household ? ` ${household}` : ""}
+            {client?.data
+              ? ` ${client?.title} (${client?.data?.people.map((item) => calculateAge(new Date(item.birthday))).join("/")})`
+              : ""}
           </div>
         </Link>
         <div className="">
@@ -128,10 +125,11 @@ const Navbar = ({
                     {({ active }) => (
                       <Link to="/profile">
                         <button
-                          className={`${active
+                          className={`${
+                            active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Settings
                         </button>
@@ -145,10 +143,11 @@ const Navbar = ({
                         target="_blank"
                       >
                         <button
-                          className={`${active
+                          className={`${
+                            active
                               ? "bg-main-orange text-white"
                               : "text-gray-900"
-                            } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         >
                           Help Center
                         </button>
@@ -160,8 +159,9 @@ const Navbar = ({
                   <Menu.Item>
                     {({ active }) => (
                       <button
-                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
-                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${
+                          active ? "bg-main-orange text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                         onClick={async () => {
                           await Session.signOut();
                           navigate("/login");

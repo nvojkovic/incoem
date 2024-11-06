@@ -10,7 +10,6 @@ const Layout = ({
   page: string;
 }) => {
   const { data } = useInfo();
-  const household = data?.title;
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const Layout = ({
   return (
     <div>
       <div className="sticky top-0 bg-white mb-6 z-[500] shadow-md">
-        {!isFullscreen && <Navbar active={page} household={household} />}
+        {!isFullscreen && <Navbar active={page} client={data} />}
       </div>
       <div className="max-w-[1480px] m-auto mb-32">
         <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">{children}</div>
