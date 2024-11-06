@@ -3,7 +3,7 @@ import Input from "./Inputs/Input";
 const WhoDies = ({ active, setWhoDies, i, title, age, setAge }: any) => {
   return (
     <div
-      className={`px-4 ${active ? "bg-main-orange-medium text-white" : "bg-white"} h-12 flex items-center gap-2 cursor-pointer border border-1 ${i == 1 && "rounded-e-lg"} ${i == -1 && "rounded-s-lg text-xs"}`}
+      className={`px-4 ${active ? "bg-main-orange text-white" : "bg-white"} h-12 flex items-center gap-2 cursor-pointer border border-1 ${i == 1 && "rounded-e-lg"} ${i == -1 && "rounded-s-lg text-xs"}`}
       onClick={() => setWhoDies(i)}
     >
       {active ? (

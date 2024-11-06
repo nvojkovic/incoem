@@ -4,11 +4,12 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
-import { yearRange } from "../../utils";
+import { updateAtIndex, yearRange } from "../../utils";
 import StackedAreaChart from "../NewChart";
 import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
+import WhoDies from "../WhoDies";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -522,53 +523,45 @@ const SpendingPage = () => {
             {data.data.people.length > 1 ? (
               <div className="border rounded-lg p-3 bg-white">
                 <div className="flex gap-4">
-                  <div className="w-[450px]">
-                    {data.data.people.length > 1 ? (
-                      <MultiToggle
-                        options={[
-                          "Both Alive",
-                          `${data.data.people[0].name} Dies`,
-                          `${data.data.people[1].name} Dies`,
-                        ]}
-                        label="Death settings"
-                        value={
-                          settings.whoDies == -1
-                            ? "Both Alive"
-                            : `${data.data.people[settings.whoDies].name} Dies`
-                        }
-                        setValue={(v: any) =>
+                  <div className=" flex">
+                    <WhoDies
+                      active={settings.whoDies == -1}
+                      setWhoDies={(i: number) =>
+                        setSettings({
+                          ...settings,
+                          whoDies: i,
+                        })
+                      }
+                      i={-1}
+                      title="Both Alive"
+                    />
+
+                    {settings.data.people.map((person, i) => (
+                      <WhoDies
+                        active={settings.whoDies == i}
+                        key={person.id}
+                        age={settings.deathYears[i]}
+                        setAge={(e: any) =>
                           setSettings({
                             ...settings,
-                            whoDies:
-                              v == "Both Alive"
-                                ? -1
-                                : data.data.people.findIndex((p) =>
-                                  v.includes(p.name),
-                                ),
-                          })
-                        }
-                      />
-                    ) : null}
-                  </div>
-                  {data.data.people.map((person, ind) => (
-                    <div>
-                      <Input
-                        label={`${person.name}'s Death`}
-                        setValue={(x) =>
-                          setSettings({
-                            ...settings,
-                            deathYears: settings.deathYears.map(
-                              (v: any, i: any) => (ind == i ? x : v),
+                            deathYears: updateAtIndex(
+                              settings.deathYears,
+                              i,
+                              parseInt(e),
                             ),
                           })
                         }
-                        value={settings.deathYears[ind]}
-                        subtype="number"
-                        vertical
-                        size="md"
+                        setWhoDies={(i: number) =>
+                          setSettings({
+                            ...settings,
+                            whoDies: i,
+                          })
+                        }
+                        i={i}
+                        title={`${person.name} Dies At`}
                       />
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : null}
