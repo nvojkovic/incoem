@@ -81,7 +81,7 @@ const Settings = () => {
                       }
                     }}
                   >
-                    Open settings
+                    Open billing settings
                   </Button>
                 </div>
               </div>
