@@ -173,7 +173,7 @@ const Settings = () => {
                 </div>
               </div>
 
-              <SectionHeader title="Features" />
+              <SectionHeader title="Extra Features" />
 
               <div className="italic text-gray-500 text-sm">
                 These are global settings that new clients will inherit.

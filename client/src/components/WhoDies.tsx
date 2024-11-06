@@ -19,7 +19,7 @@ const WhoDies = ({ active, setWhoDies, i, title, age, setAge }: any) => {
               width="!w-12 text-black !py-1"
               label=""
               labelLength={0}
-              value={age}
+              value={age || ""}
               setValue={setAge}
             />
           ) : (

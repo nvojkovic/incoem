@@ -1,5 +1,5 @@
 import Layout from "./components/Layout";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ClientOverview from "./components/Clients/ClientOverview";
 import NewClient from "./components/Clients/NewClient";
 import { deleteClient, getClients } from "./services/client";
@@ -21,14 +21,16 @@ const Clients = () => {
     fetchClients();
   }, []);
 
-  const [sortKey, setSortKey] = useState("name");
-  const [sortDir, setSortDir] = useState("up");
+  const [sortKey, setSortKey] = useState("updated_at");
+  const [sortDir, setSortDir] = useState("down");
 
-  const SortIcon = ({ name, key }: { name: string; key: string }) => {
+  const SortIcon = ({ name, item: key }: { name: string; item: string }) => {
+    console.log(sortKey);
     const handleClick = () => {
       if (sortKey === key) {
         setSortDir(sortDir === "up" ? "down" : "up");
       } else {
+        console.log("setting", key);
         setSortKey(key);
         setSortDir("up");
       }
@@ -81,10 +83,10 @@ const Clients = () => {
             >
               <tr>
                 <th className="pl-2 py-3">
-                  <SortIcon name="Name" key="name" />
+                  <SortIcon name="Name" item="name" />
                 </th>
                 <th className="px-2 py-3">
-                  <SortIcon name="Updated At" key="updated_at" />
+                  <SortIcon name="Updated At" item="updated_at" />
                 </th>
                 <th className="px-2 py-3">People</th>
                 <th className="px-2 py-3">Actions</th>
