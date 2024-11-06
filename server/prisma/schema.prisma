@@ -19,7 +19,7 @@ model Client {
   needsFlag           Boolean  @default(false)
   allInOneCalculator  Json     @default("[]")
   versatileCalculator Json     @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
-  liveSettings        Json     @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Real\",\"taxType\":\"Pre-Tax\"}")
+  liveSettings        Json     @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Nominal\",\"taxType\":\"Pre-Tax\"}")
 }
 
 model UserInfo {

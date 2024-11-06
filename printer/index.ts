@@ -54,7 +54,7 @@ const getPdf = async (url: string, browser: Browser) => {
 
   //wait a second
   console.log("waiting");
-  await new Promise((r) => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 2000));
   console.log("done waiting");
 
   const header = await page.evaluate(() => {
