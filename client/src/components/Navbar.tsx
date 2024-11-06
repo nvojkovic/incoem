@@ -98,9 +98,15 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
       <div className="flex gap-6 items-center max-w-[400px]">
         <Link to={`/client/${data.id}/basic`}>
           <div className="font-semibold text-[16px] ml-3 w-96 text-right text-main-orange cursor-pointer">
-            {client?.data
-              ? ` ${client?.title} (${client?.data?.people.map((item) => calculateAge(new Date(item.birthday))).join("/")})`
-              : ""}
+            {client?.data ? ` ${client?.title} ` : ""}{" "}
+            <div className="font-normal text-gray-500 text-xs">
+              {client?.data?.people
+                .map(
+                  (item) =>
+                    `${item.name} (${calculateAge(new Date(item.birthday))})`,
+                )
+                .join(" | ")}
+            </div>
           </div>
         </Link>
         <div className="">
