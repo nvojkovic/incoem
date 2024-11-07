@@ -37,14 +37,29 @@ const Clients = () => {
     };
 
     return (
-      <div className="w-full cursor-pointer" onClick={handleClick}>
+      <div
+        className="w-full cursor-pointer flex items-center gap-3 py-3"
+        onClick={handleClick}
+      >
         {name}
-        {sortKey === key &&
-          (sortDir === "up" ? (
-            <ChevronUpIcon className="w-4 inline-block ml-1 mb-[2px]" />
-          ) : (
-            <ChevronDownIcon className="w-4 inline-block ml-1 mb-[2px]" />
-          ))}
+        <div className="inline-block">
+          <div className="flex flex-col">
+            <ChevronUpIcon
+              className={
+                sortKey == key && sortDir == "up"
+                  ? "text-black mb-[-3px]"
+                  : "text-gray-400 mb-[-3px]"
+              }
+            />
+            <ChevronDownIcon
+              className={
+                sortKey == key && sortDir == "down"
+                  ? "text-black w-3"
+                  : "text-gray-400 w-3"
+              }
+            />
+          </div>
+        </div>
       </div>
     );
   };
@@ -58,73 +73,75 @@ const Clients = () => {
 
   return (
     <Layout page="home">
-      <div className="flex justify-between px-10 items-center mb-10">
-        <div className="font-semibold text-[30px]">Clients overview</div>
-        <div className="flex h-10 gap-5">
-          <div className="w-[400px]">
-            <Input
-              placeholder="Search clients"
-              label=""
-              value={search}
-              setValue={setSearch}
-              size="full"
-            />
-          </div>
-          <div>
-            <NewClient />
+      <div className="border bg-white rounded-xl shadow-lg">
+        <div className="flex justify-between px-10 items-center pt-8 ">
+          <div className="font-semibold text-[30px]">Clients overview</div>
+          <div className="flex h-10 gap-5">
+            <div className="w-[400px]">
+              <Input
+                placeholder="Search clients"
+                label=""
+                value={search}
+                setValue={setSearch}
+                size="full"
+              />
+            </div>
+            <div>
+              <NewClient />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="px-10">
-        {clients ? (
-          <table className=" w-full border bg-white">
-            <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
-            >
-              <tr>
-                <th className="pl-2 py-3">
-                  <SortIcon name="Name" item="name" />
-                </th>
-                <th className="px-2 py-3">
-                  <SortIcon name="Updated At" item="updated_at" />
-                </th>
-                <th className="px-2 py-3">People</th>
-                <th className="px-2 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="print:text-sm">
-              {clients
-                ?.filter((client) =>
-                  client.title.toLowerCase().includes(search.toLowerCase()),
-                )
-                ?.sort((a, b) => {
-                  if (sortKey === "name") {
-                    return sortDir === "up"
-                      ? a.title.localeCompare(b.title)
-                      : b.title.localeCompare(a.title);
-                  }
-                  if (sortKey === "updated_at") {
-                    return sortDir === "up"
-                      ? new Date(a.createdAt).getTime() -
-                      new Date(b.createdAt).getTime()
-                      : new Date(b.createdAt).getTime() -
-                      new Date(a.createdAt).getTime();
-                  }
-                  return 0;
-                })
-                ?.map((client, i) => (
-                  <ClientOverview
-                    i={i}
-                    key={client.id}
-                    client={client}
-                    onDelete={() => deleteCl(client)}
-                  />
-                ))}
-            </tbody>
-          </table>
-        ) : (
-          <Spinner />
-        )}
+        <div className="px-10 bg-white p-9">
+          {clients ? (
+            <table className=" w-full border ">
+              <thead
+                className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
+              >
+                <tr>
+                  <th className="pl-2 ">
+                    <SortIcon name="Name" item="name" />
+                  </th>
+                  <th className="px-2 ">
+                    <SortIcon name="Last Updated" item="updated_at" />
+                  </th>
+                  <th className="px-2 ">People</th>
+                  <th className="px-2 ">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="print:text-sm">
+                {clients
+                  ?.filter((client) =>
+                    client.title.toLowerCase().includes(search.toLowerCase()),
+                  )
+                  ?.sort((a, b) => {
+                    if (sortKey === "name") {
+                      return sortDir === "up"
+                        ? a.title.localeCompare(b.title)
+                        : b.title.localeCompare(a.title);
+                    }
+                    if (sortKey === "updated_at") {
+                      return sortDir === "up"
+                        ? new Date(a.createdAt).getTime() -
+                        new Date(b.createdAt).getTime()
+                        : new Date(b.createdAt).getTime() -
+                        new Date(a.createdAt).getTime();
+                    }
+                    return 0;
+                  })
+                  ?.map((client, i) => (
+                    <ClientOverview
+                      i={i}
+                      key={client.id}
+                      client={client}
+                      onDelete={() => deleteCl(client)}
+                    />
+                  ))}
+              </tbody>
+            </table>
+          ) : (
+            <Spinner />
+          )}
+        </div>
       </div>
     </Layout>
   );

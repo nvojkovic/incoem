@@ -33,10 +33,49 @@ export const printReport = async (clientId: number, scenarioId: number) => {
   let pdfFile;
   pdfFile = await fetch(
     import.meta.env.VITE_API_URL +
-      "print/client/pdf/" +
-      clientId +
-      "/" +
-      Math.max(scenarioId, 0).toString(),
+    "print/client/pdf/" +
+    clientId +
+    "/" +
+    Math.max(scenarioId, 0).toString(),
   ).then((res) => res.json());
   return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
 };
+
+export function timeAgo(date: Date): string {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  // Define time intervals in seconds
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1,
+  };
+
+  // Handle future dates
+  if (diffInSeconds < 0) {
+    return "in the future";
+  }
+
+  // Handle just now
+  if (diffInSeconds < 30) {
+    return "just now";
+  }
+
+  // Find the appropriate interval
+  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+    const count = Math.floor(diffInSeconds / secondsInUnit);
+
+    if (count >= 1) {
+      // Handle singular/plural
+      const plural = count === 1 ? "" : "s";
+      return `${count} ${unit}${plural} ago`;
+    }
+  }
+
+  return "just now";
+}

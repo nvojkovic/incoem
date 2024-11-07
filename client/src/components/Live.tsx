@@ -72,46 +72,49 @@ const Live = ({
         className={`flex items-center h-32 sticky ${fullScreen ? "top-[45px]" : "top-[116px]"} z-[5000] bg-white`}
       >
         <div className="flex justify-between items-end mb-5 z-0 px-4 w-full">
-          <div className="flex items-end gap-10">
+          <div className="flex items-start mt-3 gap-10 ">
             {settings.data.people.length == 2 ? (
-              <div className="flex gap-3 border border-1 rounded-md h-10 items-end">
-                <div className={`flex items-end`}>
-                  <WhoDies
-                    active={settings.whoDies == -1}
-                    setWhoDies={(i: number) =>
-                      setSettings({
-                        ...settings,
-                        whoDies: i,
-                      })
-                    }
-                    i={-1}
-                    title="Both Alive"
-                  />
-                  {settings.data.people.map((person, i) => (
+              <div className="flex gap-3 items-end justify-start">
+                <div className="">
+                  <div className="text-sm text-[#344054] mb-1 ">Death</div>
+                  <div className={`flex items-end`}>
                     <WhoDies
-                      active={settings.whoDies == i}
-                      key={person.id}
-                      age={settings.deathYears[i]}
-                      setAge={(e: any) =>
-                        setSettings({
-                          ...settings,
-                          deathYears: updateAtIndex(
-                            settings.deathYears,
-                            i,
-                            parseInt(e),
-                          ),
-                        })
-                      }
+                      active={settings.whoDies == -1}
                       setWhoDies={(i: number) =>
                         setSettings({
                           ...settings,
                           whoDies: i,
                         })
                       }
-                      i={i}
-                      title={`${person.name} Dies At`}
+                      i={-1}
+                      title="Both Alive"
                     />
-                  ))}
+                    {settings.data.people.map((person, i) => (
+                      <WhoDies
+                        active={settings.whoDies == i}
+                        key={person.id}
+                        age={settings.deathYears[i]}
+                        setAge={(e: any) =>
+                          setSettings({
+                            ...settings,
+                            deathYears: updateAtIndex(
+                              settings.deathYears,
+                              i,
+                              parseInt(e),
+                            ),
+                          })
+                        }
+                        setWhoDies={(i: number) =>
+                          setSettings({
+                            ...settings,
+                            whoDies: i,
+                          })
+                        }
+                        i={i}
+                        title={`${person.name} Dies At`}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : (
@@ -139,7 +142,6 @@ const Live = ({
                     />
                   </div>
                 ))}
-
               <div className="">
                 <Input
                   label="Years"
