@@ -1,4 +1,3 @@
-import logo from "src/assets/logo.png";
 import ResultTable from "src/components/IncomeTable/ResultTable";
 import { UserProvider } from "src/useUser";
 import Header from "./Header";
@@ -17,14 +16,14 @@ const Print = ({ client, scenario }: PrintProps) => {
           <ResultTable
             client={client}
             settings={scenario}
-            changeFullScreen={() => { }}
+            changeFullScreen={() => {}}
             fullScreen={true}
             id={scenario.id}
-            removeScenario={() => { }}
+            removeScenario={() => {}}
             selectedYear={0}
-            setSelectedYear={() => { }}
+            setSelectedYear={() => {}}
             selectedColumn={{ id: 0, type: "none" }}
-            setSelectedColumn={() => { }}
+            setSelectedColumn={() => {}}
             name={scenario.name}
           />
         </div>
