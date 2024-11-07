@@ -69,7 +69,7 @@ const Header = ({
                 )}
             </div>
             <div>
-              <img src={`${logoData}`} alt="logo" className="h-5" />
+              <img src={`${logoData}`} alt="logo" style={{ height: "20px" }} />
             </div>
           </div>
         </div>
