@@ -2,6 +2,7 @@ import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import { yearRange } from "../utils";
 import StackedAreaChart from "./NewChart";
+import Header from "./Report/Header";
 import { calculateSpendingYear } from "./Spending/SpendingPage";
 
 interface MapChartProps {
@@ -15,6 +16,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
   const startYear = new Date().getFullYear();
   return (
     <div>
+      <Header client={client as any} scenario={settings} />
       <StackedAreaChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
         spending={false}

@@ -79,7 +79,8 @@ const ReportCover = ({ settings, client }: CoverProps) => {
             {settings.data.people.length > 1 &&
               settings.data.people.map(
                 (person, i) =>
-                  settings.whoDies == i && (
+                  settings.whoDies == i &&
+                  settings.deathYears[i] && (
                     <PrintCard
                       title={`${person.name}'s Death`}
                       subtitle={`${settings.deathYears[i]?.toString()} years`}

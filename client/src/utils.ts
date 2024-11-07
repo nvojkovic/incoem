@@ -79,3 +79,38 @@ export function timeAgo(date: Date): string {
 
   return "just now";
 }
+
+export async function imageUrlToBase64(imageUrl: string) {
+  try {
+    // Fetch the image
+    const response = await fetch(imageUrl);
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch image: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    // Get the image blob
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        // The result contains the base64 string
+        resolve(reader.result);
+      };
+
+      reader.onerror = () => {
+        reject(new Error("Failed to convert image to base64"));
+      };
+
+      // Read the blob as a base64 string
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error("Error converting image to base64:", error);
+    throw error;
+  }
+}
