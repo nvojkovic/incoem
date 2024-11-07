@@ -69,7 +69,16 @@ const Header = ({
                 )}
             </div>
             <div>
-              <img src={`${logoData}`} alt="logo" style={{ height: "20px" }} />
+              <img 
+                src={`${logoData}`} 
+                alt="logo" 
+                style={{ 
+                  height: "20px",
+                  width: "auto",
+                  maxHeight: "20px",
+                  objectFit: "contain"
+                }} 
+              />
             </div>
           </div>
         </div>
