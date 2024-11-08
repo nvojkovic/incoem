@@ -15,9 +15,9 @@ const MapSection = ({
 }: Props) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div>
+    <div className="bg-white p-3 border shadow-md rounded-lg">
       <div
-        className={`flex justify-between mb-6 pb-3 border-b border-[#EAECF0] font-semibold text-2xl cursor-pointer  bg-[#f8f8f8] ${toggleabble ? "" : "z-50 sticky top-[72px]"}`}
+        className={`flex justify-between mb-3 pb-3 border-b border-[#EAECF0] font-semibold text-2xl cursor-pointer ${toggleabble ? "" : "z-50 sticky top-[72px]"}`}
         onClick={() => toggleabble && setOpen(!open)}
       >
         {title}

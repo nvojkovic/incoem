@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { HuePicker } from "react-color";
 import Input from "../components/Inputs/Input";
 import Layout from "../components/Layout";
 import { useUser } from "../useUser";
@@ -8,10 +7,40 @@ import { updateSettings, uploadLogo } from "../services/client";
 import Spinner from "../components/Spinner";
 import { Tooltip } from "flowbite-react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import Alert from "src/components/Alert";
 
 const SectionHeader = ({ title }: any) => (
   <div className="text-lg border-b border-black pb-1">{title}</div>
 );
+
+const isColorTooLight = (
+  hexColor: string,
+  threshold: number = 0.7,
+): boolean => {
+  // Remove # if present
+  const hex = hexColor.replace("#", "");
+
+  // Validate hex format
+  if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+    throw new Error("Invalid hex color format. Expected 6 characters (RGB)");
+  }
+
+  // Convert hex to RGB
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+
+  // Calculate relative luminance using sRGB color space
+  // Formula from: https://www.w3.org/TR/WCAG20/#relativeluminancedef
+  const toSRGB = (c: number): number => {
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+
+  const luminance =
+    0.2126 * toSRGB(r) + 0.7152 * toSRGB(g) + 0.0722 * toSRGB(b);
+
+  return luminance > threshold;
+};
 
 const Settings = () => {
   const { user, fetchUser } = useUser();
@@ -20,6 +49,7 @@ const Settings = () => {
   }, [user]);
   const [settings, setSettings] = useState(null as any);
   const [loading, setLoading] = useState(false);
+  const [tooLight, setTooLight] = useState(false);
   const ref = useRef(null as any);
   const upload = async (e: any) => {
     const file = e.target.files[0];
@@ -28,11 +58,21 @@ const Settings = () => {
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings({ ...settings, primaryColor: e.target.value });
+    if (isColorTooLight(e.target.value)) {
+      setTooLight(true);
+    } else {
+      setSettings({ ...settings, primaryColor: e.target.value });
+    }
   };
 
   return (
     <Layout page="settings">
+      <Alert onClose={() => setTooLight(false)} isOpen={tooLight}>
+        <div className="mb-5">
+          This color is too light. It would interfere with the rest of the UI.
+          Please choose a different color
+        </div>
+      </Alert>
       {settings ? (
         <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
           <div className="flex lg:flex-row flex-col gap-10 w-full">
@@ -96,12 +136,7 @@ const Settings = () => {
                 >
                   Primary Color
                 </label>
-                <HuePicker
-                  color={settings.primaryColor}
-                  onChange={(e) => {
-                    setSettings({ ...settings, primaryColor: e.hex });
-                  }}
-                />
+
                 <input
                   type="color"
                   id="primaryColor"

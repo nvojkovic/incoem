@@ -82,7 +82,7 @@ const ClientOverview = ({
             setDuplicateOpen(false);
             setNewName("");
           }}
-          onConfirm={(i: any) => {
+          onConfirm={() => {
             setDuplicateOpen(false);
             onDuplicate(client, newName);
           }}
