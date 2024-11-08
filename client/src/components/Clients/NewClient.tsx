@@ -10,7 +10,13 @@ import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
 
-const PersonInfo = ({ person, setPerson }: any) => {
+const PersonInfo = ({
+  person,
+  onChange,
+}: {
+  person: Person;
+  onChange: (updated: Person) => void;
+}) => {
   if (!person) return <div className="h-20"></div>;
   return (
     <div className="flex gap-5 my-8">
@@ -20,7 +26,7 @@ const PersonInfo = ({ person, setPerson }: any) => {
         vertical
         subtype="text"
         size="lg"
-        setValue={(name) => setPerson({ ...person, name })}
+        setValue={(name) => onChange({ ...person, name })}
       />
       <Input
         label="Birthday"
@@ -28,55 +34,65 @@ const PersonInfo = ({ person, setPerson }: any) => {
         size="lg"
         vertical
         value={person.birthday}
-        setValue={(birthday) => setPerson({ ...person, birthday })}
+        setValue={(birthday) => onChange({ ...person, birthday })}
       />
     </div>
   );
 };
-const newPerson = (id: number) => ({
-  name: "",
-  birthday: null as any,
-  id,
+const initializeNewClient = (user: User | null): Client => ({
+  id: 1,
+  title: "",
+  createdAt: new Date().toISOString(),
+  data: {
+    incomes: [],
+    people: [
+      { name: "", birthday: null as any, id: 0 },
+      { name: "", birthday: null as any, id: 1 },
+    ],
+    version: 1,
+  },
+  scenarios: [],
+  needsFlag: !!user?.info?.needsFlag,
+  stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
+  spending: {} as RetirementSpendingSettings,
+  calculators: {},
+  allInOneCalculator: [],
+  versatileCalculator: {},
+  liveSettings: {
+    id: -1,
+    name: "",
+    inflation: user?.info?.globalInflation,
+    maxYearsShown: user?.info?.globalYearsShown,
+    ssSurvivorAge: [],
+    whoDies: -1,
+    taxType: "Pre-Tax",
+    inflationType: "Nominal",
+    data: {} as any,
+    deathYears: [
+      user?.info?.globalLifeExpectancy,
+      user?.info?.globalLifeExpectancy,
+    ],
+  } as ScenarioSettings,
 });
 
 const NewClient = () => {
   const [step, setStep] = useState(1);
   const [newOpen, setNewOpen] = useState(false);
-  const [people, setPeople] = useState<Person[]>([newPerson(0), newPerson(1)]);
-  const [name, setName] = useState("");
   const { user } = useUser();
-  const [stabilityRatio, setStabilityRatio] = useState(
-    !!user?.info?.stabilityRatioFlag,
-  );
-  const [needs, setNeeds] = useState(!!user?.info?.needsFlag);
+  const [client, setClient] = useState<Client>(() => initializeNewClient(user));
   const navigate = useNavigate();
   const addClient = async () => {
-    const client = {
-      id: 1,
-      title: name,
-      createdAt: new Date().toISOString(),
-      data: {
-        incomes: [],
-        people: people,
-        version: 1 as const,
-      },
-      scenarios: [],
-      needsFlag: needs,
-      stabilityRatioFlag: stabilityRatio,
-    };
     const d = await createClient(client as any);
     const js = await d.json();
     setNewOpen(false);
-    setName("");
-    setPeople([newPerson(0)]);
+    setClient(initializeNewClient(user));
     setStep(1);
     // await updateClients();
     navigate(`/client/${js.data.id}/income`);
   };
   const cancel = () => {
     setNewOpen(false);
-    setName("");
-    setPeople([newPerson(0), newPerson(1)]);
+    setClient(initializeNewClient(user));
     setStep(1);
   };
 
@@ -85,8 +101,8 @@ const NewClient = () => {
       <div className="flex gap-8">
         <Input
           label="Household name"
-          value={name}
-          setValue={setName}
+          value={client.title}
+          setValue={(title) => setClient((prev) => ({ ...prev, title }))}
           vertical
           width="!w-[200px]"
           placeholder="e.g. John and Katie"
@@ -96,28 +112,41 @@ const NewClient = () => {
             subtype="toggle"
             vertical
             label="Single mode"
-            value={people.length === 1}
-            setValue={(b) => {
-              if (b) {
-                setPeople([people[0]]);
-              } else {
-                setPeople([people[0], newPerson(1)]);
-              }
+            value={client.data.people.length === 1}
+            setValue={(singleMode) => {
+              setClient((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  people: singleMode
+                    ? [prev.data.people[0]]
+                    : [
+                        ...prev.data.people,
+                        { name: "", birthday: null, id: 1 },
+                      ],
+                },
+              }));
             }}
           />
         </div>
       </div>
       <div>
-        {people.map((item, i) => (
+        {client.data.people.map((person, i) => (
           <PersonInfo
-            person={item}
+            person={person}
             key={i}
-            setPerson={(person: any) =>
-              setPeople((prev) => updateAtIndex(prev, i, person))
-            }
+            onChange={(updated) => {
+              setClient((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  people: updateAtIndex(prev.data.people, i, updated),
+                },
+              }));
+            }}
           />
         ))}
-        {people.length == 1 && <div className="h-[69px]"></div>}
+        {client.data.people.length === 1 && <div className="h-[69px]"></div>}
       </div>
     </div>
   );
@@ -127,14 +156,16 @@ const NewClient = () => {
       <Input
         subtype="toggle"
         label="Stability Ratio"
-        value={stabilityRatio}
-        setValue={setStabilityRatio}
+        value={client.stabilityRatioFlag}
+        setValue={(flag) =>
+          setClient((prev) => ({ ...prev, stabilityRatioFlag: flag }))
+        }
       />
       <Input
         subtype="toggle"
         label="Spending"
-        value={needs}
-        setValue={setNeeds}
+        value={client.needsFlag}
+        setValue={(flag) => setClient((prev) => ({ ...prev, needsFlag: flag }))}
       />
     </div>
   );
@@ -177,9 +208,11 @@ const NewClient = () => {
             <Button
               type="primary"
               disabled={
-                (step == 1 &&
-                  (!name || !people.every((i) => i.name && i.birthday))) ||
-                (step == 2 && !people.every((i) => i.name && i.birthday))
+                (step === 1 &&
+                  (!client.title ||
+                    !client.data.people.every((p) => p.name && p.birthday))) ||
+                (step === 2 &&
+                  !client.data.people.every((p) => p.name && p.birthday))
               }
               onClick={() => (step == 1 ? setStep(2) : addClient())}
             >
