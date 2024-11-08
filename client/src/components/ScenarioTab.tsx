@@ -23,7 +23,7 @@ const ScenarioTab = ({
     store(x);
   };
   return (
-    <div className={active ? "bg-white" : "bg-[#f8f8f8]"}>
+    <div className={active ? "bg-white" : "bg-[#f3f4f6]"}>
       <div
         className={`${
           live ? "px-6" : "px-5"

@@ -187,7 +187,7 @@ const ResultTable = ({
                       (stableIncome / needs) * 100,
                     );
                     return (
-                      <div className="z-[5000000] bg-white  sticky">
+                      <div className="z-[5000000] bg-white w-40 sticky">
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
@@ -223,7 +223,7 @@ const ResultTable = ({
                     );
                   })()}
                   theme={{ target: "" }}
-                  placement="left"
+                  placement="right"
                   style="light"
                   arrow={false}
                   className={`border-2 border-main-orange bg-white print:hidden ${client.stabilityRatioFlag || client.needsFlag ? "" : "hidden"}`}
@@ -392,7 +392,7 @@ const ResultTable = ({
               i={income.id}
             />
           ))}
-        <div className="flex flex-col print:flex-col-reverse">
+        <div className="flex flexcol print:flex-col-reverse">
           <DraggableTable
             columns={columns}
             setSelectedYear={setSelectedYear}
@@ -405,6 +405,49 @@ const ResultTable = ({
             selectedColumn={selectedColumn}
             setOpenModal={setOpenModal}
           />
+          <table className="pr-3">
+            <thead
+              className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+            >
+              <tr>
+                <td
+                  className={`font-medium  ${
+                    selectedColumn.type == "total" ? "bg-slate-200" : ""
+                  }`}
+                >
+                  <div
+                    className={`flex flex-col items-start px-2 py-[0.95rem] ${false ? "px-6" : "px-2"}`}
+                    onClick={(e) => {
+                      if (e.detail === 1) {
+                        setTimeout(() => {
+                          selectedColumn.type === "total"
+                            ? setSelectedColumn({ type: "none", id: 0 })
+                            : setSelectedColumn({ type: "total", id: 0 });
+                        }, 200);
+                      }
+                    }}
+                  >
+                    Total
+                  </div>
+                </td>
+              </tr>
+            </thead>
+            <tbody className="text-sm">
+              {tableData.map((row, i) => (
+                <tr
+                  key={i}
+                  className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"}  border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
+                >
+                  <td
+                    onClick={() => setSelectedYear(row.year)}
+                    className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} ${false ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
+                  >
+                    {row.total}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </DndContext>
