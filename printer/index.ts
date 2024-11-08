@@ -98,6 +98,7 @@ app.get("/", async (req, res) => {
     ),
   );
   const result = await mergeAllPDFs(pages);
+  browser.close();
 
   res.contentType("application/pdf");
   res.send(result);
