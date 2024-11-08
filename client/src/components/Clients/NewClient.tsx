@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
 
 const PersonInfo = ({ person, setPerson }: any) => {
+  if (!person) return <div className="h-20"></div>;
   return (
     <div className="flex gap-5 my-8">
       <Input
@@ -86,22 +87,25 @@ const NewClient = () => {
           label="Household name"
           value={name}
           setValue={setName}
-          size="full"
           vertical
+          width="!w-[200px]"
           placeholder="e.g. John and Katie"
         />
-        <Input
-          subtype="toggle"
-          label="Single mode"
-          value={people.length === 1}
-          setValue={(b) => {
-            if (b) {
-              setPeople([people[0]]);
-            } else {
-              setPeople([people[0], newPerson(1)]);
-            }
-          }}
-        />
+        <div className="w-full">
+          <Input
+            subtype="toggle"
+            vertical
+            label="Single mode"
+            value={people.length === 1}
+            setValue={(b) => {
+              if (b) {
+                setPeople([people[0]]);
+              } else {
+                setPeople([people[0], newPerson(1)]);
+              }
+            }}
+          />
+        </div>
       </div>
       <div>
         {people.map((item, i) => (
@@ -113,6 +117,7 @@ const NewClient = () => {
             }
           />
         ))}
+        {people.length == 1 && <div className="h-[69px]"></div>}
       </div>
     </div>
   );
@@ -173,8 +178,7 @@ const NewClient = () => {
               type="primary"
               disabled={
                 (step == 1 &&
-                  !name &&
-                  !people.every((i) => i.name && i.birthday)) ||
+                  (!name || !people.every((i) => i.name && i.birthday))) ||
                 (step == 2 && !people.every((i) => i.name && i.birthday))
               }
               onClick={() => (step == 1 ? setStep(2) : addClient())}

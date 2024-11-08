@@ -83,23 +83,26 @@ const Settings = () => {
                   value={settings.name}
                   setValue={(e) => setSettings({ ...settings, name: e })}
                   label="Name"
+                  labelLength={110}
                   size="full"
                 />
                 <Input
                   value={settings.firmName}
                   setValue={(e) => setSettings({ ...settings, firmName: e })}
                   label="Firm name"
+                  labelLength={110}
                   size="full"
                 />
                 <Input
                   value={settings.disclosures}
+                  labelLength={110}
                   setValue={(e) => setSettings({ ...settings, disclosures: e })}
                   label="Disclosures"
                   size="full"
                   subtype="textarea"
                 />
                 <div className="flex items-baseline">
-                  <div className="text-sm text-[#344054] w-[192px]">
+                  <div className="text-sm text-[#344054] w-[172px]">
                     Billing
                   </div>
                   <Button
@@ -124,6 +127,56 @@ const Settings = () => {
                     Open billing settings
                   </Button>
                 </div>
+              </div>
+            </div>
+            <div className="w-1/2 flex flex-col gap-5">
+              <SectionHeader title="Global defaults" />
+              <div className="flex gap-6 flex-col">
+                <Input
+                  value={settings.globalInflation}
+                  subtype="percent"
+                  setValue={(e) =>
+                    setSettings({ ...settings, globalInflation: e })
+                  }
+                  label="Inflation"
+                  size="full"
+                />
+                <Input
+                  value={settings.globalYearsShown}
+                  subtype="number"
+                  setValue={(e) =>
+                    setSettings({ ...settings, globalYearsShown: e })
+                  }
+                  label="Years Shown"
+                  size="full"
+                />
+                <Input
+                  value={settings.globalLifeExpectancy}
+                  subtype="number"
+                  setValue={(e) =>
+                    setSettings({ ...settings, globalLifeExpectancy: e })
+                  }
+                  label="Life Expectancy"
+                  size="full"
+                />
+                <Input
+                  value={settings.globalPreRetirementTaxRate}
+                  subtype="percent"
+                  setValue={(e) =>
+                    setSettings({ ...settings, globalPreRetirementTaxRate: e })
+                  }
+                  label="Pre-Retirement Tax Rate"
+                  size="full"
+                />
+                <Input
+                  value={settings.globalPostRetirementTaxRate}
+                  subtype="percent"
+                  setValue={(e) =>
+                    setSettings({ ...settings, globalPostRetirementTaxRate: e })
+                  }
+                  label="Post-Retirement Tax Rate"
+                  size="full"
+                />
               </div>
             </div>
             <div className="w-full flex flex-col gap-5">
@@ -174,7 +227,7 @@ const Settings = () => {
                   placement="right-end"
                   style="light"
                 >
-                  <div className="w-48">
+                  <div className="w-32">
                     <Button
                       type="secondary"
                       onClick={() => ref.current.click()}
@@ -193,7 +246,7 @@ const Settings = () => {
                   onChange={upload}
                 />
 
-                <div className="w-48">
+                <div className="w-32">
                   {user?.info?.logo && (
                     <Button
                       type="secondary"

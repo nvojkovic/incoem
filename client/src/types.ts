@@ -152,6 +152,11 @@ interface UserInfo {
   email: string;
   name?: string;
   primaryColor: string;
+  globalInflation: number;
+  globalYearsShown: number;
+  globalLifeExpectancy: number;
+  globalPreRetirementTaxRate: number;
+  globalPostRetirementTaxRate: number;
 }
 
 interface ScenarioSettings {

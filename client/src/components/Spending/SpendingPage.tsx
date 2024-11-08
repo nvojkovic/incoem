@@ -149,8 +149,7 @@ const SpendingPage = () => {
     <Layout page="spending">
       <div className="flex flex-col gap-8">
         <MapSection
-          title={<div className="py-2">Current Spending</div>}
-          toggleabble
+          title={<div className="py-2 px-3">Current Spending</div>}
           defaultOpen
         >
           <div className="flex gap-4">
@@ -200,12 +199,14 @@ const SpendingPage = () => {
                 <Button
                   type="primary"
                   className="!py-1"
-                  onClick={() =>
+                  onClick={(e) => {
+                    e.stopPropagation();
+
                     setField("preSpending")([
                       ...spending.preSpending,
                       { increase: { type: "general" } },
-                    ])
-                  }
+                    ]);
+                  }}
                 >
                   Add
                 </Button>
@@ -647,7 +648,8 @@ const SpendingPage = () => {
               spending={true}
             />
           </div>
-
+        </MapSection>
+        <MapSection defaultOpen title="">
           <SpendingTable
             settings={settings}
             spending={spending}

@@ -9,11 +9,11 @@ interface SpendingTableProps {
 const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
   const currentYear = new Date().getFullYear();
   return (
-    <div className="flex gap-4 mt-10">
+    <div className="flex gap-4 p-3">
       {[0, 1, 2, 3, 4].map(
         (tableInd) =>
           currentYear + settings.maxYearsShown >
-          currentYear + tableInd * 16 && (
+            currentYear + tableInd * 16 && (
             <div>
               <table className=" w-full border bg-white">
                 <thead
