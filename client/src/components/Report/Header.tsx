@@ -26,7 +26,7 @@ const Header = ({
             position: "absolute",
             top: 0,
             left: 0,
-            fontSize: "10px",
+            fontSize: "12px",
             color: "black",
             // backgroundColor: "#f0f0f0",
             display: "flex",
@@ -69,15 +69,15 @@ const Header = ({
                 )}
             </div>
             <div>
-              <img 
-                src={`${logoData}`} 
-                alt="logo" 
-                style={{ 
+              <img
+                src={`${logoData}`}
+                alt="logo"
+                style={{
                   height: "20px",
                   width: "auto",
                   maxHeight: "20px",
-                  objectFit: "contain"
-                }} 
+                  objectFit: "contain",
+                }}
               />
             </div>
           </div>

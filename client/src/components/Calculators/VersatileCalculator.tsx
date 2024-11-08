@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import Input from "../Inputs/Input";
 import Button from "../Inputs/Button";
 import Select from "../Inputs/Select";
-import { printNumber as printNumberOld } from "../../utils";
+import { printNumber } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
 import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
-
-const printNumber = (s: number) =>
-  s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
 
 interface CalculationRow {
   age: number;
@@ -320,19 +317,28 @@ const VersatileCalculator: React.FC = () => {
           </div>
         </div>
         <div className="flex w-full mb-10 gap-5 justify-center">
-          <div className="flex flex-col justify-center">
-            <div className="uppercase tracking-wide text-sm w-36 text-gray-800">
+          <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+            <div className="uppercase tracking-wide text-sm text-gray-800">
               Ending Balance
             </div>
             <div className="font-semibold text-lg mt-[2px]">
-              {printNumber(
-                calculations.length &&
-                calculations[calculations.length - 1].endingBalance,
-              )}
+              <span
+                className={
+                  calculations.length &&
+                  calculations[calculations.length - 1].endingBalance < 0
+                    ? "text-red-500"
+                    : ""
+                }
+              >
+                {printNumber(
+                  calculations.length &&
+                    calculations[calculations.length - 1].endingBalance,
+                )}
+              </span>
             </div>
           </div>
-          <div>
-            <div className="uppercase tracking-wide text-sm w-36 text-gray-800">
+          <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+            <div className="uppercase tracking-wide text-sm text-gray-800">
               Total Payments
             </div>
             <div className="font-semibold text-lg mt-[2px]">
@@ -547,8 +553,8 @@ const VersatileCalculator: React.FC = () => {
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                settings.payment.startYear +
-                                1,
+                                  settings.payment.startYear +
+                                  1,
                               ),
                             ).keys(),
                           ].map((k) => {

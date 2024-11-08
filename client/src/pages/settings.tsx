@@ -176,7 +176,9 @@ const Settings = () => {
               <SectionHeader title="Extra Features" />
 
               <div className="italic text-gray-500 text-sm">
-                These are global settings that new clients will inherit.
+                Set the default for new clients created. This default can be
+                overridden (turned off/on) for each individual client in client
+                settings page
               </div>
               <div className="flex flex-col gap-3">
                 <div className="w-60">

@@ -9,7 +9,7 @@ import { useUser } from "./useUser";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 const Clients = () => {
-  const { } = useUser();
+  const {} = useUser();
   const [clients, setClients] = useState<Client[]>(null as any);
 
   const fetchClients = () => {
@@ -91,53 +91,55 @@ const Clients = () => {
             </div>
           </div>
         </div>
-        <div className="px-10 bg-white p-9">
+        <div className="px-10 bg-white p-9 rounded-full">
           {clients ? (
-            <table className=" w-full border ">
-              <thead
-                className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
-              >
-                <tr>
-                  <th className="pl-2 ">
-                    <SortIcon name="Name" item="name" />
-                  </th>
-                  <th className="px-2 ">
-                    <SortIcon name="Last Updated" item="updated_at" />
-                  </th>
-                  <th className="px-2 ">People</th>
-                  <th className="px-2 ">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="print:text-sm">
-                {clients
-                  ?.filter((client) =>
-                    client.title.toLowerCase().includes(search.toLowerCase()),
-                  )
-                  ?.sort((a, b) => {
-                    if (sortKey === "name") {
-                      return sortDir === "up"
-                        ? a.title.localeCompare(b.title)
-                        : b.title.localeCompare(a.title);
-                    }
-                    if (sortKey === "updated_at") {
-                      return sortDir === "up"
-                        ? new Date(a.createdAt).getTime() -
-                        new Date(b.createdAt).getTime()
-                        : new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime();
-                    }
-                    return 0;
-                  })
-                  ?.map((client, i) => (
-                    <ClientOverview
-                      i={i}
-                      key={client.id}
-                      client={client}
-                      onDelete={() => deleteCl(client)}
-                    />
-                  ))}
-              </tbody>
-            </table>
+            <div className="rounded-lg">
+              <table className=" w-full border  rounded-lg border-separate border-spacing-0 ">
+                <thead
+                  className={`text-sm cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
+                >
+                  <tr className="">
+                    <th className="pl-2 rounded-lg">
+                      <SortIcon name="Household" item="name" />
+                    </th>
+                    <th className="px-2 ">
+                      <SortIcon name="Last Updated" item="updated_at" />
+                    </th>
+                    <th className="px-2 ">People</th>
+                    <th className="px-2 ">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="print:text-sm">
+                  {clients
+                    ?.filter((client) =>
+                      client.title.toLowerCase().includes(search.toLowerCase()),
+                    )
+                    ?.sort((a, b) => {
+                      if (sortKey === "name") {
+                        return sortDir === "up"
+                          ? a.title.localeCompare(b.title)
+                          : b.title.localeCompare(a.title);
+                      }
+                      if (sortKey === "updated_at") {
+                        return sortDir === "up"
+                          ? new Date(a.createdAt).getTime() -
+                              new Date(b.createdAt).getTime()
+                          : new Date(b.createdAt).getTime() -
+                              new Date(a.createdAt).getTime();
+                      }
+                      return 0;
+                    })
+                    ?.map((client, i) => (
+                      <ClientOverview
+                        i={i}
+                        key={client.id}
+                        client={client}
+                        onDelete={() => deleteCl(client)}
+                      />
+                    ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <Spinner />
           )}

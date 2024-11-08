@@ -14,7 +14,7 @@ import WhoDies from "../WhoDies";
 export const calculateSpendingYear = (
   data: IncomeMapData,
   spending: RetirementSpendingSettings | undefined,
-  settings: any,
+  settings: ScenarioSettings,
   year: number,
 ) => {
   console.log("spending", spending);
@@ -84,7 +84,7 @@ export const calculateSpendingYear = (
       inflationRate(spending.yearlyIncrease),
     ) + inflatedPre;
   if (settings.taxType == "Pre-Tax") {
-    if (year <= settings.retirementYear) {
+    if (year <= (settings.retirementYear || 0)) {
       result /= 1 - (spending.preTaxRate || 0) / 100;
     } else {
       result /= 1 - (spending.postTaxRate || 0) / 100;
@@ -208,15 +208,21 @@ const SpendingPage = () => {
             >
               <tr>
                 <th className="px-6 py-3">Category</th>
-                <th className="px-6 py-3">Amount (Today's Dollars)</th>
-                <th className="px-6 py-3">Ends (Cal Year)</th>
+                <th className="px-6 py-3">
+                  Amount <br />
+                  (Today's Dollars)
+                </th>
+                <th className="px-6 py-3">
+                  Ends <br />
+                  (Cal Year)
+                </th>
                 <th className="px-6 py-3">
                   Yearly Increase{" "}
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-7">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-7">Increase (%)</div>
+                  )}{" "}
                 </th>
                 <th className="px-6 py-3">Actions</th>
               </tr>
@@ -312,21 +318,31 @@ const SpendingPage = () => {
             >
               <tr>
                 <th className="px-6 py-3">Category</th>
-                <th className="px-6 py-3">Amount (Today's Dollars)</th>
-                <th className="px-6 py-3">Starts (Cal Year)</th>
-                <th className="px-6 py-3">Ends (Cal Year)</th>
+                <th className="px-6 py-3">
+                  Amount
+                  <br /> (Today's Dollars)
+                </th>
+                <th className="px-6 py-3">
+                  Starts <br />
+                  (Cal Year)
+                </th>
+                <th className="px-6 py-3">
+                  Ends <br />
+                  (Cal Year)
+                </th>
                 <th
-                  className={`px-6 py-3 ${spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                    }`}
+                  className={`px-6 py-3 ${
+                    spending.postSpending.find(
+                      (i) => i.increase.type === "custom",
+                    ) && "w-64"
+                  }`}
                 >
                   Yearly Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-6">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-6">Increase (%)</div>
+                  )}{" "}
                 </th>
 
                 {data.data.people.map((i) => (
@@ -537,7 +553,7 @@ const SpendingPage = () => {
                       title="Both Alive"
                     />
 
-                    {settings.data.people.map((person, i) => (
+                    {data.data.people.map((person, i) => (
                       <WhoDies
                         active={settings.whoDies == i}
                         key={person.id}
@@ -627,8 +643,9 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`text-sm flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
-              }`}
+            className={`text-sm flex-1 py-[7px] px-4 rounded ${
+              value === item ? "bg-main-orange text-white" : "bg-gray-200"
+            }`}
             onClick={() => setValue(item)}
           >
             {item}
