@@ -30,6 +30,16 @@ export const deleteClient = (client: Client) => {
   });
 };
 
+export const duplicateClient = (client: Client, name: string) => {
+  return fetch(API + `client/${client.id}/duplicate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name }),
+  });
+};
+
 export const getClients = () => {
   return fetchApi(API + "clients", {
     method: "GET",

@@ -1,5 +1,4 @@
 import EmploymentIncome from "./Info/EmploymentIncome";
-import MapSection from "./MapSection";
 import CompanyPension from "./Info/CompanyPension";
 import BasicAnnuity from "./Info/BasicAnnuity";
 import Paydown from "./Info/Paydown";
@@ -97,7 +96,7 @@ export const IncomeComponent = ({
     );
 };
 
-const IncomeSection = ({ defaultOpen = false }: Props) => {
+const IncomeSection = ({}: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
   const incomes = data.data.incomes;
@@ -121,18 +120,13 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
   };
   return (
     <Layout page="data">
-      <MapSection
-        toggleabble={false}
-        title={
-          <div className="flex gap-6 items-center w-full justify-between">
-            <div>Income information</div>
-            <div className="w-36 mr">
-              <AddIncome />
-            </div>
+      <div>
+        <div className="flex gap-6 items-center w-full justify-between py-6 sticky z-50 top-[72px] bg-[#f3f4f6]">
+          <div className="font-semibold text-2xl">Income information</div>
+          <div className="w-36 ">
+            <AddIncome />
           </div>
-        }
-        defaultOpen={defaultOpen}
-      >
+        </div>
         <div className="grid  md:grid-cols-2 lg:grid-cols-3 gap-4">
           <DndContext
             sensors={sensors}
@@ -209,7 +203,7 @@ const IncomeSection = ({ defaultOpen = false }: Props) => {
             </SortableContext>
           </DndContext>
         </div>
-      </MapSection>
+      </div>
     </Layout>
   );
 };

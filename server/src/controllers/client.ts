@@ -79,6 +79,27 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
   return res.json({ file });
 };
 
+export const duplicateClient = async (req: SessionRequest, res: Response) => {
+  let userId = req.session!.getUserId();
+  let { name } = req.body;
+  let id = parseInt(req.params.id);
+  const client: any = await prisma.client.findUnique({
+    where: {
+      userId,
+      id,
+    },
+  });
+  if (!client) return null;
+  client.title = name;
+  delete client.id;
+  await prisma.client.create({
+    data: {
+      ...client,
+    },
+  });
+  res.json(client);
+};
+
 export const updateClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
   let {

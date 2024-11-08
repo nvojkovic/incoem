@@ -80,8 +80,8 @@ const NewClient = () => {
   };
 
   const Step1 = (
-    <div className="flex gap-8">
-      <div className="flex mb-6 mt-6">
+    <div className="">
+      <div className="flex gap-8">
         <Input
           label="Household name"
           value={name}
@@ -90,8 +90,6 @@ const NewClient = () => {
           vertical
           placeholder="e.g. John and Katie"
         />
-      </div>
-      <div className="flex flex-col mb-6 mt-6 gap-2 justify-start items-start">
         <Input
           subtype="toggle"
           label="Single mode"
@@ -104,31 +102,37 @@ const NewClient = () => {
             }
           }}
         />
-        <Input
-          subtype="toggle"
-          label="Stability Ratio"
-          value={stabilityRatio}
-          setValue={setStabilityRatio}
-        />
-        <Input
-          subtype="toggle"
-          label="Spending"
-          value={needs}
-          setValue={setNeeds}
-        />
+      </div>
+      <div>
+        {people.map((item, i) => (
+          <PersonInfo
+            person={item}
+            key={i}
+            setPerson={(person: any) =>
+              setPeople((prev) => updateAtIndex(prev, i, person))
+            }
+          />
+        ))}
       </div>
     </div>
   );
 
-  const Step2 = people.map((item, i) => (
-    <PersonInfo
-      person={item}
-      key={i}
-      setPerson={(person: any) =>
-        setPeople((prev) => updateAtIndex(prev, i, person))
-      }
-    />
-  ));
+  const Step2 = (
+    <div>
+      <Input
+        subtype="toggle"
+        label="Stability Ratio"
+        value={stabilityRatio}
+        setValue={setStabilityRatio}
+      />
+      <Input
+        subtype="toggle"
+        label="Spending"
+        value={needs}
+        setValue={setNeeds}
+      />
+    </div>
+  );
 
   return (
     <>
@@ -168,7 +172,9 @@ const NewClient = () => {
             <Button
               type="primary"
               disabled={
-                (step == 1 && !name) ||
+                (step == 1 &&
+                  !name &&
+                  !people.every((i) => i.name && i.birthday)) ||
                 (step == 2 && !people.every((i) => i.name && i.birthday))
               }
               onClick={() => (step == 1 ? setStep(2) : addClient())}

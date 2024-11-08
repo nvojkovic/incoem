@@ -5,8 +5,9 @@ type Props = React.HTMLProps<HTMLElement> & {
   children: React.ReactNode;
   disabled?: boolean;
   onClick?: MouseEventHandler;
+  className?: string;
 };
-const Button = ({ type, children, onClick, disabled }: Props) => {
+const Button = ({ type, children, onClick, disabled, className }: Props) => {
   const style = {
     primary:
       "rounded-md font-semibold text-[16px] cursor-pointer bg-main-orange text-white ",
@@ -15,8 +16,8 @@ const Button = ({ type, children, onClick, disabled }: Props) => {
   };
   return (
     <button
-      className={`w-full filter- p-2 ${disabled && "opacity-50"} ${style[type]}`}
-      onClick={disabled ? () => { } : onClick}
+      className={`w-full filter- p-2 ${disabled && "opacity-50"} ${style[type]} ${className}`}
+      onClick={disabled ? () => {} : onClick}
     >
       {children}
     </button>

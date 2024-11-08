@@ -12,6 +12,7 @@ import {
   allClients,
   createClient,
   deleteClient,
+  duplicateClient,
   getClient,
   getPrintClient,
   getPrintClientPdf,
@@ -64,6 +65,7 @@ app.get("/print/client/pdf/:id/:scenario", verifySession(), getPrintClientPdf);
 app.get("/print/client/pdf-live/:id/", verifySession(), getPrintClientPdfLive);
 app.get("/print/client/:id/", getPrintClient);
 app.post("/client/:id", verifySession(), updateClient);
+app.post("/client/:id/duplicate", verifySession(), duplicateClient);
 app.post("/client/scenarios/:id", verifySession(), updateScenario);
 app.delete("/client/:id", verifySession(), deleteClient);
 app.post("/clients", verifySession(), createClient);

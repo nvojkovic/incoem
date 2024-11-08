@@ -148,7 +148,11 @@ const SpendingPage = () => {
   return (
     <Layout page="spending">
       <div className="flex flex-col gap-8">
-        <MapSection title="Current Spending" toggleabble defaultOpen>
+        <MapSection
+          title={<div className="py-2">Current Spending</div>}
+          toggleabble
+          defaultOpen
+        >
           <div className="flex gap-4">
             <div>
               <Input
@@ -188,21 +192,30 @@ const SpendingPage = () => {
             ))}
           </div>
         </MapSection>
-        <MapSection title="Current Spending That Ends" toggleabble defaultOpen>
-          <div className="w-32 mb-8">
-            <Button
-              type="primary"
-              onClick={() =>
-                setField("preSpending")([
-                  ...spending.preSpending,
-                  { increase: { type: "general" } },
-                ])
-              }
-            >
-              Add
-            </Button>
-          </div>
-          <table className=" w-full ">
+        <MapSection
+          title={
+            <div className="flex gap-6 items-center w-full p-2">
+              <div>Current Spending That Ends </div>
+              <div className="w-32">
+                <Button
+                  type="primary"
+                  className="!py-1"
+                  onClick={() =>
+                    setField("preSpending")([
+                      ...spending.preSpending,
+                      { increase: { type: "general" } },
+                    ])
+                  }
+                >
+                  Add
+                </Button>
+              </div>
+            </div>
+          }
+          toggleabble
+          defaultOpen
+        >
+          <table className="w-full">
             <thead
               className={`text-xs cursor-pointer  text-black font-medium text-left sticky z-50 border-1`}
             >
@@ -295,24 +308,34 @@ const SpendingPage = () => {
             </tbody>
           </table>
         </MapSection>
-        <MapSection title="New Spending" toggleabble defaultOpen>
-          <div className="w-32 mb-8">
-            <Button
-              type="primary"
-              onClick={() =>
-                setField("postSpending")([
-                  ...spending.postSpending,
-                  {
-                    increase: { type: "general" },
-                    changeAtDeath: data.data.people.map((_) => 0),
-                  },
-                ])
-              }
-            >
-              Add
-            </Button>
-          </div>
-          <table className=" w-full">
+        <MapSection
+          title={
+            <div className="flex gap-6 items-center w-full p-2">
+              <div>New Spending </div>
+              <div className="w-32">
+                <Button
+                  type="primary"
+                  className="!py-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setField("postSpending")([
+                      ...spending.postSpending,
+                      {
+                        increase: { type: "general" },
+                        changeAtDeath: data.data.people.map((_) => 0),
+                      },
+                    ]);
+                  }}
+                >
+                  Add
+                </Button>
+              </div>
+            </div>
+          }
+          toggleabble
+          defaultOpen
+        >
+          <table className=" w-full bg-white">
             <thead
               className={`text-xs cursor-pointer text-black font-medium text-left sticky z-50 border-1`}
             >

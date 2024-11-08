@@ -2,18 +2,19 @@ import { useInfo } from "../useData";
 import { PeopleInfo } from "./Info/PersonInfo";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";
-import MapSection from "./MapSection";
 
 const ClientOverview = () => {
   const { data, setField } = useInfo();
   return (
     <Layout page="basic">
       <div>
-        <MapSection title="Basic information" defaultOpen={true}>
+        <div title="Basic information">
+          <div className="font-semibold text-2xl mb-5">Income information</div>
           <PeopleInfo />
-        </MapSection>
+        </div>
         <div className="h-10"></div>
-        <MapSection title="Settings" defaultOpen>
+        <div title="Settings">
+          <div className="font-semibold text-2xl mb-5">Settings</div>
           <div className="w-72 bg-white p-3 rounded-lg shadow-md">
             <Input
               value={data.stabilityRatioFlag}
@@ -30,7 +31,7 @@ const ClientOverview = () => {
               subtype="toggle"
             />
           </div>
-        </MapSection>
+        </div>
       </div>
     </Layout>
   );

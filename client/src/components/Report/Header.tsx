@@ -41,8 +41,9 @@ const Header = ({
               width: "calc(100% - 50px)",
               padding: "10px 20px",
               paddingTop: "20px",
-              color: "black",
+              // color: "black",
               // backgroundColor: "#f0f0f0",
+              color: "#444",
               display: "flex",
               justifyContent: "space-between",
               WebkitPrintColorAdjust: "exact",
@@ -73,7 +74,7 @@ const Header = ({
                 src={`${logoData}`}
                 alt="logo"
                 style={{
-                  height: "20px",
+                  height: "25px",
                   width: "auto",
                   maxHeight: "20px",
                   objectFit: "contain",

@@ -2,7 +2,7 @@ import Layout from "./components/Layout";
 import { useEffect, useState } from "react";
 import ClientOverview from "./components/Clients/ClientOverview";
 import NewClient from "./components/Clients/NewClient";
-import { deleteClient, getClients } from "./services/client";
+import { deleteClient, duplicateClient, getClients } from "./services/client";
 import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
 import { useUser } from "./useUser";
@@ -70,6 +70,10 @@ const Clients = () => {
     await deleteClient(client);
     await fetchClients();
   };
+  const duplicateCl = async (client: Client, name: string) => {
+    await duplicateClient(client, name);
+    await fetchClients();
+  };
 
   return (
     <Layout page="home">
@@ -135,6 +139,9 @@ const Clients = () => {
                         key={client.id}
                         client={client}
                         onDelete={() => deleteCl(client)}
+                        onDuplicate={(client: any, name: any) =>
+                          duplicateCl(client, name)
+                        }
                       />
                     ))}
                 </tbody>
