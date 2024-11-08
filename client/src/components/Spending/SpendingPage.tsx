@@ -67,7 +67,8 @@ export const calculateSpendingYear = (
   result += post;
 
   let current = spending.currentSpending;
-  if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
+  console.log("WHO", settings.whoDies);
+  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
     console.log(year, result, current, uninflatedPre, inflatedPre);
@@ -140,8 +141,8 @@ const SpendingPage = () => {
   const maxY = Math.max(
     ...[
       calcSett({ ...settings, whoDies: -1 }),
-      calcSett({ ...settings, whoDies: 0 }),
-      calcSett({ ...settings, whoDies: 1 }),
+      // calcSett({ ...settings, whoDies: 0 }),
+      // calcSett({ ...settings, whoDies: 1 }),
     ],
   );
 

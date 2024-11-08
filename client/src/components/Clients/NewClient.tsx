@@ -40,7 +40,7 @@ const PersonInfo = ({
   );
 };
 const initializeNewClient = (user: User | null): Client => ({
-  id: 1,
+  id: undefined as any,
   title: "",
   createdAt: new Date().toISOString(),
   data: {
@@ -55,11 +55,16 @@ const initializeNewClient = (user: User | null): Client => ({
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
   spending: {
-    preTaxRate: 0,
-    postTaxRate: 0,
-    retirementYear: new Date().getFullYear(),
+    preTaxRate: user?.info?.globalPreRetirementTaxRate,
+    postTaxRate: user?.info?.globalPostRetirementTaxRate,
+    retirementYear: undefined as any,
+    preSpending: [],
+    postSpending: [],
+    yearlyIncrease: { type: "general" },
+    currentSpending: null as any,
+    decreaseAtDeath: [null, null] as any,
   } as RetirementSpendingSettings,
-  calculators: {},
+  calculators: undefined as any,
   allInOneCalculator: [],
   versatileCalculator: {},
   liveSettings: {
@@ -118,18 +123,18 @@ const NewClient = () => {
             label="Single mode"
             value={client.data.people.length === 1}
             setValue={(singleMode) => {
-              setClient((prev) => ({
-                ...prev,
+              setClient({
+                ...client,
                 data: {
-                  ...prev.data,
+                  ...client.data,
                   people: singleMode
-                    ? [prev.data.people[0]]
+                    ? [client.data.people[0]]
                     : [
-                        ...prev.data.people,
-                        { name: "", birthday: null, id: 1 },
+                        ...client.data.people,
+                        { name: "", birthday: null as any, id: 1 },
                       ],
                 },
-              }));
+              });
             }}
           />
         </div>
@@ -157,15 +162,16 @@ const NewClient = () => {
 
   const Step2 = (
     <div className="space-y-4">
+      <div className="border-b text-left font-semibold pb-1">Live Settings</div>
       <div className="grid grid-cols-2 gap-4">
         <Input
-          subtype="number"
+          subtype="percent"
           label="Inflation (%)"
           value={client.liveSettings.inflation}
           setValue={(inflation) =>
             setClient((prev) => ({
               ...prev,
-              liveSettings: { ...prev.liveSettings, inflation }
+              liveSettings: { ...prev.liveSettings, inflation },
             }))
           }
           vertical
@@ -177,51 +183,55 @@ const NewClient = () => {
           setValue={(maxYearsShown) =>
             setClient((prev) => ({
               ...prev,
-              liveSettings: { ...prev.liveSettings, maxYearsShown }
+              liveSettings: { ...prev.liveSettings, maxYearsShown },
             }))
           }
           vertical
         />
         <Input
-          subtype="number"
+          subtype="percent"
           label="Pre-Tax Rate (%)"
           value={client.spending.preTaxRate}
           setValue={(preTaxRate) =>
             setClient((prev) => ({
               ...prev,
-              spending: { ...prev.spending, preTaxRate }
+              spending: { ...prev.spending, preTaxRate },
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="percent"
+          label="Post-Tax Rate (%)"
+          value={client.spending.postTaxRate}
+          setValue={(postTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, postTaxRate },
             }))
           }
           vertical
         />
         <Input
           subtype="number"
-          label="Post-Tax Rate (%)"
-          value={client.spending.postTaxRate}
-          setValue={(postTaxRate) =>
+          label="Retirement Year"
+          value={client.spending.retirementYear}
+          setValue={(retirementYear) =>
             setClient((prev) => ({
               ...prev,
-              spending: { ...prev.spending, postTaxRate }
+              spending: { ...prev.spending, retirementYear },
             }))
           }
           vertical
         />
       </div>
-      <Input
-        subtype="number"
-        label="Retirement Year"
-        value={client.spending.retirementYear}
-        setValue={(retirementYear) =>
-          setClient((prev) => ({
-            ...prev,
-            spending: { ...prev.spending, retirementYear }
-          }))
-        }
-        vertical
-      />
-      <div className="pt-4">
+      <div className="border-b text-left font-semibold pb-1">
+        Extra Features
+      </div>
+      <div className="">
         <Input
           subtype="toggle"
+          labelLength={110}
           label="Stability Ratio"
           value={client.stabilityRatioFlag}
           setValue={(flag) =>
@@ -230,9 +240,12 @@ const NewClient = () => {
         />
         <Input
           subtype="toggle"
+          labelLength={110}
           label="Spending"
           value={client.needsFlag}
-          setValue={(flag) => setClient((prev) => ({ ...prev, needsFlag: flag }))}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, needsFlag: flag }))
+          }
         />
       </div>
     </div>
@@ -247,15 +260,8 @@ const NewClient = () => {
               <div className="w-[48px] h-[48px] border-[#EAECF0] border rounded-md flex items-center justify-center">
                 <img src={userImg} alt="user" className="h-6 w-6 mx-auto" />
               </div>
-              <div className="flex flex-col items-start ">
-                <div className="font-semibold text-[18px] mb-1">
-                  Add new client
-                </div>
-                <div className="text-[14px] text-[#475467]">
-                  {step == 1
-                    ? "Please enter a name for this client."
-                    : "Please enter the details of the people in this household."}
-                </div>
+              <div className="flex items-center ">
+                <div className="font-semibold text-[18px]">Add new client</div>
               </div>
             </div>
             <div>

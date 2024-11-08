@@ -162,10 +162,10 @@ export const deleteClient = async (req: SessionRequest, res: Response) => {
 
 export const createClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  const { data, title, needsFlag, stabilityRatioFlag } = req.body;
+  const data = req.body;
 
   const result = await prisma.client.create({
-    data: { data, title, userId, needsFlag, stabilityRatioFlag },
+    data: { ...data, userId },
   });
   return res.json({ data: result });
 };
