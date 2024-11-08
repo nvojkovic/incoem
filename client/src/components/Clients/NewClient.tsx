@@ -162,7 +162,12 @@ const NewClient = () => {
 
   const Step2 = (
     <div className="space-y-4">
-      <div className="border-b text-left font-semibold pb-1">Live Settings</div>
+      <div className="border-b text-left font-semibold pb-1">
+        Live Settings
+        <span className="text-gray-400 text-sm italic font-normal inline-block ml-3">
+          (These fields are optional)
+        </span>
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <Input
           subtype="percent"

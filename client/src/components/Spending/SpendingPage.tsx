@@ -232,7 +232,7 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th className="px-6 py-3">
-                  Yearly Increase{" "}
+                  Yearly <br /> Increase{" "}
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
