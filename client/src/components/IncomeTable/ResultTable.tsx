@@ -392,7 +392,7 @@ const ResultTable = ({
               i={income.id}
             />
           ))}
-        <div className="flex flexcol print:flex-col-reverse">
+        <div className="flex">
           <DraggableTable
             columns={columns}
             setSelectedYear={setSelectedYear}
