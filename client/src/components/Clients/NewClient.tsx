@@ -54,7 +54,11 @@ const initializeNewClient = (user: User | null): Client => ({
   scenarios: [],
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
-  spending: {} as RetirementSpendingSettings,
+  spending: {
+    preTaxRate: 0,
+    postTaxRate: 0,
+    retirementYear: new Date().getFullYear(),
+  } as RetirementSpendingSettings,
   calculators: {},
   allInOneCalculator: [],
   versatileCalculator: {},
@@ -152,21 +156,85 @@ const NewClient = () => {
   );
 
   const Step2 = (
-    <div>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          subtype="number"
+          label="Inflation (%)"
+          value={client.liveSettings.inflation}
+          setValue={(inflation) =>
+            setClient((prev) => ({
+              ...prev,
+              liveSettings: { ...prev.liveSettings, inflation }
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="number"
+          label="Years Shown"
+          value={client.liveSettings.maxYearsShown}
+          setValue={(maxYearsShown) =>
+            setClient((prev) => ({
+              ...prev,
+              liveSettings: { ...prev.liveSettings, maxYearsShown }
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="number"
+          label="Pre-Tax Rate (%)"
+          value={client.spending.preTaxRate}
+          setValue={(preTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, preTaxRate }
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="number"
+          label="Post-Tax Rate (%)"
+          value={client.spending.postTaxRate}
+          setValue={(postTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, postTaxRate }
+            }))
+          }
+          vertical
+        />
+      </div>
       <Input
-        subtype="toggle"
-        label="Stability Ratio"
-        value={client.stabilityRatioFlag}
-        setValue={(flag) =>
-          setClient((prev) => ({ ...prev, stabilityRatioFlag: flag }))
+        subtype="number"
+        label="Retirement Year"
+        value={client.spending.retirementYear}
+        setValue={(retirementYear) =>
+          setClient((prev) => ({
+            ...prev,
+            spending: { ...prev.spending, retirementYear }
+          }))
         }
+        vertical
       />
-      <Input
-        subtype="toggle"
-        label="Spending"
-        value={client.needsFlag}
-        setValue={(flag) => setClient((prev) => ({ ...prev, needsFlag: flag }))}
-      />
+      <div className="pt-4">
+        <Input
+          subtype="toggle"
+          label="Stability Ratio"
+          value={client.stabilityRatioFlag}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, stabilityRatioFlag: flag }))
+          }
+        />
+        <Input
+          subtype="toggle"
+          label="Spending"
+          value={client.needsFlag}
+          setValue={(flag) => setClient((prev) => ({ ...prev, needsFlag: flag }))}
+        />
+      </div>
     </div>
   );
 
