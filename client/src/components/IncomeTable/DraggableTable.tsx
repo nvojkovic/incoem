@@ -18,6 +18,8 @@ const DraggableTable = ({
   selectedColumn,
   setSelectedYear,
   setOpenModal,
+  hoverRow,
+  setHoverRow,
 }: {
   fullScreen: boolean;
   tableData: any;
@@ -29,6 +31,8 @@ const DraggableTable = ({
   setSelectedYear: any;
   selectedColumn: SelectedColumn;
   setOpenModal: any;
+  hoverRow: any;
+  setHoverRow: any;
 }) => {
   const table = useReactTable({
     data: tableData,
@@ -71,7 +75,13 @@ const DraggableTable = ({
         {table.getRowModel().rows.map((row, i) => (
           <tr
             key={row.id}
-            className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"}  border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
+            className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} ${hoverRow === i ? "!bg-slate-100" : ""}  border-y border-[#EAECF0]  ${selectedYear === 0 && ""}`}
+            onMouseEnter={() => {
+              setHoverRow(i);
+            }}
+            onMouseLeave={() => {
+              setHoverRow(-1);
+            }}
           >
             {row.getVisibleCells().map((cell) => (
               <SortableContext

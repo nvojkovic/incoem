@@ -243,8 +243,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-7">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-7">Increase (%)</div>
+                    )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -387,18 +387,17 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${
-                    spending.postSpending.find(
-                      (i) => i.increase.type === "custom",
-                    ) && "w-64"
-                  }`}
+                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                    }`}
                 >
                   Yearly Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-6">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-6">Increase (%)</div>
+                    )}{" "}
                 </th>
 
                 {data.data.people.map((i) => (
@@ -511,8 +510,12 @@ const SpendingPage = () => {
             </tbody>
           </table>
         </MapSection>
-        <MapSection title="Spending Needs" toggleabble defaultOpen>
-          <div className="flex gap-6 ">
+        <MapSection
+          title={<div className="py-2 px-3">Spending Needs</div>}
+          toggleabble
+          defaultOpen
+        >
+          <div className="flex gap-6 p-3 ">
             <div className="border rounded-lg p-3 h-[96px] bg-white">
               <div className="flex gap-4">
                 <div>
@@ -700,9 +703,8 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
-            className={`text-sm flex-1 py-[7px] px-4 rounded ${
-              value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            }`}
+            className={`text-sm flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
+              }`}
             onClick={() => setValue(item)}
           >
             {item}

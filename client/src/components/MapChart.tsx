@@ -15,7 +15,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
   return (
-    <div className="bg-white pb-5">
+    <div className={`bg-white ${!print && "pb-5"}`}>
       <Header client={client as any} scenario={settings} />
       <StackedAreaChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
@@ -24,14 +24,14 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-                (currentYear) =>
-                  calculateSpendingYear(
-                    settings.data,
-                    client.spending,
-                    { ...settings, taxType: "Pre-Tax" },
-                    currentYear,
-                  ),
-              )
+              (currentYear) =>
+                calculateSpendingYear(
+                  settings.data,
+                  client.spending,
+                  { ...settings, taxType: "Pre-Tax" },
+                  currentYear,
+                ),
+            )
             : []
         }
         stability={client.stabilityRatioFlag}

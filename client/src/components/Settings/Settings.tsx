@@ -214,7 +214,7 @@ const Settings = () => {
                 title="Extra Features"
                 subtitle="Set the default for new clients created. This default can be
                 overridden (turned off/on) for each individual client in client
-                settings page"
+                settings page."
               />
               <div className="flex flex-col gap-3">
                 <div className="w-60">

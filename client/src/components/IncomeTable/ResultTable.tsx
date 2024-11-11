@@ -70,6 +70,7 @@ const ResultTable = ({
   const [printing, setPrinting] = useState(false);
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
+  const [hoverRow, setHoverRow] = useState(-1);
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => generateColumns(incomes, settings.data, selectedColumn),
@@ -310,7 +311,7 @@ const ResultTable = ({
                           disabled
                           label={`${person.name}'s Death`}
                           value={settings.deathYears[i]?.toString()}
-                          setValue={() => {}}
+                          setValue={() => { }}
                         />
                       </div>
                     ),
@@ -324,7 +325,7 @@ const ResultTable = ({
                   vertical
                   disabled
                   value={settings.maxYearsShown}
-                  setValue={() => {}}
+                  setValue={() => { }}
                 />
               </div>
               <div className="print:mr-[-20px]">
@@ -339,7 +340,7 @@ const ResultTable = ({
                       ? `${settings.inflation?.toString()}%`
                       : "0%"
                   }
-                  setValue={() => {}}
+                  setValue={() => { }}
                 />
               </div>
               <div className="print:hidden">
@@ -403,6 +404,8 @@ const ResultTable = ({
             fullScreen={fullScreen}
             tableData={tableData}
             selectedYear={selectedYear}
+            hoverRow={hoverRow}
+            setHoverRow={setHoverRow}
             columnOrder={columnOrder}
             setColumnOrder={setColumnOrder}
             setSelectedColumn={setSelectedColumn}
@@ -415,9 +418,8 @@ const ResultTable = ({
             >
               <tr>
                 <td
-                  className={`font-medium  ${
-                    selectedColumn.type == "total" ? "bg-slate-200" : ""
-                  }`}
+                  className={`font-medium  ${selectedColumn.type == "total" ? "bg-slate-200" : ""
+                    }`}
                 >
                   <div
                     className={`flex flex-col items-start px-2 py-[0.95rem] ${false ? "px-6" : "px-2"}`}
@@ -440,7 +442,13 @@ const ResultTable = ({
               {tableData.map((row, i) => (
                 <tr
                   key={i}
-                  className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"}  border-y border-[#EAECF0] hover:bg-slate-100 ${selectedYear === 0 && ""}`}
+                  onMouseEnter={() => {
+                    setHoverRow(i);
+                  }}
+                  onMouseLeave={() => {
+                    setHoverRow(-1);
+                  }}
+                  className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} ${hoverRow === i ? "!bg-slate-100" : ""}  border-y border-[#EAECF0] ${selectedYear === 0 && ""}`}
                 >
                   <td
                     onClick={() => setSelectedYear(row.year)}

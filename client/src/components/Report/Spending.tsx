@@ -16,7 +16,7 @@ const Spending = ({
     <div className="mx-20 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto">Spending</div>
-      <div className="flex mt-5 mb-5 gap-3 mx-auto">
+      <div className="flex mt-6 mb-8 gap-3 mx-auto">
         {scenario?.retirementYear && (
           <PrintCard
             title={`Retirement Year`}
