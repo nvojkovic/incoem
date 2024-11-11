@@ -125,7 +125,7 @@ const Settings = () => {
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Appearance"
-                subtitle="Primary color is used to customize the UI. Logo is used in top left in the app, and on PDF reports."
+                subtitle="Primary color is used to customize the look of the app. Logo is used in top left in the app, and on PDF reports."
               />
 
               <div className="flex flex-col gap-6">

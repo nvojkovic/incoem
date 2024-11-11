@@ -336,7 +336,7 @@ const ResultTable = ({
                   vertical
                   subtype="text"
                   value={
-                    settings.inflation !== undefined
+                    settings.inflation != undefined
                       ? `${settings.inflation?.toString()}%`
                       : "0%"
                   }

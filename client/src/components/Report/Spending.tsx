@@ -11,7 +11,7 @@ const Spending = ({
   spending: RetirementSpendingSettings;
   client: PrintClient;
 }) => {
-  if (!spending) return null;
+  if (!spending || !client.needsFlag) return null;
   return (
     <div className="mx-20 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
