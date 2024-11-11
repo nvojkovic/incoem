@@ -18,35 +18,18 @@ const ClientOverview = () => {
     <Layout page="basic">
       <div>
         <div title="Basic information">
-          <div className="font-semibold text-2xl mb-5">Income information</div>
+          <div className="font-semibold text-2xl mb-5">
+            Household information
+          </div>
           <PeopleInfo />
         </div>
         <div className="h-10"></div>
         <div className="flex">
-          <div title="Settings">
-            <div className="font-semibold text-2xl mb-5">Extra features</div>
-            <div className="w-72 bg-white p-3 rounded-lg shadow-md">
-              <Input
-                value={data.stabilityRatioFlag}
-                setValue={setField("stabilityRatioFlag")}
-                label="Stability Ratio"
-                size="full"
-                subtype="toggle"
-              />
-              <Input
-                value={data.needsFlag}
-                setValue={setField("needsFlag")}
-                label="Spending"
-                size="full"
-                subtype="toggle"
-              />
-            </div>
-          </div>
-          <div title="Settings px-3 " className="px-6">
+          <div title="Settings " className="">
             <div className="font-semibold text-2xl mb-5">Settings</div>
             <div>
               <div className="flex gap-6 ">
-                <div className="border rounded-lg p-3 h-[96px] bg-white shadow-md">
+                <div className="border rounded-lg p-3 h-[102px] bg-white shadow-md">
                   <div className="flex gap-4">
                     <div>
                       <MultiToggle
@@ -74,7 +57,7 @@ const ClientOverview = () => {
                   </div>
                 </div>
                 <div className="flex gap-6 mb-5 w-full">
-                  <div className="border rounded-lg p-3 flex gap-3 bg-white shadow-md">
+                  <div className="border rounded-lg p-3 flex gap-3 bg-white shadow-md h-[102px]">
                     <div className="w-60">
                       <MultiToggle
                         options={["Pre-Tax", "Post-Tax"]}
@@ -89,6 +72,7 @@ const ClientOverview = () => {
                       <Input
                         vertical
                         size="lg"
+                        width="!w-48"
                         value={spending.preTaxRate}
                         setValue={(v) =>
                           setSpending({ ...spending, preTaxRate: v })
@@ -112,6 +96,7 @@ const ClientOverview = () => {
                     <div className="mt-1">
                       <Input
                         label="Retirement Year"
+                        width="!w-28"
                         value={settings.retirementYear}
                         setValue={(v: any) =>
                           setSettings({ ...settings, retirementYear: v })
@@ -186,6 +171,25 @@ const ClientOverview = () => {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+          <div title="Settings pl-6" className="pl-6">
+            <div className="font-semibold text-2xl mb-5">Extra features</div>
+            <div className="w-72 bg-white p-2 rounded-lg shadow-md border">
+              <Input
+                value={data.stabilityRatioFlag}
+                setValue={setField("stabilityRatioFlag")}
+                label="Stability Ratio"
+                size="full"
+                subtype="toggle"
+              />
+              <Input
+                value={data.needsFlag}
+                setValue={setField("needsFlag")}
+                label="Spending"
+                size="full"
+                subtype="toggle"
+              />
             </div>
           </div>
         </div>

@@ -82,15 +82,14 @@ const Settings = () => {
         <div>
           {toSave && (
             <div className="w-64">
-              {" "}
               <Button
                 type="primary"
                 onClick={async () => {
                   setLoading(true);
-                  setToSave(false);
                   await updateSettings(settings);
                   await fetchUser();
                   setLoading(false);
+                  setToSave(false);
                 }}
               >
                 {loading ? "Saving..." : "Save changes"}
@@ -105,7 +104,7 @@ const Settings = () => {
             <div className="flex flex-row gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Advisor"
-                subtitle="These settings are used on reports"
+                subtitle="These settings are used in the UI and to fill the first page of PDF reports."
               />
               <AdvisorSection
                 settings={settings}
@@ -126,7 +125,7 @@ const Settings = () => {
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Appearance"
-                subtitle="Primary color is used to customize the UI. Logo is used in top right in the app, and on PDF reports."
+                subtitle="Primary color is used to customize the UI. Logo is used in top left in the app, and on PDF reports."
               />
 
               <div className="flex flex-col gap-6">

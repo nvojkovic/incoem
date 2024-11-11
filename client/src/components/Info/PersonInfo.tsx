@@ -55,15 +55,6 @@ export const PeopleInfo = () => {
 
   return (
     <div className="flex gap-6">
-      {data.data.people.map((person, i) => (
-        <PersonInfo
-          title={`Person ${i + 1}`}
-          key={i}
-          subtitle="Details about how this works"
-          person={person}
-        />
-      ))}
-
       <div className="shadow-md w-full bg-white p-6 rounded-lg">
         <div className="h-full">
           <div className="flex flex-col pb-6 border-b border-[#EAECF0] ">
@@ -80,6 +71,14 @@ export const PeopleInfo = () => {
           </div>
         </div>
       </div>
+      {data.data.people.map((person, i) => (
+        <PersonInfo
+          title={`Person ${i + 1}`}
+          key={i}
+          subtitle="Details about how this works"
+          person={person}
+        />
+      ))}
     </div>
   );
 };
