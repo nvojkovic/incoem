@@ -214,8 +214,8 @@ const SpendingPage = () => {
                   }}
                 >
                   <div className="flex items-center justify-center gap-2">
-                    Add
                     <PlusIcon className="h-4" />
+                    Add
                   </div>
                 </Button>
               </div>
@@ -243,7 +243,7 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-7">Increase (%)</div>
+                      <div className="inline-block ml-16">Increase (%)</div>
                     )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
@@ -358,8 +358,8 @@ const SpendingPage = () => {
                   }}
                 >
                   <div className="flex items-center justify-center gap-2">
-                    Add
                     <PlusIcon className="h-4" />
+                    Add
                   </div>
                 </Button>
               </div>
@@ -392,11 +392,11 @@ const SpendingPage = () => {
                   ) && "w-64"
                     }`}
                 >
-                  Yearly Increase{" "}
+                  Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-6">Increase (%)</div>
+                      <div className="inline-block ml-8">Increase (%)</div>
                     )}{" "}
                 </th>
 
@@ -515,7 +515,7 @@ const SpendingPage = () => {
           toggleabble
           defaultOpen
         >
-          <div className="flex gap-6 p-3 ">
+          <div className="flex gap-6 p-3">
             <div className="border rounded-lg p-3 h-[96px] bg-white">
               <div className="flex gap-4">
                 <div>
