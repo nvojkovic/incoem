@@ -1,4 +1,5 @@
 import logo from "src/assets/logo.png";
+import { birthday } from "src/calculator/utils";
 
 const PrintCard = ({ title, subtitle }: any) => (
   <div className="bg-gray-100 py-3 px-6 rounded-lg border">
@@ -13,6 +14,13 @@ interface CoverProps {
   settings: ScenarioSettings;
   client: PrintClient;
 }
+
+export const deathText = (person: Person, deathAge: number | null) => {
+  if (!deathAge) return "";
+  const { birthYear } = birthday(person);
+  return `${deathAge} (${birthYear + deathAge})`;
+};
+
 const ReportCover = ({ settings, client }: CoverProps) => {
   return (
     <div className="w-screen h-full flex items-center p-10 ">
@@ -57,20 +65,20 @@ const ReportCover = ({ settings, client }: CoverProps) => {
               title="Inflation-Adjustment"
               subtitle={`${settings.inflationType === "Real" ? settings.inflation || 0 : 0}%`}
             />
-            {settings?.retirementYear && (
+            {client.needsFlag && settings?.retirementYear && (
               <PrintCard
                 title={`Retirement Year`}
                 subtitle={settings.retirementYear}
               />
             )}
 
-            {client.spending?.preTaxRate && (
+            {client.needsFlag && client.spending?.preTaxRate && (
               <PrintCard
                 title={`Pre-Retirement Tax Rate`}
                 subtitle={`${client.spending.preTaxRate}%`}
               />
             )}
-            {client.spending?.postTaxRate && (
+            {client.needsFlag && client.spending?.postTaxRate && (
               <PrintCard
                 title={`Post-Retirement Tax Rate`}
                 subtitle={`${client.spending.postTaxRate}%`}
@@ -83,7 +91,7 @@ const ReportCover = ({ settings, client }: CoverProps) => {
                   settings.deathYears[i] && (
                     <PrintCard
                       title={`${person.name}'s Death`}
-                      subtitle={`${settings.deathYears[i]?.toString()} years`}
+                      subtitle={deathText(person, settings.deathYears[i])}
                     />
                   ),
               )}

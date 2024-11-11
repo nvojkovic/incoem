@@ -9,7 +9,7 @@ import { useUser } from "./useUser";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 const Clients = () => {
-  const {} = useUser();
+  const { } = useUser();
   const [clients, setClients] = useState<Client[]>(null as any);
 
   const fetchClients = () => {
@@ -126,10 +126,10 @@ const Clients = () => {
                       }
                       if (sortKey === "updated_at") {
                         return sortDir === "up"
-                          ? new Date(a.createdAt).getTime() -
-                              new Date(b.createdAt).getTime()
-                          : new Date(b.createdAt).getTime() -
-                              new Date(a.createdAt).getTime();
+                          ? new Date(a.updatedAt).getTime() -
+                          new Date(b.updatedAt).getTime()
+                          : new Date(b.updatedAt).getTime() -
+                          new Date(a.updatedAt).getTime();
                       }
                       return 0;
                     })

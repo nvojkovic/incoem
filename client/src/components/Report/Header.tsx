@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { imageUrlToBase64 } from "src/utils";
+import { deathText } from "./Cover";
 
 const Header = ({
   client,
@@ -64,7 +65,7 @@ const Header = ({
                     scenario.deathYears[i] && (
                       <div>
                         {`${person.name}'s Death: `}
-                        <b>{`${scenario.deathYears[i]?.toString()} years`}</b>
+                        <b>{deathText(person, scenario.deathYears[i])}</b>
                       </div>
                     ),
                 )}

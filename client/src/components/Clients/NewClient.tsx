@@ -43,6 +43,7 @@ const initializeNewClient = (user: User | null): Client => ({
   id: undefined as any,
   title: "",
   createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
   data: {
     incomes: [],
     people: [
@@ -130,9 +131,9 @@ const NewClient = () => {
                   people: singleMode
                     ? [client.data.people[0]]
                     : [
-                        ...client.data.people,
-                        { name: "", birthday: null as any, id: 1 },
-                      ],
+                      ...client.data.people,
+                      { name: "", birthday: null as any, id: 1 },
+                    ],
                 },
               });
             }}
@@ -229,6 +230,27 @@ const NewClient = () => {
           }
           vertical
         />
+        {client.data.people.map((item, i) => (
+          <Input
+            subtype="number"
+            label={`${item.name}'s Mortality`}
+            value={client.liveSettings.deathYears[i]}
+            setValue={(e) =>
+              setClient((prev) => ({
+                ...prev,
+                liveSettings: {
+                  ...prev.liveSettings,
+                  deathYears: updateAtIndex(
+                    prev.liveSettings.deathYears,
+                    i,
+                    parseInt(e),
+                  ),
+                },
+              }))
+            }
+            vertical
+          />
+        ))}
       </div>
       <div className="border-b text-left font-semibold pb-1">
         Extra Features

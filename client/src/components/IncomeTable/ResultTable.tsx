@@ -334,7 +334,11 @@ const ResultTable = ({
                   size="xs"
                   vertical
                   subtype="text"
-                  value={`${settings.inflation?.toString()}%`}
+                  value={
+                    settings.inflation !== undefined
+                      ? `${settings.inflation?.toString()}%`
+                      : "0%"
+                  }
                   setValue={() => {}}
                 />
               </div>
@@ -405,7 +409,7 @@ const ResultTable = ({
             selectedColumn={selectedColumn}
             setOpenModal={setOpenModal}
           />
-          <table className="pr-3">
+          <table className="pr-3 ml-[-3px]">
             <thead
               className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
             >

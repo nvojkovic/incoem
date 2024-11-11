@@ -138,7 +138,7 @@ const Input = ({
         disabled={disabled}
         className={`${basic} h-56 ${calcSize(size)} `}
         value={value}
-        cols={20}
+        cols={40}
         placeholder={placeholder}
         onChange={(e) => setValue(e.target.value)}
       />

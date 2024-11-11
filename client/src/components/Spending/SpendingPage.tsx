@@ -1,4 +1,8 @@
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  DocumentDuplicateIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
@@ -209,7 +213,10 @@ const SpendingPage = () => {
                     ]);
                   }}
                 >
-                  Add
+                  <div className="flex items-center justify-center gap-2">
+                    Add
+                    <PlusIcon className="h-4" />
+                  </div>
                 </Button>
               </div>
             </div>
@@ -219,19 +226,19 @@ const SpendingPage = () => {
         >
           <table className="w-full">
             <thead
-              className={`text-xs cursor-pointer  text-black font-medium text-left sticky z-50 border-1`}
+              className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
             >
               <tr>
-                <th className="px-6 py-3">Category</th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">Category</th>
+                <th className="px-6 py-3 font-medium">
                   Amount <br />
                   (Today's Dollars)
                 </th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">
                   Ends <br />
                   (Cal Year)
                 </th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">
                   Yearly <br /> Increase{" "}
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
@@ -239,7 +246,7 @@ const SpendingPage = () => {
                     <div className="inline-block ml-7">Increase (%)</div>
                   )}{" "}
                 </th>
-                <th className="px-6 py-3">Actions</th>
+                <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -285,25 +292,46 @@ const SpendingPage = () => {
                     />
                   </td>
                   <td className="px-2 py-2">
-                    <Button
-                      type="secondary"
-                      onClick={() => {
-                        if (
-                          confirm(
-                            "Are you sure you want to delete this spending?",
+                    <div className="flex gap-3">
+                      <Button
+                        type="secondary"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "Are you sure you want to duplicate this spending?",
+                            )
                           )
-                        )
-                          setField("preSpending")(
-                            spending.preSpending.filter(
-                              (_, ind) => ind !== index,
-                            ),
-                          );
-                      }}
-                    >
-                      <div className="flex justify-center">
-                        <TrashIcon className="h-5 text-red-500" />
-                      </div>
-                    </Button>
+                            setField("preSpending")(
+                              spending.preSpending.flatMap((item, ind) =>
+                                ind === index ? [item, { ...item }] : [item],
+                              ),
+                            );
+                        }}
+                      >
+                        <div className="flex justify-center">
+                          <DocumentDuplicateIcon className="h-5 text-black" />
+                        </div>
+                      </Button>
+                      <Button
+                        type="secondary"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "Are you sure you want to delete this spending?",
+                            )
+                          )
+                            setField("preSpending")(
+                              spending.preSpending.filter(
+                                (_, ind) => ind !== index,
+                              ),
+                            );
+                        }}
+                      >
+                        <div className="flex justify-center">
+                          <TrashIcon className="h-5 text-red-500" />
+                        </div>
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -329,7 +357,10 @@ const SpendingPage = () => {
                     ]);
                   }}
                 >
-                  Add
+                  <div className="flex items-center justify-center gap-2">
+                    Add
+                    <PlusIcon className="h-4" />
+                  </div>
                 </Button>
               </div>
             </div>
@@ -339,24 +370,24 @@ const SpendingPage = () => {
         >
           <table className=" w-full bg-white">
             <thead
-              className={`text-xs cursor-pointer text-black font-medium text-left sticky z-50 border-1`}
+              className={`text-xs cursor-pointer text-left sticky z-50 border-1 text-black font-medium`}
             >
               <tr>
-                <th className="px-6 py-3">Category</th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">Category</th>
+                <th className="px-6 py-3 font-medium">
                   Amount
                   <br /> (Today's Dollars)
                 </th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">
                   Starts <br />
                   (Cal Year)
                 </th>
-                <th className="px-6 py-3">
+                <th className="px-6 py-3 font-medium">
                   Ends <br />
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 ${
+                  className={`px-6 py-3 font-medium ${
                     spending.postSpending.find(
                       (i) => i.increase.type === "custom",
                     ) && "w-64"
@@ -371,13 +402,13 @@ const SpendingPage = () => {
                 </th>
 
                 {data.data.people.map((i) => (
-                  <th className="px-6 py-3">
+                  <th className="px-6 py-3 font-medium">
                     Decrease at <br />
                     {i.name} Death
                   </th>
                 ))}
 
-                <th className="px-6 py-3">Actions</th>
+                <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -564,7 +595,7 @@ const SpendingPage = () => {
             {data.data.people.length > 1 ? (
               <div className="border rounded-lg p-3 bg-white">
                 <div className="flex flex-col">
-                  <div className="text-sm text-[#344054] mb-1">Death</div>
+                  <div className="text-sm text-[#344054] mb-1">Mortality</div>
                   <div className="flex">
                     <WhoDies
                       active={settings.whoDies == -1}

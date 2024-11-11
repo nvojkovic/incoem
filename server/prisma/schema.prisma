@@ -8,18 +8,19 @@ datasource db {
 }
 
 model Client {
-  id                  Int      @id @default(autoincrement())
-  createdAt           DateTime @default(now())
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
   title               String
   userId              String
-  data                Json     @default("{}")
-  scenarios           Json     @default("[]")
-  spending            Json     @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
-  stabilityRatioFlag  Boolean  @default(false)
-  needsFlag           Boolean  @default(false)
-  allInOneCalculator  Json     @default("[]")
-  versatileCalculator Json     @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
-  liveSettings        Json     @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Nominal\",\"taxType\":\"Pre-Tax\"}")
+  data                Json      @default("{}")
+  scenarios           Json      @default("[]")
+  spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
+  stabilityRatioFlag  Boolean   @default(false)
+  needsFlag           Boolean   @default(false)
+  updatedAt           DateTime?
+  allInOneCalculator  Json      @default("[]")
+  versatileCalculator Json      @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
+  liveSettings        Json      @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Nominal\",\"taxType\":\"Pre-Tax\"}")
 }
 
 model UserInfo {

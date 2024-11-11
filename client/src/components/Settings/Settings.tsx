@@ -8,10 +8,9 @@ import Layout from "../Layout";
 import Input from "../Inputs/Input";
 import Button from "../Inputs/Button";
 import Spinner from "../Spinner";
-
-const SectionHeader = ({ title }: any) => (
-  <div className="text-lg border-r border-black pr-4 w-96">{title}</div>
-);
+import AdvisorSection from "./AdvisorSection";
+import GlobalDefaultsSection from "./GlobalDefaultsSection";
+import SectionHeader from "./SectionHeader";
 
 const isColorTooLight = (
   hexColor: string,
@@ -45,9 +44,14 @@ const isColorTooLight = (
 const Settings = () => {
   const { user, fetchUser } = useUser();
   useEffect(() => {
-    setSettings(user?.info || null);
+    setSettings(user?.info || null, false);
   }, [user]);
-  const [settings, setSettings] = useState(null as any);
+  const [settings, setSettingsS] = useState(null as any);
+  const setSettings = (a: any, save = true) => {
+    if (save) setToSave(true);
+    setSettingsS(a);
+  };
+  const [toSave, setToSave] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tooLight, setTooLight] = useState(false);
   const ref = useRef(null as any);
@@ -73,201 +77,145 @@ const Settings = () => {
           Please choose a different color
         </div>
       </Alert>
+      <div className="sticky top-[70px] font-semibold text-[30px] flex justify-between px-10 bg-[#f3f4f6] z-50 py-5">
+        <div>Settings</div>
+        <div>
+          {toSave && (
+            <div className="w-64">
+              {" "}
+              <Button
+                type="primary"
+                onClick={async () => {
+                  setLoading(true);
+                  setToSave(false);
+                  await updateSettings(settings);
+                  await fetchUser();
+                  setLoading(false);
+                }}
+              >
+                {loading ? "Saving..." : "Save changes"}
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
       {settings ? (
         <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
           <div className="flex lg:flex-col flex-col gap-10 w-full">
-            <div className="w-full flex flex-row gap-5">
-              <SectionHeader title="Advisor" />
-              <div className="flex gap-6 flex-col">
-                <Input
-                  value={settings.name}
-                  setValue={(e) => setSettings({ ...settings, name: e })}
-                  label="Name"
-                  labelLength={110}
-                  size="full"
-                />
-                <Input
-                  value={settings.firmName}
-                  setValue={(e) => setSettings({ ...settings, firmName: e })}
-                  label="Firm name"
-                  labelLength={110}
-                  size="full"
-                />
-                <Input
-                  value={settings.disclosures}
-                  labelLength={110}
-                  setValue={(e) => setSettings({ ...settings, disclosures: e })}
-                  label="Disclosures"
-                  size="full"
-                  subtype="textarea"
-                />
-                <div className="flex items-baseline">
-                  <div className="text-sm text-[#344054] w-[172px]">
-                    Billing
-                  </div>
-                  <Button
-                    type="secondary"
-                    onClick={async () => {
-                      if (
-                        user?.info?.subsciptionStatus === "active" ||
-                        user?.info?.subsciptionStatus === "trialing"
-                      ) {
-                        const d = await fetch(
-                          import.meta.env.VITE_API_URL + "stripeRedirect",
-                        ).then((a) => a.json());
-                        window.open(d.url, "_blank");
-                      } else {
-                        const d = await fetch(
-                          import.meta.env.VITE_API_URL + "stripeSubscribe",
-                        ).then((a) => a.json());
-                        window.open(d.url, "_blank");
-                      }
-                    }}
-                  >
-                    Open billing settings
-                  </Button>
-                </div>
-              </div>
+            <div className="flex flex-row gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Advisor"
+                subtitle="These settings are used on reports"
+              />
+              <AdvisorSection
+                settings={settings}
+                setSettings={setSettings}
+                user={user}
+              />
             </div>
-            <div className="w-1/2 flex gap-5">
-              <SectionHeader title="Global defaults" />
-              <div className="flex gap-6 flex-col">
-                <Input
-                  value={settings.globalInflation}
-                  subtype="percent"
-                  setValue={(e) =>
-                    setSettings({ ...settings, globalInflation: e })
-                  }
-                  label="Inflation"
-                  size="full"
-                />
-                <Input
-                  value={settings.globalYearsShown}
-                  subtype="number"
-                  setValue={(e) =>
-                    setSettings({ ...settings, globalYearsShown: e })
-                  }
-                  label="Years Shown"
-                  size="full"
-                />
-                <Input
-                  value={settings.globalLifeExpectancy}
-                  subtype="number"
-                  setValue={(e) =>
-                    setSettings({ ...settings, globalLifeExpectancy: e })
-                  }
-                  label="Life Expectancy"
-                  size="full"
-                />
-                <Input
-                  value={settings.globalPreRetirementTaxRate}
-                  subtype="percent"
-                  setValue={(e) =>
-                    setSettings({ ...settings, globalPreRetirementTaxRate: e })
-                  }
-                  label="Pre-Retirement Tax Rate"
-                  size="full"
-                />
-                <Input
-                  value={settings.globalPostRetirementTaxRate}
-                  subtype="percent"
-                  setValue={(e) =>
-                    setSettings({ ...settings, globalPostRetirementTaxRate: e })
-                  }
-                  label="Post-Retirement Tax Rate"
-                  size="full"
-                />
-              </div>
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Global Assumptions"
+                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client"
+              />
+              <GlobalDefaultsSection
+                settings={settings}
+                setSettings={setSettings}
+              />
             </div>
-            <div className="w-full flex gap-5">
-              <SectionHeader title="Appearance" />
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Appearance"
+                subtitle="Primary color is used to customize the UI. Logo is used in top right in the app, and on PDF reports."
+              />
 
-              <div className="flex items-center gap-4">
-                <label
-                  htmlFor="primaryColor"
-                  className="text-sm text-[#344054] w-[132px]"
-                >
-                  Primary Color
-                </label>
-
-                <input
-                  type="color"
-                  id="primaryColor"
-                  value={settings.primaryColor}
-                  onChange={handleColorChange}
-                  className="w-10 h-10 rounded-md cursor-pointer"
-                />
-                <div className="w-24">
-                  <Button
-                    type="secondary"
-                    onClick={() => {
-                      setSettings({ ...settings, primaryColor: "#FF6C47" });
-                    }}
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4">
+                  <label
+                    htmlFor="primaryColor"
+                    className="text-sm text-[#344054] w-[132px]"
                   >
-                    Reset
-                  </Button>
-                </div>
-              </div>
+                    Primary Color
+                  </label>
 
-              <div className="flex gap-3 items-center">
-                <div className="text-sm text-[#344054] w-[136px]">Logo</div>
-                {user?.info?.logo && (
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={`${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`}
-                      className="h-20 min-w-20"
-                    />
-                  </div>
-                )}
-                <Tooltip
-                  content={
-                    "You can upload image files (JPG, PNG, GIF, WebP) up to 10 MB in size."
-                  }
-                  theme={{ target: "" }}
-                  placement="right-end"
-                  style="light"
-                >
-                  <div className="w-32">
+                  <input
+                    type="color"
+                    id="primaryColor"
+                    value={settings.primaryColor}
+                    onChange={handleColorChange}
+                    className="w-10 h-10 rounded-md cursor-pointer"
+                  />
+                  <div className="w-24">
                     <Button
                       type="secondary"
-                      onClick={() => ref.current.click()}
-                    >
-                      <div className="flex items-center gap-3 justify-center">
-                        Upload
-                        <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD]" />
-                      </div>
-                    </Button>
-                  </div>
-                </Tooltip>
-                <input
-                  type="file"
-                  className="hidden"
-                  ref={ref}
-                  onChange={upload}
-                />
-
-                <div className="w-32">
-                  {user?.info?.logo && (
-                    <Button
-                      type="secondary"
-                      onClick={async () => {
-                        await updateSettings({ ...settings, logo: null });
-                        await fetchUser();
+                      onClick={() => {
+                        setSettings({ ...settings, primaryColor: "#FF6C47" });
                       }}
                     >
                       Reset
                     </Button>
+                  </div>
+                </div>
+                <div className="flex gap-3 items-center">
+                  <div className="text-sm text-[#344054] w-[136px]">Logo</div>
+                  {user?.info?.logo && (
+                    <div className="flex items-center justify-center">
+                      <img
+                        src={`${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`}
+                        className="h-20 min-w-20"
+                      />
+                    </div>
                   )}
+                  <Tooltip
+                    content={
+                      "You can upload image files (JPG, PNG, GIF, WebP) up to 10 MB in size."
+                    }
+                    theme={{ target: "" }}
+                    placement="right-end"
+                    style="light"
+                  >
+                    <div className="w-32">
+                      <Button
+                        type="secondary"
+                        onClick={() => ref.current.click()}
+                      >
+                        <div className="flex items-center gap-3 justify-center">
+                          Upload
+                          <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD]" />
+                        </div>
+                      </Button>
+                    </div>
+                  </Tooltip>
+                  <input
+                    type="file"
+                    className="hidden"
+                    ref={ref}
+                    onChange={upload}
+                  />
+
+                  <div className="w-32">
+                    {user?.info?.logo && (
+                      <Button
+                        type="secondary"
+                        onClick={async () => {
+                          await updateSettings({ ...settings, logo: null });
+                          await fetchUser();
+                        }}
+                      >
+                        Reset
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-
-              <SectionHeader title="Extra Features" />
-
-              <div className="italic text-gray-500 text-sm">
-                Set the default for new clients created. This default can be
+            </div>
+            <div className="w-full flex gap-5">
+              <SectionHeader
+                title="Extra Features"
+                subtitle="Set the default for new clients created. This default can be
                 overridden (turned off/on) for each individual client in client
-                settings page
-              </div>
+                settings page"
+              />
               <div className="flex flex-col gap-3">
                 <div className="w-60">
                   <Input
@@ -295,19 +243,7 @@ const Settings = () => {
             </div>
           </div>
           <div className="flex flex-col w-[500px] gap-6 m-auto mt-10">
-            <div>
-              <Button
-                type="primary"
-                onClick={async () => {
-                  setLoading(true);
-                  await updateSettings(settings);
-                  await fetchUser();
-                  setLoading(false);
-                }}
-              >
-                {loading ? "Saving..." : "Save"}
-              </Button>
-            </div>
+            <div></div>
           </div>
         </div>
       ) : (

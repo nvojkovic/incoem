@@ -76,7 +76,7 @@ const Live = ({
             {settings.data.people.length == 2 ? (
               <div className="flex gap-3 items-end justify-start">
                 <div className="">
-                  <div className="text-sm text-[#344054] mb-1 ">Death</div>
+                  <div className="text-sm text-[#344054] mb-1 ">Mortality</div>
                   <div className={`flex items-end`}>
                     <WhoDies
                       active={settings.whoDies == -1}

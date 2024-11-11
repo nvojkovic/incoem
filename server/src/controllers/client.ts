@@ -127,6 +127,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
       allInOneCalculator,
       versatileCalculator,
       liveSettings,
+      updatedAt: new Date(),
     },
   });
   res.json(client);

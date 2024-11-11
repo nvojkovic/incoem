@@ -16,4 +16,5 @@ export interface SettingsData {
 
 export interface SectionHeaderProps {
   title: string;
+  subtitle: string;
 }

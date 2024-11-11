@@ -28,7 +28,7 @@ const ClientOverview = ({
     >
       <td className="px-2 py-3 text-sm">{client.title}</td>
       <td className="px-2 py-1 text-sm text-gray-500">
-        {timeAgo(new Date(client.createdAt))}
+        {client.updatedAt && timeAgo(new Date(client.updatedAt))}
       </td>
       <td className="px-2 py-1 text-sm text-gray-500">
         {client.data.people
@@ -55,7 +55,7 @@ const ClientOverview = ({
             }}
           />
           <TrashIcon
-            className="h-5 w-5 text-main-orange cursor-pointer"
+            className="h-5 w-5 text-red-500 cursor-pointer"
             onClick={(e) => {
               setDeleteOpen(true);
               e.stopPropagation();

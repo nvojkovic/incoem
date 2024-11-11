@@ -88,7 +88,7 @@ const Summary = () => {
   const [selectedYear, setSelectedYear] = useState(0);
   return (
     <Layout page="map">
-      <div>
+      <div className="pb-32">
         <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
           <div
             className={`flex print:hidden sticky z-[5000] ${

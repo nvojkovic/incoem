@@ -119,6 +119,7 @@ interface CalculationInfo<T extends Income> {
 interface Client {
   title: string;
   createdAt: string;
+  updatedAt: string;
   id: number;
   data: IncomeMapData;
   spending: RetirementSpendingSettings;
