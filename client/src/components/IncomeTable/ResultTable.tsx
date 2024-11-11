@@ -424,6 +424,7 @@ const ResultTable = ({
                   <div
                     className={`flex flex-col items-start px-2 py-[0.95rem] ${false ? "px-6" : "px-2"}`}
                     onClick={(e) => {
+                      console.log(selectedColumn);
                       if (e.detail === 1) {
                         setTimeout(() => {
                           selectedColumn.type === "total"
@@ -451,7 +452,11 @@ const ResultTable = ({
                   className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} ${hoverRow === i ? "!bg-slate-100" : ""}  border-y border-[#EAECF0] ${selectedYear === 0 && ""}`}
                 >
                   <td
-                    onClick={() => setSelectedYear(row.year)}
+                    onClick={() =>
+                      selectedYear == row.year
+                        ? setSelectedYear(-1)
+                        : setSelectedYear(row.year)
+                    }
                     className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} ${false ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
                   >
                     {row.total}

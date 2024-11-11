@@ -116,7 +116,7 @@ const Settings = () => {
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Global Assumptions"
-                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client"
+                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
               />
               <GlobalDefaultsSection
                 settings={settings}

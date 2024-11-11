@@ -67,7 +67,7 @@ const initializeNewClient = (user: User | null): Client => ({
   } as RetirementSpendingSettings,
   calculators: undefined as any,
   allInOneCalculator: [],
-  versatileCalculator: {},
+  versatileCalculator: undefined as any,
   liveSettings: {
     id: -1,
     name: "",

@@ -61,7 +61,7 @@ const StackedAreaChart = ({
     )
       return;
 
-    const margin = { top: 40, right: 30, bottom: 80, left: 70 };
+    const margin = { top: 40, right: 30, bottom: 80, left: 75 };
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
 

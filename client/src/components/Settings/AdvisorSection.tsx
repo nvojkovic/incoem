@@ -38,7 +38,7 @@ const AdvisorSection = ({
         subtype="textarea"
       />
       <div className="flex items-baseline">
-        <div className="text-sm text-[#344054] w-[172px]">Billing</div>
+        <div className="text-sm text-[#344054] w-[146px]">Billing</div>
         <Button
           type="secondary"
           onClick={async () => {
