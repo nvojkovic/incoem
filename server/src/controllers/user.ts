@@ -64,6 +64,7 @@ export const getLogo = async (req: any, res: Response) => {
 
 export const getReport = async (req: any, res: Response) => {
   let { report } = req.query;
+
   let file = fs.readFileSync(report);
   if (file) {
     res.setHeader("Content-Type", "application/pdf");
