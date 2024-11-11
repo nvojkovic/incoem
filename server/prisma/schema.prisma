@@ -35,11 +35,11 @@ model UserInfo {
   primaryColor                String? @default("#FF6C47")
   stabilityRatioFlag          Boolean @default(false)
   needsFlag                   Boolean @default(false)
-  globalInflation             Float   @default(2.5)
-  globalYearsShown            Int     @default(30)
-  globalLifeExpectancy        Int     @default(78)
-  globalPreRetirementTaxRate  Int     @default(0)
-  globalPostRetirementTaxRate Int     @default(0)
+  globalInflation             Float?  @default(2.5)
+  globalYearsShown            Int?    @default(30)
+  globalLifeExpectancy        Int?    @default(78)
+  globalPreRetirementTaxRate  Int?    @default(0)
+  globalPostRetirementTaxRate Int?    @default(0)
 }
 
 model all_auth_recipe_users {
