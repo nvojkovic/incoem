@@ -61,7 +61,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full flex justify-center bg-white h-full">
+    <div className="w-full flex justify-center bg- h-full">
       <div className="m-auto w-auto relative">
         <div className="w-[768px] h-[768px] relative mt-[-300px]">
           <img
@@ -70,7 +70,7 @@ const Login = () => {
             className="w-[768px] h-[768px] absolute top-0 "
           />
           <div
-            style={{ background: "radial-gradient(#aaa0,#fff)" }}
+            style={{ background: "radial-gradient(#aaa0,#f3f4f6)" }}
             className="w-full h-[768px] absolute top-0 left-0"
           ></div>
         </div>

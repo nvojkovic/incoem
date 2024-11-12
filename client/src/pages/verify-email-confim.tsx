@@ -33,7 +33,7 @@ const VerifyEmailConfirm = () => {
             className="w-[768px] h-[768px] absolute top-0 "
           />
           <div
-            style={{ background: "radial-gradient(#aaa0,#fff)" }}
+            style={{ background: "radial-gradient(#aaa0,#f3f4f6)" }}
             className="w-full h-[768px] absolute top-0 left-0"
           ></div>
         </div>
