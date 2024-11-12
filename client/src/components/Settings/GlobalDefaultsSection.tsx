@@ -17,21 +17,7 @@ const GlobalDefaultsSection = ({
         subtype="percent"
         setValue={(e) => setSettings({ ...settings, globalInflation: e })}
         label="Inflation"
-        size="full"
-      />
-      <Input
-        value={settings.globalYearsShown}
-        subtype="number"
-        setValue={(e) => setSettings({ ...settings, globalYearsShown: e })}
-        label="Years Shown"
-        size="full"
-      />
-      <Input
-        value={settings.globalLifeExpectancy}
-        subtype="number"
-        setValue={(e) => setSettings({ ...settings, globalLifeExpectancy: e })}
-        label="Mortality"
-        size="full"
+        width="!w-32"
       />
       <Input
         value={settings.globalPreRetirementTaxRate}
@@ -40,7 +26,12 @@ const GlobalDefaultsSection = ({
           setSettings({ ...settings, globalPreRetirementTaxRate: e })
         }
         label="Pre-Retirement Tax Rate"
-        size="full"
+      />
+      <Input
+        value={settings.globalYearsShown}
+        subtype="number"
+        setValue={(e) => setSettings({ ...settings, globalYearsShown: e })}
+        label="Years Shown"
       />
       <Input
         value={settings.globalPostRetirementTaxRate}
@@ -49,7 +40,12 @@ const GlobalDefaultsSection = ({
           setSettings({ ...settings, globalPostRetirementTaxRate: e })
         }
         label="Post-Retirement Tax Rate"
-        size="full"
+      />
+      <Input
+        value={settings.globalLifeExpectancy}
+        subtype="number"
+        setValue={(e) => setSettings({ ...settings, globalLifeExpectancy: e })}
+        label="Mortality"
       />
     </div>
   );

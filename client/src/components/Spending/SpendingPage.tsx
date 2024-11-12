@@ -296,16 +296,11 @@ const SpendingPage = () => {
                       <Button
                         type="secondary"
                         onClick={() => {
-                          if (
-                            confirm(
-                              "Are you sure you want to duplicate this spending?",
-                            )
-                          )
-                            setField("preSpending")(
-                              spending.preSpending.flatMap((item, ind) =>
-                                ind === index ? [item, { ...item }] : [item],
-                              ),
-                            );
+                          setField("preSpending")(
+                            spending.preSpending.flatMap((item, ind) =>
+                              ind === index ? [item, { ...item }] : [item],
+                            ),
+                          );
                         }}
                       >
                         <div className="flex justify-center">
@@ -484,7 +479,21 @@ const SpendingPage = () => {
                       />
                     </td>
                   ))}
-                  <td className="px-2 py-2">
+                  <td className="px-2 py-3 flex gap-2 items-center">
+                    <Button
+                      type="secondary"
+                      onClick={() => {
+                        setField("postSpending")(
+                          spending.postSpending.flatMap((item, ind) =>
+                            ind === index ? [item, { ...item }] : [item],
+                          ),
+                        );
+                      }}
+                    >
+                      <div className="flex justify-center">
+                        <DocumentDuplicateIcon className="h-5 text-black" />
+                      </div>
+                    </Button>
                     <Button
                       type="secondary"
                       onClick={() => {

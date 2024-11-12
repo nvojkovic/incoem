@@ -104,7 +104,7 @@ const Settings = () => {
             <div className="flex flex-row gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Advisor"
-                subtitle="These settings are used in the UI and to fill the first page of PDF reports."
+                subtitle="Advisor information will appear on the printed pdf"
               />
               <AdvisorSection
                 settings={settings}
@@ -208,7 +208,7 @@ const Settings = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex gap-5">
+            <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Extra Features"
                 subtitle="Set the default for new clients created. This default can be
@@ -240,9 +240,36 @@ const Settings = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col w-[500px] gap-6 m-auto mt-10">
-            <div></div>
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Billing"
+                subtitle="Advisor information will appear on the printed pdf"
+              />
+
+              <div className="flex items-baseline w-64">
+                <Button
+                  type="secondary"
+                  onClick={async () => {
+                    if (
+                      user?.info?.subsciptionStatus === "active" ||
+                      user?.info?.subsciptionStatus === "trialing"
+                    ) {
+                      const d = await fetch(
+                        import.meta.env.VITE_API_URL + "stripeRedirect",
+                      ).then((a) => a.json());
+                      window.open(d.url, "_blank");
+                    } else {
+                      const d = await fetch(
+                        import.meta.env.VITE_API_URL + "stripeSubscribe",
+                      ).then((a) => a.json());
+                      window.open(d.url, "_blank");
+                    }
+                  }}
+                >
+                  Open billing settings
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       ) : (

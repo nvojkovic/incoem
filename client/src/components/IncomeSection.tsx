@@ -96,7 +96,7 @@ export const IncomeComponent = ({
     );
 };
 
-const IncomeSection = ({}: Props) => {
+const IncomeSection = ({ }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
   const incomes = data.data.incomes;
@@ -123,10 +123,16 @@ const IncomeSection = ({}: Props) => {
       <div>
         <div className="flex gap-6 items-center w-full justify-between py-6 sticky z-50 top-[72px] bg-[#f3f4f6]">
           <div className="font-semibold text-2xl">Income information</div>
-          <div className="w-36 ">
+          <div className="w-40">
             <AddIncome />
           </div>
         </div>
+        {incomes.length === 0 && (
+          <div className="w-full h-[calc(100vh-300px)] flex justify-center items-center text-gray-500 text-xl">
+            This client has no incomes yet. Add an income by pressing the button
+            on top right.
+          </div>
+        )}
         <div className="grid  md:grid-cols-2 lg:grid-cols-3 gap-4">
           <DndContext
             sensors={sensors}
