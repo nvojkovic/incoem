@@ -16,6 +16,7 @@ const AdvisorSection = ({ settings, setSettings }: AdvisorSectionProps) => {
         label="Name"
         labelLength={110}
         size="full"
+        tabIndex={1}
       />
       <Input
         value={settings.firmName}
@@ -23,6 +24,7 @@ const AdvisorSection = ({ settings, setSettings }: AdvisorSectionProps) => {
         label="Firm name"
         labelLength={110}
         size="full"
+        tabIndex={2}
       />
       <Input
         value={settings.disclosures}
@@ -31,6 +33,7 @@ const AdvisorSection = ({ settings, setSettings }: AdvisorSectionProps) => {
         label="Disclosures"
         size="full"
         subtype="textarea"
+        tabIndex={3}
       />
     </div>
   );

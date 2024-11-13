@@ -7,11 +7,12 @@ interface ToggleProps {
   size?: "sm" | "lg";
 }
 
-function Toggle({ enabled, setEnabled, size = "lg" }: ToggleProps) {
+function Toggle({ enabled, setEnabled, size = "lg", ...props }: ToggleProps) {
   return (
     <div>
       {size === "sm" ? (
         <Switch
+          {...props}
           checked={enabled}
           onChange={setEnabled}
           className={`${enabled ? "bg-main-orange" : "bg-gray-200"
@@ -25,6 +26,7 @@ function Toggle({ enabled, setEnabled, size = "lg" }: ToggleProps) {
         </Switch>
       ) : (
         <Switch
+          {...props}
           checked={enabled}
           onChange={setEnabled}
           className={`${enabled ? "bg-main-orange" : "bg-gray-200"

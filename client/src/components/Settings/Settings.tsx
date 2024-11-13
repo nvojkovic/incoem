@@ -104,7 +104,7 @@ const Settings = () => {
             <div className="flex flex-row gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Advisor"
-                subtitle="Advisor information will appear on the printed pdf"
+                subtitle="Advisor information will appear on the printed pdf."
               />
               <AdvisorSection
                 settings={settings}
@@ -140,6 +140,7 @@ const Settings = () => {
                   <input
                     type="color"
                     id="primaryColor"
+                    tabIndex={9}
                     value={settings.primaryColor}
                     onChange={handleColorChange}
                     className="w-10 h-10 rounded-md cursor-pointer"
@@ -177,6 +178,7 @@ const Settings = () => {
                       <Button
                         type="secondary"
                         onClick={() => ref.current.click()}
+                        tabIndex={10}
                       >
                         <div className="flex items-center gap-3 justify-center">
                           Upload
@@ -219,6 +221,7 @@ const Settings = () => {
                 <div className="w-60">
                   <Input
                     value={settings.stabilityRatioFlag}
+                    tabIndex={11}
                     setValue={(e) =>
                       setSettings({ ...settings, stabilityRatioFlag: e })
                     }
@@ -231,6 +234,7 @@ const Settings = () => {
                 <div className="w-60">
                   <Input
                     value={settings.needsFlag}
+                    tabIndex={12}
                     setValue={(e) => setSettings({ ...settings, needsFlag: e })}
                     label="Spending"
                     tooltip="Include the Spending calculator page and show Spending on Income Map"
@@ -243,7 +247,7 @@ const Settings = () => {
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Billing"
-                subtitle="Advisor information will appear on the printed pdf"
+                subtitle="Manage your subscription."
               />
 
               <div className="flex items-baseline w-64">
