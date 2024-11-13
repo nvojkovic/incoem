@@ -29,7 +29,7 @@ const Subscribe = () => {
 
   useEffect(() => {
     if (user?.info?.subsciptionStatus === "active") {
-      navigate("/");
+      // navigate("/");
     }
   }, [user]);
 
@@ -46,19 +46,8 @@ const Subscribe = () => {
   // };
   return (
     <div className="w-full flex justify-center">
-      <div className="m-auto w-auto relative">
-        <div className="w-[768px] h-[768px] relative mt-[-300px]">
-          <img
-            src={bg}
-            alt=""
-            className="w-[768px] h-[768px] absolute top-0 "
-          />
-          <div
-            style={{ background: "radial-gradient(#aaa0,#fff)" }}
-            className="w-full h-[768px] absolute top-0 left-0"
-          ></div>
-        </div>
-        <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
+      <div className="flex items-center justify-center h-screen m-auto w-auto relative">
+        <div className="text-black top-[200px] flex w-full z-50 flex-col items-center bg-white py-4 px-12 rounded-xl shadow-lg border">
           <div className="flex flex-col items-center justify-start w-[360px]">
             <img src={logo} alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] text-center mb-6">
