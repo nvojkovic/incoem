@@ -422,7 +422,7 @@ const ResultTable = ({
                     }`}
                 >
                   <div
-                    className={`flex flex-col items-start px-2 py-[0.95rem] ${false ? "px-6" : "px-2"}`}
+                    className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} ${false ? "px-6" : "px-2"}`}
                     onClick={(e) => {
                       console.log(selectedColumn);
                       if (e.detail === 1) {

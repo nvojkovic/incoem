@@ -13,7 +13,7 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
       {[0, 1, 2, 3, 4].map(
         (tableInd) =>
           currentYear + settings.maxYearsShown >
-            currentYear + tableInd * 16 && (
+          currentYear + tableInd * 16 && (
             <div>
               <table className=" w-full border bg-white">
                 <thead
@@ -34,13 +34,13 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                     ),
                   ).map((line) => (
                     <tr className="">
-                      <td className="px-2 py-1 w-[500px] font-bold">{line}</td>
-                      <td className="px-2 py-1 w-[500px]">
+                      <td className="px-6 py-1 w-[500px] font-bold">{line}</td>
+                      <td className="px-6 py-1 w-[500px]">
                         {data.people
                           .map((p) => line - splitDate(p.birthday).year)
                           .join("/")}
                       </td>
-                      <td className="px-2 py-1 w-[500px]">
+                      <td className="px-6 py-1 w-[500px]">
                         {formatter.format(
                           calculateSpendingYear(data, spending, settings, line),
                         )}
