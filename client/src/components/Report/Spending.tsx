@@ -24,18 +24,18 @@ const Spending = ({
           />
         )}
 
-        {client.spending?.preTaxRate && (
+        {client.spending?.preTaxRate ? (
           <PrintCard
             title={`Pre-Retirement Tax Rate`}
             subtitle={`${client.spending.preTaxRate}%`}
           />
-        )}
-        {client.spending?.postTaxRate && (
+        ) : null}
+        {client.spending?.postTaxRate ? (
           <PrintCard
             title={`Post-Retirement Tax Rate`}
             subtitle={`${client.spending.postTaxRate}%`}
           />
-        )}
+        ) : null}
       </div>
       <SpendingTable
         settings={scenario}
