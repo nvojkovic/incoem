@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import bg from "../assets/login-bg.png";
 import logo from "../assets/logo.png";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
@@ -29,7 +28,7 @@ const Subscribe = () => {
 
   useEffect(() => {
     if (user?.info?.subsciptionStatus === "active") {
-      // navigate("/");
+      navigate("/");
     }
   }, [user]);
 
