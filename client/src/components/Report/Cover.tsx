@@ -65,25 +65,25 @@ const ReportCover = ({ settings, client }: CoverProps) => {
               title="Inflation-Adjustment"
               subtitle={`${settings.inflationType === "Real" ? settings.inflation || 0 : 0}%`}
             />
-            {client.needsFlag && settings?.retirementYear && (
+            {client.needsFlag && settings?.retirementYear ? (
               <PrintCard
                 title={`Retirement Year`}
                 subtitle={settings.retirementYear}
               />
-            )}
+            ) : null}
 
-            {client.needsFlag && client.spending?.preTaxRate && (
+            {client.needsFlag && client.spending?.preTaxRate ? (
               <PrintCard
                 title={`Pre-Retirement Tax Rate`}
                 subtitle={`${client.spending.preTaxRate}%`}
               />
-            )}
-            {client.needsFlag && client.spending?.postTaxRate && (
+            ) : null}
+            {client.needsFlag && client.spending?.postTaxRate ? (
               <PrintCard
                 title={`Post-Retirement Tax Rate`}
                 subtitle={`${client.spending.postTaxRate}%`}
               />
-            )}
+            ) : null}
             {settings.data.people.length > 1 &&
               settings.data.people.map(
                 (person, i) =>
