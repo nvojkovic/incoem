@@ -28,7 +28,7 @@ const PrintLivePage = () => {
     <Report
       client={client}
       scenario={scenario}
-      page={searchParams.get("page")}
+      page={JSON.parse(searchParams.get("page") || "{}")}
     />
   );
 };

@@ -69,13 +69,22 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
 };
 
 export const getPrintClientPdfLive = async (req: Request, res: Response) => {
+  const pages = (
+    await prisma.client.findFirst({ where: { id: parseInt(req.params.id) } })
+  )?.reportSettings;
+  console.log(pages);
   const url =
     process.env.PRINTER_URL +
-    "/?url=" +
+    "/?pages=" +
+    JSON.stringify(pages) +
+    "&url=" +
     process.env.APP_URL +
     // "http://im-client:5173" +
     "/print-live/" +
-    req.params.id;
+    req.params.id +
+    "/" +
+    req.params.scenario;
+  console.log("Printing url:", url);
   console.log("Printing url:", url);
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
