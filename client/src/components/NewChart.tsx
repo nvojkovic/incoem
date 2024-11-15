@@ -378,7 +378,7 @@ const StackedAreaChart = ({
         );
         
         // Position tooltip near bottom of chart
-        const top = margin.top + height + 10;
+        const top = margin.top + height + 30;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
