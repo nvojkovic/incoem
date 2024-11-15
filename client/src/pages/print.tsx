@@ -17,7 +17,7 @@ const PrintPage = () => {
   }, [id, scenarioId]);
 
   const scenario = client?.scenarios?.find((s: any) => s.id == scenarioId);
-  console.log(scenario, client);
+  console.log("sc", scenario, client);
   if (!client) return <div>Loading...</div>;
   // if (!scenario) return null;
   //
@@ -25,7 +25,7 @@ const PrintPage = () => {
     <Report
       client={client}
       scenario={scenario}
-      page={searchParams.get("page")}
+      page={JSON.parse(searchParams.get("page") || "{}")}
     />
   );
   return <div>{scenario && <Print client={client} scenario={scenario} />}</div>;

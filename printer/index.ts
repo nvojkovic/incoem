@@ -82,7 +82,7 @@ const getPdf = async (url: string, browser: Browser) => {
 };
 
 app.get("/", async (req, res) => {
-  const { url } = req.query;
+  const { url, pages } = req.query;
   if (!url) {
     return res.status(400).send("Missing url query parameter");
   }
@@ -92,12 +92,14 @@ app.get("/", async (req, res) => {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
-  const pages = await Promise.all(
-    ["cover", "chart", "incomes", "spending"].map((page) =>
-      getPdf(`${url}?page=${page}`, browser),
+  const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
+
+  const printedPages = await Promise.all(
+    toPrint.map((page: any) =>
+      getPdf(`${url}?page=${JSON.stringify(page)}`, browser),
     ),
   );
-  const result = await mergeAllPDFs(pages);
+  const result = await mergeAllPDFs(printedPages);
   browser.close();
 
   res.contentType("application/pdf");

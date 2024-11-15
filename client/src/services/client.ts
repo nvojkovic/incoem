@@ -61,7 +61,7 @@ export const getClient = (id: any) => {
 };
 
 export const getPrintClient = (id: any) => {
-  // const API = "http://im-server:3000/";
+  const API = "http://im-server:3000/";
   return fetch(API + `print/client/${id}`, {
     method: "GET",
     headers: {

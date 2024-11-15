@@ -45,16 +45,21 @@ export const getPrintClient = async (req: Request, res: Response) => {
 };
 
 export const getPrintClientPdf = async (req: Request, res: Response) => {
+  const pages = (
+    await prisma.client.findFirst({ where: { id: parseInt(req.params.id) } })
+  )?.reportSettings;
+  console.log(pages);
   const url =
     process.env.PRINTER_URL +
-    "/?url=" +
-    process.env.APP_URL +
-    // "http://im-client:5173" +
+    "/?pages=" +
+    JSON.stringify(pages) +
+    "&url=" +
+    // process.env.APP_URL +
+    "http://im-client:5173" +
     "/print/" +
     req.params.id +
     "/" +
     req.params.scenario;
-
   console.log("Printing url:", url);
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
@@ -68,7 +73,7 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
     process.env.PRINTER_URL +
     "/?url=" +
     process.env.APP_URL +
-    // "http://im-client:5173" +
+    "http://im-client:5173" +
     "/print-live/" +
     req.params.id;
   console.log("Printing url:", url);
@@ -111,6 +116,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
     versatileCalculator,
     allInOneCalculator,
     liveSettings,
+    reportSettings,
   } = req.body;
   let id = parseInt(req.params.id);
   const client = await prisma.client.update({
@@ -127,6 +133,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
       allInOneCalculator,
       versatileCalculator,
       liveSettings,
+      reportSettings,
       updatedAt: new Date(),
     },
   });

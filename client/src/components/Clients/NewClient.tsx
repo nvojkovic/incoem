@@ -9,6 +9,7 @@ import { updateAtIndex } from "../../utils";
 import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
+import Select from "../Inputs/Select";
 
 const PersonInfo = ({
   person,
@@ -19,7 +20,7 @@ const PersonInfo = ({
 }) => {
   if (!person) return <div className="h-20"></div>;
   return (
-    <div className="flex gap-5 my-8">
+    <div className="flex flex-col gap-5 my-8 w-full">
       <Input
         label="First Name"
         value={person.name}
@@ -35,6 +36,16 @@ const PersonInfo = ({
         vertical
         value={person.birthday}
         setValue={(birthday) => onChange({ ...person, birthday })}
+      />
+      <Select
+        label="Sex"
+        vertical
+        options={[
+          { id: "Male", name: "Male" },
+          { id: "Female", name: "Female" },
+        ]}
+        selected={{ id: person.sex, name: person.sex }}
+        setSelected={(option) => onChange({ ...person, sex: option.id })}
       />
     </div>
   );
@@ -83,6 +94,7 @@ const initializeNewClient = (user: User | null): Client => ({
       user?.info?.globalLifeExpectancy,
     ],
   } as ScenarioSettings,
+  reportSettings: user?.info?.globalReportSettings || [],
 });
 
 const NewClient = () => {
@@ -140,7 +152,7 @@ const NewClient = () => {
           />
         </div>
       </div>
-      <div>
+      <div className="flex justify-between">
         {client.data.people.map((person, i) => (
           <PersonInfo
             person={person}

@@ -38,9 +38,9 @@ const PersonInfo = ({ title, person }: Props) => {
             setValue={(birthday) => setPerson({ ...person, birthday })}
           />
           <Select
-            label="Timing"
-            width="!w-44"
-            labelLength={140}
+            label="Sex"
+            width="!w-[200px]"
+            labelLength={145}
             options={[
               { id: "Male", name: "Male" },
               { id: "Female", name: "Female" },

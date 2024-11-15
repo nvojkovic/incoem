@@ -1,11 +1,9 @@
-import { useState } from "react";
 import femaleTables from "src/assets/tables-female.json";
 import maleTables from "src/assets/tables-male.json";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "src/useData";
-import Input from "../Inputs/Input";
 import { calculateAge } from "../Info/PersonInfo";
 import { birthday } from "src/calculator/utils";
 import { yearRange } from "src/utils";
@@ -26,7 +24,7 @@ const LifeExpectancy = () => {
     let aliveProbability = 1;
     for (let current = age; current < 120; current++) {
       const row = table[current];
-      const [q, e] = row;
+      const [q, _] = row;
       const probability = aliveProbability * (1 - q);
       aliveProbability = probability;
       result.push({
@@ -74,6 +72,28 @@ const LifeExpectancy = () => {
     Math.max(...tables.map((i) => i.table.length), joint.length) - 1;
   const currentYear = new Date().getFullYear();
 
+  if (people.map((i) => i.sex).some((i) => i === undefined))
+    return (
+      <Layout page="calculator">
+        <div className="p-6 rounded-lg">
+          <div className="flex gap-3 items-center mb-8">
+            <Link to={`/client/${client.id}/calculator`}>
+              <div className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer bg-white">
+                <ArrowLeftIcon className="h-5 text-gray-500" />
+              </div>
+            </Link>
+            <h1 className="text-3xl font-bold">Life Expectancy Calculator</h1>
+          </div>
+        </div>
+        <div className="flex justify-center mt-10 w-full">
+          <div className="bg-white border rounded-lg p-6 shadow-md">
+            Every member of household needs to have sex set for Life Expectancy
+            Calculator to work.
+          </div>
+        </div>
+      </Layout>
+    );
+
   return (
     <Layout page="calculator">
       <div className="p-6 rounded-lg">
@@ -105,9 +125,13 @@ const LifeExpectancy = () => {
               ))}
             </div>
             <SurvivalChart
-              person1Data={tables[0].table.map((i) => i.probability)}
+              person1Data={tables[0].table
+                .map((i) => i.probability)
+                .slice(0, rowCount)}
               person2Data={
-                tables.length > 1 && tables[1].table.map((i) => i.probability)
+                tables.length > 1
+                  ? tables[1].table.map((i) => i.probability).slice(0, rowCount)
+                  : undefined
               }
               jointData={joint.map((i) => i.probability)}
               person1Name={people[0].name}
@@ -180,11 +204,11 @@ const LifeExpectancy = () => {
                     ))}
                     {people.length > 1 && (
                       <>
-                        <td className={`border px-4 py-2 `}>
+                        <td className={`border px-4 py-2`}>
                           {joint.length > index &&
                             `${Math.round(joint[index].probability * 10000) / 100}%`}
                         </td>
-                        <td className={`border px-4 py-2 `}>
+                        <td className={`border px-4 py-2`}>
                           {joint.length > index &&
                             `${Math.round(joint[index].oneAlive * 10000) / 100}%`}
                         </td>

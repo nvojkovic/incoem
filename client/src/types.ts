@@ -131,6 +131,7 @@ interface Client {
   allInOneCalculator: any[];
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
+  reportSettings: ReportSettings;
 }
 type PrintClient = Client & {
   userdata: UserInfo;
@@ -159,6 +160,7 @@ interface UserInfo {
   globalLifeExpectancy: number;
   globalPreRetirementTaxRate: number;
   globalPostRetirementTaxRate: number;
+  globalReportSettings: ReportSettings;
 }
 
 interface ScenarioSettings {
@@ -206,3 +208,31 @@ interface NewSpending {
   increase: YearlyIncrease;
   changeAtDeath: [number, number];
 }
+
+interface CoverPage {
+  id: string;
+  name: "cover";
+  settings: {};
+}
+
+interface IncomesPage {
+  id: string;
+  name: "incomes";
+  settings: {};
+}
+
+interface IncomeChartPage {
+  id: string;
+  name: "income-chart";
+  settings: {};
+}
+
+interface SpendingPage {
+  id: string;
+  name: "spending";
+  settings: {};
+}
+
+type ReportPage = CoverPage | IncomesPage | IncomeChartPage | SpendingPage;
+
+type ReportSettings = ReportPage[];

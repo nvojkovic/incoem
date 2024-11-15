@@ -5,6 +5,7 @@ import Input from "./Inputs/Input";
 import Layout from "./Layout";
 import { MultiToggle } from "./Spending/SpendingPage";
 import WhoDies from "./WhoDies";
+import ReportSettings from "./Settings/ReportSettings";
 
 const ClientOverview = () => {
   const { data, setField } = useInfo();
@@ -191,6 +192,15 @@ const ClientOverview = () => {
                 subtype="toggle"
               />
             </div>
+          </div>
+        </div>
+        <div className="">
+          <div className="font-semibold text-2xl mb-5">Report Settings</div>
+          <div className="p-2 rounded-lg ">
+            <ReportSettings
+              settings={data.reportSettings}
+              updateSettings={setField("reportSettings")}
+            />
           </div>
         </div>
       </div>

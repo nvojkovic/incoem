@@ -11,6 +11,7 @@ import Spinner from "../Spinner";
 import AdvisorSection from "./AdvisorSection";
 import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
+import ReportSettings from "./ReportSettings";
 
 const isColorTooLight = (
   hexColor: string,
@@ -46,7 +47,7 @@ const Settings = () => {
   useEffect(() => {
     setSettings(user?.info || null, false);
   }, [user]);
-  const [settings, setSettingsS] = useState(null as any);
+  const [settings, setSettingsS] = useState(null as any as UserInfo);
   const setSettings = (a: any, save = true) => {
     if (save) setToSave(true);
     setSettingsS(a);
@@ -273,6 +274,23 @@ const Settings = () => {
                   Open billing settings
                 </Button>
               </div>
+            </div>
+
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Reports"
+                subtitle="Choose which pages in which order are included in PDF reports."
+              />
+              <ReportSettings
+                settings={settings.globalReportSettings}
+                updateSettings={(globalReportSettings: any) => {
+                  console.log("update", globalReportSettings);
+                  setSettings({
+                    ...settings,
+                    globalReportSettings,
+                  });
+                }}
+              />
             </div>
           </div>
         </div>

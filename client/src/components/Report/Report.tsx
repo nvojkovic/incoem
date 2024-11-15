@@ -9,12 +9,15 @@ interface ReportProps {
   page: any;
 }
 const Report = ({ scenario, client, page }: ReportProps) => {
+  console.log(":page", page.name, client);
   if (!client.userdata) return null;
-  if (page == "cover") return <Cover settings={scenario} client={client} />;
-  if (page == "incomes") return <Print scenario={scenario} client={client} />;
-  if (page == "chart")
+  if (page.name == "cover")
+    return <Cover settings={scenario} client={client} />;
+  if (page.name == "incomes")
+    return <Print scenario={scenario} client={client} />;
+  if (page.name == "income-chart")
     return <MapChart settings={scenario} client={client} print />;
-  if (page == "spending")
+  if (page.name == "spending")
     return (
       <Spending
         scenario={scenario}
