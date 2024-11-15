@@ -204,13 +204,15 @@ const SurvivalChart = ({
         const tooltipNode = tooltip.node() as HTMLElement;
         const tooltipRect = tooltipNode.getBoundingClientRect();
 
+        const containerRect = (svgRef.current as any).parentNode.getBoundingClientRect();
+        
         const left = Math.min(
-          xScale(year) + margin.left + 15,
-          width + margin.left - tooltipRect.width - 10,
+          xPos + margin.left + 15,
+          width + margin.left - tooltipRect.width - 10
         );
-
+        
         // Position tooltip near bottom of chart
-        const top = margin.top + height + 150;
+        const top = margin.top + height + 30;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
