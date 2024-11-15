@@ -134,7 +134,7 @@ const SurvivalChart = ({
 
     // Add tooltip
     const tooltip = d3
-      .select(svgRef.current.parentNode)
+      .select((svgRef.current as any).parentNode)
       .append("div")
       .attr("class", "tooltip")
       .style("opacity", 0)
@@ -164,12 +164,13 @@ const SurvivalChart = ({
       const [xPos] = d3.pointer(event);
       const year = Math.round(xScale.invert(xPos));
       const index = year - startYear;
-      
+
       if (index >= 0 && index < person1Data.length) {
         const prob1 = person1Data[index];
         const prob2 = person2Data.length ? person2Data[index] : null;
         const jointProb = jointData.length ? jointData[index] : null;
-        const atLeastOneProb = prob2 !== null ? 1 - (1 - prob1) * (1 - prob2) : null;
+        const atLeastOneProb =
+          prob2 !== null ? 1 - (1 - prob1) * (1 - prob2) : null;
 
         let tooltipContent = `<div style="font-size: 12px;">
           <strong>Year: ${year}</strong><br/>
@@ -194,7 +195,7 @@ const SurvivalChart = ({
             </div>`;
         }
 
-        tooltipContent += '</div>';
+        tooltipContent += "</div>";
 
         tooltip.html(tooltipContent);
 
@@ -205,11 +206,11 @@ const SurvivalChart = ({
 
         const left = Math.min(
           xScale(year) + margin.left + 15,
-          width + margin.left - tooltipRect.width - 10
+          width + margin.left - tooltipRect.width - 10,
         );
-        
+
         // Position tooltip near bottom of chart
-        const top = margin.top + height + 30;
+        const top = margin.top + height + 150;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
