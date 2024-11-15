@@ -91,6 +91,15 @@ const SurvivalChart = ({
           .attr("stroke-width", 2)
           .attr("stroke-dasharray", "5,5")
           .attr("d", line);
+
+        // Add the "at least one alive" line
+        svg
+          .append("path")
+          .datum(person2Data.map((_, i) => 1 - (1 - person1Data[i]) * (1 - person2Data[i])))
+          .attr("fill", "none")
+          .attr("stroke", "#9c27b0")
+          .attr("stroke-width", 2)
+          .attr("d", line);
       }
     }
 
@@ -137,6 +146,7 @@ const SurvivalChart = ({
       legendData.push({ color: "#4ecdc4", text: person2Name });
       if (jointData.length > 0) {
         legendData.push({ color: "#45b7d1", text: "Joint Survival" });
+        legendData.push({ color: "#9c27b0", text: "At Least One Alive" });
       }
     }
 
