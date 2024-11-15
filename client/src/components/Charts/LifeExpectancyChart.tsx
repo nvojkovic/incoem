@@ -203,18 +203,13 @@ const SurvivalChart = ({
         const tooltipNode = tooltip.node() as HTMLElement;
         const tooltipRect = tooltipNode.getBoundingClientRect();
 
-        let left = event.pageX - svgRect.left + 15;
-        let top = event.pageY - svgRect.top - 10;
-
-        // Adjust if too close to right edge
-        if (left + tooltipRect.width > svgRect.width) {
-          left = svgRect.width - tooltipRect.width - 10;
-        }
-
-        // Adjust if too close to bottom
-        if (top + tooltipRect.height > svgRect.height) {
-          top = svgRect.height - tooltipRect.height - 10;
-        }
+        const left = Math.min(
+          xScale(year) + margin.left + 15,
+          width + margin.left - tooltipRect.width - 10
+        );
+        
+        // Fix tooltip at top of chart
+        const top = margin.top + 10;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 

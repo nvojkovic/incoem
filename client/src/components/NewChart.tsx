@@ -372,18 +372,13 @@ const StackedAreaChart = ({
         const tooltipRect = tooltipNode.getBoundingClientRect();
         const containerRect = containerRef.current.getBoundingClientRect();
 
-        let left = event.pageX - containerRect.left + 15;
-        let top = event.pageY - containerRect.top - 10;
-
-        // Adjust horizontal position if too close to the right edge
-        if (left + tooltipRect.width > containerRect.width) {
-          left = containerRect.width - tooltipRect.width - 10;
-        }
-
-        // Adjust vertical position if too close to the bottom edge
-        if (top + tooltipRect.height > containerRect.height) {
-          top = containerRect.height - tooltipRect.height - 10 - 100;
-        }
+        const left = Math.min(
+          xPos + margin.left + 15,
+          width + margin.left - tooltipRect.width - 10
+        );
+        
+        // Fix tooltip at top of chart
+        const top = margin.top + 10;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
