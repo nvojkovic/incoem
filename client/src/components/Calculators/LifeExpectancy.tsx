@@ -171,7 +171,7 @@ const LifeExpectancy = () => {
                 </tr>
               </thead>
               <tbody>
-                {yearRange(0, rowCount).map((row, index) => (
+                {yearRange(0, rowCount).map((_, index) => (
                   <tr key={index}>
                     <td className={`border px-4 py-2`}>
                       {currentYear + index}

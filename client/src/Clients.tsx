@@ -155,14 +155,11 @@ const Clients = () => {
         </div>
       </div>
       <div className="w-96 mt-5">
-        <Button
-          type="primary"
-          onClick={() => {
-            throw new Error("This is your first error!");
-          }}
-        >
-          Oh no! Something terrible has happened!
-        </Button>
+        <Link to="/test">
+          <Button type="primary">
+            Oh no! Something terrible has happened!
+          </Button>
+        </Link>
       </div>
     </Layout>
   );

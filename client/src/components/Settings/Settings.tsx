@@ -47,7 +47,7 @@ const Settings = () => {
   useEffect(() => {
     setSettings(user?.info || null, false);
   }, [user]);
-  const [settings, setSettingsS] = useState(null as any as UserInfo);
+  const [settings, setSettingsS] = useState(null as any);
   const setSettings = (a: any, save = true) => {
     if (save) setToSave(true);
     setSettingsS(a);

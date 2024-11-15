@@ -95,7 +95,7 @@ const SurvivalChart = ({
       .attr("fill", "none")
       .attr("stroke", "#ff6b6b")
       .attr("stroke-width", 2)
-      .attr("d", line);
+      .attr("d", line as any);
 
     if (person2Data.length > 0) {
       svg
@@ -104,7 +104,7 @@ const SurvivalChart = ({
         .attr("fill", "none")
         .attr("stroke", "#70ba1c")
         .attr("stroke-width", 2)
-        .attr("d", line);
+        .attr("d", line as any);
 
       if (jointData.length > 0) {
         svg
@@ -114,7 +114,7 @@ const SurvivalChart = ({
           .attr("stroke", "#45b7d1")
           .attr("stroke-width", 2)
           .attr("stroke-dasharray", "5,5")
-          .attr("d", line);
+          .attr("d", line as any);
 
         // Add the "at least one alive" line
         svg
