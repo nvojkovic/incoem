@@ -74,7 +74,7 @@ const LifeExpectancy = () => {
 
   if (people.map((i) => i.sex).some((i) => i === undefined))
     return (
-      <Layout page="calculator">
+      <Layout page="longevity">
         <div className="p-6 rounded-lg">
           <div className="flex gap-3 items-center mb-8">
             <Link to={`/client/${client.id}/calculator`}>
@@ -95,21 +95,13 @@ const LifeExpectancy = () => {
     );
 
   return (
-    <Layout page="calculator">
-      <div className="p-6 rounded-lg">
-        <div className="flex gap-3 items-center mb-8">
-          <Link to={`/client/${client.id}/calculator`}>
-            <div className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer bg-white">
-              <ArrowLeftIcon className="h-5 text-gray-500" />
-            </div>
-          </Link>
-          <h1 className="text-3xl font-bold">Life Expectancy Calculator</h1>
-        </div>
-      </div>
-
+    <Layout page="longevity">
       <div
         className={`px-12 ${people.length > 1 ? "w-[1200px]" : "w-[1200px]"} mx-auto`}
       >
+        <div className="flex gap-3 items-center mb-8 w-full justify-center">
+          <h1 className="text-3xl font-bold">Longevity</h1>
+        </div>
         <div className="flex gap-8 justify-center w-full">
           <div className="flex flex-col items-center gap-6 w-full">
             <div className="w-full flex gap-8 justify-center">
@@ -146,10 +138,6 @@ const LifeExpectancy = () => {
                   <th className="px-4 py-2 !rounded-none">Age</th>
                   {people.map((person) => (
                     <>
-                      <th className="px-4 py-2">
-                        Chance {person.name} <br />
-                        dies in this year
-                      </th>
                       <th className="px-4 py-2">
                         Chance of {person.name} <br />
                         living this long
@@ -189,10 +177,6 @@ const LifeExpectancy = () => {
 
                     {people.map((_, i) => (
                       <>
-                        <td className={`border px-4 py-2 `}>
-                          {tables[i].table.length > index &&
-                            `${Math.round(tables[i].table[index].q * 10000) / 100}%`}
-                        </td>
                         <td className={`border px-4 py-2 `}>
                           {tables[i].table.length > index &&
                             `${Math.round(

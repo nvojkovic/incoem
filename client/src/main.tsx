@@ -81,7 +81,7 @@ const router = createBrowserRouter([
             element: <AllInOneCalculator />,
           },
           {
-            path: "calculator/life-expectancy",
+            path: "longevity",
             element: <LifeExpectancy />,
           },
           {

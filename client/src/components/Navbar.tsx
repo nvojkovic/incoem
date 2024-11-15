@@ -67,6 +67,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
             active == "calculator" ||
             active == "map" ||
             active == "basic" ||
+            active == "longevity" ||
             active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
@@ -81,6 +82,11 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   link={`/client/${data.id}/spending`}
                 />
               )}
+              <NavItem
+                name="Longevity"
+                active={active == "longevity"}
+                link={`/client/${data.id}/longevity`}
+              />
               <NavItem
                 name="Map"
                 active={active == "map"}
