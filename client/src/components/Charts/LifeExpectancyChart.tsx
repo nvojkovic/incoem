@@ -208,8 +208,8 @@ const SurvivalChart = ({
           width + margin.left - tooltipRect.width - 10
         );
         
-        // Position tooltip vertically in middle of chart
-        const top = margin.top + (height / 2) - (tooltipRect.height / 2);
+        // Position tooltip near bottom of chart
+        const top = margin.top + height + 10;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
