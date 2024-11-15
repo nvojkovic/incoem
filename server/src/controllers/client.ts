@@ -54,8 +54,8 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     "/?pages=" +
     JSON.stringify(pages) +
     "&url=" +
-    // process.env.APP_URL +
-    "http://im-client:5173" +
+    process.env.APP_URL +
+    // "http://im-client:5173" +
     "/print/" +
     req.params.id +
     "/" +
@@ -73,7 +73,7 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
     process.env.PRINTER_URL +
     "/?url=" +
     process.env.APP_URL +
-    "http://im-client:5173" +
+    // "http://im-client:5173" +
     "/print-live/" +
     req.params.id;
   console.log("Printing url:", url);
