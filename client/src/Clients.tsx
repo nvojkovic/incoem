@@ -8,6 +8,7 @@ import Input from "./components/Inputs/Input";
 import { useUser } from "./useUser";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import Button from "./components/Inputs/Button";
 
 const Clients = () => {
   const { } = useUser();
@@ -153,14 +154,16 @@ const Clients = () => {
           )}
         </div>
       </div>
-      <Link to="/test">Clients</Link>
-      <button
-        onClick={() => {
-          throw new Error("This is your first error!");
-        }}
-      >
-        Break the world
-      </button>
+      <div className="w-96 mt-5">
+        <Button
+          type="primary"
+          onClick={() => {
+            throw new Error("This is your first error!");
+          }}
+        >
+          Oh no! Something terrible has happened!
+        </Button>
+      </div>
     </Layout>
   );
 };

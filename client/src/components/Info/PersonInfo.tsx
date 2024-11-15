@@ -1,5 +1,6 @@
 import { useInfo } from "../../useData";
 import Input from "../Inputs/Input";
+import Select from "../Inputs/Select";
 
 interface Props {
   title: string;
@@ -35,6 +36,17 @@ const PersonInfo = ({ title, person }: Props) => {
             size="lg"
             value={person.birthday}
             setValue={(birthday) => setPerson({ ...person, birthday })}
+          />
+          <Select
+            label="Timing"
+            width="!w-44"
+            labelLength={140}
+            options={[
+              { id: "Male", name: "Male" },
+              { id: "Female", name: "Female" },
+            ]}
+            selected={{ id: person.sex, name: person.sex }}
+            setSelected={(option) => setPerson({ ...person, sex: option.id })}
           />
           <Input
             label="Age"

@@ -7,6 +7,7 @@ interface Person {
   name: string;
   birthday: string;
   id: number;
+  sex?: "Male" | "Female";
 }
 interface IncomeMapData {
   people: Person[];

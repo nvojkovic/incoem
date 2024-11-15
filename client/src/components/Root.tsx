@@ -51,11 +51,13 @@ const Tmp = () => {
   console.log(u);
   return (
     <IntercomMessanger user={u}>
-      <ErrorBoundary fallback={<Error />} key={location.pathname}>
-        <Outlet />
-      </ErrorBoundary>
+      <Outlet />
     </IntercomMessanger>
   );
 };
 
+// <ErrorBoundary fallback={<Error />} key={location.pathname}>
+//   <Outlet />
+// </ErrorBoundary>
+//
 export default Root;

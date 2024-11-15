@@ -26,7 +26,7 @@ const calculators: CalculatorCard[] = [
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
         />
       </svg>
     ),
@@ -53,9 +53,30 @@ const calculators: CalculatorCard[] = [
       </svg>
     ),
   },
+  {
+    id: "life-expectancy",
+    title: "Life Expectancy Calculator",
+    description: "Calculate life expectancy for household members",
+    icon: (
+      <svg
+        className="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+        />
+      </svg>
+    ),
+  },
 ];
 
-const CalculatorMap: React.FC<any> = ({}: any) => {
+const CalculatorMap: React.FC<any> = ({ }: any) => {
   return (
     <Layout page="calculator">
       <div className="container mx-auto px-4 py-8">
