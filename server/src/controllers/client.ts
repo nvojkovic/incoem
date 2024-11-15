@@ -81,10 +81,7 @@ export const getPrintClientPdfLive = async (req: Request, res: Response) => {
     process.env.APP_URL +
     // "http://im-client:5173" +
     "/print-live/" +
-    req.params.id +
-    "/" +
-    req.params.scenario;
-  console.log("Printing url:", url);
+    req.params.id;
   console.log("Printing url:", url);
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
