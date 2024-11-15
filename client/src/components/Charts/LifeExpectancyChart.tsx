@@ -132,6 +132,117 @@ const SurvivalChart = ({
       }
     }
 
+    // Add tooltip
+    const tooltip = d3
+      .select(svgRef.current.parentNode)
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+      .style("position", "absolute")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "1px")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("pointer-events", "none");
+
+    // Add guideline
+    const guideline = svg
+      .append("line")
+      .attr("class", "guideline")
+      .style("stroke", "#999")
+      .style("stroke-width", 1)
+      .style("stroke-dasharray", "3,3")
+      .style("opacity", 0);
+
+    const mouseover = function(_: any, __: any) {
+      tooltip.style("opacity", 1);
+      guideline.style("opacity", 1);
+    };
+
+    const mousemove = function(event: any) {
+      const [xPos] = d3.pointer(event);
+      const year = Math.round(xScale.invert(xPos));
+      const index = year - startYear;
+      
+      if (index >= 0 && index < person1Data.length) {
+        const prob1 = person1Data[index];
+        const prob2 = person2Data.length ? person2Data[index] : null;
+        const jointProb = jointData.length ? jointData[index] : null;
+        const atLeastOneProb = prob2 !== null ? 1 - (1 - prob1) * (1 - prob2) : null;
+
+        let tooltipContent = `<div style="font-size: 12px;">
+          <strong>Year: ${year}</strong><br/>
+          <div style="margin-top: 5px;">
+            <span style="color: #ff6b6b">${person1Name}: ${(prob1 * 100).toFixed(1)}%</span>
+          </div>`;
+
+        if (prob2 !== null) {
+          tooltipContent += `
+            <div>
+              <span style="color: #70ba1c">${person2Name}: ${(prob2 * 100).toFixed(1)}%</span>
+            </div>`;
+        }
+
+        if (jointProb !== null) {
+          tooltipContent += `
+            <div>
+              <span style="color: #45b7d1">Both Alive: ${(jointProb * 100).toFixed(1)}%</span>
+            </div>
+            <div>
+              <span style="color: #9c27b0">At Least One: ${(atLeastOneProb! * 100).toFixed(1)}%</span>
+            </div>`;
+        }
+
+        tooltipContent += '</div>';
+
+        tooltip.html(tooltipContent);
+
+        // Position tooltip
+        const svgRect = svgRef.current.getBoundingClientRect();
+        const tooltipNode = tooltip.node() as HTMLElement;
+        const tooltipRect = tooltipNode.getBoundingClientRect();
+
+        let left = event.pageX - svgRect.left + 15;
+        let top = event.pageY - svgRect.top - 10;
+
+        // Adjust if too close to right edge
+        if (left + tooltipRect.width > svgRect.width) {
+          left = svgRect.width - tooltipRect.width - 10;
+        }
+
+        // Adjust if too close to bottom
+        if (top + tooltipRect.height > svgRect.height) {
+          top = svgRect.height - tooltipRect.height - 10;
+        }
+
+        tooltip.style("left", `${left}px`).style("top", `${top}px`);
+
+        // Update guideline position
+        guideline
+          .attr("x1", xScale(year))
+          .attr("x2", xScale(year))
+          .attr("y1", 0)
+          .attr("y2", height);
+      }
+    };
+
+    const mouseleave = function() {
+      tooltip.style("opacity", 0);
+      guideline.style("opacity", 0);
+    };
+
+    // Add invisible overlay for mouse events
+    svg
+      .append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave);
+
     // Add axes
     const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d")); // Format as decimal number
 
