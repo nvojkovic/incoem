@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+import * as Sentry from "@sentry/react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "./services/client";
 
@@ -32,6 +33,7 @@ export const UserProvider: React.FC<{
         ) {
           navigate("/subscribe");
         }
+        Sentry.setUser({ email: userData.info?.email, id: userData.userId });
       } else if (response.status === 401) {
         console.log("Unauthorized");
         navigate("/login");
