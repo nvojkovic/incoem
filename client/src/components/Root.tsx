@@ -1,8 +1,10 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
 import { UserProvider, useUser } from "../useUser";
 import { useEffect } from "react";
 import IntercomMessanger from "../intercom";
+import Error from "src/pages/error";
 const Root = () => {
   return (
     <SessionAuth>
@@ -35,6 +37,8 @@ const Tmp = () => {
       );
     }
   }, [user]);
+
+  const location = useLocation();
   if (!user || !user.info) return null;
 
   const u = {
@@ -47,7 +51,9 @@ const Tmp = () => {
   console.log(u);
   return (
     <IntercomMessanger user={u}>
-      <Outlet />
+      <ErrorBoundary fallback={<Error />} key={location.pathname}>
+        <Outlet />
+      </ErrorBoundary>
     </IntercomMessanger>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import "./sentry";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Clients from "./Clients";
 import "./supertokens";
@@ -29,6 +30,7 @@ import CalculatorMap from "./components/Calculators/CalculatorMap";
 import SpendingPage from "./components/Spending/SpendingPage";
 import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
+import NotFound from "./pages/not-found";
 
 SuperTokens.init({
   appInfo: {
@@ -45,6 +47,11 @@ SuperTokens.init({
   ],
 });
 
+const A = () => {
+  const a: any = undefined;
+  return <div>{a[1]}</div>;
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -54,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/clients",
         element: <Clients />,
+      },
+      {
+        path: "/test",
+        element: <A />,
       },
       {
         path: "/client/:id",
@@ -86,7 +97,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: "/profile",
         element: <Settings />,
@@ -136,6 +146,11 @@ const router = createBrowserRouter([
   {
     path: "/auth/verify-email",
     element: <VerifyEmailConfirm />,
+  },
+
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 
