@@ -9,6 +9,44 @@ import { birthday } from "src/calculator/utils";
 import { yearRange } from "src/utils";
 import SurvivalChart from "../Charts/LifeExpectancyChart";
 
+function calculateSurvivalProbability(
+  lifeExpectancy1: number,
+  lifeExpectancy2: number,
+  timePoint: number,
+): number {
+  const t = Math.min(timePoint, Math.max(lifeExpectancy1, lifeExpectancy2));
+  const probDead1 = Math.min(1.0, t / lifeExpectancy1);
+  const probDead2 = Math.min(1.0, t / lifeExpectancy2);
+  return 1 - probDead1 * probDead2;
+}
+
+function findFiftyPercentPoint(
+  lifeExpectancy1: number,
+  lifeExpectancy2: number,
+): number {
+  let start = 0;
+  let end = Math.max(lifeExpectancy1, lifeExpectancy2);
+
+  // Binary search to find the 50% point
+  while (end - start > 0.1) {
+    // Accurate to 0.1 years
+    const mid = (start + end) / 2;
+    const prob = calculateSurvivalProbability(
+      lifeExpectancy1,
+      lifeExpectancy2,
+      mid,
+    );
+
+    if (prob > 0.5) {
+      start = mid;
+    } else {
+      end = mid;
+    }
+  }
+
+  return Math.round(start * 10) / 10; // Round to 1 decimal place
+}
+
 const LifeExpectancy = () => {
   const { data: client } = useInfo();
   const people = client.data.people;
@@ -97,7 +135,7 @@ const LifeExpectancy = () => {
   return (
     <Layout page="longevity">
       <div
-        className={`px-12 ${people.length > 1 ? "w-[1200px]" : "w-[1200px]"} mx-auto`}
+        className={`px-12 ${people.length > 1 ? "w-[1400px]" : "w-[1400px]"} mx-auto`}
       >
         <div className="flex gap-3 items-center mb-8 w-full justify-center">
           <h1 className="text-3xl font-bold">Longevity</h1>
@@ -105,16 +143,34 @@ const LifeExpectancy = () => {
         <div className="flex gap-8 justify-center w-full">
           <div className="flex flex-col items-center gap-6 w-full">
             <div className="w-full flex gap-8 justify-center">
-              {people.map((person) => (
-                <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
-                  <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
-                    {person.name}'s Life Expectancy
+              {people.map((person) => {
+                const { birthYear } = birthday(person);
+                return (
+                  <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border gap-1">
+                    <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                      {person.name}'s Life Expectancy
+                    </div>
+                    <div className="font-semibold text-lg mt-[2px]">
+                      {makeTable(person).e}{" "}
+                      <span className="text-gray-500">
+                        ({Math.round(makeTable(person).e) + birthYear})
+                      </span>
+                    </div>
                   </div>
-                  <div className="font-semibold text-lg mt-[2px]">
-                    {makeTable(person).e}
-                  </div>
+                );
+              })}
+              <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border gap-1">
+                <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                  Joint Life Expectancy
                 </div>
-              ))}
+                <div className="font-semibold text-lg mt-[2px]">
+                  {findFiftyPercentPoint(
+                    makeTable(people[0]).e,
+                    makeTable(people[1]).e,
+                  )}{" "}
+                  <span className="text-gray-500">(0)</span>
+                </div>
+              </div>
             </div>
             <SurvivalChart
               person1Data={tables[0].table

@@ -28,7 +28,7 @@ const SurvivalChart = ({
 
     // Set up dimensions
     const margin = { top: 20, right: 30, bottom: 85, left: 80 };
-    const width = 800 - margin.left - margin.right;
+    const width = 900 - margin.left - margin.right;
     const height = 350 - margin.top - margin.bottom;
 
     // Create SVG
@@ -179,7 +179,7 @@ const SurvivalChart = ({
       }
     }
 
-    const legendWidth = width / legendData.length;
+    const legendWidth = 400 / legendData.length;
 
     const legend = svg
       .append("g")
@@ -191,7 +191,8 @@ const SurvivalChart = ({
       .join("g")
       .attr(
         "transform",
-        (_: any, i) => `translate(${(i + 0.5) * legendWidth},${height + 70})`,
+        (_: any, i) =>
+          `translate(${(i + 0.5) * legendWidth + 195},${height + 70})`,
       );
 
     legend

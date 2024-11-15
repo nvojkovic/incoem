@@ -26,7 +26,7 @@ const names: any = {
   spending: "Spending",
 };
 
-const Page = ({ setting, setSetting }: any) => {
+const Page = ({ setting, setSetting, index }: any) => {
   return (
     <div
       className={`bg-white p-3 border shadow-md rounded-lg flex items-center ${setting.enabled ? "" : "opacity-50"}`}
@@ -49,8 +49,9 @@ const Page = ({ setting, setSetting }: any) => {
         <img
           src={`/report-screenshots/${setting.name}.png`}
           alt=""
-          className="w-64"
+          className="h-48 w-auto object-cover"
         />
+        <div className="text-sm">({index})</div>
       </div>
     </div>
   );
@@ -98,6 +99,7 @@ const ReportSettings = ({ settings, updateSettings }: Props) => {
               >
                 <Page
                   setting={sc}
+                  index={i + 1}
                   setSetting={(item: any) =>
                     updateSettings(
                       settings.map((old, ind) => (ind === i ? item : old)),

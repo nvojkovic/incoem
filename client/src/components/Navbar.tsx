@@ -82,11 +82,13 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   link={`/client/${data.id}/spending`}
                 />
               )}
-              <NavItem
-                name="Longevity"
-                active={active == "longevity"}
-                link={`/client/${data.id}/longevity`}
-              />
+              {data.longevityFlag && (
+                <NavItem
+                  name="Longevity"
+                  active={active == "longevity"}
+                  link={`/client/${data.id}/longevity`}
+                />
+              )}
               <NavItem
                 name="Map"
                 active={active == "map"}

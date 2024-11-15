@@ -191,6 +191,13 @@ const ClientOverview = () => {
                 size="full"
                 subtype="toggle"
               />
+              <Input
+                value={data.longevityFlag}
+                setValue={setField("longevityFlag")}
+                label="Longevity"
+                size="full"
+                subtype="toggle"
+              />
             </div>
           </div>
         </div>
