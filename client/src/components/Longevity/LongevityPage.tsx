@@ -160,10 +160,12 @@ const LongevityPage = () => {
             </table>
           </div>
         </div>
-        <div className="text-sm text-gray-500 text-right w-full mt-3 underline">
+        <div className="text-sm text-gray-500 text-right w-full mt-3 ">
+          Source:{" "}
           <Link
             to={`https://www.ssa.gov/oact/HistEst/CohLifeTables/2020/CohLifeTables2020.html`}
             target="_blank"
+            className="underline"
           >
             Life Tables for the United States Social Security Area 1900-2100,
             Actuarial Study No. 120
