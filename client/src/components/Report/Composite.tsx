@@ -96,7 +96,11 @@ const Composite = ({
                           <td className="px-2 py-1">
                             {formatter.format(needs)}
                           </td>
-                          <td className="px-2 py-1">{formatter.format(gap)}</td>
+                          <td
+                            className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}`}
+                          >
+                            {formatter.format(gap)}
+                          </td>
                           <td className="px-2 py-1">{stabilityRatio}%</td>
                         </tr>
                       );
