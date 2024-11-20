@@ -25,6 +25,7 @@ const names: any = {
   "income-chart": "Chart",
   spending: "Spending",
   longevity: "Longevity",
+  composite: "Composite",
 };
 
 const Page = ({ setting, setSetting, index }: any) => {
