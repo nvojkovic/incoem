@@ -1,17 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import PropTypes from "prop-types";
+import { makeTable } from "../Longevity/calculate";
 
-const StackedAreaChart = ({
+interface Props {
+  years: any;
+  stackedData: any;
+  lineData: any;
+  spending: any;
+  stability: any;
+  needsFlag: any;
+  longevityFlag: any;
+  people: any;
+  initialHeight: any;
+  maxY?: any;
+}
+
+const MainChart = ({
   years,
   stackedData,
   lineData,
   spending,
   stability,
   needsFlag,
+  longevityFlag,
+  people,
   initialHeight = 500,
   maxY,
-}: any) => {
+}: Props) => {
   const svgRef = useRef() as any;
   const containerRef = useRef() as any;
   const [dimensions, setDimensions] = useState({
@@ -294,7 +309,7 @@ const StackedAreaChart = ({
       const selectedData = processedData.find((d: any) => d.year === year);
 
       if (selectedData) {
-        let tooltipContent;
+        let tooltipContent = "";
         if (spending) {
           tooltipContent = `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
                           <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
@@ -363,22 +378,25 @@ const StackedAreaChart = ({
               </div>
             `;
         }
+        const longevityContent = longevityFlag
+          ? `<div class="text-xs mt-1 mb-1 text-gray-700"><div><span class="text-black">Longevity:</span> ${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}</div></div>`
+          : "";
         tooltip.html(
-          `<div class="mb-4"><strong>Year: ${year}</strong><br>${tooltipContent}</div>`,
+          `<div class="mb-4"><strong>Year: ${year}</strong><br>${longevityContent}${tooltipContent}</div>`,
         );
 
         // Calculate tooltip dimensions
         const tooltipNode = tooltip.node() as any;
         const tooltipRect = tooltipNode.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
+        // const containerRect = containerRef.current.getBoundingClientRect();
 
         const left = Math.min(
           xPos + margin.left + 15,
-          width + margin.left - tooltipRect.width - 10
+          width + margin.left - tooltipRect.width - 10,
         );
-        
+
         // Position tooltip near bottom of chart
-        const top = margin.top + height + 30;
+        const top = margin.top + height / 2 - tooltipRect.height / 2;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
@@ -503,22 +521,22 @@ const StackedAreaChart = ({
     </div>
   );
 };
+//
+// MainChart.propTypes = {
+//   years: PropTypes.arrayOf(PropTypes.number).isRequired,
+//   stackedData: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       name: PropTypes.string.isRequired,
+//       values: PropTypes.arrayOf(PropTypes.number).isRequired,
+//       stable: PropTypes.bool.isRequired,
+//     }),
+//   ).isRequired,
+//   lineData: PropTypes.arrayOf(PropTypes.number),
+//   spending: PropTypes.bool.isRequired,
+//   stability: PropTypes.bool.isRequired,
+//   needsFlag: PropTypes.bool.isRequired,
+//   maxY: PropTypes.number,
+//   initialHeight: PropTypes.number,
+// };
 
-StackedAreaChart.propTypes = {
-  years: PropTypes.arrayOf(PropTypes.number).isRequired,
-  stackedData: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      values: PropTypes.arrayOf(PropTypes.number).isRequired,
-      stable: PropTypes.bool.isRequired,
-    }),
-  ).isRequired,
-  lineData: PropTypes.arrayOf(PropTypes.number),
-  spending: PropTypes.bool.isRequired,
-  stability: PropTypes.bool.isRequired,
-  needsFlag: PropTypes.bool.isRequired,
-  maxY: PropTypes.number,
-  initialHeight: PropTypes.number,
-};
-
-export default StackedAreaChart;
+export default MainChart;

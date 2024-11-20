@@ -9,11 +9,11 @@ import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
 import { updateAtIndex, yearRange } from "../../utils";
-import StackedAreaChart from "../NewChart";
 import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
+import MainChart from "../Charts/MainChart";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -741,8 +741,10 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="bg-white pb-[2px]">
-            <StackedAreaChart
+            <MainChart
               maxY={maxY}
+              longevityFlag={false}
+              people={[]}
               initialHeight={window.innerHeight - 400}
               stability={data.stabilityRatioFlag}
               needsFlag={data.needsFlag}

@@ -114,3 +114,8 @@ export async function imageUrlToBase64(imageUrl: string) {
     throw error;
   }
 }
+
+export function roundedToFixed(input: number, digits: number) {
+  var rounder = Math.pow(10, digits);
+  return Math.round(input * rounder) / rounder;
+}

@@ -49,13 +49,20 @@ const Tmp = () => {
     hash: user.intercomHash,
   };
   console.log(u);
-  return (
-    <IntercomMessanger user={u}>
+
+  const env = import.meta.env.VITE_ENV;
+  if (env === "local") {
+    return <Outlet />;
+  } else {
+    return (
       <ErrorBoundary fallback={<Error />} key={location.pathname}>
-        <Outlet />
+        <IntercomMessanger user={u}>
+          {env}
+          <Outlet />
+        </IntercomMessanger>
       </ErrorBoundary>
-    </IntercomMessanger>
-  );
+    );
+  }
 };
 
 export default Root;

@@ -200,19 +200,21 @@ const SurvivalChart = ({
         tooltip.html(tooltipContent);
 
         // Position tooltip
-        const svgRect = svgRef.current.getBoundingClientRect();
+        const svgRect = (svgRef as any).current.getBoundingClientRect();
         const tooltipNode = tooltip.node() as HTMLElement;
         const tooltipRect = tooltipNode.getBoundingClientRect();
 
-        const containerRect = (svgRef.current as any).parentNode.getBoundingClientRect();
-        
+        // const containerRect = (
+        //   svgRef.current as any
+        // ).parentNode.getBoundingClientRect();
         const left = Math.min(
-          xPos + margin.left + 15,
-          width + margin.left - tooltipRect.width - 10
+          xPos * 1.5 + margin.left + 15,
+          svgRect.width + margin.left - tooltipRect.width - 150,
         );
-        
+        console.log("xpos", xPos);
+
         // Position tooltip near bottom of chart
-        const top = margin.top + height + 30;
+        const top = margin.top + height / 2 - tooltipRect.height / 2 + 50;
 
         tooltip.style("left", `${left}px`).style("top", `${top}px`);
 
@@ -330,7 +332,7 @@ const SurvivalChart = ({
   ]);
 
   return (
-    <div className="w-full h-full bg-white rounded-lg border shadow-md max-h-[500px]">
+    <div className="w-full h-full bg-white rounded-lg border shadow-md print:shadow-none max-h-[500px] relative">
       <svg ref={svgRef} className="w-full h-full" />
     </div>
   );

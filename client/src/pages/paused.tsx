@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import bg from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
@@ -52,7 +51,7 @@ const Paused = () => {
         </div>
         <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
           <div className="flex flex-col items-center justify-start w-[360px]">
-            <img src={logo} alt="" className="w-20 h-20" />
+            <img src="/img/logo.png" alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] text-center mb-6">
               Your trial has finished, please add a payment method to continue
             </div>

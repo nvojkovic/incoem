@@ -31,7 +31,7 @@ import SpendingPage from "./components/Spending/SpendingPage";
 import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
-import LifeExpectancy from "./components/Calculators/LifeExpectancy";
+import LongevityPage from "./components/Longevity/LongevityPage";
 
 SuperTokens.init({
   appInfo: {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
           },
           {
             path: "longevity",
-            element: <LifeExpectancy />,
+            element: <LongevityPage />,
           },
           {
             path: "spending",

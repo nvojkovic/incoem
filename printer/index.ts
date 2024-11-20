@@ -44,41 +44,46 @@ async function mergeAllPDFs(urls: any[]) {
   return Buffer.from(pdfData);
 }
 
-const getPdf = async (url: string, browser: Browser) => {
-  console.log("url", url);
-  const page = await browser.newPage();
-  await page.setViewport({ width: 1200, height: 800 });
-  await page.goto(url as any, {
-    waitUntil: ["networkidle0", "load", "domcontentloaded"],
-  });
+const getPdf = async (browser: Browser, base: string, data: any) => {
+  try {
+    const url = `${base}?page=${JSON.stringify(data)}`;
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1200, height: 800 });
+    await page.goto(url as any, {
+      waitUntil: ["networkidle0", "load", "domcontentloaded"],
+    });
 
-  //wait a second
-  console.log("waiting");
-  await new Promise((r) => setTimeout(r, 2000));
-  console.log("done waiting");
+    //wait a second
+    console.log("waiting");
+    await new Promise((r) => setTimeout(r, 2000));
+    console.log("done waiting");
 
-  const header = await page.evaluate(() => {
-    const headerElement = document.getElementById("print-header");
-    if (!headerElement) return "";
-    return headerElement.innerHTML;
-  });
-  console.log("header", header);
-  const pdf = await page.pdf({
-    format: "letter",
-    landscape: true,
-    printBackground: true,
-    headerTemplate: header,
-    displayHeaderFooter: !!header,
-    margin: {
-      bottom: "30px",
-      top: "60px",
-    },
-  });
-
-  await page.addStyleTag({
-    content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
-  });
-  return pdf;
+    const header = await page.evaluate(() => {
+      const headerElement = document.getElementById("print-header");
+      if (!headerElement) return "";
+      return headerElement.innerHTML;
+    });
+    console.log("making PDF", data.name);
+    const pdf = await page.pdf({
+      format: "letter",
+      landscape: true,
+      printBackground: true,
+      headerTemplate: header,
+      displayHeaderFooter: !!header,
+      margin: {
+        bottom: "30px",
+        top: "60px",
+      },
+    });
+    //
+    // await page.addStyleTag({
+    //   content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
+    // });
+    console.log("got pdf", data.name);
+    return pdf;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 app.get("/", async (req, res) => {
@@ -95,11 +100,10 @@ app.get("/", async (req, res) => {
   const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
 
   const printedPages = await Promise.all(
-    toPrint.map((page: any) =>
-      getPdf(`${url}?page=${JSON.stringify(page)}`, browser),
-    ),
+    toPrint.map((page: any) => getPdf(browser, url as string, page)),
   );
   const result = await mergeAllPDFs(printedPages);
+  console.log("merging PDFs");
   browser.close();
 
   res.contentType("application/pdf");

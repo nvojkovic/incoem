@@ -1,6 +1,5 @@
 import { useState } from "react";
 import bg from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import Input from "../components/Inputs/Input";
 import Button from "../components/Inputs/Button";
 import { submitNewPassword } from "supertokens-web-js/recipe/emailpassword";
@@ -69,7 +68,7 @@ const ResetPasswordConfirm = () => {
         </div>
         <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
           <div className="flex flex-col items-center justify-start">
-            <img src={logo} alt="" className="w-20 h-20" />
+            <img src="/img/logo.png" alt="" className="w-20 h-20" />
             {done ? (
               <div className="max-w-xs  text-center mt-10 text-lg">
                 Password changed successfully. Please login to continue.

@@ -96,7 +96,7 @@ export const IncomeComponent = ({
     );
 };
 
-const IncomeSection = ({ }: Props) => {
+const IncomeSection = ({}: Props) => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
   const incomes = data.data.incomes;
@@ -121,7 +121,7 @@ const IncomeSection = ({ }: Props) => {
   return (
     <Layout page="data">
       <div>
-        <div className="flex gap-6 items-center w-full justify-between py-6 sticky z-50 top-[72px] bg-[#f3f4f6]">
+        <div className="flex gap-6 items-center justify-between py-5 sticky z-50 top-[72px] bg-[#f3f4f6] px-[10px] ml-[-10px] w-[1428px]">
           <div className="font-semibold text-2xl">Income information</div>
           <div className="w-40">
             <AddIncome />

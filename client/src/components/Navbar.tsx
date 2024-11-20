@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import Session from "supertokens-web-js/recipe/session";
-import logo from "../assets/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
@@ -46,7 +45,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   src={
                     user?.info?.logo
                       ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
-                      : logo
+                      : "/img/logo.png"
                   }
                   className="h-9 mr-2 "
                 />

@@ -1,5 +1,7 @@
 import MapChart from "../MapChart";
+import Composite from "./Composite";
 import Cover from "./Cover";
+import Longevity from "./Longevity";
 import Print from "./Print";
 import Spending from "./Spending";
 
@@ -25,6 +27,18 @@ const Report = ({ scenario, client, page }: ReportProps) => {
         client={client}
       />
     );
+
+  if (page.name == "composite")
+    return (
+      <Composite
+        spending={client.spending}
+        scenario={scenario}
+        client={client}
+      />
+    );
+
+  if (page.name == "longevity")
+    return <Longevity scenario={scenario} client={client} />;
   return <div></div>;
 };
 

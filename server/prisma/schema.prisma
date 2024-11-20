@@ -17,6 +17,7 @@ model Client {
   spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
   stabilityRatioFlag  Boolean   @default(false)
   needsFlag           Boolean   @default(false)
+  longevityFlag       Boolean   @default(false)
   updatedAt           DateTime?
   allInOneCalculator  Json      @default("[]")
   versatileCalculator Json      @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
@@ -36,6 +37,7 @@ model UserInfo {
   primaryColor                String? @default("#FF6C47")
   stabilityRatioFlag          Boolean @default(false)
   needsFlag                   Boolean @default(false)
+  longevityFlag               Boolean @default(false)
   globalInflation             Float?  @default(2.5)
   globalYearsShown            Int?    @default(30)
   globalLifeExpectancy        Int?    @default(78)

@@ -128,6 +128,7 @@ interface Client {
   calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  longevityFlag: boolean;
   allInOneCalculator: any[];
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
@@ -151,6 +152,7 @@ interface UserInfo {
   subsciptionStatus?: string;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  longevityFlag: boolean;
   logo?: string;
   email: string;
   name?: string;

@@ -3,6 +3,6 @@ export const PrintCard = ({ title, subtitle }: any) => (
     <div className="uppercase text-gray-500 font-semibold text-xs mb-1 tracking-wider">
       {title}
     </div>
-    <div className="font-semibold text-">{subtitle}</div>
+    <div className="font-semibold text-center mx-auto">{subtitle}</div>
   </div>
 );

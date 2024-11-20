@@ -66,6 +66,7 @@ const initializeNewClient = (user: User | null): Client => ({
   scenarios: [],
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
+  longevityFlag: !!user?.info?.longevityFlag,
   spending: {
     preTaxRate: user?.info?.globalPreRetirementTaxRate,
     postTaxRate: user?.info?.globalPostRetirementTaxRate,

@@ -1,7 +1,7 @@
 import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import { yearRange } from "../utils";
-import StackedAreaChart from "./NewChart";
+import MainChart from "./Charts/MainChart";
 import Header from "./Report/Header";
 import { calculateSpendingYear } from "./Spending/SpendingPage";
 
@@ -17,10 +17,12 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
   return (
     <div className={`bg-white ${!print && "pb-5"}`}>
       <Header client={client as any} scenario={settings} />
-      <StackedAreaChart
+      <MainChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
         spending={false}
         initialHeight={print ? 700 : 550}
+        longevityFlag={client.longevityFlag}
+        people={settings.data.people}
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
