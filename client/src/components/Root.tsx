@@ -57,7 +57,6 @@ const Tmp = () => {
     return (
       <ErrorBoundary fallback={<Error />} key={location.pathname}>
         <IntercomMessanger user={u}>
-          {env}
           <Outlet />
         </IntercomMessanger>
       </ErrorBoundary>
