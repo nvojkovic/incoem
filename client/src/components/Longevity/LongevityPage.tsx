@@ -182,7 +182,7 @@ const LongevityPage = () => {
           <LongevityChart people={people} />
 
           <div className="flex gap-3 justify-center my-9 w-full">
-            {card(10)} {card(20)} {card(50)}
+            {card(10)} {card(25)} {card(50)}
           </div>
           <table className="text-sm w-full bg-white shadow-lg">
             <thead
