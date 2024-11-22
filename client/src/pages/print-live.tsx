@@ -25,7 +25,7 @@ const PrintLivePage = () => {
   if (!scenario || !client.userdata) return <div>Loading...</div>;
   scenario.name = "Live";
   return (
-    <div className="bg-white h-screen">
+    <div className="bg-white ">
       <Report
         client={client}
         scenario={scenario}
