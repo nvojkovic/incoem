@@ -15,6 +15,57 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { Tooltip } from "flowbite-react";
 
+export const LongevityScenarioCard = ({
+  people,
+  percent,
+}: {
+  people: Person[];
+  percent: number;
+}) => (
+  <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg screen:shadow-md border gap-1 print:bg-gray-100">
+    <div className="uppercase tracking-wide text-gray-800 w-full text-xl font-bold text-center">
+      {percent}%
+    </div>
+    <div className="flex gap-1">
+      <div className="flex flex-col gap-1 text-right">
+        {people.map((person) => (
+          <div className="uppercase tracking-wide text-sm text-gray-800 h-7 flex items-center justify-end">
+            {person.name}:
+          </div>
+        ))}
+        <div className="uppercase tracking-wide text-sm text-gray-800 h-7 flex items-center justify-end">
+          Joint:
+        </div>
+      </div>
+      <div className="flex flex-col gap-1 text-left h-7">
+        {people.map((person) => {
+          const { year, age } = findAgeForProbability(
+            makeTable(person).table,
+            percent,
+          );
+          return (
+            <div className="font-semibold text-lg  flex gap-1 items-center h-7">
+              {age} <span className="text-gray-500 text-[14px]">({year})</span>
+            </div>
+          );
+        })}
+        <div className="uppercase tracking-wide text-sm text-gray-800 h-7">
+          <div className=" font-semibold text-lg  flex gap-1 items-center">
+            <span className="text-gray-500 text-[14px]">
+              {
+                findYearForProbability(
+                  jointTable(people[0], people[1]),
+                  percent,
+                ).year
+              }
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 const LongevityPage = () => {
   const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
   const [highlightedCol, setHighlightedCol] = useState<number | null>(null);
@@ -66,43 +117,6 @@ const LongevityPage = () => {
     });
   };
 
-  const card = (percent: number) => (
-    <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border gap-1">
-      <div className="uppercase tracking-wide text-gray-800 w-full text-xl font-bold text-center">
-        {percent}%
-      </div>
-      {people.map((person) => {
-        const { year, age } = findAgeForProbability(
-          makeTable(person).table,
-          percent,
-        );
-        return (
-          <div className="flex items-center gap-3">
-            <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
-              {person.name}
-            </div>
-            <div className="font-semibold text-lg  flex gap-1 items-center">
-              {age} <span className="text-gray-500 text-[14px]">({year})</span>
-            </div>
-          </div>
-        );
-      })}
-      <div className="flex items-center gap-3">
-        <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
-          Joint:
-        </div>
-        <div className=" font-semibold text-lg  flex gap-1 items-center">
-          <span className="text-gray-500 text-[14px]">
-            {
-              findYearForProbability(jointTable(people[0], people[1]), percent)
-                .year
-            }
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <Layout page="longevity">
       <div
@@ -115,7 +129,7 @@ const LongevityPage = () => {
           <div>
             <Input
               vertical
-              width="!w-32"
+              width="!w-20"
               value={longevityPercent}
               setValue={(v) =>
                 setField("liveSettings")({
@@ -182,7 +196,9 @@ const LongevityPage = () => {
           <LongevityChart people={people} />
 
           <div className="flex gap-3 justify-center my-9 w-full">
-            {card(10)} {card(25)} {card(50)}
+            <LongevityScenarioCard people={people} percent={10} />
+            <LongevityScenarioCard people={people} percent={25} />
+            <LongevityScenarioCard people={people} percent={50} />
           </div>
           <table className="text-sm w-full bg-white shadow-lg">
             <thead

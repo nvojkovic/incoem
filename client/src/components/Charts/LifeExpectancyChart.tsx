@@ -131,6 +131,9 @@ const SurvivalChart = ({
           .attr("d", line as any);
       }
     }
+    d3.select((svgRef.current as any).parentNode)
+      .selectAll(".tooltip")
+      .remove();
 
     // Add tooltip
     const tooltip = d3

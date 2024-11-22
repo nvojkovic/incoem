@@ -97,8 +97,7 @@ export function findAgeForProbability(
   targetProbability: number,
 ): { age: number; year: number } {
   // Convert percentage to decimal if needed
-  const probability =
-    targetProbability > 1 ? targetProbability / 100 : targetProbability;
+  const probability = targetProbability / 100;
 
   // Find the entry with the closest probability
   let closestEntry = table[0];
