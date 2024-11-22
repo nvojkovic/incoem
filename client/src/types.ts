@@ -173,6 +173,7 @@ interface ScenarioSettings {
   ssSurvivorAge: (number | null)[];
   inflation: number;
   taxType: "Pre-Tax" | "Post-Tax";
+  longevityPercent: number;
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;

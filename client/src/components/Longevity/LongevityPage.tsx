@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "src/useData";
 import { yearRange } from "src/utils";
 import {
@@ -171,7 +171,9 @@ const LongevityPage = () => {
               style="light"
             >
               <Button type="primary" onClick={updateDeathFields}>
-                Send
+                <div className="flex justify-center">
+                  <ChevronRightIcon className="h-5" />
+                </div>
               </Button>{" "}
             </Tooltip>
           </div>
