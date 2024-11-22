@@ -1,7 +1,11 @@
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftIcon,
+  ArrowUpRightIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import { useInfo } from "src/useData";
 import { yearRange } from "src/utils";
 import {
@@ -166,13 +170,13 @@ const LongevityPage = () => {
           </div>
           <div className="w-32">
             <Tooltip
-              content="Update mortality on Map with current life expectancy"
+              content="Update mortality assumptions"
               theme={{ target: "" }}
               style="light"
             >
               <Button type="primary" onClick={updateDeathFields}>
-                <div className="flex justify-center">
-                  <ChevronRightIcon className="h-5" />
+                <div className="flex justify-center items-center gap-1">
+                  Update <ArrowUpRightIcon className="h-4" />
                 </div>
               </Button>{" "}
             </Tooltip>
