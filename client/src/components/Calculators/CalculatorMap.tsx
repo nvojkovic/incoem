@@ -61,7 +61,7 @@ const CalculatorMap: React.FC<any> = ({ }: any) => {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {calculators.map((calc) => (
-            <Link to={calc.id}>
+            <Link to={calc.id} key={calc.id}>
               <div
                 key={calc.id}
                 className="border rounded-xl border-[#EAECF0] flex-grow w-full transition-shadow duration-300 p-5 cursor-pointer bg-white shadow-md h-full"

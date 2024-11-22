@@ -77,7 +77,6 @@ to ${printNumber(amount.result)} for this year`,
     }
   }
 
-  console.log("asdf", currentYear, ownAmount);
   const amount = reduceByIncome(info, ownAmount);
   if (amount.result != ownAmount)
     return {

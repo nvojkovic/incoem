@@ -791,6 +791,7 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
+            key={item}
             className={`text-sm flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
               }`}
             onClick={() => setValue(item)}

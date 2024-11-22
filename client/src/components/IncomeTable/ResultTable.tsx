@@ -147,7 +147,7 @@ const ResultTable = ({
                       const item = t.table.find((i) => i.year == currentYear);
                       if (!item) return null;
                       return (
-                        <div>
+                        <div key={p.name}>
                           {p.name}: {Math.round(item?.probability * 1000) / 10}%
                         </div>
                       );
