@@ -49,19 +49,21 @@ const Longevity = ({
                   );
                 })}
 
-                <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg screen:shadow-md print:bg-gray-100 border gap-1">
-                  <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
-                    Joint {longevityPercent}% Life Expectancy
+                {people.length > 1 ? (
+                  <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg screen:shadow-md print:bg-gray-100 border gap-1">
+                    <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                      Joint {longevityPercent}% Life Expectancy
+                    </div>
+                    <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
+                      {
+                        findYearForProbability(
+                          jointTable(people[0], people[1]),
+                          longevityPercent,
+                        ).year
+                      }
+                    </div>
                   </div>
-                  <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
-                    {
-                      findYearForProbability(
-                        jointTable(people[0], people[1]),
-                        longevityPercent,
-                      ).year
-                    }
-                  </div>
-                </div>
+                ) : null}
               </div>
             </div>
           </div>

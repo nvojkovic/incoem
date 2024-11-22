@@ -33,9 +33,11 @@ export const LongevityScenarioCard = ({
             {person.name}:
           </div>
         ))}
-        <div className="uppercase tracking-wide text-sm text-gray-800 h-7 flex items-center justify-end">
-          Joint:
-        </div>
+        {people.length > 1 ? (
+          <div className="uppercase tracking-wide text-sm text-gray-800 h-7 flex items-center justify-end">
+            Joint:
+          </div>
+        ) : null}
       </div>
       <div className="flex flex-col gap-1 text-left h-7">
         {people.map((person) => {
@@ -49,18 +51,21 @@ export const LongevityScenarioCard = ({
             </div>
           );
         })}
-        <div className="uppercase tracking-wide text-sm text-gray-800 h-7">
-          <div className=" font-semibold text-lg  flex gap-1 items-center">
-            <span className="text-gray-500 text-[14px]">
-              {
-                findYearForProbability(
-                  jointTable(people[0], people[1]),
-                  percent,
-                ).year
-              }
-            </span>
+
+        {people.length > 1 ? (
+          <div className="uppercase tracking-wide text-sm text-gray-800 h-7">
+            <div className=" font-semibold text-lg  flex gap-1 items-center">
+              <span className="text-gray-500 text-[14px]">
+                {
+                  findYearForProbability(
+                    jointTable(people[0], people[1]),
+                    percent,
+                  ).year
+                }
+              </span>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
   </div>
@@ -163,19 +168,21 @@ const LongevityPage = () => {
                 );
               })}
 
-              <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border gap-1">
-                <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
-                  Joint {longevityPercent}% Life Expectancy
+              {people.length > 1 ? (
+                <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border gap-1">
+                  <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                    Joint {longevityPercent}% Life Expectancy
+                  </div>
+                  <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
+                    {
+                      findYearForProbability(
+                        jointTable(people[0], people[1]),
+                        longevityPercent,
+                      ).year
+                    }
+                  </div>
                 </div>
-                <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
-                  {
-                    findYearForProbability(
-                      jointTable(people[0], people[1]),
-                      longevityPercent,
-                    ).year
-                  }
-                </div>
-              </div>
+              ) : null}
             </div>
           </div>
           <div className="w-32">
