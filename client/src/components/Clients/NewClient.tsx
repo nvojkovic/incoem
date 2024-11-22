@@ -90,6 +90,7 @@ const initializeNewClient = (user: User | null): Client => ({
     taxType: "Pre-Tax",
     inflationType: "Nominal",
     data: {} as any,
+    longevityPercent: 50,
     deathYears: [
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,
@@ -287,9 +288,22 @@ const NewClient = () => {
             setClient((prev) => ({ ...prev, needsFlag: flag }))
           }
         />
+        <Input
+          subtype="toggle"
+          labelLength={110}
+          label="Longevity"
+          value={client.longevityFlag}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, longevityFlag: flag }))
+          }
+        />
       </div>
     </div>
   );
+
+  const firstStepFilled =
+    client.title &&
+    client.data.people.every((p) => p.name && p.birthday && p.sex);
 
   return (
     <>
@@ -322,9 +336,7 @@ const NewClient = () => {
             <Button
               type="primary"
               disabled={
-                (step === 1 &&
-                  (!client.title ||
-                    !client.data.people.every((p) => p.name && p.birthday))) ||
+                (step === 1 && !firstStepFilled) ||
                 (step === 2 &&
                   !client.data.people.every((p) => p.name && p.birthday))
               }

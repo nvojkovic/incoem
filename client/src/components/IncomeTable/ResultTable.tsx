@@ -8,13 +8,7 @@ import {
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
 import Input from "src/components/Inputs/Input";
-import {
-  formatter,
-  printNumber,
-  printReport,
-  splitDate,
-  yearRange,
-} from "src/utils";
+import { formatter, printNumber, printReport, yearRange } from "src/utils";
 import Confirm from "src/components/Confirm";
 import { useMemo, useState } from "react";
 import Button from "src/components/Inputs/Button";
@@ -38,6 +32,7 @@ import { useInfo } from "src/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
 import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
 import DraggableTable from "./DraggableTable";
+import { jointTable, makeTable } from "../Longevity/calculate";
 
 const ResultTable = ({
   client,
@@ -120,9 +115,64 @@ const ResultTable = ({
         (currentYear) => ({
           year: currentYear,
           selectedColumn,
-          age: settings.data.people
-            .map((p) => currentYear - splitDate(p.birthday).year)
-            .join("/"),
+          // age: settings.data.people
+          //   .map((p) => currentYear - splitDate(p.birthday).year)
+          //   .join("/"),
+          age: (
+            <div className="flex gap-2">
+              <div className="w-20 relative">
+                <Tooltip
+                  content={(() => {
+                    const people = settings.data.people;
+                    const joint =
+                      people.length > 1 ? (
+                        <div>
+                          Joint:{" "}
+                          {Math.round(
+                            (jointTable(people[0], people[1]).find(
+                              (i) => i.year === currentYear,
+                            )?.oneAlive || 0) * 1000,
+                          ) / 10}
+                          %
+                        </div>
+                      ) : null;
+                    const table = settings.data.people.map((p) => {
+                      const t = makeTable(p);
+                      const item = t.table.find((i) => i.year == currentYear);
+                      if (!item) return null;
+                      return (
+                        <div>
+                          {p.name}: {Math.round(item?.probability * 1000) / 10}%
+                        </div>
+                      );
+                    });
+                    return (
+                      <div className="z-[5000000] bg-white w-40 sticky">
+                        {client.longevityFlag && <>{table}</>}
+                        {joint}
+                      </div>
+                    );
+                  })()}
+                  theme={{ target: "" }}
+                  placement="right"
+                  style="light"
+                  arrow={false}
+                  className={`border-2 border-main-orange bg-white print:hidden ${client.stabilityRatioFlag || client.needsFlag ? "" : "hidden"}`}
+                >
+                  <div className="cursor-pointer flex items-center gap-2 z-5000 ">
+                    {printNumber(
+                      incomes
+                        .map(
+                          (income) => calculateOne(income, currentYear).amount,
+                        )
+                        .filter((t) => typeof t === "number")
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+          ),
           ...Object.fromEntries(
             incomes.map((income, i) => {
               const result = calculate({

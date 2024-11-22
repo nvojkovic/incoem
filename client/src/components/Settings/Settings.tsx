@@ -274,6 +274,24 @@ const Settings = () => {
                 </div>
               </div>
             </div>
+
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Reports"
+                subtitle="Choose which pages in which order are included in PDF reports."
+              />
+              <ReportSettings
+                settings={settings.globalReportSettings}
+                updateSettings={(globalReportSettings: any) => {
+                  console.log("update", globalReportSettings);
+                  setSettings({
+                    ...settings,
+                    globalReportSettings,
+                  });
+                }}
+              />
+            </div>
+
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Billing"
@@ -303,23 +321,6 @@ const Settings = () => {
                   Open billing settings
                 </Button>
               </div>
-            </div>
-
-            <div className="flex gap-5 border-b border-black pb-7">
-              <SectionHeader
-                title="Reports"
-                subtitle="Choose which pages in which order are included in PDF reports."
-              />
-              <ReportSettings
-                settings={settings.globalReportSettings}
-                updateSettings={(globalReportSettings: any) => {
-                  console.log("update", globalReportSettings);
-                  setSettings({
-                    ...settings,
-                    globalReportSettings,
-                  });
-                }}
-              />
             </div>
           </div>
         </div>

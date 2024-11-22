@@ -1,4 +1,4 @@
-import { formatter, splitDate, yearRange } from "src/utils";
+import { formatter, printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
 import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
@@ -17,6 +17,7 @@ const Composite = ({
   return (
     <div className="mx-10 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
+      <div className="text-2xl mx-auto mb-5">Composite</div>
       <div className="flex justify-between">
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
@@ -43,7 +44,7 @@ const Composite = ({
                         currentYear + (tableInd + 1) * height - 1,
                         currentYear + scenario.maxYearsShown,
                       ),
-                    ).map((line) => {
+                    ).map((line, index) => {
                       const startYear = new Date().getFullYear();
                       const calculateOne = (
                         income: Income,
@@ -82,7 +83,9 @@ const Composite = ({
                         (stableIncome / income) * 100,
                       );
                       return (
-                        <tr className="">
+                        <tr
+                          className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
+                        >
                           <td className="px-2 py-[6px] font-bold">{line}</td>
                           <td className="px-2 py-1">
                             {scenario.data.people
@@ -99,7 +102,7 @@ const Composite = ({
                           <td
                             className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}`}
                           >
-                            {formatter.format(gap)}
+                            {printNumber(gap)}
                           </td>
                           <td className="px-2 py-1">{stabilityRatio}%</td>
                         </tr>

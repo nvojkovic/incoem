@@ -28,11 +28,19 @@ const Longevity = ({
                 <PrintCard
                   title={`${person.name}'s Life Expectancy`}
                   subtitle={
-                    <div className="font-semibold text-lg mt-[2px]">
-                      {roundedToFixed(makeTable(person).e, 1)}{" "}
-                      <span className="text-gray-500">
-                        ({Math.round(makeTable(person).e) + birthYear})
-                      </span>
+                    <div>
+                      <div className="font-semibold text-lg mt-[2px]">
+                        {person.name} {roundedToFixed(makeTable(person).e, 1)}{" "}
+                        <span className="text-gray-500">
+                          ({Math.round(makeTable(person).e) + birthYear})
+                        </span>
+                      </div>
+                      <div className="font-semibold text-lg mt-[2px]">
+                        {person.name} {roundedToFixed(makeTable(person).e, 1)}{" "}
+                        <span className="text-gray-500">
+                          ({Math.round(makeTable(person).e) + birthYear})
+                        </span>
+                      </div>
                     </div>
                   }
                 />
