@@ -19,9 +19,9 @@ const Longevity = ({
   const longevityPercent =
     scenario.longevityPercent !== undefined ? scenario.longevityPercent : 50;
   return (
-    <div className={`px-12 py-4  mx-auto`}>
+    <div className={`px-12 py-3  mx-auto`}>
       <Header client={client} scenario={scenario} />
-      <div className="flex gap-3 items-center mb-5 w-full justify-center">
+      <div className="flex gap-3 items-center mb-4 w-full justify-center">
         <h1 className="text-2xl">Longevity</h1>
       </div>
       <div className="flex gap-8 justify-center w-full">
@@ -69,7 +69,7 @@ const Longevity = ({
           </div>
           <LongevityChart people={people} />
           <div>
-            <div className="flex gap-3 justify-center my0 w-full">
+            <div className="flex gap-3 justify-center  w-full">
               <LongevityScenarioCard people={people} percent={10} />
               <LongevityScenarioCard people={people} percent={25} />
               <LongevityScenarioCard people={people} percent={50} />
