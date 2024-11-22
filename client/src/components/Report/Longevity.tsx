@@ -36,12 +36,12 @@ const Longevity = ({
                   );
                   return (
                     <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg  screen:shadow-md print:bg-gray-100  border gap-1">
-                      <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                      <div className="uppercase tracking-wide text-xs text-gray-800 w-full">
                         {person.name}'s {longevityPercent}% Life Expectancy
                       </div>
-                      <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
+                      <div className="font-semibold text-[16px] mt-[2px] flex gap-1 items-center">
                         {age}{" "}
-                        <span className="text-gray-500 text-[14px]">
+                        <span className="text-gray-500 text-[12px]">
                           ({year})
                         </span>
                       </div>
@@ -51,10 +51,10 @@ const Longevity = ({
 
                 {people.length > 1 ? (
                   <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg screen:shadow-md print:bg-gray-100 border gap-1">
-                    <div className="uppercase tracking-wide text-sm text-gray-800 w-full">
+                    <div className="uppercase tracking-wide text-xs text-gray-800 w-full">
                       Joint {longevityPercent}% Life Expectancy
                     </div>
-                    <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
+                    <div className="font-semibold text-[16px] mt-[2px] flex gap-1 items-center">
                       {
                         findYearForProbability(
                           jointTable(people[0], people[1]),
