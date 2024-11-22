@@ -1,5 +1,6 @@
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "src/useData";
 import { birthday } from "src/calculator/utils";
@@ -9,6 +10,8 @@ import LongevityChart from "./LongevityChart";
 import Button from "../Inputs/Button";
 
 const LongevityPage = () => {
+  const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
+  const [highlightedCol, setHighlightedCol] = useState<number | null>(null);
   const { data: client } = useInfo();
   const people = client.data.people;
   if (!people) return null;
@@ -123,11 +126,24 @@ const LongevityPage = () => {
                 className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[72px] rounded-none !border-none`}
               >
                 <tr>
-                  <th className="px-4 py-2 !rounded-none">Year</th>
-                  <th className="px-4 py-2 !rounded-none">Age</th>
+                  <th 
+                    className={`px-4 py-2 !rounded-none cursor-pointer ${highlightedCol === 0 ? 'bg-slate-200' : ''}`}
+                    onClick={() => setHighlightedCol(highlightedCol === 0 ? null : 0)}
+                  >
+                    Year
+                  </th>
+                  <th 
+                    className={`px-4 py-2 !rounded-none cursor-pointer ${highlightedCol === 1 ? 'bg-slate-200' : ''}`}
+                    onClick={() => setHighlightedCol(highlightedCol === 1 ? null : 1)}
+                  >
+                    Age
+                  </th>
                   {people.map((person) => (
                     <>
-                      <th className="px-4 py-2">
+                      <th 
+                        className={`px-4 py-2 cursor-pointer ${highlightedCol === index + 2 ? 'bg-slate-200' : ''}`}
+                        onClick={() => setHighlightedCol(highlightedCol === index + 2 ? null : index + 2)}
+                      >
                         Chance of {person.name} <br />
                         living this long
                       </th>
@@ -136,10 +152,16 @@ const LongevityPage = () => {
 
                   {people.length > 1 && (
                     <>
-                      <th className="px-4 py-2">
+                      <th 
+                        className={`px-4 py-2 cursor-pointer ${highlightedCol === people.length + 2 ? 'bg-slate-200' : ''}`}
+                        onClick={() => setHighlightedCol(highlightedCol === people.length + 2 ? null : people.length + 2)}
+                      >
                         Chance both <br /> are alive{" "}
                       </th>
-                      <th className="px-4 py-2">
+                      <th 
+                        className={`px-4 py-2 cursor-pointer ${highlightedCol === people.length + 3 ? 'bg-slate-200' : ''}`}
+                        onClick={() => setHighlightedCol(highlightedCol === people.length + 3 ? null : people.length + 3)}
+                      >
                         Chance at least <br />
                         one is alive{" "}
                       </th>
@@ -149,7 +171,11 @@ const LongevityPage = () => {
               </thead>
               <tbody>
                 {yearRange(0, rowCount).map((_, index) => (
-                  <tr key={index}>
+                  <tr 
+                    key={index}
+                    className={`cursor-pointer ${highlightedRow === index ? 'bg-slate-200' : ''}`}
+                    onClick={() => setHighlightedRow(highlightedRow === index ? null : index)}
+                  >
                     <td className={`border px-4 py-2`}>
                       {currentYear + index}
                     </td>
