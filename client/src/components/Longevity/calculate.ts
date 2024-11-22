@@ -91,3 +91,27 @@ export function calculateSurvivalProbability(
   const probDead2 = Math.min(1.0, t / lifeExpectancy2);
   return 1 - probDead1 * probDead2;
 }
+
+export function findAgeForProbability(table: Array<any>, targetProbability: number): {age: number, year: number} {
+  // Convert percentage to decimal if needed
+  const probability = targetProbability > 1 ? targetProbability / 100 : targetProbability;
+  
+  // Find the entry with the closest probability
+  let closestEntry = table[0];
+  let smallestDiff = Math.abs(closestEntry.probability - probability);
+  
+  for (const entry of table) {
+    const diff = Math.abs(entry.probability - probability);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      closestEntry = entry;
+    }
+  }
+  
+  return {
+    age: typeof closestEntry.age === 'string' ? 
+      parseInt(closestEntry.age.split(' / ')[0]) : 
+      closestEntry.age,
+    year: closestEntry.year
+  };
+}
