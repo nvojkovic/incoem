@@ -142,7 +142,7 @@ const LongevityPage = () => {
                   >
                     Age
                   </th>
-                  {people.map((person) => (
+                  {people.map((person, index) => (
                     <>
                       <th
                         className={`px-4 py-2 cursor-pointer ${highlightedCol === index + 2 ? "bg-slate-200" : ""}`}
@@ -198,10 +198,10 @@ const LongevityPage = () => {
                       setHighlightedRow(highlightedRow === index ? null : index)
                     }
                   >
-                    <td className={`border px-4 py-2`}>
+                    <td className={`border px-4 py-2 ${highlightedCol === 0 ? "bg-slate-200" : ""}`}>
                       {currentYear + index}
                     </td>
-                    <td className={`border px-4 py-2`}>
+                    <td className={`border px-4 py-2 ${highlightedCol === 1 ? "bg-slate-200" : ""}`}>
                       {tables
                         .map(
                           (i, ind) =>
@@ -214,7 +214,7 @@ const LongevityPage = () => {
 
                     {people.map((_, i) => (
                       <>
-                        <td className={`border px-4 py-2 `}>
+                        <td className={`border px-4 py-2 ${highlightedCol === i + 2 ? "bg-slate-200" : ""}`}>
                           {tables[i].table.length > index &&
                             `${Math.round(
                               tables[i].table[index].probability * 1000,
@@ -225,11 +225,11 @@ const LongevityPage = () => {
                     ))}
                     {people.length > 1 && (
                       <>
-                        <td className={`border px-4 py-2`}>
+                        <td className={`border px-4 py-2 ${highlightedCol === people.length + 2 ? "bg-slate-200" : ""}`}>
                           {joint.length > index &&
                             `${Math.round(joint[index].probability * 1000) / 10}%`}
                         </td>
-                        <td className={`border px-4 py-2`}>
+                        <td className={`border px-4 py-2 ${highlightedCol === people.length + 3 ? "bg-slate-200" : ""}`}>
                           {joint.length > index &&
                             `${Math.round(joint[index].oneAlive * 1000) / 10}%`}
                         </td>
