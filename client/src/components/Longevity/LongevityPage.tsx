@@ -124,7 +124,7 @@ const LongevityPage = () => {
                 })
               }
               subtype="percent"
-              label="Chance of survival"
+              label="Probability"
             />
           </div>
           <div className="flex flex-col items-center gap-6 w-full">

@@ -154,6 +154,7 @@ const ResultTable = ({
                     });
                     return (
                       <div className="z-[5000000] bg-white w-40 sticky">
+                        <b>Survival Probability</b>
                         {client.longevityFlag && <>{table}</>}
                         {joint}
                       </div>
