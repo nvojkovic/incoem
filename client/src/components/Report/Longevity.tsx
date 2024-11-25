@@ -7,6 +7,7 @@ import {
 } from "../Longevity/calculate";
 import Header from "./Header";
 import { LongevityScenarioCard } from "../Longevity/LongevityPage";
+import { birthday } from "src/calculator/utils";
 
 const Longevity = ({
   client,
@@ -55,12 +56,24 @@ const Longevity = ({
                       Joint {longevityPercent}% Life Expectancy
                     </div>
                     <div className="font-semibold text-[16px] mt-[2px] flex gap-1 items-center">
-                      {
-                        findYearForProbability(
+                      {(() => {
+                        const year = findYearForProbability(
                           jointTable(people[0], people[1]),
                           longevityPercent,
-                        ).year
-                      }
+                        ).year;
+
+                        const ages = people.map(
+                          (person) => year - birthday(person).birthYear,
+                        );
+                        return (
+                          <>
+                            {year}{" "}
+                            <span className="text-gray-500 text-[12px]">
+                              ({ages.join("/")})
+                            </span>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 ) : null}

@@ -259,14 +259,14 @@ const ResultTable = ({
                         {!isNaN(stabilityRatio) &&
                           client.stabilityRatioFlag && (
                             <div>
-                              Stability Ratio:{" "}
+                              Income Stability:{" "}
                               {Math.round((stableIncome / income) * 100)}%
                             </div>
                           )}
                         {client.spending &&
                           client.stabilityRatioFlag &&
                           client.needsFlag && (
-                            <div>Spending Stable: {needsStable}%</div>
+                            <div>Spending Stability: {needsStable}%</div>
                           )}
                       </div>
                     );

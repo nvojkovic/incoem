@@ -41,11 +41,15 @@ const Composite = ({
 
                       {client.longevityFlag &&
                         scenario.data.people.map((person) => (
-                          <th className="px-2 py-3">{person.name} alive</th>
+                          <th className="px-2 py-3 text-center">
+                            {person.name} alive
+                          </th>
                         ))}
                       {client.longevityFlag &&
                         scenario.data.people.length > 1 && (
-                          <th className="px-2 py-3">At least one alive</th>
+                          <th className="px-2 py-3 text-center">
+                            At least one alive
+                          </th>
                         )}
                       <th className="px-2 py-3">Income</th>
 
@@ -122,22 +126,22 @@ const Composite = ({
 
                           {client.longevityFlag &&
                             scenario.data.people.map((_, i) => (
-                              <td className="px-2 py-[6px]">
+                              <td className="px-2 py-[6px] text-center">
                                 {Math.round(
                                   (tables[i].table.find(
                                     (entry) => entry.year === line,
-                                  )?.probability || 0) * 1000,
-                                ) / 10}
+                                  )?.probability || 0) * 100,
+                                )}
                                 %
                               </td>
                             ))}
                           {client.longevityFlag &&
                             scenario.data.people.length > 1 && (
-                              <td className="px-2 py-[6px]">
+                              <td className="px-2 py-[6px] text-center">
                                 {Math.round(
                                   (joint.find((entry) => entry.year === line)
-                                    ?.probability || 0) * 1000,
-                                ) / 10}
+                                    ?.probability || 0) * 100,
+                                )}
                                 %
                               </td>
                             )}

@@ -187,7 +187,7 @@ const LongevityPage = () => {
                         <>
                           {year}{" "}
                           <span className="text-gray-500 text-[14px]">
-                            {ages.join("/")}
+                            ({ages.join("/")})
                           </span>
                         </>
                       );

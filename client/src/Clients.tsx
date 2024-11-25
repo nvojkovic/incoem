@@ -154,13 +154,6 @@ const Clients = () => {
           )}
         </div>
       </div>
-      <div className="w-96 mt-5">
-        <Link to="/test">
-          <Button type="primary">
-            Oh no! Something terrible has happened!
-          </Button>
-        </Link>
-      </div>
     </Layout>
   );
 };
