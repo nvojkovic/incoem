@@ -153,14 +153,6 @@ const Clients = () => {
           )}
         </div>
       </div>
-      <Link to="/test">Clients</Link>
-      <button
-        onClick={() => {
-          throw new Error("This is your first error!");
-        }}
-      >
-        Break the world
-      </button>
     </Layout>
   );
 };
