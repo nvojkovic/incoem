@@ -36,8 +36,8 @@ app.use(express.json());
 app.use(
   cors({
     origin: process.env.APP_URL,
-    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
-    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: "*",
+    methods: ["GET", "POST", "DELETE", "OPTIONS", "PUT"],
     credentials: true,
   }),
 );
