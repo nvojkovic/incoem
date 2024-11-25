@@ -235,6 +235,17 @@ interface SpendingPage {
   settings: {};
 }
 
-type ReportPage = CoverPage | IncomesPage | IncomeChartPage | SpendingPage;
+interface LongevityPage {
+  id: string;
+  name: "longevity";
+  settings: {};
+}
+
+type ReportPage =
+  | CoverPage
+  | IncomesPage
+  | IncomeChartPage
+  | SpendingPage
+  | LongevityPage;
 
 type ReportSettings = ReportPage[];

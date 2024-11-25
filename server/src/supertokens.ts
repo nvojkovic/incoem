@@ -3,17 +3,17 @@ import Session from "supertokens-node/recipe/session";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/emailpassword";
 import EmailVerification from "supertokens-node/recipe/emailverification";
 import Dashboard from "supertokens-node/recipe/dashboard";
-import { SMTPService } from "supertokens-node/recipe/emailpassword/emaildelivery";
-import { SMTPService as EmailVerificationSMTPService } from "supertokens-node/recipe/emailverification/emaildelivery";
+// import { SMTPService } from "supertokens-node/recipe/emailpassword/emaildelivery";
+// import { SMTPService as EmailVerificationSMTPService } from "supertokens-node/recipe/emailverification/emaildelivery";
 
-const smtpSettings = {
-  host: "smtp-relay.brevo.com",
-  authUsername: "info@incomemapper.com",
-  password: "ErM5a6wZW4jvYhUF",
-  port: 587,
-  from: { name: "Income Mapper", email: "noreply@incomemapper.com" },
-};
-
+// const smtpSettings = {
+//   host: "smtp-relay.brevo.com",
+//   authUsername: "info@incomemapper.com",
+//   password: "ErM5a6wZW4jvYhUF",
+//   port: 587,
+//   from: { name: "Income Mapper", email: "noreply@incomemapper.com" },
+// };
+//
 supertokens.init({
   framework: "express",
   supertokens: {
@@ -34,15 +34,15 @@ supertokens.init({
 
     ThirdPartyEmailPassword.init({
       /*TODO: See next step*/
-      emailDelivery: {
-        service: new SMTPService({ smtpSettings }),
-      },
+      // emailDelivery: {
+      //   service: new SMTPService({ smtpSettings }),
+      // },
     }),
     EmailVerification.init({
       mode: "REQUIRED",
-      emailDelivery: {
-        service: new EmailVerificationSMTPService({ smtpSettings }),
-      },
+      // emailDelivery: {
+      //   service: new EmailVerificationSMTPService({ smtpSettings }),
+      // },
     }),
     Session.init(), // initializes session features
   ],
