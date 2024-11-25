@@ -1,4 +1,4 @@
-import { formatter, printNumber, splitDate, yearRange } from "src/utils";
+import { printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
 import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
@@ -145,13 +145,9 @@ const Composite = ({
                                 %
                               </td>
                             )}
-                          <td className="px-2 py-1">
-                            {formatter.format(income)}
-                          </td>
+                          <td className="px-2 py-1">{printNumber(income)}</td>
                           {client.needsFlag && (
-                            <td className="px-2 py-1">
-                              {formatter.format(needs)}
-                            </td>
+                            <td className="px-2 py-1">{printNumber(needs)}</td>
                           )}
                           {client.needsFlag && (
                             <td

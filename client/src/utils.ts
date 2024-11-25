@@ -13,21 +13,24 @@ export const yearRange: (start: number, end: number) => number[] = (
 ) => {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
 };
-export const formatter = new Intl.NumberFormat("en-US", {
+
+const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-export const printNumberOld = (a: number | string) => {
+const printNumberOld = (a: number | string) => {
   if (typeof a === "number") {
     return `${formatter.format(a)}`;
   }
   return a;
 };
 
-export const printNumber = (s: number) =>
-  s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
+export const printNumber = (s: number) => {
+  if (Math.abs(s) < 0.001) return printNumberOld(0);
+  return s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
+};
 
 export const printReport = async (clientId: number, scenarioId: number) => {
   let pdfFile;

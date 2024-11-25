@@ -8,13 +8,7 @@ import {
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
 import Input from "src/components/Inputs/Input";
-import {
-  formatter,
-  printNumber,
-  printReport,
-  splitDate,
-  yearRange,
-} from "src/utils";
+import { printNumber, printReport, splitDate, yearRange } from "src/utils";
 import Confirm from "src/components/Confirm";
 import { useMemo, useState } from "react";
 import Button from "src/components/Inputs/Button";
@@ -240,8 +234,7 @@ const ResultTable = ({
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
-                              Spending:{" "}
-                              {client.spending && formatter.format(needs)}
+                              Spending: {client.spending && printNumber(needs)}
                             </div>
 
                             <div>
@@ -251,7 +244,7 @@ const ResultTable = ({
                                   gap < 0 ? "text-red-500" : "text-green-500"
                                 }
                               >
-                                {formatter.format(gap)}
+                                {printNumber(gap)}
                               </span>{" "}
                             </div>
                           </>
