@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import "./sentry";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Clients from "./Clients";
 import "./supertokens";
 import Login from "./pages/login";
@@ -67,40 +67,80 @@ export const router = createBrowserRouter([
         element: <A />,
       },
       {
-        path: "/client/:id",
         element: <ClientContainer />,
         children: [
-          { path: "income", element: <IncomeSection defaultOpen={true} /> },
           {
-            path: "calculator/versatile",
-            element: <VersatileCalculator />,
-          },
-          {
-            path: "calculator/time-value-of-money",
-            element: <AllInOneCalculator />,
-          },
-          {
-            path: "longevity",
-            element: <LongevityPage />,
-          },
-          {
-            path: "spending",
-            element: <SpendingPage />,
-          },
-          {
-            path: "map",
-            element: <Summary />,
-          },
-          {
-            path: "basic",
-            element: <ClientOverview />,
-          },
-          {
-            path: "calculator",
-            element: <CalculatorMap />,
+            path: "/client/:id",
+            element: <Outlet />,
+            children: [
+              { path: "income", element: <IncomeSection defaultOpen={true} /> },
+              {
+                path: "calculator/versatile",
+                element: <VersatileCalculator />,
+              },
+              {
+                path: "calculator/time-value-of-money",
+                element: <AllInOneCalculator />,
+              },
+              {
+                path: "longevity",
+                element: <LongevityPage />,
+              },
+              {
+                path: "spending",
+                element: <SpendingPage />,
+              },
+              {
+                path: "map",
+                element: <Summary />,
+              },
+              {
+                path: "basic",
+                element: <ClientOverview />,
+              },
+              {
+                path: "calculator",
+                element: <CalculatorMap />,
+              },
+            ],
           },
         ],
       },
+      // {
+      //   path: "/client/:id",
+      //   element: <ClientContainer />,
+      //   children: [
+      //     { path: "income", element: <IncomeSection defaultOpen={true} /> },
+      //     {
+      //       path: "calculator/versatile",
+      //       element: <VersatileCalculator />,
+      //     },
+      //     {
+      //       path: "calculator/time-value-of-money",
+      //       element: <AllInOneCalculator />,
+      //     },
+      //     {
+      //       path: "longevity",
+      //       element: <LongevityPage />,
+      //     },
+      //     {
+      //       path: "spending",
+      //       element: <SpendingPage />,
+      //     },
+      //     {
+      //       path: "map",
+      //       element: <Summary />,
+      //     },
+      //     {
+      //       path: "basic",
+      //       element: <ClientOverview />,
+      //     },
+      //     {
+      //       path: "calculator",
+      //       element: <CalculatorMap />,
+      //     },
+      //   ],
+      // },
       {
         path: "/profile",
         element: <Settings />,
