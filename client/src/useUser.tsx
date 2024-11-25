@@ -20,6 +20,7 @@ export const UserProvider: React.FC<{
 
   const fetchUser = async () => {
     if (ignoreLogin) return setUser({} as any);
+    console.log("fetching user");
     try {
       const response = await getUser();
       if (response.ok) {
