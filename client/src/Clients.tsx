@@ -7,8 +7,6 @@ import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
 import { useUser } from "./useUser";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
-import Button from "./components/Inputs/Button";
 
 const Clients = () => {
   const { } = useUser();
