@@ -42,13 +42,13 @@ const Composite = ({
                       {client.longevityFlag &&
                         scenario.data.people.map((person) => (
                           <th className="px-2 py-3 text-center">
-                            {person.name} alive
+                            {person.name} <br /> alive
                           </th>
                         ))}
                       {client.longevityFlag &&
                         scenario.data.people.length > 1 && (
                           <th className="px-2 py-3 text-center">
-                            At least one alive
+                            At least one <br /> alive
                           </th>
                         )}
                       <th className="px-2 py-3">Income</th>
@@ -58,10 +58,14 @@ const Composite = ({
                       )}
                       {client.needsFlag && <th className="px-2 py-3">Gap</th>}
                       {client.stabilityRatioFlag && (
-                        <th className="px-2 py-3">Income Stability</th>
+                        <th className="px-2 py-3">
+                          Income <br /> Stability
+                        </th>
                       )}
                       {client.stabilityRatioFlag && client.needsFlag && (
-                        <th className="px-2 py-3">Spending Stability</th>
+                        <th className="px-2 py-3">
+                          Spending <br /> Stability
+                        </th>
                       )}
                     </tr>
                   </thead>
