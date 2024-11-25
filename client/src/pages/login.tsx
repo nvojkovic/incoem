@@ -1,6 +1,5 @@
 import { useState } from "react";
 import bg from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import Input from "../components/Inputs/Input";
 import Button from "../components/Inputs/Button";
 import { Link } from "react-router-dom";
@@ -76,7 +75,7 @@ const Login = () => {
         </div>
         <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
           <div className="flex flex-col items-center  justify-start">
-            <img src={logo} alt="" className="w-20 h-20" />
+            <img src="/img/logo.png" alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] ">
               Log in to your account
             </div>
@@ -125,6 +124,24 @@ const Login = () => {
                 className="text-[#FF6C47] font-semibold"
               >
                 Reset Password
+              </Link>
+            </div>
+            <div className="mt-8 border-t pt-3 border-t-gray-300 text-sm text-[#475467] max-w-[350px] text-center">
+              By continuing, you confirm that you have read our{" "}
+              <Link
+                to="https://app.getterms.io/view/h0II6/privacy/en-us"
+                className="text-[#FF6C47] font-semibold"
+                target="_blank"
+              >
+                Privacy Policy{" "}
+              </Link>{" "}
+              and{" "}
+              <Link
+                target="_blank"
+                to="https://app.getterms.io/view/h0II6/tos/en-us"
+                className="text-[#FF6C47] font-semibold"
+              >
+                Terms and Conditions
               </Link>
             </div>
           </div>

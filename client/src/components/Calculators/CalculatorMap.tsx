@@ -26,7 +26,7 @@ const calculators: CalculatorCard[] = [
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
         />
       </svg>
     ),
@@ -55,13 +55,13 @@ const calculators: CalculatorCard[] = [
   },
 ];
 
-const CalculatorMap: React.FC<any> = ({}: any) => {
+const CalculatorMap: React.FC<any> = ({ }: any) => {
   return (
     <Layout page="calculator">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {calculators.map((calc) => (
-            <Link to={calc.id}>
+            <Link to={calc.id} key={calc.id}>
               <div
                 key={calc.id}
                 className="border rounded-xl border-[#EAECF0] flex-grow w-full transition-shadow duration-300 p-5 cursor-pointer bg-white shadow-md h-full"

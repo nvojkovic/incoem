@@ -136,6 +136,7 @@ const VersatileCalculator: React.FC = () => {
       },
     });
   };
+  console.log("current", settings);
 
   return (
     <Layout page="calculator">
@@ -153,7 +154,7 @@ const VersatileCalculator: React.FC = () => {
             <Button
               type="secondary"
               onClick={() => {
-                console.log("setting to", initialVersatileSettings.other);
+                console.log("setting to", initialVersatileSettings);
                 setField("versatileCalculator")(initialVersatileSettings);
               }}
             >
@@ -325,14 +326,14 @@ const VersatileCalculator: React.FC = () => {
               <span
                 className={
                   calculations.length &&
-                  calculations[calculations.length - 1].endingBalance < 0
+                    calculations[calculations.length - 1].endingBalance < 0
                     ? "text-red-500"
                     : ""
                 }
               >
                 {printNumber(
                   calculations.length &&
-                    calculations[calculations.length - 1].endingBalance,
+                  calculations[calculations.length - 1].endingBalance,
                 )}
               </span>
             </div>
@@ -553,8 +554,8 @@ const VersatileCalculator: React.FC = () => {
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                  settings.payment.startYear +
-                                  1,
+                                settings.payment.startYear +
+                                1,
                               ),
                             ).keys(),
                           ].map((k) => {

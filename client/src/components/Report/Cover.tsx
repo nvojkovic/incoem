@@ -1,4 +1,3 @@
-import logo from "src/assets/logo.png";
 import { birthday } from "src/calculator/utils";
 
 const PrintCard = ({ title, subtitle }: any) => (
@@ -32,7 +31,7 @@ const ReportCover = ({ settings, client }: CoverProps) => {
                 src={
                   client?.userdata?.logo
                     ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
-                    : logo
+                    : "/img/logo.png"
                 }
                 alt="logo"
                 className="h-20"

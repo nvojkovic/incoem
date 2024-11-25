@@ -40,9 +40,7 @@ export const IncomeProvider = ({
 }: IncomeProviderProps) => {
   const [data, setLocal] = useState<Client>(initialData);
 
-  console.log("current data", data.data);
   useEffect(() => {
-    console.log("resetting");
     setLocal(initialData);
   }, [initialData]);
   const setData = (fn: (data: Client) => Client) => {

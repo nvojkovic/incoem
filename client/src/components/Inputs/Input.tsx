@@ -74,7 +74,7 @@ const Input = ({
   } else if (subtype === "number") {
     input = (
       <CurrencyInput
-        defaultValue={value}
+        value={value}
         disableAbbreviations={true}
         disabled={disabled}
         disableGroupSeparators={true}

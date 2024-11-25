@@ -1,0 +1,38 @@
+show full chart on need too, i found myself going back and forth 
+toggle to show income on needs chart
+inherit from advisor settings 
+
+numbers right aligned?
+csv export?
+how do multitoggles look?
+popup with changelog
+fixed the curve wobble
+rebrand new name?
+how does real/nominal affect new increase
+
+
+mortality
+total resizable in table
+update settings defaults
+start age and years dont reset
+check margins
+
+
+tab through global ass by column
+
+move income title to header
+fix favicon
+add sentry
+
+set death age to life expectancy
+
+
+custom settings on charts, gear icon, live preview
+select which columns show on comp, osite
+default report settings for prod?
+
+tighten box
+align longevity card text in the middle
+change to probability
+
+death years for single households

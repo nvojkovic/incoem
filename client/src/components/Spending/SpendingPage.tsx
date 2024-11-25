@@ -9,11 +9,13 @@ import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
 import { updateAtIndex, yearRange } from "../../utils";
-import StackedAreaChart from "../NewChart";
 import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
+import MainChart from "../Charts/MainChart";
+import Confirm from "../Confirm";
+import { useState } from "react";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -227,6 +229,9 @@ const SpendingPage = () => {
     ],
   );
 
+  const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
+  const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
+
   return (
     <Layout page="spending">
       <div className="flex flex-col gap-8">
@@ -384,9 +389,28 @@ const SpendingPage = () => {
                           <DocumentDuplicateIcon className="h-5 text-black" />
                         </div>
                       </Button>
+
+                      <Confirm
+                        isOpen={preDeleteOpen === index}
+                        onClose={() => setPreDeleteOpen(-1)}
+                        onConfirm={(_: any) => {
+                          setPreDeleteOpen(-1);
+                          setField("preSpending")(
+                            spending.preSpending.filter(
+                              (_, ind) => ind !== index,
+                            ),
+                          );
+                        }}
+                      >
+                        <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                        <div className="mb-5">
+                          Are you sure you want to delete this spending?
+                        </div>
+                      </Confirm>
                       <Button
                         type="secondary"
                         onClick={() => {
+                          return setPreDeleteOpen(index);
                           if (
                             confirm(
                               "Are you sure you want to delete this spending?",
@@ -571,9 +595,28 @@ const SpendingPage = () => {
                         <DocumentDuplicateIcon className="h-5 text-black" />
                       </div>
                     </Button>
+
+                    <Confirm
+                      isOpen={postDeleteOpen === index}
+                      onClose={() => setPostDeleteOpen(-1)}
+                      onConfirm={(_: any) => {
+                        setPostDeleteOpen(-1);
+                        setField("postSpending")(
+                          spending.postSpending.filter(
+                            (_, ind) => ind !== index,
+                          ),
+                        );
+                      }}
+                    >
+                      <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                      <div className="mb-5">
+                        Are you sure you want to delete this spending?
+                      </div>
+                    </Confirm>
                     <Button
                       type="secondary"
                       onClick={() => {
+                        return setPostDeleteOpen(index);
                         if (
                           confirm(
                             "Are you sure you want to delete this spending?",
@@ -741,8 +784,10 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="bg-white pb-[2px]">
-            <StackedAreaChart
+            <MainChart
               maxY={maxY}
+              longevityFlag={false}
+              people={[]}
               initialHeight={window.innerHeight - 400}
               stability={data.stabilityRatioFlag}
               needsFlag={data.needsFlag}
@@ -789,6 +834,7 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
       <div className="flex gap-2 mt-[6px]">
         {options.map((item: any) => (
           <button
+            key={item}
             className={`text-sm flex-1 py-[7px] px-4 rounded ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
               }`}
             onClick={() => setValue(item)}

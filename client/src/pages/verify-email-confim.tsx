@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import bg from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 import { verifyEmail } from "supertokens-auth-react/recipe/emailverification";
 import Spinner from "../components/Spinner";
@@ -39,7 +38,7 @@ const VerifyEmailConfirm = () => {
         </div>
         <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
           <div className="flex flex-col items-center justify-start w-[360px]">
-            <img src={logo} alt="" className="w-20 h-20" />
+            <img src="/img/logo.png" alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] ">Verifying email...</div>
             <div className="text-[#475467] mb-10 mt-10">
               {error && (

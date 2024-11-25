@@ -8,13 +8,7 @@ import {
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
 import Input from "src/components/Inputs/Input";
-import {
-  formatter,
-  printNumber,
-  printReport,
-  splitDate,
-  yearRange,
-} from "src/utils";
+import { printNumber, printReport, splitDate, yearRange } from "src/utils";
 import Confirm from "src/components/Confirm";
 import { useMemo, useState } from "react";
 import Button from "src/components/Inputs/Button";
@@ -38,6 +32,7 @@ import { useInfo } from "src/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
 import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
 import DraggableTable from "./DraggableTable";
+import { jointTable, makeTable } from "../Longevity/calculate";
 
 const ResultTable = ({
   client,
@@ -120,9 +115,56 @@ const ResultTable = ({
         (currentYear) => ({
           year: currentYear,
           selectedColumn,
-          age: settings.data.people
-            .map((p) => currentYear - splitDate(p.birthday).year)
-            .join("/"),
+          age: (
+            <div className="flex gap-2">
+              <div className="w-20 relative">
+                <Tooltip
+                  content={(() => {
+                    const people = settings.data.people;
+                    const joint =
+                      people.length > 1 ? (
+                        <div>
+                          Joint:{" "}
+                          {Math.round(
+                            (jointTable(people[0], people[1]).find(
+                              (i) => i.year === currentYear,
+                            )?.oneAlive || 0) * 1000,
+                          ) / 10}
+                          %
+                        </div>
+                      ) : null;
+                    const table = settings.data.people.map((p) => {
+                      const t = makeTable(p);
+                      const item = t.table.find((i) => i.year == currentYear);
+                      if (!item) return null;
+                      return (
+                        <div key={p.name}>
+                          {p.name}: {Math.round(item?.probability * 1000) / 10}%
+                        </div>
+                      );
+                    });
+                    return (
+                      <div className="z-[5000000] bg-white w-40 sticky">
+                        <b>Survival Probability</b>
+                        {client.longevityFlag && <>{table}</>}
+                        {joint}
+                      </div>
+                    );
+                  })()}
+                  theme={{ target: "" }}
+                  placement="right"
+                  hidden={!client.longevityFlag}
+                  style="light"
+                  arrow={false}
+                  className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
+                >
+                  {settings.data.people
+                    .map((p) => currentYear - splitDate(p.birthday).year)
+                    .join("/")}
+                </Tooltip>
+              </div>
+            </div>
+          ),
           ...Object.fromEntries(
             incomes.map((income, i) => {
               const result = calculate({
@@ -192,8 +234,7 @@ const ResultTable = ({
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
-                              Spending:{" "}
-                              {client.spending && formatter.format(needs)}
+                              Spending: {client.spending && printNumber(needs)}
                             </div>
 
                             <div>
@@ -203,7 +244,7 @@ const ResultTable = ({
                                   gap < 0 ? "text-red-500" : "text-green-500"
                                 }
                               >
-                                {formatter.format(gap)}
+                                {printNumber(gap)}
                               </span>{" "}
                             </div>
                           </>
@@ -211,14 +252,14 @@ const ResultTable = ({
                         {!isNaN(stabilityRatio) &&
                           client.stabilityRatioFlag && (
                             <div>
-                              Stability Ratio:{" "}
+                              Income Stability:{" "}
                               {Math.round((stableIncome / income) * 100)}%
                             </div>
                           )}
                         {client.spending &&
                           client.stabilityRatioFlag &&
                           client.needsFlag && (
-                            <div>Spending Stable: {needsStable}%</div>
+                            <div>Spending Stability: {needsStable}%</div>
                           )}
                       </div>
                     );

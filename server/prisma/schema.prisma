@@ -17,10 +17,12 @@ model Client {
   spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
   stabilityRatioFlag  Boolean   @default(false)
   needsFlag           Boolean   @default(false)
+  longevityFlag       Boolean   @default(false)
   updatedAt           DateTime?
   allInOneCalculator  Json      @default("[]")
   versatileCalculator Json      @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
   liveSettings        Json      @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Nominal\",\"taxType\":\"Pre-Tax\"}")
+  reportSettings      Json      @default("[{\"id\":\"fc819519-a14c-4e86-b4a8-abe7b285fa7b\",\"name\":\"cover\",\"settings\":{},\"enabled\":true},{\"id\":\"a08ec725-9108-4e00-a3f4-e973c3cb9fce\",\"name\":\"incomes\",\"settings\":{},\"enabled\":true},{\"id\":\"d3c43f54-4250-41e1-8c67-2e37ff53fe91\",\"name\":\"income-chart\",\"settings\":{},\"enabled\":true},{\"id\":\"d3ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"spending\",\"settings\":{},\"enabled\":true},{\"id\":\"d4ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"longevity\",\"settings\":{},\"enabled\":true},{\"id\":\"d6ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"composite\",\"settings\":{},\"enabled\":true}]")
 }
 
 model UserInfo {
@@ -35,11 +37,13 @@ model UserInfo {
   primaryColor                String? @default("#FF6C47")
   stabilityRatioFlag          Boolean @default(false)
   needsFlag                   Boolean @default(false)
+  longevityFlag               Boolean @default(false)
   globalInflation             Float?  @default(2.5)
   globalYearsShown            Int?    @default(30)
   globalLifeExpectancy        Int?    @default(78)
   globalPreRetirementTaxRate  Int?    @default(0)
   globalPostRetirementTaxRate Int?    @default(0)
+  globalReportSettings        Json    @default("[{\"id\":\"fc819519-a14c-4e86-b4a8-abe7b285fa7b\",\"name\":\"cover\",\"settings\":{},\"enabled\":true},{\"id\":\"a08ec725-9108-4e00-a3f4-e973c3cb9fce\",\"name\":\"incomes\",\"settings\":{},\"enabled\":true},{\"id\":\"d3c43f54-4250-41e1-8c67-2e37ff53fe91\",\"name\":\"income-chart\",\"settings\":{},\"enabled\":true},{\"id\":\"d3ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"spending\",\"settings\":{},\"enabled\":true},{\"id\":\"d4ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"longevity\",\"settings\":{},\"enabled\":true},{\"id\":\"d6ad16db-f1e5-43f7-b254-e967e35a811e\",\"name\":\"composite\",\"settings\":{},\"enabled\":true}]")
 }
 
 model all_auth_recipe_users {

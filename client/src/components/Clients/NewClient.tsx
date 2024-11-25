@@ -9,6 +9,7 @@ import { updateAtIndex } from "../../utils";
 import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
+import Select from "../Inputs/Select";
 
 const PersonInfo = ({
   person,
@@ -19,7 +20,7 @@ const PersonInfo = ({
 }) => {
   if (!person) return <div className="h-20"></div>;
   return (
-    <div className="flex gap-5 my-8">
+    <div className="flex flex-col gap-5 my-8 w-full">
       <Input
         label="First Name"
         value={person.name}
@@ -35,6 +36,16 @@ const PersonInfo = ({
         vertical
         value={person.birthday}
         setValue={(birthday) => onChange({ ...person, birthday })}
+      />
+      <Select
+        label="Sex"
+        vertical
+        options={[
+          { id: "Male", name: "Male" },
+          { id: "Female", name: "Female" },
+        ]}
+        selected={{ id: person.sex, name: person.sex }}
+        setSelected={(option) => onChange({ ...person, sex: option.id })}
       />
     </div>
   );
@@ -55,6 +66,7 @@ const initializeNewClient = (user: User | null): Client => ({
   scenarios: [],
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
+  longevityFlag: !!user?.info?.longevityFlag,
   spending: {
     preTaxRate: user?.info?.globalPreRetirementTaxRate,
     postTaxRate: user?.info?.globalPostRetirementTaxRate,
@@ -78,11 +90,13 @@ const initializeNewClient = (user: User | null): Client => ({
     taxType: "Pre-Tax",
     inflationType: "Nominal",
     data: {} as any,
+    longevityPercent: 50,
     deathYears: [
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,
     ],
   } as ScenarioSettings,
+  reportSettings: user?.info?.globalReportSettings || [],
 });
 
 const NewClient = () => {
@@ -140,7 +154,7 @@ const NewClient = () => {
           />
         </div>
       </div>
-      <div>
+      <div className="flex justify-between">
         {client.data.people.map((person, i) => (
           <PersonInfo
             person={person}
@@ -194,42 +208,6 @@ const NewClient = () => {
           }
           vertical
         />
-        <Input
-          subtype="percent"
-          label="Pre-Tax Rate (%)"
-          value={client.spending.preTaxRate}
-          setValue={(preTaxRate) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, preTaxRate },
-            }))
-          }
-          vertical
-        />
-        <Input
-          subtype="percent"
-          label="Post-Tax Rate (%)"
-          value={client.spending.postTaxRate}
-          setValue={(postTaxRate) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, postTaxRate },
-            }))
-          }
-          vertical
-        />
-        <Input
-          subtype="number"
-          label="Retirement Year"
-          value={client.spending.retirementYear}
-          setValue={(retirementYear) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, retirementYear },
-            }))
-          }
-          vertical
-        />
         {client.data.people.map((item, i) => (
           <Input
             subtype="number"
@@ -251,6 +229,42 @@ const NewClient = () => {
             vertical
           />
         ))}
+        <Input
+          subtype="percent"
+          label="Pre-Retirement Tax Rate (%)"
+          value={client.spending.preTaxRate}
+          setValue={(preTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, preTaxRate },
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="percent"
+          label="Post-Retirement Tax Rate (%)"
+          value={client.spending.postTaxRate}
+          setValue={(postTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, postTaxRate },
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="number"
+          label="Retirement Year"
+          value={client.liveSettings.retirementYear}
+          setValue={(retirementYear) =>
+            setClient((prev) => ({
+              ...prev,
+              liveSettings: { ...prev.liveSettings, retirementYear },
+            }))
+          }
+          vertical
+        />
       </div>
       <div className="border-b text-left font-semibold pb-1">
         Extra Features
@@ -274,9 +288,22 @@ const NewClient = () => {
             setClient((prev) => ({ ...prev, needsFlag: flag }))
           }
         />
+        <Input
+          subtype="toggle"
+          labelLength={110}
+          label="Longevity"
+          value={client.longevityFlag}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, longevityFlag: flag }))
+          }
+        />
       </div>
     </div>
   );
+
+  const firstStepFilled =
+    client.title &&
+    client.data.people.every((p) => p.name && p.birthday && p.sex);
 
   return (
     <>
@@ -309,9 +336,7 @@ const NewClient = () => {
             <Button
               type="primary"
               disabled={
-                (step === 1 &&
-                  (!client.title ||
-                    !client.data.people.every((p) => p.name && p.birthday))) ||
+                (step === 1 && !firstStepFilled) ||
                 (step === 2 &&
                   !client.data.people.every((p) => p.name && p.birthday))
               }

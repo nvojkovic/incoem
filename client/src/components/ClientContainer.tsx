@@ -4,7 +4,7 @@ import { Outlet, useParams } from "react-router-dom";
 import { getClient } from "../services/client";
 import { IncomeProvider } from "../useData";
 import Layout from "./Layout";
-import { Spinner } from "flowbite-react";
+import Spinner from "./Spinner";
 
 function ClientContainer() {
   const { id } = useParams();

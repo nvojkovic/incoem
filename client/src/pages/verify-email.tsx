@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import bg from "../assets/login-bg.png";
-import logo from "../assets/logo.png";
 import Button from "../components/Inputs/Button";
 import { useNavigate } from "react-router-dom";
 import { sendVerificationEmail } from "supertokens-auth-react/recipe/emailverification";
@@ -54,7 +53,7 @@ const VerifyEmail = () => {
         </div>
         <div className="absolute text-black top-[200px] m-auto flex w-full z-50 flex-col items-center ">
           <div className="flex flex-col items-center justify-start w-[360px]">
-            <img src={logo} alt="" className="w-20 h-20" />
+            <img src="/img/logo.png" alt="" className="w-20 h-20" />
             <div className="font-semibold text-[30px] text-center">
               Verify your email address
             </div>

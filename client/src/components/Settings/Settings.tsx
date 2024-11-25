@@ -11,6 +11,7 @@ import Spinner from "../Spinner";
 import AdvisorSection from "./AdvisorSection";
 import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
+import ReportSettings from "./ReportSettings";
 
 const isColorTooLight = (
   hexColor: string,
@@ -112,16 +113,7 @@ const Settings = () => {
                 user={user}
               />
             </div>
-            <div className="flex gap-5 border-b border-black pb-7">
-              <SectionHeader
-                title="Global Assumptions"
-                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
-              />
-              <GlobalDefaultsSection
-                settings={settings}
-                setSettings={setSettings}
-              />
-            </div>
+
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Appearance"
@@ -212,38 +204,101 @@ const Settings = () => {
             </div>
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
+                title="Global Assumptions"
+                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
+              />
+              <GlobalDefaultsSection
+                settings={settings}
+                setSettings={setSettings}
+              />
+            </div>
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
                 title="Extra Features"
                 subtitle="Set the default for new clients created. This default can be
                 overridden (turned off/on) for each individual client in client
                 settings page."
               />
-              <div className="flex flex-col gap-3">
-                <div className="w-60">
-                  <Input
-                    value={settings.stabilityRatioFlag}
-                    tabIndex={11}
-                    setValue={(e) =>
-                      setSettings({ ...settings, stabilityRatioFlag: e })
-                    }
-                    label="Stability Ratio"
-                    size="full"
-                    tooltip="Calculate and show the % of income considered “Stable” on the Income Map"
-                    subtype="toggle"
-                  />
+              <div className="flex flex-col gap-3 -full">
+                <div className="flex gap-5 items-center w-full">
+                  <div>
+                    <Input
+                      value={settings.stabilityRatioFlag}
+                      tabIndex={11}
+                      setValue={(e) =>
+                        setSettings({ ...settings, stabilityRatioFlag: e })
+                      }
+                      label="Stability Ratio"
+                      size="full"
+                      subtype="toggle"
+                    />
+                  </div>
+                  <div className="text-gray-400 text-nowrap text-sm">
+                    Calculate and show the % of income considered “Stable” on
+                    the Income Map
+                  </div>
                 </div>
-                <div className="w-60">
-                  <Input
-                    value={settings.needsFlag}
-                    tabIndex={12}
-                    setValue={(e) => setSettings({ ...settings, needsFlag: e })}
-                    label="Spending"
-                    tooltip="Include the Spending calculator page and show Spending on Income Map"
-                    size="full"
-                    subtype="toggle"
-                  />
+                <div className="flex gap-5 items-center">
+                  <div>
+                    <Input
+                      value={settings.needsFlag}
+                      tabIndex={12}
+                      setValue={(e) =>
+                        setSettings({ ...settings, needsFlag: e })
+                      }
+                      label="Spending"
+                      size="full"
+                      subtype="toggle"
+                    />
+                  </div>
+                  <div className="text-gray-400 text-nowrap text-sm">
+                    Include the Spending calculator page and show Spending on
+                    Income Map
+                  </div>
+                </div>
+                <div className="flex gap-5 items-center">
+                  <div>
+                    <Input
+                      value={settings.longevityFlag}
+                      tabIndex={12}
+                      setValue={(e) =>
+                        setSettings({ ...settings, longevityFlag: e })
+                      }
+                      label="Longevity"
+                      size="full"
+                      subtype="toggle"
+                    />
+                  </div>
+                  <div className="text-gray-400 text-nowrap text-sm text-left">
+                    Include Longevity / Life Expectancy calculation.
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
+                title="Reports"
+                subtitle="Choose which pages in which order are included in PDF reports."
+              />
+              <div>
+                <ReportSettings
+                  flags={{
+                    needsFlag: settings.needsFlag,
+                    longevityFlag: settings.longevityFlag,
+                  }}
+                  settings={settings.globalReportSettings}
+                  updateSettings={(globalReportSettings: any) => {
+                    console.log("update", globalReportSettings);
+                    setSettings({
+                      ...settings,
+                      globalReportSettings,
+                    });
+                  }}
+                />
+              </div>
+            </div>
+
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Billing"

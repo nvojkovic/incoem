@@ -7,6 +7,7 @@ interface Person {
   name: string;
   birthday: string;
   id: number;
+  sex?: "Male" | "Female";
 }
 interface IncomeMapData {
   people: Person[];
@@ -127,9 +128,11 @@ interface Client {
   calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  longevityFlag: boolean;
   allInOneCalculator: any[];
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
+  reportSettings: ReportSettings;
 }
 type PrintClient = Client & {
   userdata: UserInfo;
@@ -149,6 +152,7 @@ interface UserInfo {
   subsciptionStatus?: string;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  longevityFlag: boolean;
   logo?: string;
   email: string;
   name?: string;
@@ -158,6 +162,7 @@ interface UserInfo {
   globalLifeExpectancy: number;
   globalPreRetirementTaxRate: number;
   globalPostRetirementTaxRate: number;
+  globalReportSettings: ReportSettings;
 }
 
 interface ScenarioSettings {
@@ -168,6 +173,7 @@ interface ScenarioSettings {
   ssSurvivorAge: (number | null)[];
   inflation: number;
   taxType: "Pre-Tax" | "Post-Tax";
+  longevityPercent: number;
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;
@@ -185,7 +191,6 @@ interface RetirementSpendingSettings {
   decreaseAtDeath: [number, number];
   preTaxRate: number;
   postTaxRate: number;
-  retirementYear: number;
   preSpending: CurrentSpending[];
   postSpending: NewSpending[];
 }
@@ -205,3 +210,42 @@ interface NewSpending {
   increase: YearlyIncrease;
   changeAtDeath: [number, number];
 }
+
+interface CoverPage {
+  id: string;
+  name: "cover";
+  settings: {};
+}
+
+interface IncomesPage {
+  id: string;
+  name: "incomes";
+  settings: {};
+}
+
+interface IncomeChartPage {
+  id: string;
+  name: "income-chart";
+  settings: {};
+}
+
+interface SpendingPage {
+  id: string;
+  name: "spending";
+  settings: {};
+}
+
+interface LongevityPage {
+  id: string;
+  name: "longevity";
+  settings: {};
+}
+
+type ReportPage =
+  | CoverPage
+  | IncomesPage
+  | IncomeChartPage
+  | SpendingPage
+  | LongevityPage;
+
+type ReportSettings = ReportPage[];

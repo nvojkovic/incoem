@@ -25,11 +25,13 @@ const PrintLivePage = () => {
   if (!scenario || !client.userdata) return <div>Loading...</div>;
   scenario.name = "Live";
   return (
-    <Report
-      client={client}
-      scenario={scenario}
-      page={searchParams.get("page")}
-    />
+    <div className="bg-white ">
+      <Report
+        client={client}
+        scenario={scenario}
+        page={JSON.parse(searchParams.get("page") || "{}")}
+      />
+    </div>
   );
 };
 export default PrintLivePage;

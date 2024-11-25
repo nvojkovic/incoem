@@ -1,5 +1,7 @@
 import MapChart from "../MapChart";
+import Composite from "./Composite";
 import Cover from "./Cover";
+import Longevity from "./Longevity";
 import Print from "./Print";
 import Spending from "./Spending";
 
@@ -9,12 +11,15 @@ interface ReportProps {
   page: any;
 }
 const Report = ({ scenario, client, page }: ReportProps) => {
+  console.log(":page", page.name, client);
   if (!client.userdata) return null;
-  if (page == "cover") return <Cover settings={scenario} client={client} />;
-  if (page == "incomes") return <Print scenario={scenario} client={client} />;
-  if (page == "chart")
+  if (page.name == "cover")
+    return <Cover settings={scenario} client={client} />;
+  if (page.name == "incomes")
+    return <Print scenario={scenario} client={client} />;
+  if (page.name == "income-chart")
     return <MapChart settings={scenario} client={client} print />;
-  if (page == "spending")
+  if (page.name == "spending")
     return (
       <Spending
         scenario={scenario}
@@ -22,6 +27,18 @@ const Report = ({ scenario, client, page }: ReportProps) => {
         client={client}
       />
     );
+
+  if (page.name == "composite")
+    return (
+      <Composite
+        spending={client.spending}
+        scenario={scenario}
+        client={client}
+      />
+    );
+
+  if (page.name == "longevity")
+    return <Longevity scenario={scenario} client={client} />;
   return <div></div>;
 };
 

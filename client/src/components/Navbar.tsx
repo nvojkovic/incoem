@@ -1,12 +1,12 @@
 import { Fragment } from "react";
 import Session from "supertokens-web-js/recipe/session";
-import logo from "../assets/logo.png";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUser } from "../useUser";
 import { useInfo } from "../useData";
 import { calculateAge } from "./Info/PersonInfo";
+import { router } from "src/main";
 
 const NavItem = ({
   name,
@@ -29,7 +29,7 @@ const NavItem = ({
 };
 
 const Navbar = ({ active, client }: { active: string; client?: Client }) => {
-  const navigate = useNavigate();
+  const navigate = router.navigate;
   const { user } = useUser();
   const { data } = useInfo();
 
@@ -46,7 +46,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   src={
                     user?.info?.logo
                       ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
-                      : logo
+                      : "/img/logo.png"
                   }
                   className="h-9 mr-2 "
                 />
@@ -67,6 +67,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
             active == "calculator" ||
             active == "map" ||
             active == "basic" ||
+            active == "longevity" ||
             active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
@@ -79,6 +80,13 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   name="Spending"
                   active={active == "spending"}
                   link={`/client/${data.id}/spending`}
+                />
+              )}
+              {data.longevityFlag && (
+                <NavItem
+                  name="Longevity"
+                  active={active == "longevity"}
+                  link={`/client/${data.id}/longevity`}
                 />
               )}
               <NavItem

@@ -1,4 +1,4 @@
-import { formatter, splitDate, yearRange } from "src/utils";
+import { printNumber, splitDate, yearRange } from "src/utils";
 import { calculateSpendingYear } from "./SpendingPage";
 interface SpendingTableProps {
   settings: ScenarioSettings;
@@ -40,8 +40,9 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                           .map((p) => line - splitDate(p.birthday).year)
                           .join("/")}
                       </td>
-                      <td className="px-6 py-1 w-[500px]">
-                        {formatter.format(
+
+                      <td className="px-2 py-1 w-[500px]">
+                        {printNumber(
                           calculateSpendingYear(data, spending, settings, line),
                         )}
                       </td>

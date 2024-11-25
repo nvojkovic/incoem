@@ -91,9 +91,8 @@ const Summary = () => {
       <div className="pb-32">
         <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
           <div
-            className={`flex print:hidden sticky z-[5000] ${
-              fullScreen ? "top-[0px]" : "top-[72px]"
-            } bg-[#f3f4f6]`}
+            className={`flex print:hidden sticky z-[5000] ${fullScreen ? "top-[0px]" : "top-[72px]"
+              } bg-[#f3f4f6]`}
           >
             <DndContext
               sensors={sensors}
@@ -111,7 +110,7 @@ const Summary = () => {
                     active={tab == -1}
                     setActive={() => setTab(-1)}
                     live
-                    store={() => {}}
+                    store={() => { }}
                   />
                   {scenarios.map((sc, i) => (
                     <SortableItem
@@ -138,7 +137,6 @@ const Summary = () => {
               </SortableContext>
             </DndContext>
           </div>
-
           {tab == -1 ? (
             <Live
               fullScreen={fullScreen}

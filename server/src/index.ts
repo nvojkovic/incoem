@@ -35,9 +35,17 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: true,
-    allowedHeaders: ["content-type", ...supertokens.getAllCORSHeaders()],
-    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    origin: process.env.APP_URL,
+    allowedHeaders: [
+      "content-type",
+      ...supertokens.getAllCORSHeaders(),
+      "baggage",
+      "fdi-version",
+      "rid",
+      "sentry-trace",
+      "st-auth-mode",
+    ],
+    methods: ["GET", "POST", "DELETE", "OPTIONS", "PUT"],
     credentials: true,
   }),
 );

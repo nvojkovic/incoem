@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import "./sentry";
@@ -31,6 +30,7 @@ import SpendingPage from "./components/Spending/SpendingPage";
 import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
+import LongevityPage from "./components/Longevity/LongevityPage";
 
 SuperTokens.init({
   appInfo: {
@@ -52,7 +52,7 @@ const A = () => {
   return <div>{a[1]}</div>;
 };
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
@@ -78,6 +78,10 @@ const router = createBrowserRouter([
           {
             path: "calculator/time-value-of-money",
             element: <AllInOneCalculator />,
+          },
+          {
+            path: "longevity",
+            element: <LongevityPage />,
           },
           {
             path: "spending",
@@ -155,9 +159,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <SuperTokensWrapper>
-      <RouterProvider router={router} />
-    </SuperTokensWrapper>
-  </React.StrictMode>,
+  <SuperTokensWrapper>
+    <RouterProvider router={router} />
+  </SuperTokensWrapper>,
 );

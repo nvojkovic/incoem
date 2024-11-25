@@ -23,14 +23,13 @@ function Select({
 }: Props) {
   return (
     <div
-      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
-        vertical ? "items-start" : "lg:items-center"
-      } `}
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
+        } `}
     >
       {label && (
         <label
           htmlFor={label}
-          className={`text-sm text-[#344054] w-36 `}
+          className={`text-sm text-[#344054] w-36 text-left`}
           style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
         >
           {label}
@@ -68,10 +67,9 @@ function Select({
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${
-                          active
-                            ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
-                            : "text-gray-900"
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${active
+                          ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
+                          : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -79,9 +77,8 @@ function Select({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
+                            className={`block truncate ${selected ? "font-medium" : "font-normal"
+                              }`}
                           >
                             {person.name}
                           </span>
