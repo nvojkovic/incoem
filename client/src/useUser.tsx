@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import * as Sentry from "@sentry/react";
-import { useNavigate } from "react-router-dom";
 import { getUser } from "./services/client";
+import { router } from "./main";
 
 interface UserContextType {
   user: User | null;
@@ -16,7 +16,7 @@ export const UserProvider: React.FC<{
   ignoreLogin?: boolean;
 }> = ({ children, ignoreLogin = false }) => {
   const [user, setUser] = useState<User | null>(null);
-  const navigate = useNavigate();
+  const navigate = router.navigate;
 
   const fetchUser = async () => {
     if (ignoreLogin) return setUser({} as any);

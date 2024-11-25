@@ -2,10 +2,11 @@ import { Fragment } from "react";
 import Session from "supertokens-web-js/recipe/session";
 import { Menu, Transition } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUser } from "../useUser";
 import { useInfo } from "../useData";
 import { calculateAge } from "./Info/PersonInfo";
+import { router } from "src/main";
 
 const NavItem = ({
   name,
@@ -28,7 +29,7 @@ const NavItem = ({
 };
 
 const Navbar = ({ active, client }: { active: string; client?: Client }) => {
-  const navigate = useNavigate();
+  const navigate = router.navigate;
   const { user } = useUser();
   const { data } = useInfo();
 

@@ -52,7 +52,7 @@ const A = () => {
   return <div>{a[1]}</div>;
 };
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
