@@ -67,11 +67,11 @@ export const router = createBrowserRouter([
         element: <A />,
       },
       {
+        path: "client",
         element: <ClientContainer />,
         children: [
           {
-            path: "/client/:id",
-            element: <Outlet />,
+            path: ":id/*",
             children: [
               { path: "income", element: <IncomeSection defaultOpen={true} /> },
               {
