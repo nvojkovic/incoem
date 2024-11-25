@@ -189,6 +189,24 @@ const Signup = () => {
                 Log in
               </Link>
             </div>
+            <div className="mt-8 border-t pt-3 border-t-gray-300 text-sm text-[#475467] max-w-[350px] text-center">
+              By continuing, you confirm that you have read our{" "}
+              <Link
+                to="https://app.getterms.io/view/h0II6/privacy/en-us"
+                className="text-[#FF6C47] font-semibold"
+                target="_blank"
+              >
+                Privacy Policy{" "}
+              </Link>{" "}
+              and{" "}
+              <Link
+                target="_blank"
+                to="https://app.getterms.io/view/h0II6/tos/en-us"
+                className="text-[#FF6C47] font-semibold"
+              >
+                Terms and Conditions
+              </Link>
+            </div>
           </div>
         </div>
       </div>

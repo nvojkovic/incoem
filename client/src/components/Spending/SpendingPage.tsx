@@ -14,6 +14,8 @@ import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
 import MainChart from "../Charts/MainChart";
+import Confirm from "../Confirm";
+import { useState } from "react";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -227,6 +229,9 @@ const SpendingPage = () => {
     ],
   );
 
+  const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
+  const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
+
   return (
     <Layout page="spending">
       <div className="flex flex-col gap-8">
@@ -384,9 +389,28 @@ const SpendingPage = () => {
                           <DocumentDuplicateIcon className="h-5 text-black" />
                         </div>
                       </Button>
+
+                      <Confirm
+                        isOpen={preDeleteOpen === index}
+                        onClose={() => setPreDeleteOpen(-1)}
+                        onConfirm={(_: any) => {
+                          setPreDeleteOpen(-1);
+                          setField("preSpending")(
+                            spending.preSpending.filter(
+                              (_, ind) => ind !== index,
+                            ),
+                          );
+                        }}
+                      >
+                        <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                        <div className="mb-5">
+                          Are you sure you want to delete this spending?
+                        </div>
+                      </Confirm>
                       <Button
                         type="secondary"
                         onClick={() => {
+                          return setPreDeleteOpen(index);
                           if (
                             confirm(
                               "Are you sure you want to delete this spending?",
@@ -571,9 +595,28 @@ const SpendingPage = () => {
                         <DocumentDuplicateIcon className="h-5 text-black" />
                       </div>
                     </Button>
+
+                    <Confirm
+                      isOpen={postDeleteOpen === index}
+                      onClose={() => setPostDeleteOpen(-1)}
+                      onConfirm={(_: any) => {
+                        setPostDeleteOpen(-1);
+                        setField("postSpending")(
+                          spending.postSpending.filter(
+                            (_, ind) => ind !== index,
+                          ),
+                        );
+                      }}
+                    >
+                      <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+                      <div className="mb-5">
+                        Are you sure you want to delete this spending?
+                      </div>
+                    </Confirm>
                     <Button
                       type="secondary"
                       onClick={() => {
+                        return setPostDeleteOpen(index);
                         if (
                           confirm(
                             "Are you sure you want to delete this spending?",

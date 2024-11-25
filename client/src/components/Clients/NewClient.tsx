@@ -208,42 +208,6 @@ const NewClient = () => {
           }
           vertical
         />
-        <Input
-          subtype="percent"
-          label="Pre-Tax Rate (%)"
-          value={client.spending.preTaxRate}
-          setValue={(preTaxRate) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, preTaxRate },
-            }))
-          }
-          vertical
-        />
-        <Input
-          subtype="percent"
-          label="Post-Tax Rate (%)"
-          value={client.spending.postTaxRate}
-          setValue={(postTaxRate) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, postTaxRate },
-            }))
-          }
-          vertical
-        />
-        <Input
-          subtype="number"
-          label="Retirement Year"
-          value={client.spending.retirementYear}
-          setValue={(retirementYear) =>
-            setClient((prev) => ({
-              ...prev,
-              spending: { ...prev.spending, retirementYear },
-            }))
-          }
-          vertical
-        />
         {client.data.people.map((item, i) => (
           <Input
             subtype="number"
@@ -265,6 +229,42 @@ const NewClient = () => {
             vertical
           />
         ))}
+        <Input
+          subtype="percent"
+          label="Pre-Retirement Tax Rate (%)"
+          value={client.spending.preTaxRate}
+          setValue={(preTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, preTaxRate },
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="percent"
+          label="Post-Retirement Tax Rate (%)"
+          value={client.spending.postTaxRate}
+          setValue={(postTaxRate) =>
+            setClient((prev) => ({
+              ...prev,
+              spending: { ...prev.spending, postTaxRate },
+            }))
+          }
+          vertical
+        />
+        <Input
+          subtype="number"
+          label="Retirement Year"
+          value={client.liveSettings.retirementYear}
+          setValue={(retirementYear) =>
+            setClient((prev) => ({
+              ...prev,
+              liveSettings: { ...prev.liveSettings, retirementYear },
+            }))
+          }
+          vertical
+        />
       </div>
       <div className="border-b text-left font-semibold pb-1">
         Extra Features

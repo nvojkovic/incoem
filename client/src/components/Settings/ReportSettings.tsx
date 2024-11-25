@@ -60,6 +60,18 @@ const Page = ({ setting, setSetting, index }: any) => {
     </div>
   );
 };
+// <div className="w-[320px] h-[200px]">
+//         <iframe
+//           id="printFrame"
+//           style={{
+//             width: "500px",
+//             height: "380px",
+//           }}
+//           src="http://dev.incomemapper.com/print-live/6/?page={%22name%22:%22longevity%22}"
+//           className="frame wrap"
+//         ></iframe>
+//       </div>
+//
 
 const ReportSettings = ({ settings, updateSettings }: Props) => {
   const handleDragEnd = (event: any) => {
@@ -118,3 +130,5 @@ const ReportSettings = ({ settings, updateSettings }: Props) => {
 };
 
 export default ReportSettings;
+
+// style="width: 1200px; height: 800px; background-color: white"

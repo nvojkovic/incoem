@@ -2,6 +2,7 @@ import { formatter, printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
 import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
+import { jointTable, makeTable } from "../Longevity/calculate";
 
 const Composite = ({
   scenario,
@@ -13,17 +14,23 @@ const Composite = ({
   client: PrintClient;
 }) => {
   const currentYear = new Date().getFullYear();
-  const height = Math.floor(scenario.maxYearsShown / 2);
+  const height = 100; //Math.floor(scenario.maxYearsShown / 2);
+
+  const tables = scenario.data.people.map((person) => makeTable(person));
+  const joint =
+    scenario.data.people.length > 1
+      ? jointTable(scenario.data.people[0], scenario.data.people[1])
+      : [];
   return (
     <div className="mx-10 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto mb-5">Composite</div>
-      <div className="flex justify-between">
+      <div className="flex justify-between flex-wrap">
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
             currentYear + scenario.maxYearsShown >
             currentYear + tableInd * height && (
-              <div>
+              <div className="w-full">
                 <table className="border bg-white !text-sm w-full">
                   <thead
                     className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
@@ -31,10 +38,27 @@ const Composite = ({
                     <tr>
                       <th className="px-2 py-3">Year</th>
                       <th className="px-2 py-3">Age</th>
+
+                      {client.longevityFlag &&
+                        scenario.data.people.map((person) => (
+                          <th className="px-2 py-3">{person.name} alive</th>
+                        ))}
+                      {client.longevityFlag &&
+                        scenario.data.people.length > 1 && (
+                          <th className="px-2 py-3">At least one alive</th>
+                        )}
                       <th className="px-2 py-3">Income</th>
-                      <th className="px-2 py-3">Spending</th>
-                      <th className="px-2 py-3">Gap</th>
-                      <th className="px-2 py-3">% of Income Stable</th>
+
+                      {client.needsFlag && (
+                        <th className="px-2 py-3">Spending</th>
+                      )}
+                      {client.needsFlag && <th className="px-2 py-3">Gap</th>}
+                      {client.stabilityRatioFlag && (
+                        <th className="px-2 py-3">Income Stability</th>
+                      )}
+                      {client.stabilityRatioFlag && client.needsFlag && (
+                        <th className="px-2 py-3">Spending Stability</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="print:text-sm">
@@ -82,6 +106,9 @@ const Composite = ({
                       const stabilityRatio = Math.round(
                         (stableIncome / income) * 100,
                       );
+                      const spendingStability = Math.round(
+                        (stableIncome / needs) * 100,
+                      );
                       return (
                         <tr
                           className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
@@ -93,18 +120,48 @@ const Composite = ({
                               .join("/")}
                           </td>
 
+                          {client.longevityFlag &&
+                            scenario.data.people.map((_, i) => (
+                              <td className="px-2 py-[6px]">
+                                {Math.round(
+                                  (tables[i].table.find(
+                                    (entry) => entry.year === line,
+                                  )?.probability || 0) * 1000,
+                                ) / 10}
+                                %
+                              </td>
+                            ))}
+                          {client.longevityFlag &&
+                            scenario.data.people.length > 1 && (
+                              <td className="px-2 py-[6px]">
+                                {Math.round(
+                                  (joint.find((entry) => entry.year === line)
+                                    ?.probability || 0) * 1000,
+                                ) / 10}
+                                %
+                              </td>
+                            )}
                           <td className="px-2 py-1">
                             {formatter.format(income)}
                           </td>
-                          <td className="px-2 py-1">
-                            {formatter.format(needs)}
-                          </td>
-                          <td
-                            className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}`}
-                          >
-                            {printNumber(gap)}
-                          </td>
-                          <td className="px-2 py-1">{stabilityRatio}%</td>
+                          {client.needsFlag && (
+                            <td className="px-2 py-1">
+                              {formatter.format(needs)}
+                            </td>
+                          )}
+                          {client.needsFlag && (
+                            <td
+                              className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}`}
+                            >
+                              {printNumber(gap)}
+                            </td>
+                          )}
+                          {client.stabilityRatioFlag && (
+                            <td className="px-2 py-1">{stabilityRatio}%</td>
+                          )}
+                          {client.stabilityRatioFlag && client.needsFlag && (
+                            <td className="px-2 py-1">{spendingStability}%</td>
+                          )}
                         </tr>
                       );
                     })}

@@ -191,7 +191,6 @@ interface RetirementSpendingSettings {
   decreaseAtDeath: [number, number];
   preTaxRate: number;
   postTaxRate: number;
-  retirementYear: number;
   preSpending: CurrentSpending[];
   postSpending: NewSpending[];
 }

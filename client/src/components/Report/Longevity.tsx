@@ -70,9 +70,9 @@ const Longevity = ({
           <LongevityChart people={people} />
           <div>
             <div className="flex gap-3 justify-center  w-full">
-              <LongevityScenarioCard people={people} percent={10} />
-              <LongevityScenarioCard people={people} percent={25} />
               <LongevityScenarioCard people={people} percent={50} />
+              <LongevityScenarioCard people={people} percent={25} />
+              <LongevityScenarioCard people={people} percent={10} />
             </div>
           </div>
         </div>

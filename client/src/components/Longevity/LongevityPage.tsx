@@ -14,6 +14,7 @@ import LongevityChart from "./LongevityChart";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { Tooltip } from "flowbite-react";
+import { birthday } from "src/calculator/utils";
 
 export const LongevityScenarioCard = ({
   people,
@@ -174,12 +175,23 @@ const LongevityPage = () => {
                     Joint {longevityPercent}% Life Expectancy
                   </div>
                   <div className="font-semibold text-lg mt-[2px] flex gap-1 items-center">
-                    {
-                      findYearForProbability(
+                    {(() => {
+                      const year = findYearForProbability(
                         jointTable(people[0], people[1]),
                         longevityPercent,
-                      ).year
-                    }
+                      ).year;
+                      const ages = people.map(
+                        (person) => year - birthday(person).birthYear,
+                      );
+                      return (
+                        <>
+                          {year}{" "}
+                          <span className="text-gray-500 text-[14px]">
+                            {ages.join("/")}
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               ) : null}
@@ -203,9 +215,9 @@ const LongevityPage = () => {
           <LongevityChart people={people} />
 
           <div className="flex gap-3 justify-center my-9 w-full">
-            <LongevityScenarioCard people={people} percent={10} />
-            <LongevityScenarioCard people={people} percent={25} />
             <LongevityScenarioCard people={people} percent={50} />
+            <LongevityScenarioCard people={people} percent={25} />
+            <LongevityScenarioCard people={people} percent={10} />
           </div>
           <table className="text-sm w-full bg-white shadow-lg">
             <thead

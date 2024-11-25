@@ -44,11 +44,19 @@ export const getPrintClient = async (req: Request, res: Response) => {
   res.json({ ...client, userdata });
 };
 
-export const getPrintClientPdf = async (req: Request, res: Response) => {
-  const pages = (
-    await prisma.client.findFirst({ where: { id: parseInt(req.params.id) } })
-  )?.reportSettings;
-  console.log(pages);
+const makeReport = async (id: number, page: string, fileName: string) => {
+  const client = await prisma.client.findFirst({ where: { id } });
+  let pages = client?.reportSettings as any;
+  pages = pages.filter((p: any) => {
+    if (!client?.longevityFlag && p.name === "longevity") return false;
+    if (!client?.needsFlag && p.name === "spending") return false;
+    return true;
+  });
+  console.log(
+    "printing",
+    pages.map((item: any) => item.name),
+  );
+
   const url =
     process.env.PRINTER_URL +
     "/?pages=" +
@@ -56,37 +64,26 @@ export const getPrintClientPdf = async (req: Request, res: Response) => {
     "&url=" +
     process.env.APP_URL +
     // "http://im-client:5173" +
-    "/print/" +
-    req.params.id +
-    "/" +
-    req.params.scenario;
+    page;
   console.log("Printing url:", url);
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
-  const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
-  fs.writeFileSync(file, Buffer.from(data));
-  return res.json({ file });
+  fs.writeFileSync(fileName, Buffer.from(data));
 };
 
 export const getPrintClientPdfLive = async (req: Request, res: Response) => {
-  const pages = (
-    await prisma.client.findFirst({ where: { id: parseInt(req.params.id) } })
-  )?.reportSettings;
-  console.log(pages);
-  const url =
-    process.env.PRINTER_URL +
-    "/?pages=" +
-    JSON.stringify(pages) +
-    "&url=" +
-    process.env.APP_URL +
-    // "http://im-client:5173" +
-    "/print-live/" +
-    req.params.id;
-  console.log("Printing url:", url);
-  const pdf = await fetch(url);
-  const data = await pdf.arrayBuffer();
-  const file = `/storage/${req.params.id}-live.pdf`;
-  fs.writeFileSync(file, Buffer.from(data));
+  const id = parseInt(req.params.id);
+  const page = "/print-live/" + req.params.id;
+  const file = `/storage/${id}-live.pdf`;
+  await makeReport(id, page, file);
+  return res.json({ file });
+};
+
+export const getPrintClientPdf = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const page = "/print/" + req.params.id + "/" + req.params.scenario;
+  const file = `/storage/${req.params.id}-${req.params.scenario}.pdf`;
+  await makeReport(id, page, file);
   return res.json({ file });
 };
 

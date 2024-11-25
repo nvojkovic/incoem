@@ -121,9 +121,6 @@ const ResultTable = ({
         (currentYear) => ({
           year: currentYear,
           selectedColumn,
-          // age: settings.data.people
-          //   .map((p) => currentYear - splitDate(p.birthday).year)
-          //   .join("/"),
           age: (
             <div className="flex gap-2">
               <div className="w-20 relative">
@@ -162,9 +159,10 @@ const ResultTable = ({
                   })()}
                   theme={{ target: "" }}
                   placement="right"
+                  hidden={!client.longevityFlag}
                   style="light"
                   arrow={false}
-                  className={`border-2 border-main-orange bg-white print:hidden ${client.stabilityRatioFlag || client.needsFlag ? "" : "hidden"}`}
+                  className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
                 >
                   {settings.data.people
                     .map((p) => currentYear - splitDate(p.birthday).year)

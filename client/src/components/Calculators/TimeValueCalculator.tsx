@@ -173,17 +173,6 @@ const TimeValueCalculator: React.FC<any> = ({
         handleInputChange("calculatorType", option.id as CalculatorType)
       }
     />,
-    data.calculatorType !== "Future Value" && (
-      <Input
-        size="sm"
-        width="!w-44"
-        labelLength={110}
-        label="Future Value"
-        value={data.futureValue}
-        setValue={(value) => handleInputChange("futureValue", Number(value))}
-        subtype="money"
-      />
-    ),
     data.calculatorType !== "Present Value" && (
       <Input
         size="sm"
@@ -195,6 +184,18 @@ const TimeValueCalculator: React.FC<any> = ({
         subtype="money"
       />
     ),
+    data.calculatorType !== "Future Value" && (
+      <Input
+        size="sm"
+        width="!w-44"
+        labelLength={110}
+        label="Future Value"
+        value={data.futureValue}
+        setValue={(value) => handleInputChange("futureValue", Number(value))}
+        subtype="money"
+      />
+    ),
+
     data.calculatorType !== "Interest Rate" && (
       <Input
         size="sm"
