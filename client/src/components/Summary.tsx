@@ -137,7 +137,6 @@ const Summary = () => {
               </SortableContext>
             </DndContext>
           </div>
-
           {tab == -1 ? (
             <Live
               fullScreen={fullScreen}

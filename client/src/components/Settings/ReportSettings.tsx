@@ -17,6 +17,10 @@ import Toggle from "../Inputs/Toggle";
 interface Props {
   settings: ReportSettings;
   updateSettings: any;
+  flags: {
+    needsFlag: boolean;
+    longevityFlag: boolean;
+  };
 }
 
 const names: any = {
@@ -73,7 +77,7 @@ const Page = ({ setting, setSetting, index }: any) => {
 //       </div>
 //
 
-const ReportSettings = ({ settings, updateSettings }: Props) => {
+const ReportSettings = ({ flags, settings, updateSettings }: Props) => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
     const oldIndex = settings.findIndex((s) => s.id === active.id);
@@ -95,6 +99,12 @@ const ReportSettings = ({ settings, updateSettings }: Props) => {
   );
 
   console.log("settings", settings);
+  const filtered = settings.filter(
+    (s) =>
+      !(s.name === "longevity" && !flags.longevityFlag) &&
+      !(s.name === "spending" && !flags.needsFlag),
+  );
+  console.log(filtered);
   return (
     <div className="grid gap-6 grid-cols-4 w-full">
       <DndContext

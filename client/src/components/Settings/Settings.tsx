@@ -113,16 +113,7 @@ const Settings = () => {
                 user={user}
               />
             </div>
-            <div className="flex gap-5 border-b border-black pb-7">
-              <SectionHeader
-                title="Global Assumptions"
-                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
-              />
-              <GlobalDefaultsSection
-                settings={settings}
-                setSettings={setSettings}
-              />
-            </div>
+
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Appearance"
@@ -213,12 +204,22 @@ const Settings = () => {
             </div>
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
+                title="Global Assumptions"
+                subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
+              />
+              <GlobalDefaultsSection
+                settings={settings}
+                setSettings={setSettings}
+              />
+            </div>
+            <div className="flex gap-5 border-b border-black pb-7">
+              <SectionHeader
                 title="Extra Features"
                 subtitle="Set the default for new clients created. This default can be
                 overridden (turned off/on) for each individual client in client
                 settings page."
               />
-              <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col gap-3 -full">
                 <div className="flex gap-5 items-center w-full">
                   <div>
                     <Input
@@ -280,16 +281,22 @@ const Settings = () => {
                 title="Reports"
                 subtitle="Choose which pages in which order are included in PDF reports."
               />
-              <ReportSettings
-                settings={settings.globalReportSettings}
-                updateSettings={(globalReportSettings: any) => {
-                  console.log("update", globalReportSettings);
-                  setSettings({
-                    ...settings,
-                    globalReportSettings,
-                  });
-                }}
-              />
+              <div>
+                <ReportSettings
+                  flags={{
+                    needsFlag: settings.needsFlag,
+                    longevityFlag: settings.longevityFlag,
+                  }}
+                  settings={settings.globalReportSettings}
+                  updateSettings={(globalReportSettings: any) => {
+                    console.log("update", globalReportSettings);
+                    setSettings({
+                      ...settings,
+                      globalReportSettings,
+                    });
+                  }}
+                />
+              </div>
             </div>
 
             <div className="flex gap-5 border-b border-black pb-7">

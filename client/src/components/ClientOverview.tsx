@@ -205,6 +205,10 @@ const ClientOverview = () => {
           <div className="font-semibold text-2xl mb-5">Report Settings</div>
           <div className="p-2 rounded-lg ">
             <ReportSettings
+              flags={{
+                needsFlag: data.needsFlag,
+                longevityFlag: data.longevityFlag,
+              }}
               settings={data.reportSettings}
               updateSettings={setField("reportSettings")}
             />

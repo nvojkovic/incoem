@@ -79,6 +79,8 @@ const LongevityPage = () => {
   const people = client.data.people;
   if (!people) return null;
 
+  const [updating, setUpdating] = useState(false);
+
   const tables = people.map(makeTable);
   const joint = people.length > 1 ? jointTable(people[0], people[1]) : [];
   const longevityPercent =
@@ -113,10 +115,12 @@ const LongevityPage = () => {
     );
 
   const updateDeathFields = () => {
+    setUpdating(true);
     const years = client.data.people.map(
       (person) =>
         findAgeForProbability(makeTable(person).table, longevityPercent).age,
     );
+    setTimeout(() => setUpdating(false), 1500);
     setField("liveSettings")({
       ...client.liveSettings,
       deathYears: years,
@@ -131,7 +135,7 @@ const LongevityPage = () => {
         <div className="flex gap-3 items-center mb-8 w-full justify-center">
           <h1 className="text-3xl font-bold">Longevity</h1>
         </div>
-        <div className="flex gap-8 justify-center w-full items-center mb-9">
+        <div className="flex gap-8 justify-center w-full items-center mb-9 relative">
           <div>
             <Input
               vertical
@@ -209,6 +213,11 @@ const LongevityPage = () => {
                 </div>
               </Button>{" "}
             </Tooltip>
+          </div>
+          <div
+            className={`text-sm absolute right-[-50px] bottom-[-6px] text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
+          >
+            Mortality assumptions updated!
           </div>
         </div>
         <div>
