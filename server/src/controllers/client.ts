@@ -20,13 +20,18 @@ export const allClients = async (req: SessionRequest, res: Response) => {
 export const getClient = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
   let id = parseInt(req.params.id);
-  const client = await prisma.client.findFirst({
-    where: {
-      userId,
-      id,
-    },
-  });
-  res.json(client);
+  try {
+    const client = await prisma.client.findFirst({
+      where: {
+        userId,
+        id,
+      },
+    });
+    return res.json(client);
+  } catch (e) {
+    console.log(e);
+    return res.json(null);
+  }
 };
 
 export const getPrintClient = async (req: Request, res: Response) => {

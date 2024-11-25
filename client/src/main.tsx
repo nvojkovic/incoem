@@ -31,6 +31,7 @@ import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
 import LongevityPage from "./components/Longevity/LongevityPage";
+import { getClient } from "./services/client";
 
 SuperTokens.init({
   appInfo: {
@@ -67,42 +68,46 @@ export const router = createBrowserRouter([
         element: <A />,
       },
       {
-        path: "client",
+        path: "client/:id",
         element: <ClientContainer />,
+        loader: async ({ params }) => {
+          try {
+            console.log("routt", params, params.id);
+            const response = await getClient(params.id);
+            return response.json();
+          } catch (e) {
+            return {};
+          }
+        },
         children: [
+          { path: "income", element: <IncomeSection defaultOpen={true} /> },
           {
-            path: ":id/*",
-            children: [
-              { path: "income", element: <IncomeSection defaultOpen={true} /> },
-              {
-                path: "calculator/versatile",
-                element: <VersatileCalculator />,
-              },
-              {
-                path: "calculator/time-value-of-money",
-                element: <AllInOneCalculator />,
-              },
-              {
-                path: "longevity",
-                element: <LongevityPage />,
-              },
-              {
-                path: "spending",
-                element: <SpendingPage />,
-              },
-              {
-                path: "map",
-                element: <Summary />,
-              },
-              {
-                path: "basic",
-                element: <ClientOverview />,
-              },
-              {
-                path: "calculator",
-                element: <CalculatorMap />,
-              },
-            ],
+            path: "calculator/versatile",
+            element: <VersatileCalculator />,
+          },
+          {
+            path: "calculator/time-value-of-money",
+            element: <AllInOneCalculator />,
+          },
+          {
+            path: "longevity",
+            element: <LongevityPage />,
+          },
+          {
+            path: "spending",
+            element: <SpendingPage />,
+          },
+          {
+            path: "map",
+            element: <Summary />,
+          },
+          {
+            path: "basic",
+            element: <ClientOverview />,
+          },
+          {
+            path: "calculator",
+            element: <CalculatorMap />,
           },
         ],
       },

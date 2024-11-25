@@ -1,41 +1,29 @@
 import "../App.css";
-import { useEffect, useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
-import { getClient } from "../services/client";
+import { Outlet, useLoaderData } from "react-router-dom";
 import { IncomeProvider } from "../useData";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
 
 function ClientContainer() {
-  const { id } = useParams();
+  // const { id } = useParams();
 
-  const fetchData = () => {
-    console.log("fetchData");
-    return getClient(id)
-      .then((data) => data.json())
-      .then((data) => {
-        setData(data);
-        data = { ...data.data, scenarios: data.scenarios };
-      });
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // const fetchData = () => {
+  //   console.log("fetchData");
+  //   return getClient(id)
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       setData(data);
+  //       data = { ...data.data, scenarios: data.scenarios };
+  //     });
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const [data, setData] = useState<Client | null>(null);
+  const data = useLoaderData() as any;
 
-  // const [allInOneData, setAllInOneData] = useState([
-  //   {
-  //     futureValue: 0,
-  //     presentValue: 0,
-  //     interestRate: 0,
-  //     annualPayment: 0,
-  //     timePeriod: 0,
-  //     calculatorType: "Future Value",
-  //     timing: "End of Year",
-  //     compounding: "Annual",
-  //   },
-  // ]);
+  // const [data, setData] = useState<Client | null>(null);
+
   if (!data)
     return (
       <Layout page="">
