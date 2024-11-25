@@ -58,12 +58,12 @@ const Composite = ({
                       )}
                       {client.needsFlag && <th className="px-2 py-3">Gap</th>}
                       {client.stabilityRatioFlag && (
-                        <th className="px-2 py-3">
+                        <th className="px-2 py-3 text-center">
                           Income <br /> Stability
                         </th>
                       )}
                       {client.stabilityRatioFlag && client.needsFlag && (
-                        <th className="px-2 py-3">
+                        <th className="px-2 py-3 text-center">
                           Spending <br /> Stability
                         </th>
                       )}
@@ -161,10 +161,14 @@ const Composite = ({
                             </td>
                           )}
                           {client.stabilityRatioFlag && (
-                            <td className="px-2 py-1">{stabilityRatio}%</td>
+                            <td className="px-2 py-1 text-center">
+                              {stabilityRatio}%
+                            </td>
                           )}
                           {client.stabilityRatioFlag && client.needsFlag && (
-                            <td className="px-2 py-1">{spendingStability}%</td>
+                            <td className="px-2 py-1 text-center">
+                              {spendingStability}%
+                            </td>
                           )}
                         </tr>
                       );
