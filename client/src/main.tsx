@@ -72,15 +72,6 @@ export const router = createBrowserRouter([
       {
         path: "client/:id",
         element: <ClientContainer />,
-        loader: async ({ params }) => {
-          try {
-            console.log("routt", params, params.id);
-            const response = await getClient(params.id);
-            return response.json();
-          } catch (e) {
-            return {};
-          }
-        },
         children: [
           { path: "income", element: <IncomeSection defaultOpen={true} /> },
           {
