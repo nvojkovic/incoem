@@ -3,6 +3,7 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import { IncomeProvider } from "../useData";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
+import { useState } from "react";
 
 function ClientContainer() {
   // const { id } = useParams();
@@ -20,9 +21,11 @@ function ClientContainer() {
   //   fetchData();
   // }, []);
 
-  const data = useLoaderData() as any;
-
   // const [data, setData] = useState<Client | null>(null);
+  const loaderData = useLoaderData(); // Get initial data
+  const [data, setData] = useState(loaderData as Client);
+
+  // Allow IncomeProvider to update the client container's data
 
   if (!data)
     return (
@@ -32,7 +35,7 @@ function ClientContainer() {
     );
 
   return (
-    <IncomeProvider initialData={data}>
+    <IncomeProvider data={data} setLocal={setData}>
       <Outlet />
     </IncomeProvider>
   );

@@ -30,19 +30,21 @@ const debounce = (callback: Function, wait: number) => {
 const updateRemote = debounce(updateData, 500);
 
 interface IncomeProviderProps {
-  initialData: Client;
+  data: Client;
+  setLocal: React.Dispatch<React.SetStateAction<Client>>;
   children: React.ReactNode;
 }
 
 export const IncomeProvider = ({
-  initialData,
+  data,
+  setLocal,
   children,
 }: IncomeProviderProps) => {
-  const [data, setLocal] = useState<Client>(initialData);
+  // const [data, setLocal] = useState<Client>(initialData);
 
-  useEffect(() => {
-    setLocal(initialData);
-  }, [initialData]);
+  // useEffect(() => {
+  //   setLocal(initialData);
+  // }, [initialData]);
   const setData = (fn: (data: Client) => Client) => {
     console.log("setting data", data);
     setLocal((data) => {
