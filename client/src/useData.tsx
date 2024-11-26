@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useContext } from "react";
 import { updateData, updateScenarios } from "./services/client";
 import { updateAtIndex } from "./utils";
