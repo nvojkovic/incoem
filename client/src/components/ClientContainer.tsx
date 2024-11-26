@@ -1,9 +1,10 @@
 import "../App.css";
-import { Outlet, useLoaderData } from "react-router-dom";
-import { IncomeProvider } from "../useData";
+import { Outlet, useParams } from "react-router-dom";
+import { useInfo } from "../useData";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
-import { useState } from "react";
+import { useEffect } from "react";
+import { getClient } from "src/services/client";
 
 function ClientContainer() {
   // const { id } = useParams();
@@ -22,23 +23,27 @@ function ClientContainer() {
   // }, []);
 
   // const [data, setData] = useState<Client | null>(null);
-  const loaderData = useLoaderData(); // Get initial data
-  const [data, setData] = useState(loaderData as Client);
+  const { data: clientData, setLocal: updateClientData } = useInfo();
+  const { id } = useParams();
+  useEffect(() => {
+    if (!clientData || clientData.id?.toString() !== id) {
+      getClient(id)
+        .then((data) => data.json())
+        .then((data) => {
+          updateClientData(data);
+        });
+    }
+  }, [id]);
 
-  // Allow IncomeProvider to update the client container's data
-
-  if (!data)
+  if (!clientData || clientData.id?.toString() !== id) {
     return (
       <Layout page="">
         <Spinner />
       </Layout>
     );
+  }
 
-  return (
-    <IncomeProvider data={data} setLocal={setData}>
-      <Outlet />
-    </IncomeProvider>
-  );
+  return <Outlet />;
 }
 
 export default ClientContainer;

@@ -63,7 +63,7 @@ const PersonInfo = ({ title, person }: Props) => {
 };
 
 export const PeopleInfo = () => {
-  const { data, setTitle } = useInfo();
+  const { data, setField } = useInfo();
 
   return (
     <div className="flex gap-6">
@@ -78,7 +78,7 @@ export const PeopleInfo = () => {
               value={data.title}
               size="lg"
               subtype="text"
-              setValue={(name) => setTitle(name)}
+              setValue={setField("title")}
             />
           </div>
         </div>

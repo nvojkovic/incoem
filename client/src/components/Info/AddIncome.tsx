@@ -22,6 +22,7 @@ const AddIncome = ({ }: AddIncomeProps) => {
                 className={`${active ? "bg-main-orange text-white" : "text-gray-900"
                   } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                 onClick={() => {
+                  console.log(incomes);
                   addIncome(newIncome(type as IncomeType, person));
                 }}
               >

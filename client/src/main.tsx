@@ -32,6 +32,8 @@ import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
 import LongevityPage from "./components/Longevity/LongevityPage";
 import { getClient } from "./services/client";
+import { IncomeProvider } from "./useData";
+import { useState } from "react";
 
 SuperTokens.init({
   appInfo: {
@@ -111,41 +113,6 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "/client/:id",
-      //   element: <ClientContainer />,
-      //   children: [
-      //     { path: "income", element: <IncomeSection defaultOpen={true} /> },
-      //     {
-      //       path: "calculator/versatile",
-      //       element: <VersatileCalculator />,
-      //     },
-      //     {
-      //       path: "calculator/time-value-of-money",
-      //       element: <AllInOneCalculator />,
-      //     },
-      //     {
-      //       path: "longevity",
-      //       element: <LongevityPage />,
-      //     },
-      //     {
-      //       path: "spending",
-      //       element: <SpendingPage />,
-      //     },
-      //     {
-      //       path: "map",
-      //       element: <Summary />,
-      //     },
-      //     {
-      //       path: "basic",
-      //       element: <ClientOverview />,
-      //     },
-      //     {
-      //       path: "calculator",
-      //       element: <CalculatorMap />,
-      //     },
-      //   ],
-      // },
       {
         path: "/profile",
         element: <Settings />,
@@ -203,8 +170,15 @@ export const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <SuperTokensWrapper>
-    <RouterProvider router={router} />
-  </SuperTokensWrapper>,
-);
+const App = () => {
+  const [clientData, setClientData] = useState<Client | null>({} as any);
+  return (
+    <SuperTokensWrapper>
+      <IncomeProvider data={clientData as any} setLocal={setClientData as any}>
+        <RouterProvider router={router} />
+      </IncomeProvider>
+    </SuperTokensWrapper>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")!).render(<App />);

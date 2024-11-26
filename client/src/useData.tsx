@@ -12,9 +12,9 @@ const IncomeContext = React.createContext({
   storeScenarios: (_: ScenarioSettings[]) => { },
   addScenario: (_: ScenarioSettings) => { },
   setPerson: (_: Person) => { },
-  setTitle: (_: string) => { },
-  setField: (_: string) => (_: any) => { },
+  setField: (_: keyof Client) => (_: any) => { },
   setSpending: (_: RetirementSpendingSettings) => { },
+  setLocal: (() => { }) as any,
 });
 
 const debounce = (callback: Function, wait: number) => {
@@ -55,7 +55,6 @@ export const IncomeProvider = ({
     });
   };
   const updateIncomes = (incomes: Income[]) => {
-    console.log("updating incomes", incomes, data.data.incomes);
     setData((data) => {
       console.log("whtf", incomes);
       return {
@@ -66,13 +65,6 @@ export const IncomeProvider = ({
         },
       };
     });
-  };
-
-  const setTitle = (title: string) => {
-    setData((data) => ({
-      ...data,
-      title,
-    }));
   };
 
   const setField = (key: string) => (val: any) => {
@@ -156,9 +148,9 @@ export const IncomeProvider = ({
     storeScenarios,
     addScenario,
     setPerson,
-    setTitle,
     setSpending,
     setField,
+    setLocal,
   };
 
   return (
