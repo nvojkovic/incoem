@@ -43,17 +43,21 @@ const isColorTooLight = (
 };
 
 const Settings = () => {
-  const { user, fetchUser } = useUser();
+  const { user, fetchUser, updateInfo } = useUser();
   useEffect(() => {
-    setSettings(user?.info || null, false);
+    // setSettings(user?.info || null, false);
   }, [user]);
-  const [settings, setSettingsS] = useState(null as any);
-  const setSettings = (a: any, save = true) => {
-    if (save) setToSave(true);
-    setSettingsS(a);
+  // const [settings, setSettingsS] = useState(null as any);
+  // const setSettings = (a: any, save = true) => {
+  //   if (save) setToSave(true);
+  //   setSettingsS(a);
+  // };
+  //
+  const settings = user?.info;
+
+  const setSettings = (settings: any) => {
+    updateInfo(settings);
   };
-  const [toSave, setToSave] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [tooLight, setTooLight] = useState(false);
   const ref = useRef(null as any);
   const upload = async (e: any) => {
@@ -80,24 +84,6 @@ const Settings = () => {
       </Alert>
       <div className="sticky top-[70px] font-semibold text-[30px] flex justify-between px-10 bg-[#f3f4f6] z-50 py-5">
         <div>Settings</div>
-        <div>
-          {toSave && (
-            <div className="w-64">
-              <Button
-                type="primary"
-                onClick={async () => {
-                  setLoading(true);
-                  await updateSettings(settings);
-                  await fetchUser();
-                  setLoading(false);
-                  setToSave(false);
-                }}
-              >
-                {loading ? "Saving..." : "Save changes"}
-              </Button>
-            </div>
-          )}
-        </div>
       </div>
       {settings ? (
         <div className="mt-6 max-w-[1480px] m-auto mb-32 px-10">
@@ -108,7 +94,7 @@ const Settings = () => {
                 subtitle="Advisor information will appear on the printed pdf."
               />
               <AdvisorSection
-                settings={settings}
+                settings={settings as any}
                 setSettings={setSettings}
                 user={user}
               />
@@ -208,7 +194,7 @@ const Settings = () => {
                 subtitle="Prefill assumptions for new clients created. These defaults can be changed for each individual client."
               />
               <GlobalDefaultsSection
-                settings={settings}
+                settings={settings as any}
                 setSettings={setSettings}
               />
             </div>

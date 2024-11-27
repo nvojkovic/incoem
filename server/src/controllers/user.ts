@@ -9,8 +9,11 @@ const prisma = new PrismaClient();
 
 export const updateUser = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
-  await prisma.userInfo.update({ data: req.body, where: { id: userId } });
-  return res.json({});
+  const user = await prisma.userInfo.update({
+    data: req.body,
+    where: { id: userId },
+  });
+  return res.json(user);
 };
 
 export const getUser = async (req: SessionRequest, res: Response) => {

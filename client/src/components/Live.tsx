@@ -2,42 +2,29 @@ import Input from "./Inputs/Input";
 import save from "../assets/save.png";
 import WhoDies from "./WhoDies";
 import { updateAtIndex } from "../utils";
-import ResultTable from "./IncomeTable/ResultTable";
 import Button from "./Inputs/Button";
 import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
   PrinterIcon,
 } from "@heroicons/react/24/outline";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ModalInput from "./Inputs/ModalInput";
 import { Spinner } from "flowbite-react";
 import { MultiToggle } from "./Spending/SpendingPage";
-import MapChart from "./MapChart";
 import { useInfo } from "src/useData";
+import { useFullscreen } from "src/hooks/useFullScreen";
 const Live = ({
-  fullScreen,
-  selectedYear,
-  setSelectedYear,
-  selectedColumn,
-  setSelectedColumn,
-  changeFullScreen,
   client,
   spending,
 }: {
-  fullScreen: boolean;
-  selectedYear: number;
-  setSelectedYear: any;
-  selectedColumn: SelectedColumn;
-  setSelectedColumn: any;
-  changeFullScreen: any;
   client: Client;
   spending?: RetirementSpendingSettings;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
-  const inputRef = useRef(null as any);
 
   const { data: initial, setField, storeScenarios } = useInfo();
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
   const settings = {
     ...initial.liveSettings,
     data: initial.data,
@@ -67,9 +54,11 @@ const Live = ({
   };
 
   return (
-    <div className="rounded-xl border-[#EAECF0] border print:border-0">
+    <div
+      className={`rounded-xl z-[500] border-[#EAECF0] border print:border-0 sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} `}
+    >
       <div
-        className={`flex items-center h-32 sticky ${fullScreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
+        className={`flex items-center h-32 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
       >
         <div className="flex justify-between items-end mb-5 z-0 px-4 w-full">
           <div className="flex items-start mt-3 gap-10 ">
@@ -147,7 +136,9 @@ const Live = ({
                   label="Years"
                   tooltip="The maximum number of years shown in the chart"
                   subtype="number"
+                  invalid={settings.maxYearsShown < 0}
                   size="xs"
+                  errorMessage="Years shown must be positive"
                   vertical
                   value={settings.maxYearsShown?.toString()}
                   setValue={(e) =>
@@ -167,7 +158,6 @@ const Live = ({
               </div>
               <div className="">
                 <Input
-                  ref={inputRef}
                   onFocus={(event: any) => {
                     const input = event.target;
                     setTimeout(() => {
@@ -240,10 +230,10 @@ const Live = ({
               </ModalInput>
             </div>
             <div>
-              <Button type="secondary" onClick={changeFullScreen}>
+              <Button type="secondary" onClick={toggleFullscreen}>
                 <div className="flex gap-3">
                   <div className="flex items-center">
-                    {fullScreen ? (
+                    {isFullscreen ? (
                       <ArrowsPointingInIcon className="h-6 w-6" />
                     ) : (
                       <ArrowsPointingOutIcon className="h-6 w-6" />
@@ -263,20 +253,6 @@ const Live = ({
           </div>
         </div>
       </div>
-      <ResultTable
-        client={client}
-        changeFullScreen={changeFullScreen}
-        settings={settings}
-        removeScenario={null}
-        fullScreen={fullScreen}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-        selectedColumn={selectedColumn}
-        setSelectedColumn={setSelectedColumn}
-        setSettings={setSettings}
-        id={-1}
-      />
-      <MapChart settings={settings} client={client} />
     </div>
   );
 };

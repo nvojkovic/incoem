@@ -70,6 +70,7 @@ const DraggableTableHeader = ({
             clearTimeout(timer);
             setOpenModal(data.index);
           }
+          console.log("asdas ");
         }}
         {...attributes}
         {...listeners}

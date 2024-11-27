@@ -1,5 +1,17 @@
 interface SelectedColumn {
-  type: "year" | "age" | "income" | "total" | "none";
+  type:
+  | "year"
+  | "age"
+  | "income"
+  | "total"
+  | "none"
+  | "spending"
+  | "gap"
+  | "income-stability"
+  | "spending-stability"
+  | "0-alive"
+  | "1-alive"
+  | "joint-alive";
   id: number;
 }
 

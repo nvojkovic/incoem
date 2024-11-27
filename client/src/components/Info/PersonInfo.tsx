@@ -3,7 +3,6 @@ import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 
 interface Props {
-  title: string;
   subtitle: string;
   person: Person;
 }
@@ -14,49 +13,50 @@ export function calculateAge(birthday: Date) {
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-const PersonInfo = ({ title, person }: Props) => {
+export const PersonInfo = ({ person }: Props) => {
   const { setPerson } = useInfo();
   return (
-    <div className="shadow-md w-full bg-white p-6 rounded-lg">
-      <div className="">
-        <div className="flex flex-col pb-6 border-b border-[#EAECF0] ">
-          <div className="font-semibold text-lg">{title}</div>
-        </div>
-        <div className="flex flex-col gap-4 mt-6">
-          <Input
-            label="First Name"
-            value={person.name}
-            size="lg"
-            subtype="text"
-            setValue={(name) => setPerson({ ...person, name })}
-          />
-          <Input
-            label="Birthday"
-            subtype="date"
-            size="lg"
-            value={person.birthday}
-            setValue={(birthday) => setPerson({ ...person, birthday })}
-          />
-          <Select
-            label="Sex"
-            width="!w-[200px]"
-            labelLength={145}
-            options={[
-              { id: "Male", name: "Male" },
-              { id: "Female", name: "Female" },
-            ]}
-            selected={{ id: person.sex, name: person.sex }}
-            setSelected={(option) => setPerson({ ...person, sex: option.id })}
-          />
-          <Input
-            label="Age"
-            subtype="text"
-            size="lg"
-            value={calculateAge(new Date(person.birthday))}
-            setValue={(_) => { }}
-            disabled
-          />
-        </div>
+    <div className="flex flex-col pb-6 border-b border-[#EAECF0] ">
+      <div className="flex flex-col gap-4 mt-6">
+        <Input
+          label="First Name"
+          width="!w-40"
+          labelLength={100}
+          value={person.name}
+          size="lg"
+          subtype="text"
+          setValue={(name) => setPerson({ ...person, name })}
+        />
+        <Input
+          label="Birthday"
+          subtype="date"
+          width="!w-40"
+          labelLength={100}
+          size="lg"
+          value={person.birthday}
+          setValue={(birthday) => setPerson({ ...person, birthday })}
+        />
+        <Select
+          label="Sex"
+          width="!w-40"
+          labelLength={100}
+          options={[
+            { id: "Male", name: "Male" },
+            { id: "Female", name: "Female" },
+          ]}
+          selected={{ id: person.sex, name: person.sex }}
+          setSelected={(option) => setPerson({ ...person, sex: option.id })}
+        />
+        <Input
+          label="Age"
+          subtype="text"
+          size="lg"
+          labelLength={100}
+          width="!w-40"
+          value={calculateAge(new Date(person.birthday))}
+          setValue={(_) => { }}
+          disabled
+        />
       </div>
     </div>
   );
@@ -85,7 +85,6 @@ export const PeopleInfo = () => {
       </div>
       {data.data.people.map((person, i) => (
         <PersonInfo
-          title={`Person ${i + 1}`}
           key={i}
           subtitle="Details about how this works"
           person={person}

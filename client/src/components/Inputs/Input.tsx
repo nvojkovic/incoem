@@ -12,7 +12,9 @@ interface Props {
   tooltip?: string;
   toggleable?: boolean;
   labelLength?: number;
+  invalid?: boolean;
   placeholder?: string;
+  errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
   | "money"
@@ -40,6 +42,8 @@ const Input = ({
   size = "sm",
   placeholder,
   vertical = false,
+  invalid = false,
+  errorMessage,
   label,
   value,
   toggleable = false,
@@ -58,7 +62,7 @@ const Input = ({
     setInternalValue(value?.toString());
   }, [value]);
 
-  const basic = `focus:outline-none focus:border-main-orange focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width}`;
+  const basic = `focus:outline-none focus:border-main-orange-light focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width} ${invalid ? "border-red-500 border-2" : ""}`;
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -174,7 +178,14 @@ const Input = ({
       {tooltip ? (
         <div className={calcSize(size)}>
           <Tooltip
-            content={tooltip}
+            content={
+              <div>
+                {tooltip}
+                {errorMessage && invalid && (
+                  <div className="text-red-500">{errorMessage}</div>
+                )}
+              </div>
+            }
             theme={{ target: "" }}
             placement="right-end"
             style="light"
@@ -182,7 +193,9 @@ const Input = ({
           // className="border-black border"
           >
             <div className="relative cursor-pointer">
-              <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] absolute right-2 top-1/2 transform -translate-y-1/2" />
+              <QuestionMarkCircleIcon
+                className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} absolute right-2 top-1/2 transform -translate-y-1/2`}
+              />
               {input}
             </div>
           </Tooltip>

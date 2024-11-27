@@ -36,7 +36,7 @@ const Page = ({ setting, setSetting, index }: any) => {
   return (
     <div className="border shadow-md rounded-lg bg-white justify-center">
       <div
-        className={`bg-white p-3  items-center ${setting.enabled ? "" : "opacity-50"}`}
+        className={`bg-white p-3  items-center rounded-lg ${setting.enabled ? "" : "opacity-50"}`}
       >
         <div className="flex flex-col items-center gap-2">
           <div className="flex justify-between w-full">

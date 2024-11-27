@@ -1,7 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { updateData, updateScenarios } from "./services/client";
-import { updateAtIndex } from "./utils";
+import { debounce, updateAtIndex } from "./utils";
 
 const IncomeContext = React.createContext({
   data: {} as Client,
@@ -16,16 +16,6 @@ const IncomeContext = React.createContext({
   setSpending: (_: RetirementSpendingSettings) => { },
   setLocal: (() => { }) as any,
 });
-
-const debounce = (callback: Function, wait: number) => {
-  let timeoutId: any = null;
-  return (...args: any[]) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
-};
 
 const updateRemote = debounce(updateData, 500);
 

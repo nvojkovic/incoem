@@ -18,7 +18,9 @@ import ScenarioTab from "src/components/ScenarioTab";
 import { useInfo } from "src/useData";
 import Layout from "src/components/Layout";
 import MapChart from "src/components/MapChart";
-import Live from "src/components/Live";
+import Input from "./Inputs/Input";
+import CompositeTable from "./Report/CompositeTable";
+import ScenarioHeader from "./IncomeTable/ScenarioHeader";
 
 const Summary = () => {
   const sensors = useSensors(
@@ -31,12 +33,13 @@ const Summary = () => {
 
   const [fullScreen, setFullScreen] = useState(false);
   const [tab, setTab] = useState(-1);
+  const [shownTable, setShownTable] = useState("result");
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
     id: 0,
     type: "none",
   });
 
-  const { data, storeScenarios } = useInfo();
+  const { data, storeScenarios, setField } = useInfo();
   const scenarios = data.scenarios;
 
   const openFullScreen = () => {
@@ -86,12 +89,19 @@ const Summary = () => {
   }, []);
 
   const [selectedYear, setSelectedYear] = useState(0);
+  const liveSettings = {
+    ...data.liveSettings,
+    data: data.data,
+  };
+
+  const settings =
+    tab == -1 ? liveSettings : (scenarios.find(({ id }) => id === tab) as any);
   return (
     <Layout page="map">
       <div className="pb-32">
         <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
           <div
-            className={`flex print:hidden sticky z-[5000] ${fullScreen ? "top-[0px]" : "top-[72px]"
+            className={`flex justify-between items-center print:hidden sticky z-[5000] ${fullScreen ? "top-[0px]" : "top-[72px]"
               } bg-[#f3f4f6]`}
           >
             <DndContext
@@ -136,46 +146,60 @@ const Summary = () => {
                 </div>
               </SortableContext>
             </DndContext>
+            <div>
+              <Input
+                subtype="toggle"
+                labelLength={80}
+                label="Composite?"
+                value={shownTable === "composite"}
+                setValue={(value) =>
+                  setShownTable(value ? "composite" : "result")
+                }
+              />
+            </div>
           </div>
-          {tab == -1 ? (
-            <Live
-              fullScreen={fullScreen}
+          {shownTable === "result" ? (
+            <ResultTable
               client={data}
               changeFullScreen={() =>
                 fullScreen ? closeFullscreen() : openFullScreen()
               }
+              settings={settings}
+              removeScenario={() => {
+                const newScenarios = scenarios.filter((sc) => sc.id != tab);
+                storeScenarios(newScenarios);
+                setTab(-1);
+              }}
+              fullScreen={fullScreen}
               selectedYear={selectedYear}
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
+              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
+              id={tab}
             />
           ) : (
             <>
-              <ResultTable
-                client={data}
-                settings={scenarios.find(({ id }) => id === tab) as any}
-                fullScreen={fullScreen}
-                changeFullScreen={() =>
-                  fullScreen ? closeFullscreen() : openFullScreen()
-                }
-                id={tab}
+              <ScenarioHeader
                 removeScenario={() => {
                   const newScenarios = scenarios.filter((sc) => sc.id != tab);
                   storeScenarios(newScenarios);
                   setTab(-1);
                 }}
-                name={scenarios.find(({ id }) => id === tab)?.name}
+                client={data}
+                settings={settings}
+              />
+              <CompositeTable
+                client={data}
+                scenario={settings}
                 selectedYear={selectedYear}
                 setSelectedYear={setSelectedYear}
                 selectedColumn={selectedColumn}
                 setSelectedColumn={setSelectedColumn}
               />
-              <MapChart
-                settings={scenarios.find(({ id }) => id === tab) as any}
-                client={data}
-              />
             </>
           )}
+          <MapChart settings={settings} client={data} />
         </div>
       </div>
     </Layout>

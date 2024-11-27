@@ -31,7 +31,6 @@ import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
 import LongevityPage from "./components/Longevity/LongevityPage";
-import { getClient } from "./services/client";
 import { IncomeProvider } from "./useData";
 import { useState } from "react";
 

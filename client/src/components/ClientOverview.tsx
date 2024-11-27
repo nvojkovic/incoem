@@ -1,31 +1,135 @@
-import { updateAtIndex } from "src/utils";
 import { useInfo } from "../useData";
-import { PeopleInfo } from "./Info/PersonInfo";
+import PersonInfo from "./Info/PersonInfo";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";
-import { MultiToggle } from "./Spending/SpendingPage";
-import WhoDies from "./WhoDies";
 import ReportSettings from "./Settings/ReportSettings";
 
 const ClientOverview = () => {
   const { data, setField } = useInfo();
   const settings = data.liveSettings;
-  const spending = data.spending;
   const setSettings = (sett: any) => {
     setField("liveSettings")(sett);
   };
-  const setSpending = setField("spending");
   return (
     <Layout page="basic">
       <div>
-        <div title="Basic information">
-          <div className="font-semibold text-2xl mb-5">
-            Household information
+        <div className="flex gap-6 w-[1600px]">
+          <div className="shadow-md  bg-white p-6 rounded-lg">
+            <div className="h-full">
+              <div className="font-semibold text-2xl">Household</div>
+              <div className="flex flex-col gap-4 mt-6">
+                <Input
+                  label="Household Name"
+                  value={data.title}
+                  size="lg"
+                  subtype="text"
+                  setValue={setField("title")}
+                />
+              </div>
+              <div className="flex gap-12">
+                {data.data.people.map((person, i) => (
+                  <PersonInfo
+                    key={i}
+                    subtitle="Details about how this works"
+                    person={person}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-          <PeopleInfo />
+          <div className="shadow-md bg-white p-6 rounded-lg w-96">
+            <div className="font-semibold text-2xl mb-5">Assumptions</div>
+            <div className="grid gap-y-5 grid-cols2 w-[500px]">
+              <Input
+                value={data.liveSettings.inflation}
+                subtype="percent"
+                setValue={(e) => setSettings({ ...settings, inflation: e })}
+                label="Inflation"
+                labelLength={190}
+                width="!w-24"
+                tabIndex={4}
+              />
+              <Input
+                value={data.spending.preTaxRate}
+                subtype="percent"
+                setValue={(e) =>
+                  setField("spending")({ ...data.spending, preTaxRate: e })
+                }
+                labelLength={190}
+                width="!w-24"
+                label="Pre-Retirement Tax Rate"
+                tabIndex={7}
+              />
+              <Input
+                value={data.spending.postTaxRate}
+                subtype="percent"
+                setValue={(e) =>
+                  setField("spending")({ ...data.spending, postTaxRate: e })
+                }
+                label="Post-Retirement Tax Rate"
+                labelLength={190}
+                width="!w-24"
+                tabIndex={8}
+              />
+              <Input
+                value={data.liveSettings.maxYearsShown}
+                subtype="number"
+                setValue={(e) => setSettings({ ...settings, maxYearsShown: e })}
+                label="Years Shown"
+                labelLength={190}
+                width="!w-24"
+                tabIndex={5}
+              />
+
+              {data.data.people.map((person, i) => (
+                <Input
+                  value={data.liveSettings.deathYears[i]}
+                  subtype="number"
+                  setValue={(e) =>
+                    setSettings({
+                      ...settings,
+                      deathYears: settings.deathYears.map((item, ind) =>
+                        ind != i ? item : e,
+                      ),
+                    })
+                  }
+                  label={`${person.name}'s Mortality`}
+                  labelLength={190}
+                  width="!w-24"
+                  tabIndex={6}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-lg shadow-md border pr-8">
+            <div className="font-semibold text-2xl mb-5">Extra features</div>
+            <div className="w-72 ">
+              <Input
+                value={data.stabilityRatioFlag}
+                setValue={setField("stabilityRatioFlag")}
+                label="Stability Ratio"
+                size="full"
+                subtype="toggle"
+              />
+              <Input
+                value={data.needsFlag}
+                setValue={setField("needsFlag")}
+                label="Spending"
+                size="full"
+                subtype="toggle"
+              />
+              <Input
+                value={data.longevityFlag}
+                setValue={setField("longevityFlag")}
+                label="Longevity"
+                size="full"
+                subtype="toggle"
+              />
+            </div>
+          </div>
         </div>
-        <div className="h-10"></div>
-        <div className="flex">
+        {/*<div className="flex">
           <div title="Settings " className="">
             <div className="font-semibold text-2xl mb-5">Settings</div>
             <div>
@@ -174,36 +278,10 @@ const ClientOverview = () => {
               </div>
             </div>
           </div>
-          <div title="Settings pl-6" className="pl-6">
-            <div className="font-semibold text-2xl mb-5">Extra features</div>
-            <div className="w-72 bg-white p-2 rounded-lg shadow-md border">
-              <Input
-                value={data.stabilityRatioFlag}
-                setValue={setField("stabilityRatioFlag")}
-                label="Stability Ratio"
-                size="full"
-                subtype="toggle"
-              />
-              <Input
-                value={data.needsFlag}
-                setValue={setField("needsFlag")}
-                label="Spending"
-                size="full"
-                subtype="toggle"
-              />
-              <Input
-                value={data.longevityFlag}
-                setValue={setField("longevityFlag")}
-                label="Longevity"
-                size="full"
-                subtype="toggle"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="">
+        </div>*/}
+        <div className="w-full mt-8">
           <div className="font-semibold text-2xl mb-5">Report Settings</div>
-          <div className="p-2 rounded-lg ">
+          <div className="rounded-lg w-full ">
             <ReportSettings
               flags={{
                 needsFlag: data.needsFlag,

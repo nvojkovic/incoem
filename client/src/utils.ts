@@ -122,3 +122,13 @@ export function roundedToFixed(input: number, digits: number) {
   var rounder = Math.pow(10, digits);
   return Math.round(input * rounder) / rounder;
 }
+
+export const debounce = (callback: Function, wait: number) => {
+  let timeoutId: any = null;
+  return (...args: any[]) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback(...args);
+    }, wait);
+  };
+};

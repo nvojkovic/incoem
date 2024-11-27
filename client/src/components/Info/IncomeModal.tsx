@@ -24,39 +24,41 @@ const IncomeModal = ({
   const index = incomes.findIndex((inc) => inc.id === i);
   if (!data) return;
   return (
-    <Modal
-      isOpen={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-    >
-      <div className="flex justify-between mb-5">
-        <div className="text-lg font-semibold w-72 text-left">
-          {title(incomes, people, index)}
+    <>
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <div className="flex justify-between mb-5">
+          <div className="text-lg font-semibold w-72 text-left">
+            {title(incomes, people, index)}
+          </div>
+          <XMarkIcon
+            className="h-6 w-6 cursor-pointer"
+            onClick={() => setOpen(false)}
+          />
         </div>
-        <XMarkIcon
-          className="h-6 w-6 cursor-pointer"
-          onClick={() => setOpen(false)}
-        />
-      </div>
 
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-4 items-center w-full text-left">
-          <IncomeComponent income={income} i={index} />
-          {user?.info?.stabilityRatioFlag && (
-            <Input
-              label="Stable Income"
-              subtype="toggle"
-              size="lg"
-              value={income.stable}
-              setValue={(stable) => {
-                setIncome(index, { ...income, stable });
-              }}
-            />
-          )}
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-4 items-center w-full text-left">
+            <IncomeComponent income={income} i={index} />
+            {user?.info?.stabilityRatioFlag && (
+              <Input
+                label="Stable Income"
+                subtype="toggle"
+                size="lg"
+                value={income.stable}
+                setValue={(stable) => {
+                  setIncome(index, { ...income, stable });
+                }}
+              />
+            )}
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 

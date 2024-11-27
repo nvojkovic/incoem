@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { makeTable } from "../Longevity/calculate";
+import { jointTable, makeTable } from "../Longevity/calculate";
 
 interface Props {
   years: any;
@@ -379,7 +379,10 @@ const MainChart = ({
             `;
         }
         const longevityContent = longevityFlag
-          ? `<div class="text-xs mt-1 mb-1 text-gray-700"><div><span class="text-black">Longevity:</span> ${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}</div></div>`
+          ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${people.length > 1
+            ? `, <span>Joint: (${Math.round((jointTable(people[0], people[1]).find((i: any) => i.year === year)?.probability || 0) * 100)}%)</span>`
+            : ""
+          }</div></div></div>`
           : "";
         tooltip.html(
           `<div class="mb-4"><strong>Year: ${year}</strong><br>${longevityContent}${tooltipContent}</div>`,

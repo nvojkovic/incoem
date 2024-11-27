@@ -1,18 +1,9 @@
-import {
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  PrinterIcon,
-  QuestionMarkCircleIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
-import Input from "src/components/Inputs/Input";
-import { printNumber, printReport, splitDate, yearRange } from "src/utils";
-import Confirm from "src/components/Confirm";
+import { printNumber, splitDate, yearRange } from "src/utils";
 import { useMemo, useState } from "react";
-import Button from "src/components/Inputs/Button";
-import { Spinner, Tooltip } from "flowbite-react";
+import { Tooltip } from "flowbite-react";
 import IncomeModal from "src/components/Info/IncomeModal";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -33,15 +24,14 @@ import { generateColumns } from "src/components/IncomeTable/tableData";
 import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
 import DraggableTable from "./DraggableTable";
 import { jointTable, makeTable } from "../Longevity/calculate";
+import ScenarioHeader from "./ScenarioHeader";
 
 const ResultTable = ({
   client,
   settings,
   removeScenario,
   fullScreen,
-  name,
   selectedYear,
-  changeFullScreen,
   setSelectedYear,
   setSelectedColumn,
   selectedColumn,
@@ -50,7 +40,6 @@ const ResultTable = ({
   client: Client;
   settings: ScenarioSettings;
   removeScenario: any;
-  name?: string;
   fullScreen: boolean;
   id: number;
   selectedYear: number;
@@ -61,8 +50,6 @@ const ResultTable = ({
   setSettings?: (data: any) => void;
 }) => {
   const startYear = new Date().getFullYear();
-  const [removeOpen, setRemoveOpen] = useState(false);
-  const [printing, setPrinting] = useState(false);
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
@@ -76,13 +63,6 @@ const ResultTable = ({
   );
 
   const { updateIncomes } = useInfo();
-
-  const print = async () => {
-    setPrinting(true);
-    const url = await printReport(client.id, settings.id);
-    setPrinting(false);
-    window.open(url, "_blank");
-  };
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -204,7 +184,7 @@ const ResultTable = ({
           ),
           total: (
             <div className="flex gap-2">
-              <div className="w-20 relative">
+              <div className="w-24 relative">
                 <Tooltip
                   content={(() => {
                     const needs = calculateSpendingYear(
@@ -230,7 +210,7 @@ const ResultTable = ({
                       (stableIncome / needs) * 100,
                     );
                     return (
-                      <div className="z-[5000000] bg-white w-40 sticky">
+                      <div className="z-[5000000] bg-white w-44 sticky">
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
@@ -331,105 +311,12 @@ const ResultTable = ({
       sensors={sensors}
     >
       <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
-        {name && (
-          <div
-            className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${fullScreen ? "top-[45px]" : "top-[115px]"} bg-white h-32 print:hidden`}
-          >
-            <div className="text-[#101828] font-semibold text-[18px]">
-              {name || " "}
-            </div>
-            <div className="hidden print:block"></div>
-
-            <div className="flex gap-5 items-end print:hidden">
-              {settings.data.people.length > 1 &&
-                settings.data.people.map(
-                  (person, i) =>
-                    settings.whoDies == i && (
-                      <div className="w-36" key={person.id}>
-                        <Input
-                          subtype="number"
-                          vertical
-                          disabled
-                          label={`${person.name}'s Death`}
-                          value={settings.deathYears[i]?.toString()}
-                          setValue={() => { }}
-                        />
-                      </div>
-                    ),
-                )}
-
-              <div className="">
-                <Input
-                  label="Years"
-                  subtype="text"
-                  size="xs"
-                  vertical
-                  disabled
-                  value={settings.maxYearsShown}
-                  setValue={() => { }}
-                />
-              </div>
-              <div className="print:mr-[-20px]">
-                <Input
-                  label="Inflation"
-                  disabled
-                  size="xs"
-                  vertical
-                  subtype="text"
-                  value={
-                    settings.inflation != undefined
-                      ? `${settings.inflation?.toString()}%`
-                      : "0%"
-                  }
-                  setValue={() => { }}
-                />
-              </div>
-              <div className="print:hidden">
-                <Button type="secondary" onClick={changeFullScreen}>
-                  <div className="flex gap-3">
-                    <div className="flex items-center">
-                      {fullScreen ? (
-                        <ArrowsPointingInIcon className="h-6 w-6" />
-                      ) : (
-                        <ArrowsPointingOutIcon className="h-6 w-6" />
-                      )}
-                    </div>
-                  </div>
-                </Button>
-              </div>
-              <div className="print:hidden">
-                <Button type="secondary" onClick={print}>
-                  <div className="flex gap-2">
-                    <PrinterIcon className="h-6 w-6" />
-                    {printing && <Spinner className="h-5" />}
-                  </div>
-                </Button>
-              </div>
-              <div className="flex items-center print:hidden">
-                <Button type="secondary">
-                  <TrashIcon
-                    className="h-6 w-6 text-red-500 cursor-pointer "
-                    onClick={() => setRemoveOpen(true)}
-                  />
-                </Button>
-                <Confirm
-                  isOpen={removeOpen}
-                  onClose={() => setRemoveOpen(false)}
-                  onConfirm={() => {
-                    if (removeScenario) removeScenario();
-                    setRemoveOpen(false);
-                  }}
-                >
-                  <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
-                  <div className="mb-5">
-                    Are you sure you want to delete this scenario?
-                  </div>
-                </Confirm>
-              </div>
-            </div>
-          </div>
-        )}
-        {!removeScenario &&
+        <ScenarioHeader
+          removeScenario={removeScenario}
+          client={client}
+          settings={settings}
+        />
+        {!settings.name &&
           incomes?.map((income) => (
             <IncomeModal
               income={income}

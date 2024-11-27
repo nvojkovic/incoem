@@ -1,12 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import * as Sentry from "@sentry/react";
-import { getUser } from "./services/client";
+import { getUser, updateSettings } from "./services/client";
 import { router } from "./main";
+import { debounce } from "./utils";
 
 interface UserContextType {
   user: User | null;
   fetchUser: () => Promise<void>;
   updatePrimaryColor: (color: string) => Promise<void>;
+  updateInfo: (settings: any) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -36,7 +38,6 @@ export const UserProvider: React.FC<{
         }
         Sentry.setUser({ email: userData.info?.email, id: userData.userId });
       } else if (response.status === 401) {
-        console.log("Unauthorized");
         navigate("/login");
       } else {
         throw new Error("Failed to fetch user");
@@ -69,12 +70,26 @@ export const UserProvider: React.FC<{
     }
   };
 
+  const updateRemote = debounce(updateSettings, 500);
+
+  const updateInfo = (settings: any) => {
+    setUser((prevUser) => {
+      updateRemote(settings);
+      return {
+        ...prevUser!,
+        info: settings,
+      };
+    });
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, fetchUser, updatePrimaryColor }}>
+    <UserContext.Provider
+      value={{ user, fetchUser, updatePrimaryColor, updateInfo }}
+    >
       {children}
     </UserContext.Provider>
   );

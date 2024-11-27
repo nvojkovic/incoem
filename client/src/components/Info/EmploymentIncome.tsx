@@ -30,6 +30,8 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       <Input
         label="Annual Income"
         subtype="money"
+        invalid={income.annualIncome < 0}
+        errorMessage="Income must be positive"
         size="lg"
         value={income.annualIncome}
         setValue={(name) => setIncome({ ...income, annualIncome: name })}
