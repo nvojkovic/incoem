@@ -21,6 +21,9 @@ const Composite = ({
     scenario.data.people.length > 1
       ? jointTable(scenario.data.people[0], scenario.data.people[1])
       : [];
+
+  const divisionFactor =
+    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
   return (
     <div className="mx-10 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
@@ -95,19 +98,26 @@ const Composite = ({
                           inflationType: scenario.inflationType,
                         });
 
-                      const needs = calculateSpendingYear(
-                        scenario.data,
-                        spending,
-                        scenario,
-                        line,
-                      );
+                      const needs =
+                        calculateSpendingYear(
+                          scenario.data,
+                          spending,
+                          scenario,
+                          line,
+                        ) / divisionFactor;
                       const income = scenario.data.incomes
-                        .map((income) => calculateOne(income, line).amount)
+                        .map(
+                          (income) =>
+                            calculateOne(income, line).amount / divisionFactor,
+                        )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
                       const stableIncome = scenario.data.incomes
                         .filter((item) => item.stable)
-                        .map((income) => calculateOne(income, line).amount)
+                        .map(
+                          (income) =>
+                            calculateOne(income, line).amount / divisionFactor,
+                        )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
                       const gap = income - needs;
