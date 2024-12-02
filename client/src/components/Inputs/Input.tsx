@@ -173,9 +173,7 @@ const Input = ({
               value.type === "yearly" &&
               setValue({
                 type: "monthly",
-                value: value.value
-                  ? Math.round((100 * value.value) / 12) / 100
-                  : value.value,
+                value: value.value,
               })
             }
           >
@@ -187,7 +185,7 @@ const Input = ({
               value.type === "monthly" &&
               setValue({
                 type: "yearly",
-                value: value.value ? value.value * 12 : value.value,
+                value: value.value,
               })
             }
           >

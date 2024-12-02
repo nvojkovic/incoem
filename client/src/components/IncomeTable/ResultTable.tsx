@@ -264,7 +264,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings, settings.data],
+    [settings, settings.data, divisionFactor],
   );
 
   const handleDragEnd = (moved: any) => {
