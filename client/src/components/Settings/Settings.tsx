@@ -244,7 +244,7 @@ const Settings = () => {
               />
               <div className="flex flex-col gap-3 w-full">
                 <div className="flex gap-5 items-center w-full">
-                  <div className="flex gap-5 items-center w-[700px]">
+                  <div className="flex gap-5 items-center w-[730px]">
                     <div>
                       <Input
                         value={settings.stabilityRatioFlag}
@@ -271,7 +271,7 @@ const Settings = () => {
                   </div>
                 </div>
                 <div className="flex gap-5 items-center w-full ">
-                  <div className="flex gap-5 items-center w-[700px]">
+                  <div className="flex gap-5 items-center w-[730px]">
                     <div>
                       <Input
                         value={settings.needsFlag}
@@ -296,7 +296,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="flex gap-5 items-center w-full">
-                  <div className="flex gap-5 items-center w-[700px]">
+                  <div className="flex gap-5 items-center w-[730px]">
                     <div>
                       <Input
                         value={settings.longevityFlag}
