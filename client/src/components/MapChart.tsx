@@ -14,6 +14,8 @@ interface MapChartProps {
 const MapChart = ({ settings, client, print }: MapChartProps) => {
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
+  const divisionFactor =
+    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
   return (
     <div className={`bg-white ${!print && "pb-5"}`}>
       <Header client={client as any} scenario={settings} />
@@ -32,7 +34,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
                   client.spending,
                   { ...settings, taxType: "Pre-Tax" },
                   currentYear,
-                ),
+                ) / divisionFactor,
             )
             : []
         }
@@ -57,7 +59,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
                 incomes: incomes,
                 ssSurvivorAge: settings.ssSurvivorAge,
                 inflationType: settings.inflationType,
-              }).amount,
+              }).amount / divisionFactor,
             ),
           ),
         }))}

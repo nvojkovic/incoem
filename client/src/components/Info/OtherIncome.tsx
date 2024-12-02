@@ -59,6 +59,8 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
         <Input
           label="Start Year"
           size="lg"
+          invalid={!!pension.startYear && pension.startYear < 1900}
+          errorMessage="Start year should be a calender year (e.g. 2031)"
           subtype="number"
           tooltip="Calendar year (e.g., 2030) income begins. Leave blank if already receiving"
           value={pension.startYear}
@@ -68,6 +70,8 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           label="End Year"
           subtype="number"
           size="lg"
+          invalid={!!pension.endYear && pension.endYear < 1900}
+          errorMessage="End year should be a calender year (e.g. 2031)"
           tooltip="Calendar year (e.g., 2040) that income ends. Leave blank if ends at death"
           value={pension.endYear}
           setValue={(name) => setIncome({ ...pension, endYear: name })}

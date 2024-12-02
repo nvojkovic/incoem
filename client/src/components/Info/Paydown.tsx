@@ -76,6 +76,8 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         size="lg"
         tooltip="The calendar year the paydown starts"
         value={paydown.startYear}
+        invalid={!!paydown.startYear && paydown.startYear < 1900}
+        errorMessage="End year should be a calender year (e.g. 2031)"
         setValue={(name) => setIncome({ ...paydown, startYear: name })}
       />
       <Input
@@ -99,7 +101,7 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         value={
           Number.isNaN(amount) || amount == Infinity ? 0 : amount.toFixed(2)
         }
-        setValue={() => {}}
+        setValue={() => { }}
       />
     </div>
   );

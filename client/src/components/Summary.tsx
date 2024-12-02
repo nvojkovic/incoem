@@ -18,7 +18,6 @@ import ScenarioTab from "src/components/ScenarioTab";
 import { useInfo } from "src/useData";
 import Layout from "src/components/Layout";
 import MapChart from "src/components/MapChart";
-import Input from "./Inputs/Input";
 import CompositeTable from "./Report/CompositeTable";
 import ScenarioHeader from "./IncomeTable/ScenarioHeader";
 
@@ -33,13 +32,14 @@ const Summary = () => {
 
   const [fullScreen, setFullScreen] = useState(false);
   const [tab, setTab] = useState(-1);
-  const [shownTable, setShownTable] = useState("result");
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
     id: 0,
     type: "none",
   });
 
   const { data, storeScenarios, setField } = useInfo();
+
+  const shownTable = data.liveSettings.mapType;
   const scenarios = data.scenarios;
 
   const openFullScreen = () => {
@@ -146,39 +146,8 @@ const Summary = () => {
                 </div>
               </SortableContext>
             </DndContext>
-            <div>
-              <Input
-                subtype="toggle"
-                labelLength={80}
-                label="Composite?"
-                value={shownTable === "composite"}
-                setValue={(value) =>
-                  setShownTable(value ? "composite" : "result")
-                }
-              />
-            </div>
           </div>
-          {shownTable === "result" ? (
-            <ResultTable
-              client={data}
-              changeFullScreen={() =>
-                fullScreen ? closeFullscreen() : openFullScreen()
-              }
-              settings={settings}
-              removeScenario={() => {
-                const newScenarios = scenarios.filter((sc) => sc.id != tab);
-                storeScenarios(newScenarios);
-                setTab(-1);
-              }}
-              fullScreen={fullScreen}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-              selectedColumn={selectedColumn}
-              setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
-              id={tab}
-            />
-          ) : (
+          {shownTable === "composite" ? (
             <>
               <ScenarioHeader
                 removeScenario={() => {
@@ -198,6 +167,26 @@ const Summary = () => {
                 setSelectedColumn={setSelectedColumn}
               />
             </>
+          ) : (
+            <ResultTable
+              client={data}
+              changeFullScreen={() =>
+                fullScreen ? closeFullscreen() : openFullScreen()
+              }
+              settings={settings}
+              removeScenario={() => {
+                const newScenarios = scenarios.filter((sc) => sc.id != tab);
+                storeScenarios(newScenarios);
+                setTab(-1);
+              }}
+              fullScreen={fullScreen}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedColumn={selectedColumn}
+              setSelectedColumn={setSelectedColumn}
+              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
+              id={tab}
+            />
           )}
           <MapChart settings={settings} client={data} />
         </div>

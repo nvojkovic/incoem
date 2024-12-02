@@ -80,6 +80,16 @@ export const updateData = (id: any, data: any) => {
   });
 };
 
+export const applyToAll = (name: any, value: any) => {
+  return fetch(API + `user/featureToggle`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, value }),
+  });
+};
+
 export const updateScenarios = (id: any, data: any) => {
   return fetch(API + `client/scenarios/${id}`, {
     method: "POST",

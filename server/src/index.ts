@@ -24,6 +24,7 @@ import {
   getLogo,
   getReport,
   getUser,
+  toggleClientFeature,
   updateUser,
   uploadLogo,
 } from "./controllers/user";
@@ -80,6 +81,7 @@ app.post("/clients", verifySession(), createClient);
 app.post("/settings", verifySession(), updateUser);
 app.get("/user", verifySession(), getUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
+app.post("/user/featureToggle", verifySession(), toggleClientFeature);
 app.post("/stripe/webhook", stripeWebhook);
 app.post("/user/logo", verifySession(), upload.single("logo"), uploadLogo);
 app.get("/logo/", getLogo);

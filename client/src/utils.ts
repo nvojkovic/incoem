@@ -132,3 +132,8 @@ export const debounce = (callback: Function, wait: number) => {
     }, wait);
   };
 };
+
+export const moyrToAnnual = (input: MonthlyYearlyAmount) => {
+  if (input.type === "yearly") return input.value;
+  return input.value * 12;
+};

@@ -1,4 +1,7 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationTriangleIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import Toggle from "./Toggle";
 import CurrencyInput from "react-currency-input-field";
 import { Tooltip } from "flowbite-react";
@@ -24,6 +27,7 @@ interface Props {
   | "date"
   | "toggle"
   | "password"
+  | "mo/yr"
   | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
@@ -148,6 +152,50 @@ const Input = ({
         {...props}
       />
     );
+  } else if (subtype == "mo/yr") {
+    input = (
+      <div className="flex items-center">
+        <CurrencyInput
+          prefix="$"
+          value={value.value}
+          decimalsLimit={2}
+          disabled={disabled}
+          className={`${basic} ${size == "sm" && "w-full"} ${calcSize(size)}`}
+          onValueChange={(_, __, values) =>
+            setValue({ ...value, value: values?.float })
+          }
+          {...props}
+        />
+        <div className="flex ml-[-80px] text-sm">
+          <div
+            className={`${value.type == "monthly" ? "bg-main-orange text-white" : "bg-gray-200 text-black"} rounded-l px-1 py-[2px]`}
+            onClick={() =>
+              value.type === "yearly" &&
+              setValue({
+                type: "monthly",
+                value: value.value
+                  ? Math.round((100 * value.value) / 12) / 100
+                  : value.value,
+              })
+            }
+          >
+            mo
+          </div>
+          <div
+            className={`${value.type == "yearly" ? "bg-main-orange text-white" : "bg-gray-200 text-black"} rounded-r px-1 py-[2px]`}
+            onClick={() =>
+              value.type === "monthly" &&
+              setValue({
+                type: "yearly",
+                value: value.value ? value.value * 12 : value.value,
+              })
+            }
+          >
+            yr
+          </div>
+        </div>
+      </div>
+    );
   }
   return (
     <div
@@ -175,7 +223,7 @@ const Input = ({
           />
         )}
       </div>
-      {tooltip ? (
+      {tooltip || (errorMessage && invalid) ? (
         <div className={calcSize(size)}>
           <Tooltip
             content={
@@ -193,9 +241,15 @@ const Input = ({
           // className="border-black border"
           >
             <div className="relative cursor-pointer">
-              <QuestionMarkCircleIcon
-                className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} absolute right-2 top-1/2 transform -translate-y-1/2`}
-              />
+              {errorMessage && invalid ? (
+                <ExclamationTriangleIcon
+                  className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} absolute right-2 top-1/2 transform -translate-y-1/2`}
+                />
+              ) : (
+                <QuestionMarkCircleIcon
+                  className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} absolute right-2 top-1/2 transform -translate-y-1/2`}
+                />
+              )}
               {input}
             </div>
           </Tooltip>

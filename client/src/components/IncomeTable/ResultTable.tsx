@@ -62,6 +62,9 @@ const ResultTable = ({
     columns.map((c) => c.id!),
   );
 
+  const divisionFactor =
+    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
+
   const { updateIncomes } = useInfo();
 
   const sensors = useSensors(
@@ -74,8 +77,8 @@ const ResultTable = ({
     useSensor(KeyboardSensor, {}),
   );
 
-  const calculateOne = (income: Income, currentYear: number) =>
-    calculate({
+  const calculateOne = (income: Income, currentYear: number) => {
+    let result = calculate({
       people: settings.data.people,
       income,
       startYear,
@@ -85,9 +88,14 @@ const ResultTable = ({
       inflation: settings.inflation,
       incomes: incomes,
       ssSurvivorAge: settings.ssSurvivorAge,
-
       inflationType: settings.inflationType,
     });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
+  };
 
   const tableData = useMemo(
     () =>
@@ -147,18 +155,7 @@ const ResultTable = ({
           ),
           ...Object.fromEntries(
             incomes.map((income, i) => {
-              const result = calculate({
-                people: settings.data.people,
-                income,
-                startYear,
-                currentYear,
-                deathYears: settings.deathYears as any,
-                dead: settings.whoDies,
-                inflation: settings.inflation,
-                incomes: incomes,
-                inflationType: settings.inflationType,
-                ssSurvivorAge: settings.ssSurvivorAge,
-              });
+              const result = calculateOne(income, currentYear);
               return [
                 title(incomes, settings.data.people, i),
                 <div>
@@ -187,12 +184,13 @@ const ResultTable = ({
               <div className="w-24 relative">
                 <Tooltip
                   content={(() => {
-                    const needs = calculateSpendingYear(
-                      settings.data,
-                      client.spending,
-                      settings,
-                      currentYear,
-                    );
+                    const needs =
+                      calculateSpendingYear(
+                        settings.data,
+                        client.spending,
+                        settings,
+                        currentYear,
+                      ) / divisionFactor;
                     const income = incomes
                       .map((income) => calculateOne(income, currentYear).amount)
                       .filter((t) => typeof t === "number")

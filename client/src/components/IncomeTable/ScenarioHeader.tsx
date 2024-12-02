@@ -1,4 +1,4 @@
-import Live from "../Live";
+import Live, { SmallToggle } from "../Live";
 import {
   ArrowsPointingInIcon,
   ArrowsPointingOutIcon,
@@ -12,6 +12,7 @@ import { Spinner } from "flowbite-react";
 import { useState } from "react";
 import { printReport } from "src/utils";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import { useInfo } from "src/useData";
 
 interface Props {
   settings: ScenarioSettings;
@@ -22,12 +23,15 @@ interface Props {
 const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
+  const { setField } = useInfo();
   const print = async () => {
     setPrinting(true);
     const url = await printReport(client.id, settings.id);
     setPrinting(false);
     window.open(url, "_blank");
   };
+
+  const setSettings = setField("liveSettings");
 
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
@@ -84,47 +88,90 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
             setValue={() => { }}
           />
         </div>
-        <div className="print:hidden">
-          <Button type="secondary" onClick={toggleFullscreen}>
-            <div className="flex gap-3">
-              <div className="flex items-center">
-                {isFullscreen ? (
-                  <ArrowsPointingInIcon className="h-6 w-6" />
-                ) : (
-                  <ArrowsPointingOutIcon className="h-6 w-6" />
-                )}
-              </div>
-            </div>
-          </Button>
-        </div>
-        <div className="print:hidden">
-          <Button type="secondary" onClick={print}>
-            <div className="flex gap-2">
-              <PrinterIcon className="h-6 w-6" />
-              {printing && <Spinner className="h-5" />}
-            </div>
-          </Button>
-        </div>
-        <div className="flex items-center print:hidden">
-          <Button type="secondary">
-            <TrashIcon
-              className="h-6 w-6 text-red-500 cursor-pointer "
-              onClick={() => setRemoveOpen(true)}
+        <div>
+          <div className="flex mb-3 justify-end gap-3">
+            <SmallToggle
+              item1="Basic"
+              item2="Composite"
+              active={
+                client.liveSettings.mapType === "composite"
+                  ? "Composite"
+                  : "Basic"
+              }
+              toggle={() =>
+                setSettings({
+                  ...client.liveSettings,
+                  mapType:
+                    client.liveSettings.mapType === "composite"
+                      ? "basic"
+                      : "composite",
+                })
+              }
             />
-          </Button>
-          <Confirm
-            isOpen={removeOpen}
-            onClose={() => setRemoveOpen(false)}
-            onConfirm={() => {
-              if (removeScenario) removeScenario();
-              setRemoveOpen(false);
-            }}
-          >
-            <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
-            <div className="mb-5">
-              Are you sure you want to delete this scenario?
+
+            <SmallToggle
+              item1="Monthly"
+              item2="Annual"
+              active={
+                client.liveSettings.monthlyYearly === "monthly"
+                  ? "Monthly"
+                  : "Annual"
+              }
+              toggle={() =>
+                setSettings({
+                  ...client.liveSettings,
+                  monthlyYearly:
+                    client.liveSettings.monthlyYearly === "monthly"
+                      ? "yearly"
+                      : "monthly",
+                })
+              }
+            />
+          </div>
+          <div className="flex justify-end gap-2 print:hidden">
+            <div className="print:hidden">
+              <Button type="secondary" onClick={toggleFullscreen}>
+                <div className="flex gap-3">
+                  <div className="flex items-center">
+                    {isFullscreen ? (
+                      <ArrowsPointingInIcon className="h-6 w-6" />
+                    ) : (
+                      <ArrowsPointingOutIcon className="h-6 w-6" />
+                    )}
+                  </div>
+                </div>
+              </Button>
             </div>
-          </Confirm>
+            <div>
+              <Button type="secondary" onClick={print}>
+                <div className="flex gap-2">
+                  <PrinterIcon className="h-6 w-6" />
+                  {printing && <Spinner className="h-5" />}
+                </div>
+              </Button>
+            </div>
+            <div>
+              <Button type="secondary">
+                <TrashIcon
+                  className="h-6 w-6 text-red-500 cursor-pointer "
+                  onClick={() => setRemoveOpen(true)}
+                />
+              </Button>
+            </div>
+            <Confirm
+              isOpen={removeOpen}
+              onClose={() => setRemoveOpen(false)}
+              onConfirm={() => {
+                if (removeScenario) removeScenario();
+                setRemoveOpen(false);
+              }}
+            >
+              <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+              <div className="mb-5">
+                Are you sure you want to delete this scenario?
+              </div>
+            </Confirm>
+          </div>
         </div>
       </div>
     </div>

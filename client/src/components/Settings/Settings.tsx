@@ -3,7 +3,7 @@ import { Tooltip } from "flowbite-react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import Alert from "src/components/Alert";
 import { useUser } from "src/useUser";
-import { updateSettings, uploadLogo } from "src/services/client";
+import { applyToAll, updateSettings, uploadLogo } from "src/services/client";
 import Layout from "../Layout";
 import Input from "../Inputs/Input";
 import Button from "../Inputs/Button";
@@ -40,6 +40,32 @@ const isColorTooLight = (
     0.2126 * toSRGB(r) + 0.7152 * toSRGB(g) + 0.0722 * toSRGB(b);
 
   return luminance > threshold;
+};
+
+const ApplyToCurrent = ({ name, value }: any) => {
+  const updateSetting = async () => {
+    await applyToAll(name, value);
+    setUpdateTimer(true);
+    setTimeout(() => {
+      setUpdateTimer(false);
+    }, 2000);
+  };
+
+  const [updating, setUpdateTimer] = useState(false);
+
+  return (
+    <div>
+      <Button type="primary" onClick={updateSetting}>
+        {" "}
+        Apply to current clients
+      </Button>
+      <div
+        className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
+      >
+        Clients updated!
+      </div>
+    </div>
+  );
 };
 
 const Settings = () => {
@@ -205,58 +231,82 @@ const Settings = () => {
                 overridden (turned off/on) for each individual client in client
                 settings page."
               />
-              <div className="flex flex-col gap-3 -full">
-                <div className="flex gap-5 items-center w-full">
+              <div className="flex flex-col gap-3 w-full">
+                <div className="flex gap-5 items-center w-full justify-between">
+                  <div className="flex gap-5 items-center">
+                    <div>
+                      <Input
+                        value={settings.stabilityRatioFlag}
+                        tabIndex={11}
+                        setValue={(e) =>
+                          setSettings({ ...settings, stabilityRatioFlag: e })
+                        }
+                        label="Stability Ratio"
+                        size="full"
+                        subtype="toggle"
+                      />
+                    </div>
+                    <div className="text-gray-400 text-nowrap text-sm">
+                      Calculate and show the % of income considered “Stable” on
+                      the Income Map
+                    </div>
+                  </div>
                   <div>
-                    <Input
+                    <ApplyToCurrent
+                      name="stabilityRatioFlag"
                       value={settings.stabilityRatioFlag}
-                      tabIndex={11}
-                      setValue={(e) =>
-                        setSettings({ ...settings, stabilityRatioFlag: e })
-                      }
-                      label="Stability Ratio"
-                      size="full"
-                      subtype="toggle"
                     />
                   </div>
-                  <div className="text-gray-400 text-nowrap text-sm">
-                    Calculate and show the % of income considered “Stable” on
-                    the Income Map
-                  </div>
                 </div>
-                <div className="flex gap-5 items-center">
+                <div className="flex gap-5 items-center w-full justify-between">
+                  <div className="flex gap-5 items-center">
+                    <div>
+                      <Input
+                        value={settings.needsFlag}
+                        tabIndex={12}
+                        setValue={(e) =>
+                          setSettings({ ...settings, needsFlag: e })
+                        }
+                        label="Spending"
+                        size="full"
+                        subtype="toggle"
+                      />
+                    </div>
+                    <div className="text-gray-400 text-nowrap text-sm">
+                      Include the Spending calculator page and show Spending on
+                      Income Map
+                    </div>
+                  </div>
                   <div>
-                    <Input
+                    <ApplyToCurrent
+                      name="needsFlag"
                       value={settings.needsFlag}
-                      tabIndex={12}
-                      setValue={(e) =>
-                        setSettings({ ...settings, needsFlag: e })
-                      }
-                      label="Spending"
-                      size="full"
-                      subtype="toggle"
                     />
-                  </div>
-                  <div className="text-gray-400 text-nowrap text-sm">
-                    Include the Spending calculator page and show Spending on
-                    Income Map
                   </div>
                 </div>
-                <div className="flex gap-5 items-center">
-                  <div>
-                    <Input
-                      value={settings.longevityFlag}
-                      tabIndex={12}
-                      setValue={(e) =>
-                        setSettings({ ...settings, longevityFlag: e })
-                      }
-                      label="Longevity"
-                      size="full"
-                      subtype="toggle"
-                    />
+                <div className="flex gap-5 items-center w-full justify-between">
+                  <div className="flex gap-5 items-center">
+                    <div>
+                      <Input
+                        value={settings.longevityFlag}
+                        tabIndex={12}
+                        setValue={(e) =>
+                          setSettings({ ...settings, longevityFlag: e })
+                        }
+                        label="Longevity"
+                        size="full"
+                        subtype="toggle"
+                      />
+                    </div>
+                    <div className="text-gray-400 text-nowrap text-sm text-left">
+                      Include Longevity / Life Expectancy calculation.
+                    </div>
                   </div>
-                  <div className="text-gray-400 text-nowrap text-sm text-left">
-                    Include Longevity / Life Expectancy calculation.
+                  <div>
+                    <ApplyToCurrent
+                      name="longevityFlag"
+                      value={settings.longevityFlag}
+                    />
                   </div>
                 </div>
               </div>

@@ -14,6 +14,26 @@ import { Spinner } from "flowbite-react";
 import { MultiToggle } from "./Spending/SpendingPage";
 import { useInfo } from "src/useData";
 import { useFullscreen } from "src/hooks/useFullScreen";
+
+export const SmallToggle = ({ item1, item2, active, toggle }: any) => {
+  return (
+    <div className="flex text-sm cursor-pointer">
+      <div
+        className={`${active === item1 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-2 py-[2px] rounded-l-md`}
+        onClick={toggle}
+      >
+        {item1}
+      </div>
+      <div
+        className={`${active === item2 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-2 py-[2px] rounded-r-md`}
+        onClick={toggle}
+      >
+        {item2}
+      </div>
+    </div>
+  );
+};
+
 const Live = ({
   client,
   spending,
@@ -175,80 +195,119 @@ const Live = ({
             </div>
           </div>
           <div className="flex gap-3">
-            <div>
-              <Button type="secondary" onClick={() => setSaveOpen(true)}>
-                <div className="flex gap-2">
-                  <img src={save} className="w-6 h-6" />
-                </div>
-              </Button>
-              <ModalInput
-                isOpen={saveOpen}
-                onClose={() => {
-                  setSaveOpen(false);
-                  setSettings({
-                    ...settings,
-                    name: "",
-                  });
-                }}
-                onConfirm={() => {
-                  setSaveOpen(false);
-                  setSettings({
-                    ...settings,
-                    name: "",
-                  });
-                  addScenario({
-                    ...settings,
-                    data: { ...settings.data },
-                    spending: { ...spending },
-                  });
-                }}
-              >
-                <div className="py-3">
-                  <Input
-                    label="Scenario name"
-                    value={settings.name}
-                    setValue={(name) => setSettings({ ...settings, name })}
-                    onKeyDown={(e: any) => {
-                      if (e.key === "Enter") {
-                        setSaveOpen(false);
-                        setSettings({
-                          ...settings,
-                          name: "",
-                        });
+            <div className="flex flex-col items-end">
+              <div className="flex mb-3 justify-end gap-3">
+                <SmallToggle
+                  item1="Basic"
+                  item2="Composite"
+                  active={
+                    settings.mapType === "composite" ? "Composite" : "Basic"
+                  }
+                  toggle={() =>
+                    setSettings({
+                      ...settings,
+                      mapType:
+                        settings.mapType === "composite"
+                          ? "basic"
+                          : "composite",
+                    })
+                  }
+                />
 
-                        addScenario({
-                          ...settings,
-                          data: { ...settings.data },
-                          spending: { ...spending },
-                        });
-                      }
+                <SmallToggle
+                  item1="Monthly"
+                  item2="Annual"
+                  active={
+                    settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
+                  }
+                  toggle={() =>
+                    setSettings({
+                      ...settings,
+                      monthlyYearly:
+                        settings.monthlyYearly === "monthly"
+                          ? "yearly"
+                          : "monthly",
+                    })
+                  }
+                />
+              </div>
+              <div className="flex gap-2">
+                <div>
+                  <Button type="secondary" onClick={() => setSaveOpen(true)}>
+                    <div className="flex gap-2">
+                      <img src={save} className="w-6 h-6" />
+                    </div>
+                  </Button>
+                  <ModalInput
+                    isOpen={saveOpen}
+                    onClose={() => {
+                      setSaveOpen(false);
+                      setSettings({
+                        ...settings,
+                        name: "",
+                      });
                     }}
-                    size="full"
-                    vertical
-                  />
+                    onConfirm={() => {
+                      setSaveOpen(false);
+                      setSettings({
+                        ...settings,
+                        name: "",
+                      });
+                      addScenario({
+                        ...settings,
+                        data: { ...settings.data },
+                        spending: { ...spending },
+                      });
+                    }}
+                  >
+                    <div className="py-3">
+                      <Input
+                        label="Scenario name"
+                        value={settings.name}
+                        setValue={(name) => setSettings({ ...settings, name })}
+                        onKeyDown={(e: any) => {
+                          if (e.key === "Enter") {
+                            setSaveOpen(false);
+                            setSettings({
+                              ...settings,
+                              name: "",
+                            });
+
+                            addScenario({
+                              ...settings,
+                              data: { ...settings.data },
+                              spending: { ...spending },
+                            });
+                          }
+                        }}
+                        size="full"
+                        vertical
+                      />
+                    </div>
+                  </ModalInput>
                 </div>
-              </ModalInput>
-            </div>
-            <div>
-              <Button type="secondary" onClick={toggleFullscreen}>
-                <div className="flex gap-3">
-                  <div className="flex items-center">
-                    {isFullscreen ? (
-                      <ArrowsPointingInIcon className="h-6 w-6" />
-                    ) : (
-                      <ArrowsPointingOutIcon className="h-6 w-6" />
-                    )}
-                  </div>
+                <div>
+                  <Button type="secondary" onClick={toggleFullscreen}>
+                    <div className="flex gap-3">
+                      <div className="flex items-center">
+                        {isFullscreen ? (
+                          <ArrowsPointingInIcon className="h-6 w-6" />
+                        ) : (
+                          <ArrowsPointingOutIcon className="h-6 w-6" />
+                        )}
+                      </div>
+                    </div>
+                  </Button>
                 </div>
-              </Button>
-            </div>
-            <div>
-              <Button type="secondary" onClick={() => print()}>
-                <div className="flex gap-2">
-                  <PrinterIcon className="h-6 w-6" />
-                  {printing && <Spinner className="h-5" />}
+                <div>
+                  <Button type="secondary" onClick={() => print()}>
+                    <div className="flex gap-2">
+                      <PrinterIcon className="h-6 w-6" />
+                      {printing && <Spinner className="h-5" />}
+                    </div>
+                  </Button>
                 </div>
-              </Button>
+              </div>
             </div>
           </div>
         </div>

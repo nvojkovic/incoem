@@ -43,12 +43,18 @@ type IncomeType =
   | "other-income"
   | "paydown";
 
+interface MonthlyYearlyAmount {
+  type: "monthly" | "yearly";
+  value: number;
+}
+
 interface EmploymentIncome extends Income {
   type: "employment-income";
   startAge: number;
   name: string;
   firstYearProratePercent: number;
   annualIncome: number;
+  income: MonthlyYearlyAmount;
   yearlyIncreasePercent: number;
   yearlyIncrease: YearlyIncrease;
   retirementAgeYear: number;
@@ -183,6 +189,8 @@ interface ScenarioSettings {
   maxYearsShown: number;
   deathYears: (number | null)[];
   ssSurvivorAge: (number | null)[];
+  mapType: "result" | "composite";
+  monthlyYearly: "monthly" | "yearly";
   inflation: number;
   taxType: "Pre-Tax" | "Post-Tax";
   longevityPercent: number;

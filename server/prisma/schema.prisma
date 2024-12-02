@@ -14,7 +14,7 @@ model Client {
   userId              String
   data                Json      @default("{}")
   scenarios           Json      @default("[]")
-  spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[null,null]}")
+  spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[0,0]}")
   stabilityRatioFlag  Boolean   @default(false)
   needsFlag           Boolean   @default(false)
   longevityFlag       Boolean   @default(false)

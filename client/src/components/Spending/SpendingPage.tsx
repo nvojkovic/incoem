@@ -237,6 +237,7 @@ const SpendingPage = () => {
       <div className="flex flex-col gap-8">
         <MapSection
           title={<div className="py-2 px-3">Current Spending</div>}
+          toggleabble
           defaultOpen
         >
           <div className="flex gap-4">

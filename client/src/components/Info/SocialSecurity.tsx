@@ -100,6 +100,8 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                   subtype="number"
                   size="lg"
                   value={pension.startAgeYear}
+                  invalid={!!pension.startAgeYear && pension.startAgeYear > 100}
+                  errorMessage="Start Age should be the age of the person, not the calendar year"
                   setValue={(name) =>
                     setIncome({ ...pension, startAgeYear: name })
                   }

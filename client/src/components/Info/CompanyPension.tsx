@@ -64,6 +64,8 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             size="lg"
             value={pension.startAge}
             setValue={(name) => setIncome({ ...pension, startAge: name })}
+            invalid={!!pension.startAge && pension.startAge > 100}
+            errorMessage="Start Age should be the age of the person, not the calendar year"
             tooltip="Age that pension income begins (e.g., 65). Leave blank if already receiving."
           />
           <Input

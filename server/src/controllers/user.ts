@@ -16,6 +16,18 @@ export const updateUser = async (req: SessionRequest, res: Response) => {
   return res.json(user);
 };
 
+export const toggleClientFeature = async (req: any, res: Response) => {
+  let userId = req.session!.getUserId();
+  const { name, value } = req.body;
+  const clients = await prisma.client.updateMany({
+    where: { userId },
+    data: {
+      [name]: value,
+    },
+  });
+  return res.json(clients);
+};
+
 export const getUser = async (req: SessionRequest, res: Response) => {
   let userId = req.session!.getUserId();
 

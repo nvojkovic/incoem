@@ -75,7 +75,7 @@ const initializeNewClient = (user: User | null): Client => ({
     postSpending: [],
     yearlyIncrease: { type: "general" },
     currentSpending: null as any,
-    decreaseAtDeath: [null, null] as any,
+    decreaseAtDeath: [0, 0] as any,
   } as RetirementSpendingSettings,
   calculators: undefined as any,
   allInOneCalculator: [],
@@ -95,6 +95,8 @@ const initializeNewClient = (user: User | null): Client => ({
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,
     ],
+    mapType: "result",
+    monthlyYearly: "yearly",
   } as ScenarioSettings,
   reportSettings: user?.info?.globalReportSettings || [],
 });

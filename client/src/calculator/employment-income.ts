@@ -1,4 +1,4 @@
-import { splitDate } from "../utils";
+import { moyrToAnnual, splitDate } from "../utils";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 const calculate = (info: CalculationInfo<EmploymentIncome>) => {
@@ -26,10 +26,14 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   //     1 + (income.yearlyIncreasePercent || 0) / 100,
   //     Math.min(age - income.startAge, currentYear - startYear),
   //   );
+  //
+  const annualIncome = income.income
+    ? moyrToAnnual(income.income)
+    : income.annualIncome;
 
   let baseAmount = adjustForIncrease(
     info,
-    income.annualIncome,
+    annualIncome,
     Math.max(birthYear + income.startAge, startYear),
   );
 

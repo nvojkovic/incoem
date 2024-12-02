@@ -10,6 +10,12 @@ interface Props {
 }
 
 const EmploymentIncome = ({ people, income, setIncome }: Props) => {
+  const amount = income.income
+    ? income.income
+    : {
+      type: "yearly",
+      value: income.annualIncome,
+    };
   return (
     <div className="flex flex-col gap-4">
       {people.length > 1 && (
@@ -28,13 +34,11 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
         setValue={(name) => setIncome({ ...income, name })}
       />
       <Input
-        label="Annual Income"
-        subtype="money"
-        invalid={income.annualIncome < 0}
-        errorMessage="Income must be positive"
+        label="Income"
+        subtype="mo/yr"
         size="lg"
-        value={income.annualIncome}
-        setValue={(name) => setIncome({ ...income, annualIncome: name })}
+        value={amount}
+        setValue={(name) => setIncome({ ...income, income: name })}
         tooltip="The amount of income earned annually."
       />
       <IncomeYearlyIncrease
@@ -54,6 +58,8 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
         subtype="number"
         size="lg"
         value={income.startAge}
+        invalid={!!income.startAge && income.startAge > 100}
+        errorMessage="Start Age should be the age of the person, not the calendar year"
         setValue={(name) => setIncome({ ...income, startAge: name })}
         tooltip="Leave blank if already receiving"
       />
@@ -69,6 +75,8 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
       />
       <Input
         label="Retirement Age"
+        invalid={!!income.retirementAgeYear && income.retirementAgeYear > 100}
+        errorMessage="Retirement Age should be the age of the person, not the calendar year"
         subtype="text"
         size="lg"
         value={income.retirementAgeYear}
