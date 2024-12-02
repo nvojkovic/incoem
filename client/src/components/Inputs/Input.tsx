@@ -20,15 +20,15 @@ interface Props {
   errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-  | "money"
-  | "percent"
-  | "text"
-  | "number"
-  | "date"
-  | "toggle"
-  | "password"
-  | "mo/yr"
-  | "textarea";
+    | "money"
+    | "percent"
+    | "text"
+    | "number"
+    | "date"
+    | "toggle"
+    | "password"
+    | "mo/yr"
+    | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
   setValue: (value: any) => void;
@@ -166,7 +166,9 @@ const Input = ({
           }
           {...props}
         />
-        <div className="flex ml-[-80px] text-sm">
+        <div
+          className={`flex ${tooltip ? "ml-[-80px]" : "ml-[-55px]"} text-sm`}
+        >
           <div
             className={`${value.type == "monthly" ? "bg-main-orange text-white" : "bg-gray-200 text-black"} rounded-l px-1 py-[2px]`}
             onClick={() =>
@@ -236,7 +238,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-          // className="border-black border"
+            // className="border-black border"
           >
             <div className="relative cursor-pointer">
               {errorMessage && invalid ? (

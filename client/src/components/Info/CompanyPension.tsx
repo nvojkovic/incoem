@@ -9,6 +9,12 @@ interface Props {
 }
 
 const CompanyPension = ({ people, pension, setIncome }: Props) => {
+  const amount = pension.amount
+    ? pension.amount
+    : {
+        type: "yearly",
+        value: pension.annualAmount,
+      };
   return (
     <>
       <div className="flex-grow">
@@ -28,12 +34,14 @@ const CompanyPension = ({ people, pension, setIncome }: Props) => {
             value={pension.name}
             setValue={(name) => setIncome({ ...pension, name })}
           />
+
           <Input
-            label="Annual Amount"
-            subtype="money"
+            label="Amount"
+            subtype="mo/yr"
             size="lg"
-            value={pension.annualAmount}
-            setValue={(name) => setIncome({ ...pension, annualAmount: name })}
+            value={amount}
+            setValue={(name) => setIncome({ ...pension, amount: name })}
+            tooltip="The amount of income earned."
           />
           <IncomeYearlyIncrease
             labels={false}

@@ -1,9 +1,13 @@
+import { moyrToAnnual } from "src/utils";
 import { adjustForInflation, adjustForIncrease, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<BasicAnnuity>) => {
   const { income, startYear, currentYear } = info;
   const start = startYear + income.yearsOfDeferral;
-  let yearAmount = adjustForIncrease(info, income.annualAmount, start);
+  const amount = income.amount
+    ? moyrToAnnual(income.amount)
+    : income.annualAmount;
+  let yearAmount = adjustForIncrease(info, amount, start);
 
   if (currentYear < start) {
     return 0;

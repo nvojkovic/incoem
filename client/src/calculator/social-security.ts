@@ -103,7 +103,6 @@ export const calculateOwnSocialSecurity = (
     if (income.alreadyReceiving) {
       ownAmount = income.annualAmount;
     } else if (income.startAgeYear == age) {
-      //console.log("hehe", income.annualAmount, "month", startAgeMonth);
       ownAmount = (income.annualAmount * (12 - (startAgeMonth || 1) + 1)) / 12;
     } else if (income.startAgeYear < age) {
       ownAmount = income.annualAmount;

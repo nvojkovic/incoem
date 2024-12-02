@@ -13,6 +13,13 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
   if (people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
+  const amount = pension.amount
+    ? pension.amount
+    : {
+        type: "yearly",
+        value: pension.annualAmount,
+      };
+
   return (
     <>
       <div className="flex-grow">
@@ -37,11 +44,11 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             setValue={(name) => setIncome({ ...pension, name })}
           />
           <Input
-            label="Annual Amount"
-            subtype="money"
+            label="Amount"
+            subtype="mo/yr"
             size="lg"
-            value={pension.annualAmount}
-            setValue={(name) => setIncome({ ...pension, annualAmount: name })}
+            value={amount}
+            setValue={(name) => setIncome({ ...pension, amount: name })}
           />
           <Input
             label="Years of Deferral"

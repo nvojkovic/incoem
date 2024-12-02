@@ -1,17 +1,17 @@
 interface SelectedColumn {
   type:
-  | "year"
-  | "age"
-  | "income"
-  | "total"
-  | "none"
-  | "spending"
-  | "gap"
-  | "income-stability"
-  | "spending-stability"
-  | "0-alive"
-  | "1-alive"
-  | "joint-alive";
+    | "year"
+    | "age"
+    | "income"
+    | "total"
+    | "none"
+    | "spending"
+    | "gap"
+    | "income-stability"
+    | "spending-stability"
+    | "0-alive"
+    | "1-alive"
+    | "joint-alive";
   id: number;
 }
 
@@ -78,6 +78,7 @@ interface CompanyPension extends Income {
   name: string;
   personId: number;
   annualAmount: number;
+  amount: MonthlyYearlyAmount;
   survivorPercent: number;
   yearlyIncreasePercent: number;
   yearlyIncrease: YearlyIncrease;
@@ -90,6 +91,7 @@ interface BasicAnnuity extends Income {
   name: string;
   personId: number;
   annualAmount: number;
+  amount: MonthlyYearlyAmount;
   yearsOfDeferral: number;
   yearlyIncreasePercent: number;
   yearlyIncrease: YearlyIncrease;

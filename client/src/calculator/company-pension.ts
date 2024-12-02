@@ -1,4 +1,4 @@
-import { splitDate } from "../utils";
+import { moyrToAnnual, splitDate } from "../utils";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<CompanyPension>) => {
@@ -13,8 +13,11 @@ export const calculate = (info: CalculationInfo<CompanyPension>) => {
   //     1 + (income.yearlyIncreasePercent || 0) / 100,
   //     currentYear - start,
   //   );
+  const annualIncome = income.amount
+    ? moyrToAnnual(income.amount)
+    : income.annualAmount;
 
-  let yearAmount = adjustForIncrease(info, income.annualAmount, start);
+  let yearAmount = adjustForIncrease(info, annualIncome, start);
 
   yearAmount = adjustForInflation(info, yearAmount, start);
 
