@@ -48,6 +48,8 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
             subtype="number"
             size="lg"
             value={pension.yearsOfDeferral}
+            invalid={!!pension.yearsOfDeferral && pension.yearsOfDeferral > 50}
+            errorMessage="Years of deferral should be the number of years until the annuity starts."
             tooltip="Years of deferral"
             setValue={(name) =>
               setIncome({ ...pension, yearsOfDeferral: name })

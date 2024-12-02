@@ -833,7 +833,7 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
     <div className="">
       <label className="text-sm text-[#344054] w-36 ">{label}</label>
       <div className="flex mt-[6px]">
-        {options.map((item: any, i) => (
+        {options.map((item: any, i: any) => (
           <button
             key={item}
             className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg" : ""} border text-sm flex-1 py-[7px] px-4 ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
