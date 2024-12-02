@@ -1,5 +1,4 @@
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
-import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { SettingsData } from "./types";
 import { Tooltip } from "flowbite-react";
