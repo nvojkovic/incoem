@@ -37,6 +37,9 @@ const CompositeTable = ({
       ? setSelectedColumn({ type: "none", id: 0 })
       : setSelectedColumn({ type: name, id: 0 });
   };
+  const setRow = (year: number) => () => {
+    setSelectedYear === year ? setSelectedYear(0) : setSelectedYear(year);
+  };
 
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
@@ -181,11 +184,7 @@ const CompositeTable = ({
                     return (
                       <tr
                         className={`${index % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] ${selectedYear === line ? "!bg-slate-200" : ""}`}
-                        onClick={() => () =>
-                          selectedYear == line
-                            ? setSelectedYear(0)
-                            : setSelectedYear(line)
-                        }
+                        onClick={setRow(line)}
                       >
                         <td
                           className={`px-6 py-[6px] font-medium ${selectedColumn?.type === "year" ? "!bg-slate-200" : ""}`}
