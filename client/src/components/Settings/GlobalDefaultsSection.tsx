@@ -1,5 +1,9 @@
+import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { SettingsData } from "./types";
+import { Tooltip } from "flowbite-react";
+import { ApplyToCurrent } from "./Settings";
 
 interface GlobalDefaultsSectionProps {
   settings: SettingsData;
@@ -11,16 +15,32 @@ const GlobalDefaultsSection = ({
   setSettings,
 }: GlobalDefaultsSectionProps) => {
   return (
-    <div className="grid gap-y-5 grid-cols-2 w-[500px]">
-      <Input
-        value={settings.globalInflation}
-        subtype="percent"
-        setValue={(e) => setSettings({ ...settings, globalInflation: e })}
-        label="Inflation"
-        labelLength={110}
-        width="!w-24"
-        tabIndex={4}
-      />
+    <div className="grid gap-y-5 grid-cols-2 ">
+      <div className="flex justify-start">
+        <div>
+          <Input
+            value={settings.globalInflation}
+            subtype="percent"
+            setValue={(e) => setSettings({ ...settings, globalInflation: e })}
+            label="Inflation"
+            labelLength={110}
+            width="!w-24"
+            tabIndex={4}
+          />
+        </div>
+        <div className="mx-3  w-72">
+          <Tooltip
+            content="Apply this inflation rate to existing clients"
+            style="light"
+          >
+            <ApplyToCurrent
+              content={<ArrowUpRightIcon className="h-5" />}
+              name="inflation"
+              value={settings.globalInflation}
+            />
+          </Tooltip>
+        </div>
+      </div>
       <Input
         value={settings.globalPreRetirementTaxRate}
         subtype="percent"

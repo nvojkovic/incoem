@@ -42,7 +42,11 @@ const isColorTooLight = (
   return luminance > threshold;
 };
 
-const ApplyToCurrent = ({ name, value }: any) => {
+export const ApplyToCurrent = ({
+  name,
+  value,
+  content = "Apply to current clients",
+}: any) => {
   const updateSetting = async () => {
     await applyToAll(name, value);
     setUpdateTimer(true);
@@ -54,16 +58,21 @@ const ApplyToCurrent = ({ name, value }: any) => {
   const [updating, setUpdateTimer] = useState(false);
 
   return (
-    <div>
-      <Button type="primary" onClick={updateSetting}>
-        {" "}
-        Apply to current clients
-      </Button>
-      <div
-        className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
-      >
-        Clients updated!
+    <div
+      className={`flex ${name !== "inflation" ? "flex-col" : "gap-3"} items-center justify-center`}
+    >
+      <div>
+        <Button type="primary" onClick={updateSetting}>
+          {content}
+        </Button>
       </div>
+      {updating && (
+        <div
+          className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
+        >
+          Clients updated!
+        </div>
+      )}
     </div>
   );
 };
@@ -277,12 +286,7 @@ const Settings = () => {
                       Income Map
                     </div>
                   </div>
-                  <div>
-                    <ApplyToCurrent
-                      name="needsFlag"
-                      value={settings.needsFlag}
-                    />
-                  </div>
+                  <ApplyToCurrent name="needsFlag" value={settings.needsFlag} />
                 </div>
                 <div className="flex gap-5 items-center w-full justify-between">
                   <div className="flex gap-5 items-center">

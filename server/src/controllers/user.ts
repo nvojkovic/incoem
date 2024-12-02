@@ -19,13 +19,29 @@ export const updateUser = async (req: SessionRequest, res: Response) => {
 export const toggleClientFeature = async (req: any, res: Response) => {
   let userId = req.session!.getUserId();
   const { name, value } = req.body;
-  const clients = await prisma.client.updateMany({
-    where: { userId },
-    data: {
-      [name]: value,
-    },
-  });
-  return res.json(clients);
+  if (name === "inflation") {
+    // update inflation field on liveSettings for every client
+    const clients = await prisma.client.findMany({
+      where: { userId },
+    });
+    clients.forEach(async (client) => {
+      const old = client.liveSettings as any;
+      await prisma.client.update({
+        where: { id: client.id },
+        data: {
+          liveSettings: { ...old, inflation: value },
+        },
+      });
+    });
+  } else {
+    const clients = await prisma.client.updateMany({
+      where: { userId },
+      data: {
+        [name]: value,
+      },
+    });
+  }
+  return res.json({});
 };
 
 export const getUser = async (req: SessionRequest, res: Response) => {
