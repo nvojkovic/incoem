@@ -56,7 +56,7 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
                     disabled
                     label={`${person.name}'s Death`}
                     value={settings.deathYears[i]?.toString()}
-                    setValue={() => { }}
+                    setValue={() => {}}
                   />
                 </div>
               ),
@@ -70,7 +70,7 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
             vertical
             disabled
             value={settings.maxYearsShown}
-            setValue={() => { }}
+            setValue={() => {}}
           />
         </div>
         <div className="print:mr-[-20px]">
@@ -85,30 +85,11 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
                 ? `${settings.inflation?.toString()}%`
                 : "0%"
             }
-            setValue={() => { }}
+            setValue={() => {}}
           />
         </div>
         <div>
           <div className="flex mb-4 justify-end gap-3">
-            <SmallToggle
-              item1="Basic"
-              item2="Composite"
-              active={
-                client.liveSettings.mapType === "composite"
-                  ? "Composite"
-                  : "Basic"
-              }
-              toggle={() =>
-                setSettings({
-                  ...client.liveSettings,
-                  mapType:
-                    client.liveSettings.mapType === "composite"
-                      ? "basic"
-                      : "composite",
-                })
-              }
-            />
-
             <SmallToggle
               item1="Monthly"
               item2="Annual"
@@ -124,6 +105,24 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
                     client.liveSettings.monthlyYearly === "monthly"
                       ? "yearly"
                       : "monthly",
+                })
+              }
+            />
+            <SmallToggle
+              item1="Basic"
+              item2="Composite"
+              active={
+                client.liveSettings.mapType === "composite"
+                  ? "Composite"
+                  : "Basic"
+              }
+              toggle={() =>
+                setSettings({
+                  ...client.liveSettings,
+                  mapType:
+                    client.liveSettings.mapType === "composite"
+                      ? "basic"
+                      : "composite",
                 })
               }
             />

@@ -17,15 +17,15 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 
 export const SmallToggle = ({ item1, item2, active, toggle }: any) => {
   return (
-    <div className="flex text-sm cursor-pointer">
+    <div className="flex text-sm cursor-pointer border-collapse">
       <div
-        className={`${active === item1 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-l-md`}
+        className={`${active === item1 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-l-md  border  border-gray-300 border-1`}
         onClick={toggle}
       >
         {item1}
       </div>
       <div
-        className={`${active === item2 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-r-md`}
+        className={`${active === item2 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-r-md ml-[-1px] border  border-gray-300 border-1`}
         onClick={toggle}
       >
         {item2}
@@ -198,23 +198,6 @@ const Live = ({
             <div className="flex flex-col items-end">
               <div className="flex mb-4 mt-3 justify-end gap-3">
                 <SmallToggle
-                  item1="Basic"
-                  item2="Composite"
-                  active={
-                    settings.mapType === "composite" ? "Composite" : "Basic"
-                  }
-                  toggle={() =>
-                    setSettings({
-                      ...settings,
-                      mapType:
-                        settings.mapType === "composite"
-                          ? "basic"
-                          : "composite",
-                    })
-                  }
-                />
-
-                <SmallToggle
                   item1="Monthly"
                   item2="Annual"
                   active={
@@ -227,6 +210,22 @@ const Live = ({
                         settings.monthlyYearly === "monthly"
                           ? "yearly"
                           : "monthly",
+                    })
+                  }
+                />
+                <SmallToggle
+                  item1="Basic"
+                  item2="Composite"
+                  active={
+                    settings.mapType === "composite" ? "Composite" : "Basic"
+                  }
+                  toggle={() =>
+                    setSettings({
+                      ...settings,
+                      mapType:
+                        settings.mapType === "composite"
+                          ? "basic"
+                          : "composite",
                     })
                   }
                 />

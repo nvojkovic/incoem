@@ -1,7 +1,6 @@
 import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
 import Input from "../Inputs/Input";
 import { SettingsData } from "./types";
-import { Tooltip } from "flowbite-react";
 import { ApplyToCurrent } from "./Settings";
 
 interface GlobalDefaultsSectionProps {
@@ -27,17 +26,13 @@ const GlobalDefaultsSection = ({
             tabIndex={4}
           />
         </div>
-        <div className="mx-3  w-72">
-          <Tooltip
-            content="Apply this inflation rate to existing clients"
-            style="light"
-          >
-            <ApplyToCurrent
-              content={<ArrowUpRightIcon className="h-5" />}
-              name="inflation"
-              value={settings.globalInflation}
-            />
-          </Tooltip>
+        <div className="mx-3 w-72">
+          <ApplyToCurrent
+            tooltip="Apply this inflation rate to existing clients"
+            content={<ArrowUpRightIcon className="h-5" />}
+            name="inflation"
+            value={settings.globalInflation}
+          />
         </div>
       </div>
       <Input

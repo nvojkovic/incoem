@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Tooltip } from "flowbite-react";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpRightIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import Alert from "src/components/Alert";
 import { useUser } from "src/useUser";
 import { applyToAll, updateSettings, uploadLogo } from "src/services/client";
@@ -45,7 +48,8 @@ const isColorTooLight = (
 export const ApplyToCurrent = ({
   name,
   value,
-  content = "Apply to current clients",
+  content = <ArrowUpRightIcon className="h-5" />,
+  tooltip = "",
 }: any) => {
   const updateSetting = async () => {
     await applyToAll(name, value);
@@ -58,22 +62,20 @@ export const ApplyToCurrent = ({
   const [updating, setUpdateTimer] = useState(false);
 
   return (
-    <div
-      className={`flex ${name !== "inflation" ? "flex-col" : "gap-3"} items-center justify-center`}
-    >
-      <div>
-        <Button type="primary" onClick={updateSetting}>
-          {content}
-        </Button>
-      </div>
-      {updating && (
+    <Tooltip content={tooltip} style="light">
+      <div className={`flex ${"gap-3"} items-center justify-center`}>
+        <div>
+          <Button type="primary" onClick={updateSetting}>
+            {content}
+          </Button>
+        </div>
         <div
           className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
         >
           Clients updated!
         </div>
-      )}
-    </div>
+      </div>
+    </Tooltip>
   );
 };
 
@@ -241,8 +243,8 @@ const Settings = () => {
                 settings page."
               />
               <div className="flex flex-col gap-3 w-full">
-                <div className="flex gap-5 items-center w-full justify-between">
-                  <div className="flex gap-5 items-center">
+                <div className="flex gap-5 items-center w-full">
+                  <div className="flex gap-5 items-center w-[700px]">
                     <div>
                       <Input
                         value={settings.stabilityRatioFlag}
@@ -260,15 +262,16 @@ const Settings = () => {
                       the Income Map
                     </div>
                   </div>
-                  <div>
+                  <div className="">
                     <ApplyToCurrent
                       name="stabilityRatioFlag"
                       value={settings.stabilityRatioFlag}
+                      tooltip="Apply this Stability setting to existing clients"
                     />
                   </div>
                 </div>
-                <div className="flex gap-5 items-center w-full justify-between">
-                  <div className="flex gap-5 items-center">
+                <div className="flex gap-5 items-center w-full ">
+                  <div className="flex gap-5 items-center w-[700px]">
                     <div>
                       <Input
                         value={settings.needsFlag}
@@ -286,10 +289,14 @@ const Settings = () => {
                       Income Map
                     </div>
                   </div>
-                  <ApplyToCurrent name="needsFlag" value={settings.needsFlag} />
+                  <ApplyToCurrent
+                    name="needsFlag"
+                    value={settings.needsFlag}
+                    tooltip="Apply this Spending setting to existing clients"
+                  />
                 </div>
-                <div className="flex gap-5 items-center w-full justify-between">
-                  <div className="flex gap-5 items-center">
+                <div className="flex gap-5 items-center w-full">
+                  <div className="flex gap-5 items-center w-[700px]">
                     <div>
                       <Input
                         value={settings.longevityFlag}
@@ -309,6 +316,7 @@ const Settings = () => {
                   <div>
                     <ApplyToCurrent
                       name="longevityFlag"
+                      tooltip="Apply this Longevity setting to existing clients"
                       value={settings.longevityFlag}
                     />
                   </div>
