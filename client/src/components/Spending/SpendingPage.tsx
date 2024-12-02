@@ -326,8 +326,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-16">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-16">Increase (%)</div>
+                  )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -484,17 +484,18 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                    }`}
+                  className={`px-6 py-3 font-medium ${
+                    spending.postSpending.find(
+                      (i) => i.increase.type === "custom",
+                    ) && "w-64"
+                  }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-8">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-8">Increase (%)</div>
+                  )}{" "}
                 </th>
 
                 {data.data.people.map((i) => (
@@ -832,12 +833,13 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
   return (
     <div className="">
       <label className="text-sm text-[#344054] w-36 ">{label}</label>
-      <div className="flex mt-[6px]">
+      <div className="flex mt-[3px]">
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg" : ""} border text-sm flex-1 py-[7px] px-4 ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
-              }`}
+            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg" : ""} border text-sm flex-1 py-[7px] px-4 ${
+              value === item ? "bg-main-orange text-white" : "bg-gray-200"
+            }`}
             onClick={() => setValue(item)}
           >
             {item}

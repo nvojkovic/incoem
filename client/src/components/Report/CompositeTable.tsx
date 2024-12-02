@@ -38,7 +38,7 @@ const CompositeTable = ({
       : setSelectedColumn({ type: name, id: 0 });
   };
   const setRow = (year: number) => () => {
-    setSelectedYear === year ? setSelectedYear(0) : setSelectedYear(year);
+    selectedYear === year ? setSelectedYear(-1) : setSelectedYear(year);
   };
 
   const divisionFactor =
@@ -48,7 +48,7 @@ const CompositeTable = ({
       {[0, 1, 2, 3, 4].map((tableInd) => {
         return (
           currentYear + scenario.maxYearsShown >
-          currentYear + tableInd * height && (
+            currentYear + tableInd * height && (
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
