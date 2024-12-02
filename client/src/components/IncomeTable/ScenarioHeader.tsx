@@ -89,7 +89,7 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
           />
         </div>
         <div>
-          <div className="flex mb-3 justify-end gap-3">
+          <div className="flex mb-4 justify-end gap-3">
             <SmallToggle
               item1="Basic"
               item2="Composite"

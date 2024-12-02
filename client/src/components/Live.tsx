@@ -19,13 +19,13 @@ export const SmallToggle = ({ item1, item2, active, toggle }: any) => {
   return (
     <div className="flex text-sm cursor-pointer">
       <div
-        className={`${active === item1 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-2 py-[2px] rounded-l-md`}
+        className={`${active === item1 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-l-md`}
         onClick={toggle}
       >
         {item1}
       </div>
       <div
-        className={`${active === item2 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-2 py-[2px] rounded-r-md`}
+        className={`${active === item2 ? "bg-main-orange text-white" : "bg-gray-200 text-black"} px-3 py-[3px] rounded-r-md`}
         onClick={toggle}
       >
         {item2}
@@ -196,7 +196,7 @@ const Live = ({
           </div>
           <div className="flex gap-3">
             <div className="flex flex-col items-end">
-              <div className="flex mb-3 justify-end gap-3">
+              <div className="flex mb-4 mt-3 justify-end gap-3">
                 <SmallToggle
                   item1="Basic"
                   item2="Composite"
