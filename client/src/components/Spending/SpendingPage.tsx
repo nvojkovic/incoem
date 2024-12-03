@@ -8,7 +8,12 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
-import { updateAtIndex, yearRange } from "../../utils";
+import {
+  convertToMoYr,
+  moyrToAnnual,
+  updateAtIndex,
+  yearRange,
+} from "../../utils";
 import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
@@ -39,10 +44,19 @@ export const calculateSpendingYear = (
 
   // back out existing spending
   const existing = spending.preSpending
-    .map((item) => item.amount || 0)
+    .map((item) =>
+      moyrToAnnual(
+        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+      ),
+    )
     .reduce((a, b) => a + b, 0);
 
-  let result = spending.currentSpending - existing;
+  let result =
+    moyrToAnnual(
+      spending.newCurrentSpending
+        ? spending.newCurrentSpending
+        : convertToMoYr(spending.currentSpending),
+    ) - existing;
 
   //back out death reduction
   if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
@@ -58,7 +72,14 @@ export const calculateSpendingYear = (
   // add pre back in
   const pre = spending.preSpending
     ?.filter((item) => year <= item.endYear)
-    .map((item) => inflateAmount(item.amount || 0, item.increase))
+    .map((item) =>
+      inflateAmount(
+        moyrToAnnual(
+          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+        ),
+        item.increase,
+      ),
+    )
     .reduce((a, b) => a + b, 0);
   result += pre;
 
@@ -68,7 +89,9 @@ export const calculateSpendingYear = (
       (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
     )
     .map((item) => {
-      let amount = item.amount || 0;
+      let amount = moyrToAnnual(
+        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+      );
       if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
         const age =
           calculateAge(new Date(data.people[settings.whoDies].birthday)) +
@@ -118,16 +141,30 @@ export const calculateSendingYear = (
   const pre = spending.preSpending
     ?.filter((item) => year > item.endYear)
     .map((item) =>
-      inflateAmount(item.amount || 0, inflationRate(item.increase)),
+      inflateAmount(
+        moyrToAnnual(
+          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+        ),
+        inflationRate(item.increase),
+      ),
     )
     .reduce((a, b) => a + b, 0);
 
   const uninflatedPre = spending.preSpending
-    ?.map((item) => item.amount || 0)
+    ?.map((item) =>
+      moyrToAnnual(
+        item.newAmount ? item.newAmount : convertToMoYr(item.amount) || 0,
+      ),
+    )
     .reduce((a, b) => a + b, 0);
   const inflatedPre = spending.preSpending
     ?.map((item) =>
-      inflateAmount(item.amount || 0, inflationRate(item.increase)),
+      inflateAmount(
+        moyrToAnnual(
+          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+        ),
+        inflationRate(item.increase),
+      ),
     )
     .reduce((a, b) => a + b, 0);
   const post = spending.postSpending
@@ -135,7 +172,9 @@ export const calculateSendingYear = (
       (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
     )
     .map((item) => {
-      let amount = item.amount || 0;
+      let amount = moyrToAnnual(
+        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+      );
       if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
         const age =
           calculateAge(new Date(data.people[settings.whoDies].birthday)) +
@@ -151,7 +190,11 @@ export const calculateSendingYear = (
   result -= pre;
   result += post;
 
-  let current = spending.currentSpending;
+  let current = moyrToAnnual(
+    spending.newCurrentSpending
+      ? spending.newCurrentSpending
+      : convertToMoYr(spending.currentSpending),
+  );
   if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
@@ -245,11 +288,15 @@ const SpendingPage = () => {
               <Input
                 vertical
                 size="lg"
-                value={spending.currentSpending}
-                setValue={(v) =>
-                  setSpending({ ...spending, currentSpending: v })
+                value={
+                  spending.newCurrentSpending
+                    ? spending.newCurrentSpending
+                    : convertToMoYr(spending.currentSpending)
                 }
-                subtype="money"
+                setValue={(v) =>
+                  setSpending({ ...spending, newCurrentSpending: v })
+                }
+                subtype="mo/yr"
                 label="Amount (Today's Dollars)"
               />
             </div>
@@ -350,9 +397,13 @@ const SpendingPage = () => {
                       label=""
                       vertical
                       size="full"
-                      value={line.amount}
-                      setValue={(v) => setPreSpending(index, "amount", v)}
-                      subtype="money"
+                      value={
+                        line.newAmount
+                          ? line.newAmount
+                          : { type: "yearly", value: line.amount }
+                      }
+                      setValue={(v) => setPostSpending(index, "newAmount", v)}
+                      subtype="mo/yr"
                     />
                   </td>
                   <td className="px-2 py-2">
@@ -412,16 +463,6 @@ const SpendingPage = () => {
                         type="secondary"
                         onClick={() => {
                           return setPreDeleteOpen(index);
-                          if (
-                            confirm(
-                              "Are you sure you want to delete this spending?",
-                            )
-                          )
-                            setField("preSpending")(
-                              spending.preSpending.filter(
-                                (_, ind) => ind !== index,
-                              ),
-                            );
                         }}
                       >
                         <div className="flex justify-center">
@@ -526,9 +567,13 @@ const SpendingPage = () => {
                       label=""
                       vertical
                       size="md"
-                      value={line.amount}
-                      setValue={(v) => setPostSpending(index, "amount", v)}
-                      subtype="money"
+                      value={
+                        line.newAmount
+                          ? line.newAmount
+                          : { type: "yearly", value: line.amount }
+                      }
+                      setValue={(v) => setPostSpending(index, "newAmount", v)}
+                      subtype="mo/yr"
                     />
                   </td>
                   <td className="px-2 py-2">

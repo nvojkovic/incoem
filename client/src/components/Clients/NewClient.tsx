@@ -74,7 +74,8 @@ const initializeNewClient = (user: User | null): Client => ({
     preSpending: [],
     postSpending: [],
     yearlyIncrease: { type: "general" },
-    currentSpending: null as any,
+    newCurrentSpending: { type: "yearly", value: 0 },
+    currentSpending: 0,
     decreaseAtDeath: [0, 0] as any,
   } as RetirementSpendingSettings,
   calculators: undefined as any,
@@ -147,9 +148,9 @@ const NewClient = () => {
                   people: singleMode
                     ? [client.data.people[0]]
                     : [
-                      ...client.data.people,
-                      { name: "", birthday: null as any, id: 1 },
-                    ],
+                        ...client.data.people,
+                        { name: "", birthday: null as any, id: 1 },
+                      ],
                 },
               });
             }}

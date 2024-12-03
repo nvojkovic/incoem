@@ -167,7 +167,7 @@ const Input = ({
           {...props}
         />
         <div
-          className={`flex ${tooltip ? "ml-[-80px]" : "ml-[-55px]"} text-sm`}
+          className={`flex ${tooltip ? "ml-[-80px]" : "ml-[-55px]"} text-sm cursor-pointer`}
         >
           <div
             className={`${value.type == "monthly" ? "bg-main-orange text-white" : "bg-gray-200 text-black"} rounded-l px-1 py-[2px]`}

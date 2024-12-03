@@ -209,6 +209,7 @@ type YearlyIncrease =
 
 interface RetirementSpendingSettings {
   currentSpending: number;
+  newCurrentSpending: MonthlyYearlyAmount;
   yearlyIncrease: YearlyIncrease;
   decreaseAtDeath: [number, number];
   preTaxRate: number;
@@ -220,6 +221,7 @@ interface RetirementSpendingSettings {
 interface CurrentSpending {
   category: string;
   amount: number;
+  newAmount: MonthlyYearlyAmount;
   endYear: number;
   increase: YearlyIncrease;
 }
@@ -227,6 +229,7 @@ interface CurrentSpending {
 interface NewSpending {
   category: string;
   amount: number;
+  newAmount: MonthlyYearlyAmount;
   startYear: number;
   endYear: number;
   increase: YearlyIncrease;
