@@ -1,6 +1,7 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
+import { migrateOtherIncome } from "src/calculator/other-income";
 
 interface Props {
   annuity: OtherIncome;
@@ -13,9 +14,11 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
   if (people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
+  let newAmount = migrateOtherIncome(pension);
+
   return (
     <>
-      <div className="flex flex-col gap-4  justify-start">
+      <div className="flex flex-col gap-4 justify-start">
         {people.length > 1 && (
           <Select
             options={options}
@@ -36,6 +39,14 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           setValue={(name) => setIncome({ ...pension, name })}
         />
         <Input
+          label="Amount"
+          subtype="mo/yr"
+          size="lg"
+          value={newAmount}
+          setValue={(name) => setIncome({ ...pension, newAmount: name })}
+        />
+        {/*
+<Input
           label="Income Amount"
           subtype="money"
           size="lg"
@@ -55,7 +66,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           }}
           setSelected={(i) => setIncome({ ...pension, frequency: i.id })}
           label="Income Frequency"
-        />
+        />*/}
         <Input
           label="Start Year"
           size="lg"
@@ -76,7 +87,6 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
           value={pension.endYear}
           setValue={(name) => setIncome({ ...pension, endYear: name })}
         />
-
         <IncomeYearlyIncrease
           labels={false}
           increase={

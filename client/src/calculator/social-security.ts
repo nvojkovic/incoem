@@ -1,4 +1,4 @@
-import { printNumber, splitDate } from "../utils";
+import { moyrToAnnual, printNumber, splitDate } from "../utils";
 import { calculateEmploymentIncome } from "./employment-income";
 import {
   adjustCompoundInterest,
@@ -99,13 +99,19 @@ export const calculateOwnSocialSecurity = (
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
   let ownAmount = 0;
+
   if (income.calculationMethod == "manual") {
+    const amount = moyrToAnnual(
+      income.amount
+        ? income.amount
+        : { value: income.annualAmount, type: "yearly" },
+    );
     if (income.alreadyReceiving) {
-      ownAmount = income.annualAmount;
+      ownAmount = amount;
     } else if (income.startAgeYear == age) {
-      ownAmount = (income.annualAmount * (12 - (startAgeMonth || 1) + 1)) / 12;
+      ownAmount = (amount * (12 - (startAgeMonth || 1) + 1)) / 12;
     } else if (income.startAgeYear < age) {
-      ownAmount = income.annualAmount;
+      ownAmount = amount;
     }
   } else {
     const prorate =

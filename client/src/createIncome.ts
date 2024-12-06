@@ -23,6 +23,7 @@ export const newSocialSecurityIncome = (
   personId: person.id,
   stable: true,
   annualAmount: 0,
+  amount: { type: "yearly", value: null as any },
   cola: 0,
   yearlyIncrease: { type: "general" },
   alreadyReceiving: false,

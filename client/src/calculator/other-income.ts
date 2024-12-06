@@ -1,7 +1,25 @@
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
+export const migrateOtherIncome = (
+  income: OtherIncome,
+): MonthlyYearlyAmount => {
+  if (income.newAmount) return income.newAmount;
+  if (income.amount && income.frequency) {
+    if (income.frequency === "monthly") {
+      return { value: income.amount, type: "monthly" };
+    } else if (income.frequency === "quarterly") {
+      return { value: income.amount * 4, type: "yearly" };
+    } else if (income.frequency === "semi-annually") {
+      return { value: income.amount * 2, type: "yearly" };
+    } else if (income.frequency === "annually") {
+      return { value: income.amount, type: "yearly" };
+    }
+  }
+  return { value: null as any, type: "yearly" };
+};
 
 export const calculate = (info: CalculationInfo<OtherIncome>) => {
   const { income, currentYear } = info;
+  const newAmount = migrateOtherIncome(income);
   const current = currentYear;
   const startYear = income.startYear || info.startYear;
 
@@ -16,16 +34,14 @@ export const calculate = (info: CalculationInfo<OtherIncome>) => {
   //   income.amount *
   //   (1 + income.yearlyIncreasePercent / 100) ** (current - startYear);
   //
-  let yearAmount = adjustForIncrease(info, income.amount, startYear);
+  let yearAmount = adjustForIncrease(info, newAmount.value, startYear);
 
   yearAmount = adjustForInflation(info, yearAmount, info.startYear);
 
-  if (income.frequency === "monthly") {
+  if (newAmount?.type === "monthly") {
     yearAmount = yearAmount * 12;
-  } else if (income.frequency === "quarterly") {
-    yearAmount = yearAmount * 4;
-  } else if (income.frequency === "semi-annually") {
-    yearAmount = yearAmount * 2;
+  } else {
+    yearAmount = newAmount.value;
   }
 
   if (isDead(info, income.personId)) {

@@ -1,17 +1,17 @@
 interface SelectedColumn {
   type:
-    | "year"
-    | "age"
-    | "income"
-    | "total"
-    | "none"
-    | "spending"
-    | "gap"
-    | "income-stability"
-    | "spending-stability"
-    | "0-alive"
-    | "1-alive"
-    | "joint-alive";
+  | "year"
+  | "age"
+  | "income"
+  | "total"
+  | "none"
+  | "spending"
+  | "gap"
+  | "income-stability"
+  | "spending-stability"
+  | "0-alive"
+  | "1-alive"
+  | "joint-alive";
   id: number;
 }
 
@@ -66,6 +66,7 @@ interface SocialSecurityIncome extends Income {
   calculationMethod: "manual" | "pia";
   pia: number;
   annualAmount: number;
+  amount: MonthlyYearlyAmount;
   alreadyReceiving: boolean;
   cola: number;
   yearlyIncrease: YearlyIncrease;
@@ -104,6 +105,7 @@ interface OtherIncome extends Income {
   name: string;
   personId: number;
   amount: number;
+  newAmount: MonthlyYearlyAmount;
   frequency: "monthly" | "quarterly" | "semi-annually" | "annually";
   startYear: number;
   endYear: number;

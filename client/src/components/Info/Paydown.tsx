@@ -1,5 +1,6 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
+import { useState } from "react";
 
 interface Props {
   paydown: Paydown;
@@ -20,6 +21,12 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
   if (paydown.paymentInYear === "beginning") {
     amount = amount / (1 + interest);
   }
+  const [resultType, setResultType] = useState("yearly");
+  const factor = resultType === "monthly" ? 12 : 1;
+  const result =
+    Number.isNaN(amount) || amount == Infinity
+      ? 0
+      : Math.round(amount / factor);
 
   return (
     <div className="flex flex-col gap-4">
@@ -89,19 +96,17 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         setValue={(name) =>
           setIncome({
             ...paydown,
-            length: parseInt(name),
+            length: name,
           })
         }
       />
       <Input
         label="Calculated Payment"
-        subtype="money"
+        subtype="mo/yr"
         size="lg"
         disabled
-        value={
-          Number.isNaN(amount) || amount == Infinity ? 0 : amount.toFixed(2)
-        }
-        setValue={() => { }}
+        value={{ value: result, type: resultType }}
+        setValue={({ type }) => setResultType(type)}
       />
     </div>
   );

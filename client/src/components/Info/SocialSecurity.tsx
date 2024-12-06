@@ -17,6 +17,10 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
   const handleStartAgeMonthChange = (month: { id: number }) => {
     setIncome({ ...pension, startAgeMonth: month.id || 0 }); // Set to 1 if blank or 0
   };
+
+  const amount = pension.amount
+    ? pension.amount
+    : { value: pension.annualAmount, type: "yearly" };
   return (
     <>
       <div className="flex-grow">
@@ -58,13 +62,11 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
               {pension.calculationMethod == "manual" && (
                 <Input
                   label="Annual Amount"
-                  subtype="money"
+                  subtype="mo/yr"
                   size="lg"
-                  value={pension.annualAmount}
+                  value={amount}
                   tooltip="Annual amount"
-                  setValue={(name) =>
-                    setIncome({ ...pension, annualAmount: name })
-                  }
+                  setValue={(name) => setIncome({ ...pension, amount: name })}
                 />
               )}
               <IncomeYearlyIncrease
