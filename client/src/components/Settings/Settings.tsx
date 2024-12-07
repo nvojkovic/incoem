@@ -333,7 +333,7 @@ const Settings = () => {
                     reports."
                     <div className="mt-5">
                       <ApplyToCurrent
-                        name="globalReportSettings"
+                        name="reportSettings"
                         value={settings.globalReportSettings}
                         tooltip="Apply report settings to existing clients"
                       />
