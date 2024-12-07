@@ -8,6 +8,7 @@ interface SpendingTableProps {
 
 const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
   const currentYear = new Date().getFullYear();
+  const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
   return (
     <div className="flex gap-4 p-3">
       {[0, 1, 2, 3, 4].map(
@@ -43,7 +44,12 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
 
                       <td className="px-2 py-1 w-[500px]">
                         {printNumber(
-                          calculateSpendingYear(data, spending, settings, line),
+                          calculateSpendingYear(
+                            data,
+                            spending,
+                            settings,
+                            line,
+                          ) / factor,
                         )}
                       </td>
                     </tr>

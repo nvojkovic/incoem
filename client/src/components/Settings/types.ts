@@ -16,5 +16,5 @@ export interface SettingsData {
 
 export interface SectionHeaderProps {
   title: string;
-  subtitle: string;
+  subtitle: string | React.ReactElement;
 }

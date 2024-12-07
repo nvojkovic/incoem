@@ -327,7 +327,19 @@ const Settings = () => {
             <div className="flex gap-5 border-b border-black pb-7">
               <SectionHeader
                 title="Reports"
-                subtitle="Choose which pages in which order are included in PDF reports."
+                subtitle={
+                  <>
+                    "Choose which pages in which order are included in PDF
+                    reports."
+                    <div className="mt-5">
+                      <ApplyToCurrent
+                        name="globalReportSettings"
+                        value={settings.globalReportSettings}
+                        tooltip="Apply report settings to existing clients"
+                      />
+                    </div>
+                  </>
+                }
               />
               <div>
                 <ReportSettings

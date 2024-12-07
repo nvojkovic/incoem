@@ -21,6 +21,7 @@ import WhoDies from "../WhoDies";
 import MainChart from "../Charts/MainChart";
 import Confirm from "../Confirm";
 import { useState } from "react";
+import { SmallToggle } from "../Live";
 
 export const calculateSpendingYear = (
   data: IncomeMapData,
@@ -264,13 +265,15 @@ const SpendingPage = () => {
       ),
     );
 
-  const maxY = Math.max(
-    ...[
-      calcSett({ ...settings, whoDies: -1 }),
-      // calcSett({ ...settings, whoDies: 0 }),
-      // calcSett({ ...settings, whoDies: 1 }),
-    ],
-  );
+  const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
+  const maxY =
+    Math.max(
+      ...[
+        calcSett({ ...settings, whoDies: -1 }),
+        // calcSett({ ...settings, whoDies: 0 }),
+        // calcSett({ ...settings, whoDies: 1 }),
+      ],
+    ) / factor;
 
   const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
@@ -767,6 +770,24 @@ const SpendingPage = () => {
                   />
                 </div>
               </div>
+              <div>
+                <SmallToggle
+                  item1="Monthly"
+                  item2="Annual"
+                  active={
+                    settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
+                  }
+                  toggle={() =>
+                    setSettings({
+                      ...settings,
+                      monthlyYearly:
+                        settings.monthlyYearly === "monthly"
+                          ? "yearly"
+                          : "monthly",
+                    })
+                  }
+                />
+              </div>
             </div>
           </div>
           <div className="flex gap-6 mb-10">
@@ -852,8 +873,14 @@ const SpendingPage = () => {
                   values: yearRange(
                     currentYear,
                     currentYear + settings.maxYearsShown,
-                  ).map((year) =>
-                    calculateSpendingYear(data.data, spending, settings, year),
+                  ).map(
+                    (year) =>
+                      calculateSpendingYear(
+                        data.data,
+                        spending,
+                        settings,
+                        year,
+                      ) / factor,
                   ),
                 },
               ]}
