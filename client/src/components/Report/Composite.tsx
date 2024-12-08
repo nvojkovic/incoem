@@ -40,17 +40,23 @@ const Composite = ({
                   >
                     <tr>
                       <th className="px-2 py-3">Year</th>
-                      <th className="px-2 py-3">Age</th>
+                      <th className="px-2 py-3 border-r border-black border-solid">
+                        Age
+                      </th>
 
                       {client.longevityFlag &&
                         scenario.data.people.map((person) => (
-                          <th className="px-2 py-3 text-center">
+                          <th
+                            className={`px-2 py-3 text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                          >
                             {person.name} <br /> alive
                           </th>
                         ))}
                       {client.longevityFlag &&
                         scenario.data.people.length > 1 && (
-                          <th className="px-2 py-3 text-center">
+                          <th
+                            className={`px-2 py-3 text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                          >
                             At least one <br /> alive
                           </th>
                         )}
@@ -59,7 +65,11 @@ const Composite = ({
                       {client.needsFlag && (
                         <th className="px-2 py-3">Spending</th>
                       )}
-                      {client.needsFlag && <th className="px-2 py-3">Gap</th>}
+                      {client.needsFlag && (
+                        <th className="px-2 py-3 border-r border-gray-700">
+                          Gap
+                        </th>
+                      )}
                       {client.stabilityRatioFlag && (
                         <th className="px-2 py-3 text-center">
                           Income <br /> Stability
@@ -132,7 +142,7 @@ const Composite = ({
                           className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
                         >
                           <td className="px-2 py-[6px] font-bold">{line}</td>
-                          <td className="px-2 py-1">
+                          <td className="px-2 py-1 border-r border-gray-700">
                             {scenario.data.people
                               .map((p) => line - splitDate(p.birthday).year)
                               .join("/")}
@@ -140,7 +150,9 @@ const Composite = ({
 
                           {client.longevityFlag &&
                             scenario.data.people.map((_, i) => (
-                              <td className="px-2 py-[6px] text-center">
+                              <td
+                                className={`px-2 py-[6px] text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                              >
                                 {Math.round(
                                   (tables[i].table.find(
                                     (entry) => entry.year === line,
@@ -151,7 +163,9 @@ const Composite = ({
                             ))}
                           {client.longevityFlag &&
                             scenario.data.people.length > 1 && (
-                              <td className="px-2 py-[6px] text-center">
+                              <td
+                                className={`px-2 py-[6px] text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                              >
                                 {Math.round(
                                   (joint.find((entry) => entry.year === line)
                                     ?.probability || 0) * 100,
@@ -165,7 +179,7 @@ const Composite = ({
                           )}
                           {client.needsFlag && (
                             <td
-                              className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}`}
+                              className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}  border-r border-gray-700`}
                             >
                               {printNumber(gap)}
                             </td>

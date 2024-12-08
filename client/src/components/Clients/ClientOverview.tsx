@@ -87,7 +87,7 @@ const ClientOverview = ({
             onDuplicate(client, newName);
           }}
         >
-          <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+          <div className="mb-3 text-xl font-semibold">Duplicate client</div>
           <div className="mb-5">What should be the name of new client?</div>
           <Input
             width="w-full"

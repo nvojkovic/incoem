@@ -48,7 +48,7 @@ const CompositeTable = ({
       {[0, 1, 2, 3, 4].map((tableInd) => {
         return (
           currentYear + scenario.maxYearsShown >
-            currentYear + tableInd * height && (
+          currentYear + tableInd * height && (
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
@@ -65,7 +65,7 @@ const CompositeTable = ({
                       className={` font-medium ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""} border-r border-black border-solid`}
                       onClick={setColumn("age")}
                     >
-                      <div className=" px-2 h-full w-full">Age</div>
+                      <div className="px-2 h-full w-full">Age</div>
                     </th>
 
                     {client.longevityFlag &&
@@ -103,7 +103,7 @@ const CompositeTable = ({
                     )}
                     {client.needsFlag && (
                       <th
-                        className={`px-2 font-medium ${selectedColumn?.type === "gap" ? "!bg-slate-200" : ""}`}
+                        className={`px-2 font-medium border-r border-gray-700  ${selectedColumn?.type === "gap" ? "!bg-slate-200" : ""}`}
                         onClick={setColumn("gap")}
                       >
                         Gap
