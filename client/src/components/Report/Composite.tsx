@@ -66,7 +66,7 @@ const Composite = ({
                         <th className="px-2 py-3">Spending</th>
                       )}
                       {client.needsFlag && (
-                        <th className="px-2 py-3 border-r">Gap</th>
+                        <th className="px-2 py-3 border-r border-black">Gap</th>
                       )}
                       {client.stabilityRatioFlag && (
                         <th className="px-2 py-3 text-center">
@@ -140,7 +140,7 @@ const Composite = ({
                           className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
                         >
                           <td className="px-2 py-[6px] font-bold">{line}</td>
-                          <td className="px-2 py-1 border-r">
+                          <td className="px-2 py-1 border-r border-black">
                             {scenario.data.people
                               .map((p) => line - splitDate(p.birthday).year)
                               .join("/")}
@@ -177,7 +177,7 @@ const Composite = ({
                           )}
                           {client.needsFlag && (
                             <td
-                              className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}  border-r`}
+                              className={`px-2 py-1 ${gap >= 0 ? "text-green-500" : "text-red-500"}  border-r border-black`}
                             >
                               {printNumber(gap)}
                             </td>
