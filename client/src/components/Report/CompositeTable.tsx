@@ -48,7 +48,7 @@ const CompositeTable = ({
       {[0, 1, 2, 3, 4].map((tableInd) => {
         return (
           currentYear + scenario.maxYearsShown >
-            currentYear + tableInd * height && (
+          currentYear + tableInd * height && (
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
@@ -148,7 +148,9 @@ const CompositeTable = ({
                         deathYears: scenario.deathYears as any,
                         dead: scenario.whoDies,
                         inflation: scenario.inflation,
-                        incomes: scenario.data.incomes,
+                        incomes: scenario.data.incomes.filter(
+                          (income) => income.enabled,
+                        ),
                         ssSurvivorAge: scenario.ssSurvivorAge,
                         inflationType: scenario.inflationType,
                       });
@@ -179,6 +181,7 @@ const CompositeTable = ({
                     );
                     const stableIncome = client.data.incomes
                       .filter((item) => item.stable)
+                      .filter((income) => income.enabled)
                       .map((income) => calculateOne(income, line).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
