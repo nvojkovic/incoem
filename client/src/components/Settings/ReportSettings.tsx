@@ -7,7 +7,6 @@ import {
 } from "@dnd-kit/core";
 import {
   SortableContext,
-  arrayMove,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableItem from "../Sortable/SortableItem";
@@ -17,6 +16,7 @@ import Toggle from "../Inputs/Toggle";
 interface Props {
   settings: ReportSettings;
   updateSettings: any;
+  switchOrder: (name1: string, name2: string) => void;
   flags: {
     needsFlag: boolean;
     longevityFlag: boolean;
@@ -77,16 +77,23 @@ const Page = ({ setting, setSetting, index }: any) => {
 //       </div>
 //
 
-const ReportSettings = ({ flags, settings, updateSettings }: Props) => {
+const ReportSettings = ({
+  flags,
+  settings,
+  updateSettings,
+  switchOrder,
+}: Props) => {
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    const oldIndex = settings.findIndex((s) => s.id === active.id);
-    const newIndex = settings.findIndex((s) => s.id === over.id);
+    const oldIndex = settings.find((s) => s.id === active.id)?.name || "";
+    const newIndex = settings.find((s) => s.id === over.id)?.name || "";
+
     console.log(oldIndex, newIndex);
     if (oldIndex !== newIndex) {
-      const newArr = arrayMove([...settings], oldIndex, newIndex);
-      console.log(newArr);
-      updateSettings(newArr);
+      switchOrder(oldIndex, newIndex);
+      // const newArr = arrayMove([...settings], oldIndex, newIndex);
+      // console.log(newArr);
+      // updateSettings(newArr);
     }
   };
 
@@ -113,7 +120,7 @@ const ReportSettings = ({ flags, settings, updateSettings }: Props) => {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={settings}
+          items={structuredClone(settings)}
           strategy={horizontalListSortingStrategy}
         >
           {settings.map((sc, i) => (

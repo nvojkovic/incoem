@@ -15,6 +15,7 @@ import AdvisorSection from "./AdvisorSection";
 import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
 import ReportSettings from "./ReportSettings";
+import { arrayMove } from "@dnd-kit/sortable";
 
 const isColorTooLight = (
   hexColor: string,
@@ -348,6 +349,28 @@ const Settings = () => {
                     longevityFlag: settings.longevityFlag,
                   }}
                   settings={settings.globalReportSettings}
+                  switchOrder={(name1, name2) => {
+                    const oldIndex = settings.globalReportSettings.findIndex(
+                      (s) => s.name === name1,
+                    );
+                    const newIndex = settings.globalReportSettings.findIndex(
+                      (s) => s.name === name2,
+                    );
+                    console.log(oldIndex, newIndex);
+                    if (oldIndex !== newIndex) {
+                      const newArr = arrayMove(
+                        [...settings.globalReportSettings],
+                        oldIndex,
+                        newIndex,
+                      );
+                      console.log(newArr);
+
+                      setSettings({
+                        ...settings,
+                        globalReportSettings: newArr,
+                      });
+                    }
+                  }}
                   updateSettings={(globalReportSettings: any) => {
                     console.log("update", globalReportSettings);
                     setSettings({

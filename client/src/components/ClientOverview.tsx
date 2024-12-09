@@ -1,3 +1,4 @@
+import { arrayMove } from "@dnd-kit/sortable";
 import { useInfo } from "../useData";
 import PersonInfo from "./Info/PersonInfo";
 import Input from "./Inputs/Input";
@@ -10,6 +11,12 @@ const ClientOverview = () => {
   const setSettings = (sett: any) => {
     setField("liveSettings")(sett);
   };
+
+  const reportSettings = data.reportSettings.filter((s) => {
+    if (s.name === "spending" && !data.needsFlag) return false;
+    if (s.name === "longevity" && !data.longevityFlag) return false;
+    return true;
+  });
   return (
     <Layout page="basic">
       <div>
@@ -287,8 +294,26 @@ const ClientOverview = () => {
                 needsFlag: data.needsFlag,
                 longevityFlag: data.longevityFlag,
               }}
-              settings={data.reportSettings}
+              settings={reportSettings}
               updateSettings={setField("reportSettings")}
+              switchOrder={(name1, name2) => {
+                const oldIndex = data.reportSettings.findIndex(
+                  (s) => s.name === name1,
+                );
+                const newIndex = data.reportSettings.findIndex(
+                  (s) => s.name === name2,
+                );
+                console.log(oldIndex, newIndex);
+                if (oldIndex !== newIndex) {
+                  const newArr = arrayMove(
+                    [...data.reportSettings],
+                    oldIndex,
+                    newIndex,
+                  );
+                  console.log(newArr);
+                  setField("reportSettings")(newArr);
+                }
+              }}
             />
           </div>
         </div>
