@@ -96,19 +96,14 @@ const LongevityPage = () => {
     return (
       <Layout page="longevity">
         <div className="p-6 rounded-lg">
-          <div className="flex gap-3 items-center mb-8">
-            <Link to={`/client/${client.id}/calculator`}>
-              <div className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer bg-white">
-                <ArrowLeftIcon className="h-5 text-gray-500" />
-              </div>
-            </Link>
-            <h1 className="text-3xl font-bold">Life Expectancy Calculator</h1>
+          <div className="flex gap-3 items-center  w-full justify-center">
+            <h1 className="text-3xl font-bold">Longevity</h1>
           </div>
         </div>
         <div className="flex justify-center mt-10 w-full">
           <div className="bg-white border rounded-lg p-6 shadow-md">
-            Every member of household needs to have sex set for Life Expectancy
-            Calculator to work.
+            Every member of household needs to have sex set for Longevity
+            feature to work.
           </div>
         </div>
       </Layout>
