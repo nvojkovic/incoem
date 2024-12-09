@@ -1,7 +1,7 @@
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { ArrowLeftIcon, ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "src/useData";
 import { yearRange } from "src/utils";
 import {
