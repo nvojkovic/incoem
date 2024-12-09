@@ -62,8 +62,7 @@ const Live = ({
 
   const print = async () => {
     setPrinting(true);
-    let pdfFile;
-    pdfFile = await fetch(
+    const pdfFile = await fetch(
       import.meta.env.VITE_API_URL + "print/client/pdf-live/" + client.id,
     ).then((res) => res.json());
     setPrinting(false);

@@ -14,7 +14,7 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
   if (people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
-  let newAmount = migrateOtherIncome(pension);
+  const newAmount = migrateOtherIncome(pension);
 
   return (
     <>

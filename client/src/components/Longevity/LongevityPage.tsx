@@ -75,11 +75,11 @@ export const LongevityScenarioCard = ({
 const LongevityPage = () => {
   const [highlightedRow, setHighlightedRow] = useState<number | null>(null);
   const [highlightedCol, setHighlightedCol] = useState<number | null>(null);
+  const [updating, setUpdating] = useState(false);
+
   const { data: client, setField } = useInfo();
   const people = client.data.people;
   if (!people) return null;
-
-  const [updating, setUpdating] = useState(false);
 
   const tables = people.map(makeTable);
   const joint = people.length > 1 ? jointTable(people[0], people[1]) : [];

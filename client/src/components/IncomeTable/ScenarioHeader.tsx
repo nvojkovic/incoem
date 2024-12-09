@@ -17,7 +17,7 @@ import { useInfo } from "src/useData";
 interface Props {
   settings: ScenarioSettings;
   client: Client;
-  removeScenario: any;
+  removeScenario: () => void;
 }
 
 const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {

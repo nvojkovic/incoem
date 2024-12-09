@@ -241,31 +241,31 @@ interface NewSpending {
 interface CoverPage {
   id: string;
   name: "cover";
-  settings: {};
+  settings: object;
 }
 
 interface IncomesPage {
   id: string;
   name: "incomes";
-  settings: {};
+  settings: object;
 }
 
 interface IncomeChartPage {
   id: string;
   name: "income-chart";
-  settings: {};
+  settings: object;
 }
 
 interface SpendingPage {
   id: string;
   name: "spending";
-  settings: {};
+  settings: object;
 }
 
 interface LongevityPage {
   id: string;
   name: "longevity";
-  settings: {};
+  settings: object;
 }
 
 type ReportPage =

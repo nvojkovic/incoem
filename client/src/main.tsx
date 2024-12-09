@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
         path: "client/:id",
         element: <ClientContainer />,
         children: [
-          { path: "income", element: <IncomeSection defaultOpen={true} /> },
+          { path: "income", element: <IncomeSection /> },
           {
             path: "calculator/versatile",
             element: <VersatileCalculator />,

@@ -149,7 +149,7 @@ export const calculateSurvivorSocialSecurity = (
   const { income, people, currentYear, deathYears } = info;
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
-  let deathYear = deathYears[income.personId];
+  const deathYear = deathYears[income.personId];
   let ownAmount = 0;
   if (deathYear - birthYear < income.startAgeYear) {
     const newInfo = {
@@ -190,7 +190,7 @@ const reduceByIncome = (
     };
 
     const a = calculateEmploymentIncome(newInfo).amount;
-    let r = retirementYear(person.birthday);
+    const r = retirementYear(person.birthday);
     if (currentYear < r && a > 22320) {
       ownAmount = Math.max(ownAmount - (a - 22320) / 2, 0);
     }

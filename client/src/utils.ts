@@ -3,7 +3,7 @@ export function updateAtIndex<T>(arr: T[], index: number, update: T) {
 }
 
 export const splitDate = (date: string) => {
-  let [year, month, day] = date.split("-").map((v) => parseInt(v));
+  const [year, month, day] = date.split("-").map((v) => parseInt(v));
   return { year, month, day };
 };
 
@@ -33,8 +33,7 @@ export const printNumber = (s: number) => {
 };
 
 export const printReport = async (clientId: number, scenarioId: number) => {
-  let pdfFile;
-  pdfFile = await fetch(
+  const pdfFile = await fetch(
     import.meta.env.VITE_API_URL +
       "print/client/pdf/" +
       clientId +
@@ -83,7 +82,7 @@ export function timeAgo(date: Date): string {
   return "just now";
 }
 
-export async function imageUrlToBase64(imageUrl: string) {
+export async function imageUrlToBase64(imageUrl: string): Promise<string> {
   try {
     // Fetch the image
     const response = await fetch(imageUrl);
@@ -102,7 +101,7 @@ export async function imageUrlToBase64(imageUrl: string) {
 
       reader.onload = () => {
         // The result contains the base64 string
-        resolve(reader.result);
+        resolve(reader.result as string);
       };
 
       reader.onerror = () => {
@@ -119,12 +118,12 @@ export async function imageUrlToBase64(imageUrl: string) {
 }
 
 export function roundedToFixed(input: number, digits: number) {
-  var rounder = Math.pow(10, digits);
+  const rounder = Math.pow(10, digits);
   return Math.round(input * rounder) / rounder;
 }
 
 export const debounce = (callback: Function, wait: number) => {
-  let timeoutId: any = null;
+  let timeoutId: number = 0;
   return (...args: any[]) => {
     window.clearTimeout(timeoutId);
     timeoutId = window.setTimeout(() => {

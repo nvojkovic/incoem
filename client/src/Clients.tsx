@@ -5,11 +5,9 @@ import NewClient from "./components/Clients/NewClient";
 import { deleteClient, duplicateClient, getClients } from "./services/client";
 import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
-import { useUser } from "./useUser";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 const Clients = () => {
-  const { } = useUser();
   const [clients, setClients] = useState<Client[]>(null as any);
 
   const fetchClients = () => {

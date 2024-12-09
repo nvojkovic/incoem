@@ -15,7 +15,7 @@ const Header = ({
   const [logoData, setLogoData] = useState("");
   useEffect(() => {
     imageUrlToBase64(logoUrl).then((data) => {
-      setLogoData(data as any);
+      setLogoData(data);
     });
   }, [logoUrl]);
   return (

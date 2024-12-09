@@ -56,7 +56,7 @@ const ResultTable = ({
 
   const columns = React.useMemo<ColumnDef<any>[]>(
     () => generateColumns(incomes, settings.data, selectedColumn),
-    [selectedColumn, settings, selectedYear, settings.data],
+    [selectedColumn, settings, selectedYear, settings.data, incomes],
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     columns.map((c) => c.id!),
@@ -78,7 +78,7 @@ const ResultTable = ({
   );
 
   const calculateOne = (income: Income, currentYear: number) => {
-    let result = calculate({
+    const result = calculate({
       people: settings.data.people,
       income,
       startYear,
@@ -264,7 +264,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings, settings.data, divisionFactor],
+    [settings, settings.data, divisionFactor, client],
   );
 
   const handleDragEnd = (moved: any) => {
@@ -348,7 +348,7 @@ const ResultTable = ({
                     }`}
                 >
                   <div
-                    className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} ${false ? "px-6" : "px-2"}`}
+                    className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
                     onClick={(e) => {
                       console.log(selectedColumn);
                       if (e.detail === 1) {
@@ -383,7 +383,7 @@ const ResultTable = ({
                         ? setSelectedYear(-1)
                         : setSelectedYear(row.year)
                     }
-                    className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} ${false ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
+                    className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} px-2 py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
                   >
                     {row.total}
                   </td>

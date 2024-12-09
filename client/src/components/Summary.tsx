@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import ResultTable from "src/components/IncomeTable/ResultTable";
 import {
   DndContext,
@@ -20,6 +20,7 @@ import Layout from "src/components/Layout";
 import MapChart from "src/components/MapChart";
 import CompositeTable from "./Report/CompositeTable";
 import ScenarioHeader from "./IncomeTable/ScenarioHeader";
+import { useFullscreen } from "src/hooks/useFullScreen";
 
 const Summary = () => {
   const sensors = useSensors(
@@ -30,7 +31,6 @@ const Summary = () => {
     }),
   );
 
-  const [fullScreen, setFullScreen] = useState(false);
   const [tab, setTab] = useState(-1);
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
     id: 0,
@@ -42,32 +42,7 @@ const Summary = () => {
   const shownTable = data.liveSettings.mapType;
   const scenarios = data.scenarios;
 
-  const openFullScreen = () => {
-    var elem = document.documentElement as any;
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Safari */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE11 */
-      elem.msRequestFullscreen();
-    }
-  };
-
-  function closeFullscreen() {
-    const doc: any = document;
-    if (doc.exitFullscreen) {
-      doc.exitFullscreen();
-    } else if (doc.webkitExitFullscreen) {
-      /* Safari */
-      doc.webkitExitFullscreen();
-    } else if (doc.msExitFullscreen) {
-      /* IE11 */
-      doc.msExitFullscreen();
-    }
-  }
+  const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -77,16 +52,6 @@ const Summary = () => {
       storeScenarios(arrayMove([...scenarios], oldIndex, newIndex));
     }
   };
-
-  useLayoutEffect(() => {
-    const fullscreenchange = () => {
-      setFullScreen(!!document.fullscreenElement);
-    };
-    document.addEventListener("fullscreenchange", fullscreenchange);
-    return () => {
-      document.removeEventListener("fullscreenchange", fullscreenchange);
-    };
-  }, []);
 
   const [selectedYear, setSelectedYear] = useState(0);
   const liveSettings = {
@@ -99,10 +64,11 @@ const Summary = () => {
   return (
     <Layout page="map">
       <div className="pb-32">
-        <div className={`sticky z-50 ${fullScreen ? "top-0" : "top-[72px]"}`}>
+        <div className={`sticky z-50 ${isFullscreen ? "top-0" : "top-[72px]"}`}>
           <div
-            className={`flex justify-between items-center print:hidden sticky z-[5000] ${fullScreen ? "top-[0px]" : "top-[72px]"
-              } bg-[#f3f4f6]`}
+            className={`flex justify-between items-center print:hidden sticky z-[5000] ${
+              isFullscreen ? "top-[0px]" : "top-[72px]"
+            } bg-[#f3f4f6]`}
           >
             <DndContext
               sensors={sensors}
@@ -120,7 +86,7 @@ const Summary = () => {
                     active={tab == -1}
                     setActive={() => setTab(-1)}
                     live
-                    store={() => { }}
+                    store={() => {}}
                   />
                   {scenarios.map((sc, i) => (
                     <SortableItem
@@ -170,21 +136,19 @@ const Summary = () => {
           ) : (
             <ResultTable
               client={data}
-              changeFullScreen={() =>
-                fullScreen ? closeFullscreen() : openFullScreen()
-              }
+              changeFullScreen={() => toggleFullscreen()}
               settings={settings}
               removeScenario={() => {
                 const newScenarios = scenarios.filter((sc) => sc.id != tab);
                 storeScenarios(newScenarios);
                 setTab(-1);
               }}
-              fullScreen={fullScreen}
+              fullScreen={isFullscreen}
               selectedYear={selectedYear}
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
+              setSettings={tab === -1 ? setField("liveSettings") : () => {}}
               id={tab}
             />
           )}

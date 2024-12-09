@@ -9,7 +9,6 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   const person = people[income.personId];
   const { year: birthYear } = splitDate(person.birthday);
   const age = currentYear - birthYear;
-  income.startAge = income.startAge;
   income.retirementAgeYear = income.retirementAgeYear || 3000;
 
   if (

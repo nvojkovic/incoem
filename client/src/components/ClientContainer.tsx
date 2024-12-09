@@ -33,7 +33,7 @@ function ClientContainer() {
           updateClientData(data);
         });
     }
-  }, [id]);
+  }, [id, clientData, updateClientData]);
 
   if (!clientData || clientData.id?.toString() !== id) {
     return (

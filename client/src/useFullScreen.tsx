@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function useFullscreenStatus(elRef: any) {
-  let document = window.document as any;
+  const document = window.document as any;
   const [isFullscreen, setIsFullscreen] = React.useState(
     document[getBrowserFullscreenElementProp()] != null,
   );
@@ -30,7 +30,7 @@ export default function useFullscreenStatus(elRef: any) {
 }
 
 function getBrowserFullscreenElementProp() {
-  let document = window.document as any;
+  const document = window.document as any;
   if (typeof document.fullscreenElement !== "undefined") {
     return "fullscreenElement";
   } else if (typeof document.mozFullScreenElement !== "undefined") {

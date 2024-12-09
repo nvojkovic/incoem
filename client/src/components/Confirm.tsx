@@ -2,7 +2,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Button from "./Inputs/Button";
 
-const Confirm = ({ isOpen, onClose, children, onConfirm }: any) => {
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  children: any;
+  onConfirm: () => void;
+}
+
+const Confirm = ({ isOpen, onClose, children, onConfirm }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[1000]" onClose={onClose}>

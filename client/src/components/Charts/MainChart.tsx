@@ -54,7 +54,7 @@ const MainChart = ({
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width - 10,
           height: initialHeight,
@@ -504,7 +504,20 @@ const MainChart = ({
 
       lineItem.append("span").style("font-size", "12px").text("Spending");
     }
-  }, [dimensions, years, stackedData, lineData, hiddenSeries]);
+  }, [
+    dimensions,
+    years,
+    stackedData,
+    lineData,
+    hiddenSeries,
+    colorArray,
+    longevityFlag,
+    maxY,
+    needsFlag,
+    people,
+    spending,
+    stability,
+  ]);
 
   return (
     <div className="bg-white">

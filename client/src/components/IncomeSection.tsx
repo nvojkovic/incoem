@@ -27,10 +27,6 @@ import { useInfo } from "../useData";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";
 
-interface Props {
-  defaultOpen?: boolean;
-}
-
 export const IncomeComponent = ({
   income,
   i,
@@ -96,7 +92,7 @@ export const IncomeComponent = ({
     );
 };
 
-const IncomeSection = ({}: Props) => {
+const IncomeSection = () => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
   const incomes = data.data.incomes;

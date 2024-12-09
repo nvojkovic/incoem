@@ -66,7 +66,7 @@ const ClientOverview = ({
         <Confirm
           isOpen={deleteOpen}
           onClose={() => setDeleteOpen(false)}
-          onConfirm={(i: any) => {
+          onConfirm={() => {
             setDeleteOpen(false);
             onDelete(i);
           }}

@@ -3,7 +3,7 @@ import Select from "../Inputs/Select";
 
 interface Props {
   increase: YearlyIncrease;
-  setYearlyIncrease: any;
+  setYearlyIncrease: (a: YearlyIncrease) => void;
   labels: boolean;
 }
 const YearlyIncrease = ({ increase, setYearlyIncrease, labels }: Props) => {

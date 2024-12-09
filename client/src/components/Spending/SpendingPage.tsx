@@ -128,7 +128,7 @@ export const calculateSendingYear = (
   if (!spending) return 0;
   const years = year - 2024;
   let result = 0;
-  const inflationRate = (inflation: any) => {
+  const inflationRate = (inflation?: YearlyIncrease) => {
     if (!inflation || inflation.type == "none") return 0;
     else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
     else if (inflation.type == "general") return settings.inflation / 100 || 0;
@@ -236,7 +236,11 @@ const SpendingPage = () => {
     setSpending({ ...spending, [key]: val });
   };
 
-  const setPreSpending = (index: number, field: string, value: any) => {
+  const setPreSpending = (
+    index: number,
+    field: keyof CurrentSpending,
+    value: CurrentSpending[typeof field],
+  ) => {
     setField("preSpending")(
       spending.preSpending.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
@@ -244,7 +248,11 @@ const SpendingPage = () => {
     );
   };
 
-  const setPostSpending = (index: number, field: string, value: any) => {
+  const setPostSpending = (
+    index: number,
+    field: keyof NewSpending,
+    value: NewSpending[typeof field],
+  ) => {
     setField("postSpending")(
       spending.postSpending.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
@@ -258,7 +266,7 @@ const SpendingPage = () => {
     currentYear,
     currentYear + settings.maxYearsShown,
   );
-  const calcSett = (settings: any) =>
+  const calcSett = (settings: ScenarioSettings) =>
     Math.max(
       ...currentYearRange.map((year) =>
         calculateSpendingYear(data.data, spending, settings, year),
@@ -314,12 +322,12 @@ const SpendingPage = () => {
                   vertical
                   size="lg"
                   value={spending.decreaseAtDeath[i]}
-                  setValue={(value) =>
+                  setValue={(value: number) =>
                     setSpending({
                       ...spending,
                       decreaseAtDeath: spending.decreaseAtDeath.map(
                         (val, ind) => (ind == i ? value : val),
-                      ) as any,
+                      ) as [number, number],
                     })
                   }
                   subtype="percent"
@@ -376,8 +384,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-16">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-16">Increase (%)</div>
+                  )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -423,7 +431,7 @@ const SpendingPage = () => {
                     <YearlyIncrease
                       labels={false}
                       increase={line.increase}
-                      setYearlyIncrease={(v: any) =>
+                      setYearlyIncrease={(v) =>
                         setPreSpending(index, "increase", v)
                       }
                     />
@@ -448,7 +456,7 @@ const SpendingPage = () => {
                       <Confirm
                         isOpen={preDeleteOpen === index}
                         onClose={() => setPreDeleteOpen(-1)}
-                        onConfirm={(_: any) => {
+                        onConfirm={() => {
                           setPreDeleteOpen(-1);
                           setField("preSpending")(
                             spending.preSpending.filter(
@@ -528,17 +536,18 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                    }`}
+                  className={`px-6 py-3 font-medium ${
+                    spending.postSpending.find(
+                      (i) => i.increase.type === "custom",
+                    ) && "w-64"
+                  }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-8">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-8">Increase (%)</div>
+                  )}{" "}
                 </th>
 
                 {data.data.people.map((i) => (
@@ -604,7 +613,7 @@ const SpendingPage = () => {
                     <YearlyIncrease
                       labels={false}
                       increase={line.increase}
-                      setYearlyIncrease={(v: any) =>
+                      setYearlyIncrease={(v) =>
                         setPostSpending(index, "increase", v)
                       }
                     />
@@ -621,7 +630,7 @@ const SpendingPage = () => {
                             "changeAtDeath",
                             line.changeAtDeath.map((i, ind) =>
                               ind == index2 ? v : i,
-                            ),
+                            ) as [number, number],
                           )
                         }
                         subtype="percent"
@@ -648,7 +657,7 @@ const SpendingPage = () => {
                     <Confirm
                       isOpen={postDeleteOpen === index}
                       onClose={() => setPostDeleteOpen(-1)}
-                      onConfirm={(_: any) => {
+                      onConfirm={() => {
                         setPostDeleteOpen(-1);
                         setField("postSpending")(
                           spending.postSpending.filter(
@@ -666,16 +675,6 @@ const SpendingPage = () => {
                       type="secondary"
                       onClick={() => {
                         return setPostDeleteOpen(index);
-                        if (
-                          confirm(
-                            "Are you sure you want to delete this spending?",
-                          )
-                        )
-                          setField("postSpending")(
-                            spending.postSpending.filter(
-                              (_, ind) => ind !== index,
-                            ),
-                          );
                       }}
                     >
                       <div className="flex justify-center">
@@ -908,8 +907,9 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] px-4 ${value === item ? "bg-main-orange text-white" : "bg-gray-200"
-              } border  border-gray-300 border-1`}
+            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] px-4 ${
+              value === item ? "bg-main-orange text-white" : "bg-gray-200"
+            } border  border-gray-300 border-1`}
             onClick={() => setValue(item)}
           >
             {item}

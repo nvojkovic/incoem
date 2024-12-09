@@ -25,7 +25,7 @@ const Button = ({
     <button
       {...(props as any)}
       className={`w-full filter- p-2 ${disabled && "opacity-50"} ${style[type]} ${className}`}
-      onClick={disabled ? () => { } : onClick}
+      onClick={disabled ? () => {} : onClick}
     >
       {children}
     </button>

@@ -55,7 +55,7 @@ const calculators: CalculatorCard[] = [
   },
 ];
 
-const CalculatorMap: React.FC<any> = ({ }: any) => {
+const CalculatorMap = () => {
   return (
     <Layout page="calculator">
       <div className="container mx-auto px-4 py-8">

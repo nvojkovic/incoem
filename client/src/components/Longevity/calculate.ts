@@ -8,7 +8,7 @@ export const makeTable = (person: Person) => {
   const { birthYear } = birthday(person);
   const selectedTable: any = person.sex === "Male" ? maleTables : femaleTables;
   const table = selectedTable[birthYear.toString()];
-  let result = [];
+  const result = [];
   let aliveProbability = 1;
   for (let current = age; current < 120; current++) {
     const row = table[current];
@@ -29,7 +29,7 @@ export const makeTable = (person: Person) => {
 export const jointTable = (person1: Person, person2: Person) => {
   const table1 = makeTable(person1);
   const table2 = makeTable(person2);
-  let result = [];
+  const result = [];
   let aliveProbability = 1;
   for (
     let current = 0;

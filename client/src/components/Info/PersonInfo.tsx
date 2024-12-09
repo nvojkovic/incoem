@@ -8,8 +8,8 @@ interface Props {
 }
 export function calculateAge(birthday: Date) {
   // birthday is a date
-  var ageDifMs = Date.now() - (birthday as any);
-  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  const ageDifMs = Date.now() - (birthday as any);
+  const ageDate = new Date(ageDifMs); // miliseconds from epoch
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
