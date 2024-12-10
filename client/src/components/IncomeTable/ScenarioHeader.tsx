@@ -35,7 +35,7 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
 
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
-  return settings.id ? (
+  return settings.id && settings.id !== -1 ? (
     <div
       className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} bg-white h-32 print:hidden`}
     >
