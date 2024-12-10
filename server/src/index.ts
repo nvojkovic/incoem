@@ -24,6 +24,7 @@ import {
   getLogo,
   getReport,
   getUser,
+  impersonateUser,
   toggleClientFeature,
   updateUser,
   uploadLogo,
@@ -80,6 +81,7 @@ app.delete("/client/:id", verifySession(), deleteClient);
 app.post("/clients", verifySession(), createClient);
 app.post("/settings", verifySession(), updateUser);
 app.get("/user", verifySession(), getUser);
+app.get("/user/impersonate", verifySession(), impersonateUser);
 app.get("/stripeRedirect", verifySession(), createPortalSession);
 app.post("/user/featureToggle", verifySession(), toggleClientFeature);
 app.post("/stripe/webhook", stripeWebhook);

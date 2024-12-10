@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
+import Session from "supertokens-node/recipe/session";
 import fs from "fs";
 import crypto from "crypto";
 import supertokens from "supertokens-node";
@@ -67,6 +68,41 @@ export const getUser = async (req: SessionRequest, res: Response) => {
     createdAt: userInfo?.timeJoined,
     intercomHash: hash,
   });
+};
+
+export const impersonateUser = async (req: SessionRequest, res: Response) => {
+  let userId = req.session!.getUserId();
+  console.log("impersonate", userId);
+  const userInfo = await supertokens.getUser(userId);
+  if (
+    userInfo?.emails.includes("nikola.vojkovic@live.com") ||
+    userInfo?.emails.includes("nikola.vojkovic@toptal.com")
+  ) {
+    const email = req.query.email as string;
+
+    let user = await supertokens.listUsersByAccountInfo("public", {
+      email,
+    });
+
+    console.log(email, user);
+    if (user.length === 0) {
+      return res.json({ error: "User not found" });
+    }
+
+    await Session.createNewSession(
+      req,
+      res,
+      "public",
+      user[0].loginMethods[0].recipeUserId,
+      {
+        isImpersonation: true,
+      },
+    );
+    return res.json({ done: true });
+  } else {
+    return res.json({ done: false });
+  }
+  return res.json({});
 };
 
 export const uploadLogo = async (req: any, res: Response) => {
