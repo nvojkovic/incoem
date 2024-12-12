@@ -309,11 +309,13 @@ const ResultTable = ({
       sensors={sensors}
     >
       <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
-        <ScenarioHeader
-          removeScenario={removeScenario}
-          client={client}
-          settings={settings}
-        />
+        <div className="print:hidden">
+          <ScenarioHeader
+            removeScenario={removeScenario}
+            client={client}
+            settings={settings}
+          />
+        </div>
         {!settings.name &&
           settings.id === -1 &&
           incomes?.map((income) => (
