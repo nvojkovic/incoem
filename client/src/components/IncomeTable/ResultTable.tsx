@@ -315,6 +315,7 @@ const ResultTable = ({
           settings={settings}
         />
         {!settings.name &&
+          settings.id === -1 &&
           incomes?.map((income) => (
             <IncomeModal
               income={income}
@@ -344,8 +345,9 @@ const ResultTable = ({
             >
               <tr>
                 <td
-                  className={`font-medium  ${selectedColumn.type == "total" ? "bg-slate-200" : ""
-                    }`}
+                  className={`font-medium  ${
+                    selectedColumn.type == "total" ? "bg-slate-200" : ""
+                  }`}
                 >
                   <div
                     className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}

@@ -2,6 +2,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
 import Report from "src/components/Report/Report";
+import { IncomeProvider } from "src/useData";
 
 const PrintLivePage = () => {
   const [client, setClient] = useState({} as any);
@@ -23,15 +24,17 @@ const PrintLivePage = () => {
   }; //JSON.parse(searchParams.get("data") || "null");
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
-  scenario.name = "Live";
+  console.log("sc", scenario);
   return (
-    <div className="bg-white ">
-      <Report
-        client={client}
-        scenario={scenario}
-        page={JSON.parse(searchParams.get("page") || "{}")}
-      />
-    </div>
+    <IncomeProvider data={client as any} setLocal={() => {}}>
+      <div className="bg-white ">
+        <Report
+          client={client}
+          scenario={scenario}
+          page={JSON.parse(searchParams.get("page") || "{}")}
+        />
+      </div>
+    </IncomeProvider>
   );
 };
 export default PrintLivePage;
