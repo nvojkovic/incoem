@@ -25,6 +25,7 @@ const PrintLivePage = () => {
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
   console.log("sc", scenario);
+  scenario.name = "Live";
   return (
     <IncomeProvider data={client as any} setLocal={() => {}}>
       <div className="bg-white ">
