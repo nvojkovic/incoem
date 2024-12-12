@@ -343,7 +343,7 @@ const ResultTable = ({
           />
           <table className="pr-3 ml-[-3px]">
             <thead
-              className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[172px]" : "top-[243px]"} ${fullScreen ? "a" : "b"}`}
+              className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[44px]" : "top-[114px]"} ${fullScreen ? "a" : "b"}`}
             >
               <tr>
                 <td
