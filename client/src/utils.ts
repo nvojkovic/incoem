@@ -141,3 +141,17 @@ export const convertToMoYr = (amount: number) => ({
   type: "yearly" as const,
   value: amount,
 });
+
+export const getTaxRate = (
+  client: Client,
+  scenario: ScenarioSettings,
+  year: number,
+) => {
+  if (!client.taxesFlag || scenario.taxType === "Pre-Tax") return 0;
+
+  if (year >= (scenario.retirementYear || 0)) {
+    return (client.spending.postTaxRate || 0) / 100;
+  } else {
+    return (client.spending.preTaxRate || 0) / 100;
+  }
+};

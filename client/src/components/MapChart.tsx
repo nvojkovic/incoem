@@ -14,8 +14,53 @@ interface MapChartProps {
 const MapChart = ({ settings, client, print }: MapChartProps) => {
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
+  const years = yearRange(startYear, startYear + settings.maxYearsShown - 1);
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
+
+  const calculateOne = (income: Income, currentYear: number) => {
+    const result = calculate({
+      people: settings.data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: settings.data.incomes.filter((income) => income.enabled),
+      ssSurvivorAge: settings.ssSurvivorAge,
+      inflationType: settings.inflationType,
+    });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
+  };
+  const income = years.map((line) =>
+    client.data.incomes
+      .filter((income) => income.enabled)
+      .map((income) => calculateOne(income, line).amount)
+      .filter((t) => typeof t === "number")
+      .reduce((a, b) => a + b, 0),
+  );
+
+  const taxes = (line) => {
+    const income = client.data.incomes
+      .filter((income) => income.enabled)
+      .map((income) => calculateOne(income, line).amount)
+      .filter((t) => typeof t === "number")
+      .reduce((a, b) => a + b, 0);
+
+    const taxRate = settings.retirementYear
+      ? line >= settings.retirementYear
+        ? client.spending.postTaxRate
+        : client.spending.preTaxRate
+      : 0;
+    const taxes = income * (taxRate / 100);
+    return taxes;
+  };
+
   return (
     <div className={`bg-white ${!print && "pb-5"}`}>
       <Header client={client as any} scenario={settings} />
@@ -28,14 +73,23 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (currentYear) =>
-                calculateSpendingYear(
-                  settings.data,
-                  client.spending,
-                  { ...settings, taxType: "Pre-Tax" },
-                  currentYear,
-                ) / divisionFactor,
-            )
+                (currentYear) =>
+                  calculateSpendingYear(
+                    settings.data,
+                    client.spending,
+                    { ...settings, taxType: "Pre-Tax" },
+                    currentYear,
+                  ) /
+                    divisionFactor +
+                  (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
+              )
+            : []
+        }
+        taxes={
+          client.needsFlag && settings.taxType === "Post-Tax"
+            ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
+                (line) => taxes(line),
+              )
             : []
         }
         stability={client.stabilityRatioFlag}

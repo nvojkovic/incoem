@@ -18,212 +18,10 @@ import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
-import MainChart from "../Charts/MainChart";
 import Confirm from "../Confirm";
 import { useState } from "react";
 import { SmallToggle } from "../Live";
-
-export const calculateSpendingYear = (
-  data: IncomeMapData,
-  spending: RetirementSpendingSettings | undefined,
-  settings: ScenarioSettings,
-  year: number,
-) => {
-  if (!spending) return 0;
-  const years = year - 2024;
-
-  const inflationRate = (inflation: YearlyIncrease) => {
-    if (!inflation || inflation.type == "none") return 0;
-    else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
-    else if (inflation.type == "general") return settings.inflation / 100 || 0;
-    else return -10e9;
-  };
-
-  const inflateAmount = (amount: number, inflation: YearlyIncrease) => {
-    return amount * Math.pow(1 + inflationRate(inflation), years);
-  };
-
-  // back out existing spending
-  const existing = spending.preSpending
-    .map((item) =>
-      moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-
-  let result =
-    moyrToAnnual(
-      spending.newCurrentSpending
-        ? spending.newCurrentSpending
-        : convertToMoYr(spending.currentSpending),
-    ) - existing;
-
-  //back out death reduction
-  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
-    const age =
-      calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
-    if (age > (settings.deathYears[settings.whoDies] as any)) {
-      result = result * (1 - spending.decreaseAtDeath[settings.whoDies] / 100);
-    }
-  }
-  // inflate by general
-  result = inflateAmount(result, spending.yearlyIncrease);
-
-  // add pre back in
-  const pre = spending.preSpending
-    ?.filter((item) => year <= item.endYear)
-    .map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        item.increase,
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  result += pre;
-
-  // add post spending
-  const post = spending.postSpending
-    ?.filter(
-      (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
-    )
-    .map((item) => {
-      let amount = moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      );
-      if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
-        const age =
-          calculateAge(new Date(data.people[settings.whoDies].birthday)) +
-          years;
-        if (age > (settings.deathYears[settings.whoDies] as any)) {
-          amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
-        }
-      }
-      return inflateAmount(amount, item.increase);
-    })
-    .reduce((a, b) => a + b, 0);
-  result += post;
-
-  if (settings.taxType == "Pre-Tax") {
-    if (year <= (settings.retirementYear || 0)) {
-      result /= 1 - (spending.preTaxRate || 0) / 100;
-    } else {
-      result /= 1 - (spending.postTaxRate || 0) / 100;
-    }
-  }
-  if (settings.inflationType == "Real") {
-    result = calculatePV(result, (settings.inflation || 0) / 100, years);
-  }
-
-  return Math.round(isNaN(result) ? 0 : result);
-};
-export const calculateSendingYear = (
-  data: IncomeMapData,
-  spending: RetirementSpendingSettings | undefined,
-  settings: ScenarioSettings,
-  year: number,
-) => {
-  if (!spending) return 0;
-  const years = year - 2024;
-  let result = 0;
-  const inflationRate = (inflation?: YearlyIncrease) => {
-    if (!inflation || inflation.type == "none") return 0;
-    else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
-    else if (inflation.type == "general") return settings.inflation / 100 || 0;
-    else return -10e9;
-  };
-
-  const inflateAmount = (amount: number, inflation: number) => {
-    return amount * Math.pow(1 + inflation, years);
-  };
-
-  const pre = spending.preSpending
-    ?.filter((item) => year > item.endYear)
-    .map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        inflationRate(item.increase),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-
-  const uninflatedPre = spending.preSpending
-    ?.map((item) =>
-      moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount) || 0,
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  const inflatedPre = spending.preSpending
-    ?.map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        inflationRate(item.increase),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  const post = spending.postSpending
-    ?.filter(
-      (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
-    )
-    .map((item) => {
-      let amount = moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      );
-      if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
-        const age =
-          calculateAge(new Date(data.people[settings.whoDies].birthday)) +
-          years;
-        if (age > (settings.deathYears[settings.whoDies] as any)) {
-          amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
-        }
-      }
-      return inflateAmount(amount, inflationRate(item.increase));
-    })
-    .reduce((a, b) => a + b, 0);
-
-  result -= pre;
-  result += post;
-
-  let current = moyrToAnnual(
-    spending.newCurrentSpending
-      ? spending.newCurrentSpending
-      : convertToMoYr(spending.currentSpending),
-  );
-  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
-    const age =
-      calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
-    if (age > (settings.deathYears[settings.whoDies] as any)) {
-      current =
-        (current + result) * 1 -
-        spending.decreaseAtDeath[settings.whoDies] / 100;
-    }
-  }
-
-  result +=
-    inflateAmount(
-      current - uninflatedPre,
-      inflationRate(spending.yearlyIncrease),
-    ) + inflatedPre;
-  if (settings.taxType == "Pre-Tax") {
-    if (year <= (settings.retirementYear || 0)) {
-      result /= 1 - (spending.preTaxRate || 0) / 100;
-    } else {
-      result /= 1 - (spending.postTaxRate || 0) / 100;
-    }
-  }
-  if (settings.inflationType == "Real") {
-    result = calculatePV(result, (settings.inflation || 0) / 100, years);
-  }
-
-  return Math.round(isNaN(result) ? 0 : result);
-};
+import SpendingChart from "../Charts/SpendingChart";
 
 const currentYear = new Date().getFullYear();
 
@@ -850,7 +648,7 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="bg-white pb-[2px]">
-            <MainChart
+            <SpendingChart
               maxY={maxY}
               longevityFlag={false}
               people={[]}
@@ -883,7 +681,6 @@ const SpendingPage = () => {
                   ),
                 },
               ]}
-              spending={true}
             />
           </div>
         </MapSection>
@@ -899,17 +696,27 @@ const SpendingPage = () => {
   );
 };
 
-export const MultiToggle = ({ label, value, options, setValue }: any) => {
+export const MultiToggle = ({
+  label,
+  value,
+  options,
+  setValue,
+  vertical = true,
+}: any) => {
   return (
-    <div className="">
-      <label className="text-sm text-[#344054] w-36 ">{label}</label>
-      <div className="flex mt-[3px] border-collapse">
+    <div
+      className={`w-full flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
+    >
+      <label className={`text-sm text-[#344054] ${vertical ? "w-36" : ""} `}>
+        {label}
+      </label>
+      <div className={`flex ${vertical ? "mt-[3px]" : ""} border-collapse`}>
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] px-4 ${
+            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] min-w-[100px] px-4 ${
               value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            } border  border-gray-300 border-1`}
+            } border  border-gray-300 border-1 ${vertical ? "" : "w-full"}`}
             onClick={() => setValue(item)}
           >
             {item}
@@ -919,9 +726,5 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
     </div>
   );
 };
-
-function calculatePV(futureValue: any, interestRate: any, periods: any) {
-  return futureValue / Math.pow(1 + interestRate, periods);
-}
 
 export default SpendingPage;

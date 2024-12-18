@@ -133,6 +133,13 @@ const ClientOverview = () => {
                 size="full"
                 subtype="toggle"
               />
+              <Input
+                value={data.taxesFlag}
+                setValue={setField("taxesFlag")}
+                label="Taxes"
+                size="full"
+                subtype="toggle"
+              />
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { printNumber, splitDate, yearRange } from "src/utils";
+import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
 import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
@@ -32,7 +32,7 @@ const Composite = ({
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
             currentYear + scenario.maxYearsShown >
-            currentYear + tableInd * height && (
+              currentYear + tableInd * height && (
               <div className="w-full">
                 <table className="border bg-white !text-sm w-full">
                   <thead
@@ -62,6 +62,13 @@ const Composite = ({
                         )}
                       <th className="px-2 py-3">Income</th>
 
+                      {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                        <th className="px-2 py-3">Taxes</th>
+                      )}
+
+                      {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                        <th className="px-2 py-3">Post-Tax Income</th>
+                      )}
                       {client.needsFlag && (
                         <th className="px-2 py-3">Spending</th>
                       )}
@@ -132,13 +139,17 @@ const Composite = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
-                      const gap = income - needs;
                       const stabilityRatio = Math.round(
                         (stableIncome / income) * 100,
                       );
                       const spendingStability = Math.round(
                         (stableIncome / needs) * 100,
                       );
+
+                      const taxRate = getTaxRate(client, scenario, line);
+                      const taxes = income * taxRate;
+                      const gap = income - needs - taxes;
+
                       return (
                         <tr
                           className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
@@ -176,6 +187,18 @@ const Composite = ({
                               </td>
                             )}
                           <td className="px-2 py-1">{printNumber(income)}</td>
+                          {client.taxesFlag &&
+                            scenario.taxType == "Post-Tax" && (
+                              <td className="px-2 py-1">
+                                {printNumber(taxes)}
+                              </td>
+                            )}
+                          {client.taxesFlag &&
+                            scenario.taxType == "Post-Tax" && (
+                              <td className="px-2 py-1">
+                                {printNumber(income - taxes)}
+                              </td>
+                            )}
                           {client.needsFlag && (
                             <td className="px-2 py-1">{printNumber(needs)}</td>
                           )}

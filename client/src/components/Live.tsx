@@ -77,235 +77,222 @@ const Live = ({
       className={`rounded-xl z-[500] border-[#EAECF0] border print:border-0 sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} `}
     >
       <div
-        className={`flex items-center h-32 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
+        className={`flex flex-col items-center h-32 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
       >
-        <div className="flex justify-between items-end mb-5 z-0 px-4 w-full">
-          <div className="flex items-start mt-3 gap-10 ">
-            {settings.data.people.length == 2 ? (
-              <div className="flex gap-3 items-end justify-start">
-                <div className="">
-                  <div className="text-sm text-[#344054] mb-1 ">Mortality</div>
-                  <div className={`flex items-end`}>
-                    <WhoDies
-                      active={settings.whoDies == -1}
-                      setWhoDies={(i: number) =>
-                        setSettings({
-                          ...settings,
-                          whoDies: i,
-                        })
-                      }
-                      i={-1}
-                      title="Both Alive"
-                    />
-                    {settings.data.people.map((person, i) => (
-                      <WhoDies
-                        active={settings.whoDies == i}
-                        key={person.id}
-                        age={settings.deathYears[i]}
-                        setAge={(e: any) =>
-                          setSettings({
-                            ...settings,
-                            deathYears: updateAtIndex(
-                              settings.deathYears,
-                              i,
-                              parseInt(e),
-                            ),
-                          })
-                        }
-                        setWhoDies={(i: number) =>
-                          setSettings({
-                            ...settings,
-                            whoDies: i,
-                          })
-                        }
-                        i={i}
-                        title={`${person.name} Dies At`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div></div>
-            )}
-            <div className="flex gap-5">
-              {settings.data.people.length > 1 &&
-                settings.data.people.map((person, i) => (
-                  <div className="w-36 hidden" key={person.id}>
-                    <Input
-                      subtype="number"
-                      vertical
-                      label={`${person.name}'s Death`}
-                      value={settings.deathYears[i]?.toString()}
-                      setValue={(e) =>
-                        setSettings({
-                          ...settings,
-                          deathYears: updateAtIndex(
-                            settings.deathYears,
-                            i,
-                            parseInt(e),
-                          ),
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-              <div className="">
-                <Input
-                  label="Years"
-                  tooltip="The maximum number of years shown in the chart"
-                  subtype="number"
-                  invalid={settings.maxYearsShown < 0}
-                  size="xs"
-                  errorMessage="Years shown must be positive"
-                  vertical
-                  value={settings.maxYearsShown?.toString()}
-                  setValue={(e) =>
-                    setSettings({ ...settings, maxYearsShown: parseInt(e) })
-                  }
-                />
-              </div>
-              <div className="mt-[-3px]">
-                <MultiToggle
-                  options={["Real", "Nominal"]}
-                  label="Inflation"
-                  value={settings.inflationType}
-                  setValue={(v: any) =>
-                    setSettings({ ...settings, inflationType: v })
-                  }
-                />
-              </div>
-              <div className="">
-                <Input
-                  onFocus={(event: any) => {
-                    const input = event.target;
-                    setTimeout(() => {
-                      input.select();
-                    }, 0);
-                  }}
-                  label="Inflation (%)"
-                  size="xs"
-                  vertical
-                  subtype="percent"
-                  value={settings.inflation}
-                  setValue={(e) => setSettings({ ...settings, inflation: e })}
-                />
-              </div>
+        <div className="w-full flex justify-between pb-2 border-b ">
+          <div className="flex gap-7 items-end px-3 py-1">
+            <div className="">
+              <Input
+                label="Years shown"
+                tooltip="The maximum number of years shown in the chart"
+                subtype="number"
+                invalid={settings.maxYearsShown < 0}
+                size="xs"
+                labelLength={100}
+                errorMessage="Years shown must be positive"
+                value={settings.maxYearsShown?.toString()}
+                setValue={(e) =>
+                  setSettings({ ...settings, maxYearsShown: parseInt(e) })
+                }
+              />
+            </div>
+            <div className="w-[200px]">
+              <MultiToggle
+                options={["Monthly", "Annual"]}
+                label=""
+                value={
+                  settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
+                }
+                setValue={(v: any) =>
+                  setSettings({
+                    ...settings,
+                    monthlyYearly: v === "Annual" ? "yearly" : "monthly",
+                  })
+                }
+              />
+            </div>
+
+            <div className="w-[200px]">
+              <MultiToggle
+                options={["Basic", "Composite"]}
+                label=""
+                value={settings.mapType === "composite" ? "Composite" : "Basic"}
+                setValue={(v: any) =>
+                  setSettings({
+                    ...settings,
+                    mapType: v === "Basic" ? "basic" : "composite",
+                  })
+                }
+              />
             </div>
           </div>
-          <div className="flex gap-3">
-            <div className="flex flex-col items-end">
-              <div className="flex mb-4 mt-3 justify-end gap-3">
-                <SmallToggle
-                  item1="Monthly"
-                  item2="Annual"
-                  active={
-                    settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
-                  }
-                  toggle={() =>
-                    setSettings({
-                      ...settings,
-                      monthlyYearly:
-                        settings.monthlyYearly === "monthly"
-                          ? "yearly"
-                          : "monthly",
-                    })
-                  }
-                />
-                <SmallToggle
-                  item1="Basic"
-                  item2="Composite"
-                  active={
-                    settings.mapType === "composite" ? "Composite" : "Basic"
-                  }
-                  toggle={() =>
-                    setSettings({
-                      ...settings,
-                      mapType:
-                        settings.mapType === "composite"
-                          ? "basic"
-                          : "composite",
-                    })
-                  }
-                />
-              </div>
-              <div className="flex gap-2">
-                <div>
-                  <Button type="secondary" onClick={() => setSaveOpen(true)}>
-                    <div className="flex gap-2">
-                      <img src={save} className="w-6 h-6" />
-                    </div>
-                  </Button>
-                  <ModalInput
-                    isOpen={saveOpen}
-                    onClose={() => {
-                      setSaveOpen(false);
-                      setSettings({
-                        ...settings,
-                        name: "",
-                      });
-                    }}
-                    onConfirm={() => {
-                      setSaveOpen(false);
-                      setSettings({
-                        ...settings,
-                        name: "",
-                      });
-                      addScenario({
-                        ...settings,
-                        data: { ...settings.data },
-                        spending: { ...spending },
-                      });
-                    }}
-                  >
-                    <div className="py-3">
-                      <Input
-                        label="Scenario name"
-                        value={settings.name}
-                        setValue={(name) => setSettings({ ...settings, name })}
-                        onKeyDown={(e: any) => {
-                          if (e.key === "Enter") {
-                            setSaveOpen(false);
-                            setSettings({
-                              ...settings,
-                              name: "",
-                            });
+          <div className="flex gap-3 w-full justify-end pt-3 pr-3">
+            <div>
+              <Button type="secondary" onClick={() => setSaveOpen(true)}>
+                <div className="flex gap-2">
+                  <img src={save} className="w-6 h-6" />
+                </div>
+              </Button>
+              <ModalInput
+                isOpen={saveOpen}
+                onClose={() => {
+                  setSaveOpen(false);
+                  setSettings({
+                    ...settings,
+                    name: "",
+                  });
+                }}
+                onConfirm={() => {
+                  setSaveOpen(false);
+                  setSettings({
+                    ...settings,
+                    name: "",
+                  });
+                  addScenario({
+                    ...settings,
+                    data: { ...settings.data },
+                    spending: { ...spending },
+                  });
+                }}
+              >
+                <div className="py-3">
+                  <Input
+                    label="Scenario name"
+                    value={settings.name}
+                    setValue={(name) => setSettings({ ...settings, name })}
+                    onKeyDown={(e: any) => {
+                      if (e.key === "Enter") {
+                        setSaveOpen(false);
+                        setSettings({
+                          ...settings,
+                          name: "",
+                        });
 
-                            addScenario({
-                              ...settings,
-                              data: { ...settings.data },
-                              spending: { ...spending },
-                            });
-                          }
-                        }}
-                        size="full"
-                        vertical
-                      />
-                    </div>
-                  </ModalInput>
+                        addScenario({
+                          ...settings,
+                          data: { ...settings.data },
+                          spending: { ...spending },
+                        });
+                      }
+                    }}
+                    size="full"
+                    vertical
+                  />
                 </div>
-                <div>
-                  <Button type="secondary" onClick={toggleFullscreen}>
-                    <div className="flex gap-3">
-                      <div className="flex items-center">
-                        {isFullscreen ? (
-                          <ArrowsPointingInIcon className="h-6 w-6" />
-                        ) : (
-                          <ArrowsPointingOutIcon className="h-6 w-6" />
-                        )}
-                      </div>
-                    </div>
-                  </Button>
+              </ModalInput>
+            </div>
+            <div>
+              <Button type="secondary" onClick={toggleFullscreen}>
+                <div className="flex gap-3">
+                  <div className="flex items-center">
+                    {isFullscreen ? (
+                      <ArrowsPointingInIcon className="h-6 w-6" />
+                    ) : (
+                      <ArrowsPointingOutIcon className="h-6 w-6" />
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <Button type="secondary" onClick={() => print()}>
-                    <div className="flex gap-2">
-                      <PrinterIcon className="h-6 w-6" />
-                      {printing && <Spinner className="h-5" />}
-                    </div>
-                  </Button>
+              </Button>
+            </div>
+            <div>
+              <Button type="secondary" onClick={() => print()}>
+                <div className="flex gap-2">
+                  <PrinterIcon className="h-6 w-6" />
+                  {printing && <Spinner className="h-5" />}
                 </div>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-5 z-0 px-4 w-full h-[55%]">
+          {settings.data.people.length == 2 ? (
+            <div className="flex gap-3 items-center">
+              <div className="text-sm text-[#344054] mb-1 ">Mortality</div>
+              <div className={`flex items-end`}>
+                <WhoDies
+                  active={settings.whoDies == -1}
+                  setWhoDies={(i: number) =>
+                    setSettings({
+                      ...settings,
+                      whoDies: i,
+                    })
+                  }
+                  i={-1}
+                  title="Both Alive"
+                />
+                {settings.data.people.map((person, i) => (
+                  <WhoDies
+                    active={settings.whoDies == i}
+                    key={person.id}
+                    age={settings.deathYears[i]}
+                    setAge={(e: any) =>
+                      setSettings({
+                        ...settings,
+                        deathYears: updateAtIndex(
+                          settings.deathYears,
+                          i,
+                          parseInt(e),
+                        ),
+                      })
+                    }
+                    setWhoDies={(i: number) =>
+                      setSettings({
+                        ...settings,
+                        whoDies: i,
+                      })
+                    }
+                    i={i}
+                    title={`${person.name} Dies At`}
+                  />
+                ))}
               </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <div className="flex gap-3 items-center">
+            <div className="mt-[-3px]">
+              <MultiToggle
+                vertical={false}
+                options={["Real", "Nominal"]}
+                label="Inflation"
+                value={settings.inflationType}
+                setValue={(v: any) =>
+                  setSettings({ ...settings, inflationType: v })
+                }
+              />
+            </div>
+            <div className="">
+              <Input
+                onFocus={(event: any) => {
+                  const input = event.target;
+                  setTimeout(() => {
+                    input.select();
+                  }, 0);
+                }}
+                label="Inflation (%)"
+                labelLength={85}
+                size="xs"
+                subtype="percent"
+                value={settings.inflation}
+                setValue={(e) => setSettings({ ...settings, inflation: e })}
+              />
+            </div>
+
+            <div className="h-10">
+              {client.taxesFlag && (
+                <div className="w-[283px]">
+                  <MultiToggle
+                    options={["Pre-Tax", "Post-Tax"]}
+                    label=""
+                    vertical={false}
+                    value={settings.taxType}
+                    setValue={(v: any) =>
+                      setSettings({ ...settings, taxType: v })
+                    }
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

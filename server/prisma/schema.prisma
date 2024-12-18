@@ -18,6 +18,7 @@ model Client {
   stabilityRatioFlag  Boolean   @default(false)
   needsFlag           Boolean   @default(false)
   longevityFlag       Boolean   @default(false)
+  taxesFlag           Boolean   @default(false)
   updatedAt           DateTime?
   allInOneCalculator  Json      @default("[]")
   versatileCalculator Json      @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
@@ -38,6 +39,7 @@ model UserInfo {
   stabilityRatioFlag          Boolean @default(false)
   needsFlag                   Boolean @default(false)
   longevityFlag               Boolean @default(false)
+  taxesFlag                   Boolean @default(false)
   globalInflation             Float?  @default(2.5)
   globalYearsShown            Int?    @default(30)
   globalLifeExpectancy        Int?    @default(78)

@@ -16,7 +16,7 @@ interface Props {
   maxY?: any;
 }
 
-const MainChart = ({
+const SpendingChart = ({
   years,
   stackedData,
   lineData,
@@ -572,4 +572,4 @@ const MainChart = ({
 //   initialHeight: PropTypes.number,
 // };
 
-export default MainChart;
+export default SpendingChart;

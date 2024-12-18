@@ -21,10 +21,9 @@ const PrintLivePage = () => {
     ...client.liveSettings,
     data: client.data,
     spending: client.spending,
-  }; //JSON.parse(searchParams.get("data") || "null");
+  };
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
-  console.log("sc", scenario);
   scenario.name = "Live";
   return (
     <IncomeProvider data={client as any} setLocal={() => {}}>

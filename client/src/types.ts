@@ -1,17 +1,19 @@
 interface SelectedColumn {
   type:
-  | "year"
-  | "age"
-  | "income"
-  | "total"
-  | "none"
-  | "spending"
-  | "gap"
-  | "income-stability"
-  | "spending-stability"
-  | "0-alive"
-  | "1-alive"
-  | "joint-alive";
+    | "year"
+    | "age"
+    | "income"
+    | "total"
+    | "none"
+    | "spending"
+    | "gap"
+    | "taxes"
+    | "posttax"
+    | "income-stability"
+    | "spending-stability"
+    | "0-alive"
+    | "1-alive"
+    | "joint-alive";
   id: number;
 }
 
@@ -150,6 +152,7 @@ interface Client {
   calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  taxesFlag: boolean;
   longevityFlag: boolean;
   allInOneCalculator: any[];
   versatileCalculator: any;
@@ -175,6 +178,7 @@ interface UserInfo {
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
   longevityFlag: boolean;
+  taxesFlag: boolean;
   logo?: string;
   email: string;
   name?: string;

@@ -1,7 +1,7 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
-import { printNumber, splitDate, yearRange } from "src/utils";
+import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import { useMemo, useState } from "react";
 import { Tooltip } from "flowbite-react";
 import IncomeModal from "src/components/Info/IncomeModal";
@@ -200,15 +200,23 @@ const ResultTable = ({
                       .map((income) => calculateOne(income, currentYear).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
-                    const gap = income - needs;
+
+                    const taxRate = getTaxRate(client, settings, currentYear);
+                    const gap = income - needs - taxRate * income;
                     const stabilityRatio = Math.round(
                       (stableIncome / income) * 100,
                     );
                     const needsStable = Math.round(
-                      (stableIncome / needs) * 100,
+                      ((stableIncome * (1 - taxRate)) / needs) * 100,
                     );
                     return (
                       <div className="z-[5000000] bg-white w-44 sticky">
+                        {client.taxesFlag && (
+                          <>
+                            <div>Total Income: {printNumber(income)}</div>
+                            <div>Taxes: {printNumber(taxRate * income)}</div>
+                          </>
+                        )}
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
@@ -255,7 +263,16 @@ const ResultTable = ({
                           (income) => calculateOne(income, currentYear).amount,
                         )
                         .filter((t) => typeof t === "number")
-                        .reduce((a, b) => a + b, 0),
+                        .reduce((a, b) => a + b, 0) *
+                        (client.taxesFlag &&
+                        settings.taxType == "Post-Tax" &&
+                        settings.retirementYear
+                          ? 1 -
+                            (currentYear >= settings.retirementYear
+                              ? client.spending.postTaxRate
+                              : client.spending.preTaxRate) /
+                              100
+                          : 1),
                     )}
                   </div>
                 </Tooltip>
@@ -364,7 +381,7 @@ const ResultTable = ({
                       }
                     }}
                   >
-                    Total
+                    {client.taxesFlag ? settings.taxType : ""} Total
                   </div>
                 </td>
               </tr>

@@ -322,6 +322,32 @@ const Settings = () => {
                     />
                   </div>
                 </div>
+                <div className="flex gap-5 items-center w-full">
+                  <div className="flex gap-5 items-center w-[730px]">
+                    <div>
+                      <Input
+                        value={settings.taxesFlag}
+                        tabIndex={12}
+                        setValue={(e) =>
+                          setSettings({ ...settings, taxesFlag: e })
+                        }
+                        label="Taxes"
+                        size="full"
+                        subtype="toggle"
+                      />
+                    </div>
+                    <div className="text-gray-400 text-nowrap text-sm text-left">
+                      Include tax calculations on income.
+                    </div>
+                  </div>
+                  <div>
+                    <ApplyToCurrent
+                      name="taxesFlag"
+                      tooltip="Apply this Longevity setting to existing clients"
+                      value={settings.taxesFlag}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
