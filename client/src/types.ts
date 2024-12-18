@@ -213,6 +213,12 @@ type YearlyIncrease =
   | { type: "none" }
   | { type: "custom"; percent: number };
 
+interface SpendingResult {
+  type: "base" | "pre" | "post";
+  category?: string;
+  amount: number;
+}
+
 interface RetirementSpendingSettings {
   currentSpending: number;
   newCurrentSpending: MonthlyYearlyAmount;

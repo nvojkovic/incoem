@@ -1,8 +1,8 @@
 import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
-import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
 import { jointTable, makeTable } from "../Longevity/calculate";
+import { calculateSpendingYear } from "../Spending/calculate";
 
 const Composite = ({
   scenario,

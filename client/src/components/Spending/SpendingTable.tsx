@@ -1,5 +1,5 @@
 import { printNumber, splitDate, yearRange } from "src/utils";
-import { calculateSpendingYear } from "./SpendingPage";
+import { calculateSpendingYear } from "./calculate";
 interface SpendingTableProps {
   settings: ScenarioSettings;
   spending: RetirementSpendingSettings;
@@ -14,7 +14,7 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
       {[0, 1, 2, 3, 4].map(
         (tableInd) =>
           currentYear + settings.maxYearsShown >
-          currentYear + tableInd * 16 && (
+            currentYear + tableInd * 16 && (
             <div>
               <table className=" w-full border bg-white">
                 <thead

@@ -1,13 +1,13 @@
 import { convertToMoYr, moyrToAnnual } from "../../utils";
 import { calculateAge } from "../Info/PersonInfo";
 
-export const calculateSpendingYear = (
+export const calculateSingleSpending = (
   data: IncomeMapData,
   spending: RetirementSpendingSettings | undefined,
   settings: ScenarioSettings,
   year: number,
-) => {
-  if (!spending) return 0;
+): SpendingResult[] => {
+  if (!spending) return [];
   const years = year - 2024;
 
   const inflationRate = (inflation: YearlyIncrease) => {
@@ -21,53 +21,57 @@ export const calculateSpendingYear = (
     return amount * Math.pow(1 + inflationRate(inflation), years);
   };
 
-  // back out existing spending
-  const existing = spending.preSpending
-    .map((item) =>
-      moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
+  const results: SpendingResult[] = [];
 
-  let result =
-    moyrToAnnual(
-      spending.newCurrentSpending
-        ? spending.newCurrentSpending
-        : convertToMoYr(spending.currentSpending),
-    ) - existing;
+  // Calculate base spending
+  let baseAmount = moyrToAnnual(
+    spending.newCurrentSpending
+      ? spending.newCurrentSpending
+      : convertToMoYr(spending.currentSpending),
+  );
 
-  //back out death reduction
+  // Apply death reduction to base
   if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
     if (age > (settings.deathYears[settings.whoDies] as any)) {
-      result = result * (1 - spending.decreaseAtDeath[settings.whoDies] / 100);
+      baseAmount =
+        baseAmount * (1 - spending.decreaseAtDeath[settings.whoDies] / 100);
     }
   }
-  // inflate by general
-  result = inflateAmount(result, spending.yearlyIncrease);
 
-  // add pre back in
-  const pre = spending.preSpending
+  // Inflate base amount
+  baseAmount = inflateAmount(baseAmount, spending.yearlyIncrease);
+
+  // Add base spending
+  results.push({
+    type: "base",
+    amount: baseAmount,
+  });
+
+  // Add pre-retirement spending
+  spending.preSpending
     ?.filter((item) => year <= item.endYear)
-    .map((item) =>
-      inflateAmount(
+    .forEach((item) => {
+      let amount = inflateAmount(
         moyrToAnnual(
           item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
         ),
         item.increase,
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  result += pre;
+      );
+      results.push({
+        type: "pre",
+        category: item.category,
+        amount,
+      });
+    });
 
-  // add post spending
-  const post = spending.postSpending
+  // Add post-retirement spending
+  spending.postSpending
     ?.filter(
       (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
     )
-    .map((item) => {
+    .forEach((item) => {
       let amount = moyrToAnnual(
         item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
       );
@@ -79,24 +83,99 @@ export const calculateSpendingYear = (
           amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
         }
       }
-      return inflateAmount(amount, item.increase);
-    })
-    .reduce((a, b) => a + b, 0);
-  result += post;
+      amount = inflateAmount(amount, item.increase);
+      results.push({
+        type: "post",
+        category: item.category,
+        amount,
+      });
+    });
 
+  // Apply real dollars adjustment if needed
   if (settings.inflationType == "Real") {
-    result = calculatePV(result, (settings.inflation || 0) / 100, years);
+    results.forEach((result) => {
+      result.amount = calculatePV(
+        result.amount,
+        (settings.inflation || 0) / 100,
+        years,
+      );
+    });
   }
 
-  return Math.round(isNaN(result) ? 0 : result);
+  // Round all amounts
+  results.forEach((result) => {
+    result.amount = Math.round(isNaN(result.amount) ? 0 : result.amount);
+  });
+
+  return results;
 };
 
-const calculateSingleSpending = (
+export const calculateSpendingYear = (
   data: IncomeMapData,
   spending: RetirementSpendingSettings | undefined,
   settings: ScenarioSettings,
   year: number,
-) => {};
+) => {
+  const result = calculateSingleSpending(data, spending, settings, year);
+  return result.map((i) => i.amount).reduce((a, b) => a + b, 0);
+};
+
+export const getSpendingItems = (
+  data: IncomeMapData,
+  spending: RetirementSpendingSettings | undefined,
+  settings: ScenarioSettings,
+  year: number,
+): SpendingResult[] => {
+  const result = calculateSingleSpending(data, spending, settings, year);
+  return result;
+};
+
+export const getSpendingItemsByType = (
+  data: IncomeMapData,
+  spending: RetirementSpendingSettings | undefined,
+  settings: ScenarioSettings,
+  year: number,
+  type: "base" | "pre" | "post",
+): SpendingResult[] => {
+  const result = calculateSingleSpending(data, spending, settings, year);
+  return result.filter((i) => i.type === type);
+};
+
+export const getSpendingItemOverYears = (
+  data: IncomeMapData,
+  spending: RetirementSpendingSettings | undefined,
+  settings: ScenarioSettings,
+  startYear: number,
+  endYear: number,
+  type: "base" | "pre" | "post",
+  category?: string,
+): { year: number; amount: number; name: string }[] => {
+  const results: { year: number; amount: number; name: string }[] = [];
+
+  for (let year = startYear; year <= endYear; year++) {
+    const yearItems = calculateSingleSpending(data, spending, settings, year);
+    const matchingItem = yearItems.find(
+      (item) =>
+        item.type === type && (category ? item.category === category : true),
+    );
+
+    if (matchingItem) {
+      results.push({
+        year,
+        amount: matchingItem.amount,
+        name: category || (type as any).capitalize(),
+      });
+    } else {
+      results.push({
+        year,
+        amount: 0,
+        name: category || (type as any).capitalize(),
+      });
+    }
+  }
+
+  return results;
+};
 
 function calculatePV(futureValue: any, interestRate: any, periods: any) {
   return futureValue / Math.pow(1 + interestRate, periods);

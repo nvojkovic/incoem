@@ -8,13 +8,7 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
-import {
-  convertToMoYr,
-  moyrToAnnual,
-  updateAtIndex,
-  yearRange,
-} from "../../utils";
-import { calculateAge } from "../Info/PersonInfo";
+import { convertToMoYr, updateAtIndex, yearRange } from "../../utils";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
@@ -22,6 +16,7 @@ import Confirm from "../Confirm";
 import { useState } from "react";
 import { SmallToggle } from "../Live";
 import SpendingChart from "../Charts/SpendingChart";
+import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
 
 const currentYear = new Date().getFullYear();
 
@@ -83,6 +78,39 @@ const SpendingPage = () => {
 
   const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
+
+  const baseSpending = getSpendingItemOverYears(
+    data.data,
+    spending,
+    settings,
+    currentYear,
+    currentYear + settings.maxYearsShown,
+    "base",
+  );
+  const preSpending = spending.preSpending.map((item) =>
+    getSpendingItemOverYears(
+      data.data,
+      spending,
+      settings,
+      currentYear,
+      currentYear + settings.maxYearsShown,
+      "pre",
+      item.category,
+    ),
+  );
+
+  const postSpending = spending.postSpending.map((item) =>
+    getSpendingItemOverYears(
+      data.data,
+      spending,
+      settings,
+      currentYear,
+      currentYear + settings.maxYearsShown,
+      "post",
+      item.category,
+    ),
+  );
+  console.log(baseSpending, preSpending, postSpending);
 
   return (
     <Layout page="spending">
@@ -649,6 +677,8 @@ const SpendingPage = () => {
           </div>
           <div className="bg-white pb-[2px]">
             <SpendingChart
+              spending={true}
+              taxes={[]}
               maxY={maxY}
               longevityFlag={false}
               people={[]}
@@ -659,28 +689,13 @@ const SpendingPage = () => {
                 currentYear,
                 currentYear + settings.maxYearsShown,
               )}
-              lineData={yearRange(
-                currentYear,
-                currentYear + settings.maxYearsShown,
-              ).map((_) => 0)}
-              stackedData={[
-                {
-                  name: "Spending",
+              stackedData={[baseSpending, ...preSpending, ...postSpending].map(
+                (item) => ({
+                  name: item[0].name,
                   stable: true,
-                  values: yearRange(
-                    currentYear,
-                    currentYear + settings.maxYearsShown,
-                  ).map(
-                    (year) =>
-                      calculateSpendingYear(
-                        data.data,
-                        spending,
-                        settings,
-                        year,
-                      ) / factor,
-                  ),
-                },
-              ]}
+                  values: item.map((i) => i.amount),
+                }),
+              )}
             />
           </div>
         </MapSection>

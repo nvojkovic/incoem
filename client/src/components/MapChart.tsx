@@ -3,7 +3,7 @@ import title from "../calculator/title";
 import { yearRange } from "../utils";
 import MainChart from "./Charts/MainChart";
 import Header from "./Report/Header";
-import { calculateSpendingYear } from "./Spending/SpendingPage";
+import { calculateSpendingYear } from "./Spending/calculate";
 
 interface MapChartProps {
   settings: ScenarioSettings;
@@ -14,7 +14,6 @@ interface MapChartProps {
 const MapChart = ({ settings, client, print }: MapChartProps) => {
   const incomes = settings.data.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
-  const years = yearRange(startYear, startYear + settings.maxYearsShown - 1);
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 
@@ -37,15 +36,15 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
       amount: result.amount / divisionFactor,
     };
   };
-  const income = years.map((line) =>
-    client.data.incomes
-      .filter((income) => income.enabled)
-      .map((income) => calculateOne(income, line).amount)
-      .filter((t) => typeof t === "number")
-      .reduce((a, b) => a + b, 0),
-  );
-
-  const taxes = (line) => {
+  // const income = years.map((line) =>
+  //   client.data.incomes
+  //     .filter((income) => income.enabled)
+  //     .map((income) => calculateOne(income, line).amount)
+  //     .filter((t) => typeof t === "number")
+  //     .reduce((a, b) => a + b, 0),
+  // );
+  //
+  const taxes = (line: any) => {
     const income = client.data.incomes
       .filter((income) => income.enabled)
       .map((income) => calculateOne(income, line).amount)

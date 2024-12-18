@@ -1,8 +1,8 @@
 import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import { jointTable, makeTable } from "../Longevity/calculate";
 import calculate from "src/calculator/calculate";
-import { calculateSpendingYear } from "../Spending/SpendingPage";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import { calculateSpendingYear } from "../Spending/calculate";
 
 interface Props {
   scenario: ScenarioSettings;

@@ -21,10 +21,10 @@ import { arrayMove } from "@dnd-kit/sortable";
 import React from "react";
 import { useInfo } from "src/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
-import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
 import DraggableTable from "./DraggableTable";
 import { jointTable, makeTable } from "../Longevity/calculate";
 import ScenarioHeader from "./ScenarioHeader";
+import { calculateSpendingYear } from "../Spending/calculate";
 
 const ResultTable = ({
   client,

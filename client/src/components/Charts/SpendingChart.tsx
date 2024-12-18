@@ -6,7 +6,6 @@ interface Props {
   years: any;
   taxes: any;
   stackedData: any;
-  lineData: any;
   spending: any;
   stability: any;
   needsFlag: any;
@@ -19,7 +18,6 @@ interface Props {
 const SpendingChart = ({
   years,
   stackedData,
-  lineData,
   spending,
   taxes,
   stability,
@@ -74,7 +72,6 @@ const SpendingChart = ({
       dimensions.width === 0 ||
       !years.length ||
       !stackedData.length //||
-      // !lineData.length
     )
       return;
 
@@ -146,19 +143,18 @@ const SpendingChart = ({
             (d3 as any).max(processedData as any, (d: any) => {
               return d3.sum(keys, (key: any) => d[key]);
             }),
-            lineData ? Math.max(...lineData) : 0,
           ) * 1.1,
       ])
       .range([height, 0]);
 
     // Create sorted domain for consistent color mapping
     const sortedDomain = [...stackedData]
-      .sort((a, b) => {
-        if (a.stable === b.stable) {
-          return a.name.localeCompare(b.name);
-        }
-        return a.stable ? -1 : 1;
-      })
+      // .sort((a, b) => {
+      //   if (a.stable === b.stable) {
+      //     return a.name.localeCompare(b.name);
+      //   }
+      //   return a.stable ? -1 : 1;
+      // })
       .map((d) => d.name);
     console.log("sorted domain", sortedDomain);
 
@@ -219,21 +215,6 @@ const SpendingChart = ({
       .attr("d", area)
       .style("stroke", (d: any) => color(d.key))
       .style("stroke-width", 1);
-
-    const line = d3
-      .line()
-      .x((_, i) => x(years[i]))
-      .y((d: any) => y(d))
-      .curve(d3.curveMonotoneX);
-
-    if (lineData && !spending)
-      mainG
-        .append("path")
-        .datum(lineData)
-        .attr("fill", "none")
-        .attr("stroke", "#ED4337")
-        .attr("stroke-width", 3)
-        .attr("d", line);
 
     // Update x-axis
     mainG
@@ -312,25 +293,12 @@ const SpendingChart = ({
 
       if (selectedData) {
         let tooltipContent = "";
-        if (spending) {
-          tooltipContent = `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
-                          <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
-                            <div>
-                              <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-                              <b>Spending: </b>
-                            </div>
-                            <div>
-                              <b>${formatCurrency.format(selectedData["Spending"])}</b>
-                            </div>
-                          </div>
-                        </div>`;
-        } else {
-          tooltipContent =
-            keys
-              .filter((key: any) => selectedData[key])
-              .map(
-                (key: any) =>
-                  `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
+        tooltipContent =
+          keys
+            .filter((key: any) => selectedData[key])
+            .map(
+              (key: any) =>
+                `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)}; margin-right: 5px;"></span>
@@ -341,22 +309,24 @@ const SpendingChart = ({
                   </div>
                 </div>
               </div>`,
-              )
-              .join("") +
-            `
+            )
+            .join("") +
+          `
 
                      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+
+              <div class="h-[1px] bg-black my-1"/>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-2">
                   <div class="ml-5">
-                    <b>Total Income: </b>
+                    <b>Total Spending: </b>
                   </div>
                   <div>
                     <b>${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0))}</b>
                   </div>
                 </div>
               </div>`;
-          if (needsFlag)
-            tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+        if (needsFlag)
+          tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
                 ${
                   taxes.length
                     ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
@@ -370,30 +340,9 @@ const SpendingChart = ({
                 </div>`
                     : ""
                 }
-
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
-                  <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-                    <b>Spending: </b>
-                  </div>
-                  <div>
-                    <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0))}</b>
-                  </div>
-                </div>
                               </div>
-              <div class="h-[1px] bg-black my-1"/>
-<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-1 ">
-                  <div class="ml-5">
-                    <b>Gap: </b>
-                  </div>
-                  <div>
-                    <b style="color:${keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)] < 0 ? "red" : "green"}">${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)])}</b>
-                  </div>
-                </div>
-              </div>
             `;
-        }
+
         const longevityContent = longevityFlag
           ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${
               people.length > 1
@@ -503,29 +452,10 @@ const SpendingChart = ({
           setHiddenSeries(newHiddenSeries);
         });
     });
-
-    // Add line to legend if lineData exists
-    if (lineData?.length && !spending) {
-      const lineItem = legendContainer
-        .append("div")
-        .style("display", "flex")
-        .style("align-items", "center")
-        .style("gap", "5px");
-
-      lineItem
-        .append("div")
-        .style("width", "15px")
-        .style("height", "15px")
-        .style("background-color", "red")
-        .style("border-radius", "50%");
-
-      lineItem.append("span").style("font-size", "12px").text("Spending");
-    }
   }, [
     dimensions,
     years,
     stackedData,
-    lineData,
     hiddenSeries,
     colorArray,
     longevityFlag,
