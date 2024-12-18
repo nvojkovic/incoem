@@ -1,4 +1,5 @@
-import { yearRange } from "../utils";
+import calculate from "src/calculator/calculate";
+import { getTaxRate, yearRange } from "../utils";
 import SpendingChart from "./Charts/SpendingChart";
 import Header from "./Report/Header";
 import { getSpendingItemOverYears } from "./Spending/calculate";
@@ -46,11 +47,49 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
     ),
   );
 
+  const years = yearRange(startYear, startYear + settings.maxYearsShown - 1);
+
+  // const taxes = yearRange(
+  //   startYear,
+  //   startYear + settings.maxYearsShown - 1,
+  // ).map((year) => {});
+  const divisionFactor =
+    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
+
+  const calculateOne = (income: Income, currentYear: number) => {
+    const result = calculate({
+      people: settings.data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: settings.data.incomes.filter((income) => income.enabled),
+      ssSurvivorAge: settings.ssSurvivorAge,
+      inflationType: settings.inflationType,
+    });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
+  };
+  const taxes = years.map((year) => ({
+    name: "Taxes",
+    year,
+    amount:
+      client.data.incomes
+        .filter((income) => income.enabled)
+        .map((income) => calculateOne(income, year).amount)
+        .filter((t) => typeof t === "number")
+        .reduce((a, b) => a + b, 0) * getTaxRate(client, settings, year),
+  }));
+
   return (
     <div className={`bg-white ${!print && "pb-5"}`}>
       <Header client={client as any} scenario={settings} />
       <SpendingChart
-        taxes={null}
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
         spending={false}
         initialHeight={print ? 700 : 550}
@@ -58,7 +97,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
         people={settings.data.people}
         stability={client.stabilityRatioFlag}
         needsFlag={client.needsFlag}
-        stackedData={[baseSpending, ...preSpending, ...postSpending].map(
+        stackedData={[baseSpending, ...preSpending, ...postSpending, taxes].map(
           (item) => ({
             name: item[0].name,
             stable: true,

@@ -4,7 +4,6 @@ import { jointTable, makeTable } from "../Longevity/calculate";
 
 interface Props {
   years: any;
-  taxes: any;
   stackedData: any;
   spending: any;
   stability: any;
@@ -19,7 +18,6 @@ const SpendingChart = ({
   years,
   stackedData,
   spending,
-  taxes,
   stability,
   needsFlag,
   longevityFlag,
@@ -178,7 +176,7 @@ const SpendingChart = ({
       .attr("class", "area")
       .attr("fill", (d: any) => {
         const item = stackedData.find((item: any) => item.name === d.key);
-        const baseColor = color(d.key);
+        const baseColor = d.key == "Taxes" ? "#000" : color(d.key);
         if (item.stable || !stability) return baseColor;
 
         // Create a unique pattern ID for each unstable series
@@ -301,7 +299,9 @@ const SpendingChart = ({
                 `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                   <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)}; margin-right: 5px;"></span>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${
+                      key == "Taxes" ? "#000" : color(key)
+                    }; margin-right: 5px;"></span>
                     ${key}: 
                   </div>
                   <div>
@@ -327,19 +327,6 @@ const SpendingChart = ({
               </div>`;
         if (needsFlag)
           tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
-                ${
-                  taxes.length
-                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
-                  <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-                    <b>Taxes: </b>
-                  </div>
-                  <div>
-                    <b>${formatCurrency.format(taxes[years.indexOf(year)])}</b>
-                  </div>
-                </div>`
-                    : ""
-                }
                               </div>
             `;
 
@@ -425,7 +412,10 @@ const SpendingChart = ({
         .append("div")
         .style("width", "15px")
         .style("height", "15px")
-        .style("background-color", color(key as any) as any)
+        .style(
+          "background-color",
+          key == "Taxes" ? "#000" : (color(key as any) as any),
+        )
         .style("border-radius", "50%")
         .style(
           "opacity",

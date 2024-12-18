@@ -8,7 +8,12 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
 import YearlyIncrease from "./YearlyIncrease";
-import { convertToMoYr, updateAtIndex, yearRange } from "../../utils";
+import {
+  convertToMoYr,
+  getTaxRate,
+  updateAtIndex,
+  yearRange,
+} from "../../utils";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
@@ -17,6 +22,7 @@ import { useState } from "react";
 import { SmallToggle } from "../Live";
 import SpendingChart from "../Charts/SpendingChart";
 import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
+import calculate from "src/calculator/calculate";
 
 const currentYear = new Date().getFullYear();
 
@@ -110,6 +116,44 @@ const SpendingPage = () => {
       item.category,
     ),
   );
+  const startYear = currentYear;
+  const years = yearRange(startYear, startYear + settings.maxYearsShown);
+
+  // const taxes = yearRange(
+  //   startYear,
+  //   startYear + settings.maxYearsShown - 1,
+  // ).map((year) => {});
+  const divisionFactor = settings.monthlyYearly === "monthly" ? 12 : 1;
+
+  const calculateOne = (income: Income, currentYear: number) => {
+    const result = calculate({
+      people: settings.data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: settings.data.incomes.filter((income) => income.enabled),
+      ssSurvivorAge: settings.ssSurvivorAge,
+      inflationType: settings.inflationType,
+    });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
+  };
+  const taxes = years.map((year) => ({
+    name: "Taxes",
+    year,
+    amount:
+      data.data.incomes
+        .filter((income) => income.enabled)
+        .map((income) => calculateOne(income, year).amount)
+        .filter((t) => typeof t === "number")
+        .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
+  }));
   console.log(baseSpending, preSpending, postSpending);
 
   return (
@@ -678,7 +722,6 @@ const SpendingPage = () => {
           <div className="bg-white pb-[2px]">
             <SpendingChart
               spending={true}
-              taxes={[]}
               maxY={maxY}
               longevityFlag={false}
               people={[]}
@@ -689,13 +732,16 @@ const SpendingPage = () => {
                 currentYear,
                 currentYear + settings.maxYearsShown,
               )}
-              stackedData={[baseSpending, ...preSpending, ...postSpending].map(
-                (item) => ({
-                  name: item[0].name,
-                  stable: true,
-                  values: item.map((i) => i.amount),
-                }),
-              )}
+              stackedData={[
+                baseSpending,
+                ...preSpending,
+                ...postSpending,
+                taxes,
+              ].map((item) => ({
+                name: item[0].name,
+                stable: true,
+                values: item.map((i) => i.amount),
+              }))}
             />
           </div>
         </MapSection>
