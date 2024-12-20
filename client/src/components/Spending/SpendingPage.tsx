@@ -160,8 +160,6 @@ const SpendingPage = () => {
   //   startYear + settings.maxYearsShown - 1,
   // ).map((year) => {});
 
-  console.log(baseSpending, preSpending, postSpending);
-
   return (
     <Layout page="spending">
       <div className="flex flex-col gap-8">

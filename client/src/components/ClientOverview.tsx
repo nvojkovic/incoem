@@ -14,6 +14,7 @@ const ClientOverview = () => {
 
   const reportSettings = data.reportSettings.filter((s) => {
     if (s.name === "spending" && !data.needsFlag) return false;
+    if (s.name === "spending-chart" && !data.needsFlag) return false;
     if (s.name === "longevity" && !data.longevityFlag) return false;
     return true;
   });

@@ -13,7 +13,7 @@ const Spending = ({
 }) => {
   if (!spending || !client.needsFlag) return null;
   return (
-    <div className="mx-20 flex justify-center flex-col mt-6">
+    <div className="mx-5 flex justify-center flex-col mt-6">
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto">Spending</div>
       <div className="flex mt-6 mb-8 gap-3 mx-auto">

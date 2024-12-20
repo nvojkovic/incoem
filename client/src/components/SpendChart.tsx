@@ -49,10 +49,6 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
 
   const years = yearRange(startYear, startYear + settings.maxYearsShown - 1);
 
-  // const taxes = yearRange(
-  //   startYear,
-  //   startYear + settings.maxYearsShown - 1,
-  // ).map((year) => {});
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 

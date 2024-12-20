@@ -26,8 +26,10 @@ interface Props {
 const names: any = {
   cover: "Cover",
   incomes: "Incomes",
-  "income-chart": "Chart",
+  "income-chart": "Income Chart",
   spending: "Spending",
+
+  "spending-chart": "Spending Chart",
   longevity: "Longevity",
   composite: "Composite",
 };
@@ -109,7 +111,8 @@ const ReportSettings = ({
   const filtered = settings.filter(
     (s) =>
       !(s.name === "longevity" && !flags.longevityFlag) &&
-      !(s.name === "spending" && !flags.needsFlag),
+      !(s.name === "spending" && !flags.needsFlag) &&
+      !(s.name === "spending-chart" && !flags.needsFlag),
   );
   console.log(filtered);
   return (
@@ -127,7 +130,7 @@ const ReportSettings = ({
             <SortableItem
               key={sc.id}
               id={sc.id}
-            // onClick={() => setTab(i)}
+              // onClick={() => setTab(i)}
             >
               <Page
                 setting={sc}

@@ -273,6 +273,12 @@ interface SpendingPage {
   settings: object;
 }
 
+interface SpendingChartPage {
+  id: string;
+  name: "spending-chart";
+  settings: object;
+}
+
 interface LongevityPage {
   id: string;
   name: "longevity";
@@ -284,6 +290,7 @@ type ReportPage =
   | IncomesPage
   | IncomeChartPage
   | SpendingPage
+  | SpendingChartPage
   | LongevityPage;
 
 type ReportSettings = ReportPage[];

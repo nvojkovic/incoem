@@ -53,17 +53,17 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                   className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
                 >
                   <tr>
-                    <th className="px-6 py-3">Year</th>
-                    <th className="px-6 py-3">Age</th>
-                    <th className="px-6 py-3">Base Spending</th>
+                    <th className="px-6 print:px-3 py-3">Year</th>
+                    <th className="px-6 print:px-3 py-3">Age</th>
+                    <th className="px-6 print:px-3 py-3">Base Spending</th>
                     {spending.preSpending.map((i) => (
-                      <th className="px-6 py-3">{i.category}</th>
+                      <th className="px-6 print:px-3 py-3">{i.category}</th>
                     ))}
                     {spending.postSpending.map((i) => (
-                      <th className="px-6 py-3">{i.category}</th>
+                      <th className="px-6 print:px-3  py-3">{i.category}</th>
                     ))}
 
-                    <th className="px-6 py-3">Total</th>
+                    <th className="px-6 print:px-3 py-3">Total</th>
                   </tr>
                 </thead>
                 <tbody className="print:text-sm">
@@ -75,20 +75,22 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                     ),
                   ).map((year) => (
                     <tr className="">
-                      <td className="px-6 py-1  font-bold">{year}</td>
-                      <td className="px-6 py-1 ">
+                      <td className="px-6 print:px-3 py-1  font-bold">
+                        {year}
+                      </td>
+                      <td className="px-6 print:px-3 py-1 ">
                         {data.people
                           .map((p) => year - splitDate(p.birthday).year)
                           .join("/")}
                       </td>
                       {results.map((item) => (
-                        <td className="px-6 py-1 ">
+                        <td className="px-6 print:px-3 py-1 ">
                           {printNumber(
                             item[year - currentYear].amount / factor,
                           )}
                         </td>
                       ))}
-                      <td className="px-6 py-1 ">
+                      <td className="px-6 py-1 print:px-3 ">
                         {printNumber(
                           results
                             .map((item) => item[year - currentYear].amount)
