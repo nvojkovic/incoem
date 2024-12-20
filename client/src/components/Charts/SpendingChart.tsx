@@ -106,12 +106,6 @@ const SpendingChart = ({
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // First sort the stackedData array
-    stackedData.sort((a: any, b: any) => {
-      if (a.stable === b.stable) {
-        return a.name.localeCompare(b.name);
-      }
-      return a.stable ? -1 : 1;
-    });
 
     // Process data after sorting
     const processedData = years.map((year: any, index: any) => {

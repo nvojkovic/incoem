@@ -30,6 +30,19 @@ export const calculateSingleSpending = (
       : convertToMoYr(spending.currentSpending),
   );
 
+  // Inflate base amount
+
+  const toRemove = spending.preSpending
+    .map((item) => {
+      let amount = moyrToAnnual(
+        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
+      );
+      return amount;
+    })
+    .reduce((a, b) => a + b, 0);
+  console.log(year, toRemove, baseAmount);
+
+  baseAmount = inflateAmount(baseAmount - toRemove, spending.yearlyIncrease);
   // Apply death reduction to base
   if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
     const age =
@@ -39,9 +52,6 @@ export const calculateSingleSpending = (
         baseAmount * (1 - spending.decreaseAtDeath[settings.whoDies] / 100);
     }
   }
-
-  // Inflate base amount
-  baseAmount = inflateAmount(baseAmount, spending.yearlyIncrease);
 
   // Add base spending
   results.push({

@@ -361,7 +361,7 @@ const MainChart = ({
                   taxes.length
                     ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
                   <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: white; margin-right: 5px;"></span>
                     <b>Taxes: </b>
                   </div>
                   <div>
@@ -373,13 +373,27 @@ const MainChart = ({
 
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
                   <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${taxes.length ? "white" : "red"}; margin-right: 5px;"></span>
                     <b>Spending: </b>
                   </div>
                   <div>
                     <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0))}</b>
                   </div>
                 </div>
+
+                ${
+                  taxes.length
+                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px; margin-top: 2px;">
+                  <div>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                    <b>Taxes + Spending: </b>
+                  </div>
+                  <div>
+                    <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0) + taxes[years.indexOf(year)])}</b>
+                  </div>
+                </div>`
+                    : ""
+                }
                               </div>
               <div class="h-[1px] bg-black my-1"/>
 <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">

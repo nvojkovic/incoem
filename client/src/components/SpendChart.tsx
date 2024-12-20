@@ -10,7 +10,7 @@ interface MapChartProps {
   print?: boolean;
 }
 
-const MapChart = ({ settings, client, print }: MapChartProps) => {
+const SpendChart = ({ settings, client, print }: MapChartProps) => {
   const startYear = new Date().getFullYear();
   const spending = client.spending;
   const currentYear = new Date().getFullYear();
@@ -101,7 +101,7 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
           (item) => ({
             name: item[0].name,
             stable: true,
-            values: item.map((i) => i.amount),
+            values: item.map((i) => i.amount / divisionFactor),
           }),
         )}
       />
@@ -109,4 +109,4 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
   );
 };
 
-export default MapChart;
+export default SpendChart;

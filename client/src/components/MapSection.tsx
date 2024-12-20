@@ -32,7 +32,7 @@ const MapSection = ({
         </div>
       )}
       <div
-        className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1000px]" : "max-h-0 overflow-hidden"}`}
+        className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
       >
         {children}
       </div>

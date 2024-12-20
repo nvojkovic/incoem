@@ -311,7 +311,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="text-gray-400 text-nowrap text-sm text-left">
-                      Include Longevity / Life Expectancy calculation.
+                      Include Longevity / Life Expectancy calculation
                     </div>
                   </div>
                   <div>
@@ -337,7 +337,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="text-gray-400 text-nowrap text-sm text-left">
-                      Include tax calculations on income.
+                      Include Tax calculations
                     </div>
                   </div>
                   <div>

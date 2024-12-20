@@ -93,6 +93,7 @@ const initializeNewClient = (user: User | null): Client => ({
     inflationType: "Nominal",
     data: {} as any,
     longevityPercent: 50,
+    chartType: "income",
     deathYears: [
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,

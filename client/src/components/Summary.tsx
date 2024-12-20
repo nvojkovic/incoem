@@ -21,6 +21,8 @@ import MapChart from "src/components/MapChart";
 import CompositeTable from "./Report/CompositeTable";
 import ScenarioHeader from "./IncomeTable/ScenarioHeader";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import { SmallToggle } from "./Live";
+import SpendChart from "./SpendChart";
 
 const Summary = () => {
   const sensors = useSensors(
@@ -152,7 +154,29 @@ const Summary = () => {
               id={tab}
             />
           )}
-          <MapChart settings={settings} client={data} />
+          <div className=" my-3 bg-white">
+            <div className="flex justify-end p-3">
+              <SmallToggle
+                item1="Income"
+                item2="Spending"
+                active={
+                  settings.chartType == "spending" ? "Spending" : "Income"
+                }
+                toggle={() => {
+                  setField("liveSettings")({
+                    ...settings,
+                    chartType:
+                      settings.chartType == "spending" ? "income" : "spending",
+                  });
+                }}
+              />
+            </div>
+            {settings.chartType == "spending" ? (
+              <SpendChart settings={settings} client={data} />
+            ) : (
+              <MapChart settings={settings} client={data} />
+            )}
+          </div>
         </div>
       </div>
     </Layout>

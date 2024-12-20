@@ -199,6 +199,7 @@ interface ScenarioSettings {
   ssSurvivorAge: (number | null)[];
   mapType: "result" | "composite";
   monthlyYearly: "monthly" | "yearly";
+  chartType: "income" | "spending";
   inflation: number;
   taxType: "Pre-Tax" | "Post-Tax";
   longevityPercent: number;

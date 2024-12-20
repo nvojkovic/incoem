@@ -77,7 +77,7 @@ const Live = ({
       className={`rounded-xl z-[500] border-[#EAECF0] border print:border-0 sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} `}
     >
       <div
-        className={`flex flex-col items-center h-32 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
+        className={`flex flex-col items-center h-36 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
       >
         <div className="w-full flex justify-between pb-2 border-b ">
           <div className="flex gap-7 items-end px-3 py-1">
@@ -91,9 +91,7 @@ const Live = ({
                 labelLength={100}
                 errorMessage="Years shown must be positive"
                 value={settings.maxYearsShown?.toString()}
-                setValue={(e) =>
-                  setSettings({ ...settings, maxYearsShown: parseInt(e) })
-                }
+                setValue={(e) => setSettings({ ...settings, maxYearsShown: e })}
               />
             </div>
             <div className="w-[200px]">
@@ -204,9 +202,9 @@ const Live = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-5 z-0 px-4 w-full h-[55%]">
+        <div className="flex items-center gap-3 z-0 px-4 w-full h-[55%]">
           {settings.data.people.length == 2 ? (
-            <div className="flex gap-3 items-center">
+            <div className="flex flex-col gap-1 items-start">
               <div className="text-sm text-[#344054] mb-1 ">Mortality</div>
               <div className={`flex items-end`}>
                 <WhoDies
@@ -250,50 +248,77 @@ const Live = ({
           ) : (
             <div></div>
           )}
-          <div className="flex gap-3 items-center">
-            <div className="mt-[-3px]">
-              <MultiToggle
-                vertical={false}
-                options={["Real", "Nominal"]}
-                label="Inflation"
-                value={settings.inflationType}
-                setValue={(v: any) =>
-                  setSettings({ ...settings, inflationType: v })
-                }
-              />
-            </div>
-            <div className="">
-              <Input
-                onFocus={(event: any) => {
-                  const input = event.target;
-                  setTimeout(() => {
-                    input.select();
-                  }, 0);
-                }}
-                label="Inflation (%)"
-                labelLength={85}
-                size="xs"
-                subtype="percent"
-                value={settings.inflation}
-                setValue={(e) => setSettings({ ...settings, inflation: e })}
-              />
-            </div>
+          <div className="bg-gray-300 w-[1px] h-[81px]"></div>
+          <div className="mt-[-3px]">
+            <MultiToggle
+              vertical={true}
+              options={["Real", "Nominal"]}
+              label="Inflation"
+              value={settings.inflationType}
+              setValue={(v: any) =>
+                setSettings({ ...settings, inflationType: v })
+              }
+            />
+          </div>
+          <div className="">
+            <Input
+              onFocus={(event: any) => {
+                const input = event.target;
+                setTimeout(() => {
+                  input.select();
+                }, 0);
+              }}
+              label="Inflation (%)"
+              labelLength={85}
+              size="xs"
+              vertical
+              subtype="percent"
+              value={settings.inflation}
+              setValue={(e) => setSettings({ ...settings, inflation: e })}
+            />
+          </div>
+          <div className="bg-gray-300 w-[1px] h-[81px]"></div>
 
-            <div className="h-10">
-              {client.taxesFlag && (
-                <div className="w-[283px]">
-                  <MultiToggle
-                    options={["Pre-Tax", "Post-Tax"]}
-                    label=""
-                    vertical={false}
-                    value={settings.taxType}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, taxType: v })
-                    }
-                  />
-                </div>
-              )}
-            </div>
+          <div className="">
+            {client.taxesFlag && (
+              <div className="w-[200px]">
+                <MultiToggle
+                  options={["Pre-Tax", "Post-Tax"]}
+                  label="Taxation"
+                  vertical={true}
+                  value={settings.taxType}
+                  setValue={(v: any) =>
+                    setSettings({ ...settings, taxType: v })
+                  }
+                />
+              </div>
+            )}
+          </div>
+          <div className="">
+            <Input
+              vertical
+              size="lg"
+              width="!w-[160px]"
+              value={client.spending.preTaxRate}
+              setValue={(v) =>
+                setField("spending")({ ...client.spending, preTaxRate: v })
+              }
+              subtype="percent"
+              label={"Pre-Retirement Tax Rate"}
+            />
+          </div>
+          <div className="">
+            <Input
+              vertical
+              size="lg"
+              width="!w-[170px]"
+              value={client.spending.postTaxRate}
+              setValue={(v) =>
+                setField("spending")({ ...client.spending, postTaxRate: v })
+              }
+              subtype="percent"
+              label={"Post-Retirement Tax Rate"}
+            />
           </div>
         </div>
       </div>

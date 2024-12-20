@@ -35,6 +35,31 @@ const SpendingPage = () => {
     setSpending({ ...spending, [key]: val });
   };
 
+  const startYear = currentYear;
+  const years = yearRange(startYear, startYear + settings.maxYearsShown);
+
+  const divisionFactor = settings.monthlyYearly === "monthly" ? 12 : 1;
+
+  const calculateOne = (income: Income, currentYear: number) => {
+    const result = calculate({
+      people: settings.data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: settings.data.incomes.filter((income) => income.enabled),
+      ssSurvivorAge: settings.ssSurvivorAge,
+      inflationType: settings.inflationType,
+    });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
+  };
+
   const setPreSpending = (
     index: number,
     field: keyof CurrentSpending,
@@ -65,6 +90,17 @@ const SpendingPage = () => {
     currentYear,
     currentYear + settings.maxYearsShown,
   );
+  const taxes = years.map((year) => ({
+    name: "Taxes",
+    year,
+    amount:
+      data.data.incomes
+        .filter((income) => income.enabled)
+        .map((income) => calculateOne(income, year).amount)
+        .filter((t) => typeof t === "number")
+        .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
+  }));
+
   const calcSett = (settings: ScenarioSettings) =>
     Math.max(
       ...currentYearRange.map((year) =>
@@ -74,13 +110,15 @@ const SpendingPage = () => {
 
   const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
   const maxY =
-    Math.max(
+    (Math.max(
       ...[
         calcSett({ ...settings, whoDies: -1 }),
         // calcSett({ ...settings, whoDies: 0 }),
         // calcSett({ ...settings, whoDies: 1 }),
       ],
-    ) / factor;
+    ) +
+      Math.max(...taxes.map((i) => i.amount))) /
+    factor;
 
   const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
@@ -116,44 +154,12 @@ const SpendingPage = () => {
       item.category,
     ),
   );
-  const startYear = currentYear;
-  const years = yearRange(startYear, startYear + settings.maxYearsShown);
 
   // const taxes = yearRange(
   //   startYear,
   //   startYear + settings.maxYearsShown - 1,
   // ).map((year) => {});
-  const divisionFactor = settings.monthlyYearly === "monthly" ? 12 : 1;
 
-  const calculateOne = (income: Income, currentYear: number) => {
-    const result = calculate({
-      people: settings.data.people,
-      income,
-      startYear,
-      currentYear,
-      deathYears: settings.deathYears as any,
-      dead: settings.whoDies,
-      inflation: settings.inflation,
-      incomes: settings.data.incomes.filter((income) => income.enabled),
-      ssSurvivorAge: settings.ssSurvivorAge,
-      inflationType: settings.inflationType,
-    });
-
-    return {
-      ...result,
-      amount: result.amount / divisionFactor,
-    };
-  };
-  const taxes = years.map((year) => ({
-    name: "Taxes",
-    year,
-    amount:
-      data.data.incomes
-        .filter((income) => income.enabled)
-        .map((income) => calculateOne(income, year).amount)
-        .filter((t) => typeof t === "number")
-        .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
-  }));
   console.log(baseSpending, preSpending, postSpending);
 
   return (
@@ -592,13 +598,17 @@ const SpendingPage = () => {
             </div>
             <div className="flex gap-6 mb-5 w-full">
               <div className="border rounded-lg p-3 flex gap-3 bg-white">
-                <div className="w-60">
-                  <MultiToggle
-                    options={["Pre-Tax", "Post-Tax"]}
-                    label="Taxation"
-                    value={settings.taxType}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, taxType: v })
+                <div className="mt-1 w-32">
+                  <Input
+                    subtype="toggle"
+                    label="Include Taxes"
+                    value={settings.taxType === "Post-Tax"}
+                    vertical
+                    setValue={(v) =>
+                      setSettings({
+                        ...settings,
+                        taxType: v ? "Post-Tax" : "Pre-Tax",
+                      })
                     }
                   />
                 </div>
@@ -740,7 +750,9 @@ const SpendingPage = () => {
               ].map((item) => ({
                 name: item[0].name,
                 stable: true,
-                values: item.map((i) => i.amount),
+                values: item.map((i) =>
+                  i.name == "Taxes" ? i.amount : i.amount / factor,
+                ),
               }))}
             />
           </div>
