@@ -23,7 +23,6 @@ interface Props {
 const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
-  const { setField } = useInfo();
   const print = async () => {
     setPrinting(true);
     const url = await printReport(client.id, settings.id);
@@ -31,13 +30,15 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
     window.open(url, "_blank");
   };
 
+  const { setField } = useInfo();
+
   const setSettings = setField("liveSettings");
 
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   return settings.id && settings.id !== -1 ? (
     <div
-      className={`z-[500] flex p-5 py-8 gap-5 items-center justify-between sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} bg-white h-32 print:hidden`}
+      className={`z-[500] flex p-5 py-8 h-40 gap-5 items-center justify-between sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} bg-white h-32 print:hidden`}
     >
       <div className="text-[#101828] font-semibold text-[18px]">
         {settings.name || " "}
@@ -175,7 +176,7 @@ const ScenarioHeader = ({ client, settings, removeScenario }: Props) => {
       </div>
     </div>
   ) : (
-    <Live client={client} />
+    <Live client={client} settings={settings} />
   );
 };
 

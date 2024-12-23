@@ -49,7 +49,7 @@ const DraggableTable = ({
   return (
     <table className="w-full">
       <thead
-        className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[44px]" : "top-[114px]"} ${fullScreen ? "a" : "b"}`}
+        className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[204px]" : "top-[275px]"}`}
       >
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>

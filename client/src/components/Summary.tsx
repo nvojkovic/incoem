@@ -56,9 +56,11 @@ const Summary = () => {
   };
 
   const [selectedYear, setSelectedYear] = useState(0);
+
   const liveSettings = {
     ...data.liveSettings,
     data: data.data,
+    spending: data.spending,
   };
 
   const settings =
@@ -68,9 +70,8 @@ const Summary = () => {
       <div className="pb-32">
         <div className={`sticky z-50 ${isFullscreen ? "top-0" : "top-[72px]"}`}>
           <div
-            className={`flex justify-between items-center print:hidden sticky z-[5000] ${
-              isFullscreen ? "top-[0px]" : "top-[72px]"
-            } bg-[#f3f4f6]`}
+            className={`flex justify-between items-center print:hidden sticky z-[5000] ${isFullscreen ? "top-[0px]" : "top-[72px]"
+              } bg-[#f3f4f6]`}
           >
             <DndContext
               sensors={sensors}
@@ -88,7 +89,7 @@ const Summary = () => {
                     active={tab == -1}
                     setActive={() => setTab(-1)}
                     live
-                    store={() => {}}
+                    store={() => { }}
                   />
                   {scenarios.map((sc, i) => (
                     <SortableItem
@@ -115,26 +116,24 @@ const Summary = () => {
               </SortableContext>
             </DndContext>
           </div>
+          <ScenarioHeader
+            removeScenario={() => {
+              const newScenarios = scenarios.filter((sc) => sc.id != tab);
+              storeScenarios(newScenarios);
+              setTab(-1);
+            }}
+            client={data}
+            settings={settings}
+          />
           {shownTable === "composite" ? (
-            <>
-              <ScenarioHeader
-                removeScenario={() => {
-                  const newScenarios = scenarios.filter((sc) => sc.id != tab);
-                  storeScenarios(newScenarios);
-                  setTab(-1);
-                }}
-                client={data}
-                settings={settings}
-              />
-              <CompositeTable
-                client={data}
-                scenario={settings}
-                selectedYear={selectedYear}
-                setSelectedYear={setSelectedYear}
-                selectedColumn={selectedColumn}
-                setSelectedColumn={setSelectedColumn}
-              />
-            </>
+            <CompositeTable
+              client={data}
+              scenario={settings}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedColumn={selectedColumn}
+              setSelectedColumn={setSelectedColumn}
+            />
           ) : (
             <ResultTable
               client={data}
@@ -150,7 +149,7 @@ const Summary = () => {
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => {}}
+              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
               id={tab}
             />
           )}

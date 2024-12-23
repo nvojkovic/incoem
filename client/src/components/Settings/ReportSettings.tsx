@@ -25,7 +25,7 @@ interface Props {
 
 const names: any = {
   cover: "Cover",
-  incomes: "Incomes",
+  incomes: "Income",
   "income-chart": "Income Chart",
   spending: "Spending",
 

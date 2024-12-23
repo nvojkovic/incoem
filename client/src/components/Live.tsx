@@ -36,20 +36,19 @@ export const SmallToggle = ({ item1, item2, active, toggle }: any) => {
 
 const Live = ({
   client,
+  settings,
   spending,
+  disabled,
 }: {
   client: Client;
   spending?: RetirementSpendingSettings;
+  settings: ScenarioSettings;
+  disabled?: boolean;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
 
   const { data: initial, setField, storeScenarios } = useInfo();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
-  const settings = {
-    ...initial.liveSettings,
-    data: initial.data,
-    spending: initial.spending,
-  };
   const setSettings = setField("liveSettings");
   const [printing, setPrinting] = useState(false);
 
@@ -77,7 +76,7 @@ const Live = ({
       className={`rounded-xl z-[500] border-[#EAECF0] border print:border-0 sticky ${isFullscreen ? "top-[45px]" : "top-[115px]"} `}
     >
       <div
-        className={`flex flex-col items-center h-36 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
+        className={`flex flex-col items-center h-40 sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white`}
       >
         <div className="w-full flex justify-between pb-2 border-b ">
           <div className="flex gap-7 items-end px-3 py-1">
@@ -248,7 +247,7 @@ const Live = ({
           ) : (
             <div></div>
           )}
-          <div className="bg-gray-300 w-[1px] h-[81px]"></div>
+          <div className="bg-gray-300 mt-[8px] w-[1px] h-[98px]"></div>
           <div className="mt-[-3px]">
             <MultiToggle
               vertical={true}
@@ -268,6 +267,7 @@ const Live = ({
                   input.select();
                 }, 0);
               }}
+              disabled={disabled}
               label="Inflation (%)"
               labelLength={85}
               size="xs"
@@ -277,8 +277,7 @@ const Live = ({
               setValue={(e) => setSettings({ ...settings, inflation: e })}
             />
           </div>
-          <div className="bg-gray-300 w-[1px] h-[81px]"></div>
-
+          <div className="bg-gray-300 mt-[8px] w-[1px] h-[98px]"></div>
           <div className="">
             {client.taxesFlag && (
               <div className="w-[200px]">
@@ -298,26 +297,54 @@ const Live = ({
             <Input
               vertical
               size="lg"
-              width="!w-[160px]"
+              width="!w-[120px]"
               value={client.spending.preTaxRate}
               setValue={(v) =>
                 setField("spending")({ ...client.spending, preTaxRate: v })
               }
               subtype="percent"
-              label={"Pre-Retirement Tax Rate"}
+              label={
+                <>
+                  Pre-Retirement
+                  <br /> Tax Rate
+                </>
+              }
             />
           </div>
           <div className="">
             <Input
               vertical
               size="lg"
-              width="!w-[170px]"
+              width="!w-[120px]"
               value={client.spending.postTaxRate}
               setValue={(v) =>
                 setField("spending")({ ...client.spending, postTaxRate: v })
               }
               subtype="percent"
-              label={"Post-Retirement Tax Rate"}
+              label={
+                <>
+                  Post-Retirement <br />
+                  Tax Rate
+                </>
+              }
+            />
+          </div>{" "}
+          <div className="">
+            <Input
+              vertical
+              size="lg"
+              width="!w-[80px]"
+              value={settings.retirementYear}
+              setValue={(v) =>
+                setField("spending")({ ...client.spending, postTaxRate: v })
+              }
+              subtype="number"
+              label={
+                <>
+                  Retirement <br />
+                  Year
+                </>
+              }
             />
           </div>
         </div>

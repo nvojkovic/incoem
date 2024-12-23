@@ -362,7 +362,7 @@ const MainChart = ({
                     ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: white; margin-right: 5px;"></span>
-                    <b>Taxes: </b>
+                    Taxes: 
                   </div>
                   <div>
                     <b>${formatCurrency.format(taxes[years.indexOf(year)])}</b>
@@ -374,7 +374,7 @@ const MainChart = ({
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${taxes.length ? "white" : "red"}; margin-right: 5px;"></span>
-                    <b>Spending: </b>
+                   Spending: 
                   </div>
                   <div>
                     <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0))}</b>

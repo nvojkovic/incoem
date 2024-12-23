@@ -1,6 +1,5 @@
 import SpendingTable from "../Spending/SpendingTable";
 import Header from "./Header";
-import { PrintCard } from "./PrintCard";
 
 const Spending = ({
   scenario,
@@ -13,30 +12,9 @@ const Spending = ({
 }) => {
   if (!spending || !client.needsFlag) return null;
   return (
-    <div className="mx-5 flex justify-center flex-col mt-6">
+    <div className="mx-5 flex justify-center flex-col pt-6">
       <Header client={client} scenario={scenario} />
-      <div className="text-2xl mx-auto">Spending</div>
-      <div className="flex mt-6 mb-8 gap-3 mx-auto">
-        {scenario?.retirementYear && (
-          <PrintCard
-            title={`Retirement Year`}
-            subtitle={scenario.retirementYear}
-          />
-        )}
-
-        {client.spending?.preTaxRate ? (
-          <PrintCard
-            title={`Pre-Retirement Tax Rate`}
-            subtitle={`${client.spending.preTaxRate}%`}
-          />
-        ) : null}
-        {client.spending?.postTaxRate ? (
-          <PrintCard
-            title={`Post-Retirement Tax Rate`}
-            subtitle={`${client.spending.postTaxRate}%`}
-          />
-        ) : null}
-      </div>
+      <div className="text-2xl mx-auto pb-3">Spending</div>
       <SpendingTable
         settings={scenario}
         spending={spending}
@@ -47,3 +25,25 @@ const Spending = ({
 };
 
 export default Spending;
+
+// <div className="flex mt-6 mb-8 gap-3 mx-auto">
+//   {scenario?.retirementYear && (
+//     <PrintCard
+//       title={`Retirement Year`}
+//       subtitle={scenario.retirementYear}
+//     />
+//   )}
+//
+//   {client.spending?.preTaxRate ? (
+//     <PrintCard
+//       title={`Pre-Retirement Tax Rate`}
+//       subtitle={`${client.spending.preTaxRate}%`}
+//     />
+//   ) : null}
+//   {client.spending?.postTaxRate ? (
+//     <PrintCard
+//       title={`Post-Retirement Tax Rate`}
+//       subtitle={`${client.spending.postTaxRate}%`}
+//     />
+//   ) : null}
+// </div>

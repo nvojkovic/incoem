@@ -25,14 +25,14 @@ const Composite = ({
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
   return (
-    <div className="mx-10 flex justify-center flex-col mt-6">
+    <div className="mx-10 flex justify-center flex-col pt-6">
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto mb-5">Composite</div>
       <div className="flex justify-between flex-wrap">
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
             currentYear + scenario.maxYearsShown >
-              currentYear + tableInd * height && (
+            currentYear + tableInd * height && (
               <div className="w-full">
                 <table className="border bg-white !text-sm w-full">
                   <thead

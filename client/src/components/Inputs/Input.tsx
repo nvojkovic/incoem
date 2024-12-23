@@ -8,7 +8,7 @@ import { Tooltip } from "flowbite-react";
 import { useEffect, useState } from "react";
 
 interface Props {
-  label: string;
+  label: string | React.ReactElement;
   value: any;
   disabled?: boolean;
   vertical?: boolean;
@@ -20,15 +20,15 @@ interface Props {
   errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-    | "money"
-    | "percent"
-    | "text"
-    | "number"
-    | "date"
-    | "toggle"
-    | "password"
-    | "mo/yr"
-    | "textarea";
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "mo/yr"
+  | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
   setValue: (value: any) => void;
@@ -206,7 +206,7 @@ const Input = ({
       >
         {label && (
           <label
-            htmlFor={label}
+            htmlFor={label as any}
             className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"} `}
             style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
           >
@@ -238,7 +238,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-            // className="border-black border"
+          // className="border-black border"
           >
             <div className="relative cursor-pointer">
               {errorMessage && invalid ? (
