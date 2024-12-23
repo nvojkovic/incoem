@@ -66,29 +66,29 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
       <MainChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
         spending={false}
-        initialHeight={print ? 700 : 550}
+        initialHeight={print ? 600 : 550}
         longevityFlag={client.longevityFlag}
         people={settings.data.people}
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-                (currentYear) =>
-                  calculateSpendingYear(
-                    settings.data,
-                    client.spending,
-                    { ...settings, taxType: "Pre-Tax" },
-                    currentYear,
-                  ) /
-                    divisionFactor +
-                  (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
-              )
+              (currentYear) =>
+                calculateSpendingYear(
+                  settings.data,
+                  client.spending,
+                  { ...settings, taxType: "Pre-Tax" },
+                  currentYear,
+                ) /
+                divisionFactor +
+                (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
+            )
             : []
         }
         taxes={
           client.needsFlag && settings.taxType === "Post-Tax"
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-                (line) => taxes(line),
-              )
+              (line) => taxes(line),
+            )
             : []
         }
         stability={client.stabilityRatioFlag}

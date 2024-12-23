@@ -88,7 +88,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
       <SpendingChart
         years={yearRange(startYear, startYear + settings.maxYearsShown - 1)}
         spending={false}
-        initialHeight={print ? 700 : 550}
+        initialHeight={print ? 620 : 550}
         longevityFlag={client.longevityFlag}
         people={settings.data.people}
         stability={client.stabilityRatioFlag}

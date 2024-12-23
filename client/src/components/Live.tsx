@@ -335,9 +335,7 @@ const Live = ({
               size="lg"
               width="!w-[80px]"
               value={settings.retirementYear}
-              setValue={(v) =>
-                setField("spending")({ ...client.spending, postTaxRate: v })
-              }
+              setValue={(e) => setSettings({ ...settings, retirementYear: e })}
               subtype="number"
               label={
                 <>
