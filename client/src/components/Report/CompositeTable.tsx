@@ -48,11 +48,11 @@ const CompositeTable = ({
       {[0, 1, 2, 3, 4].map((tableInd) => {
         return (
           currentYear + scenario.maxYearsShown >
-            currentYear + tableInd * height && (
+          currentYear + tableInd * height && (
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[172px]" : "top-[256px]"} border-separate`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[203px]" : "top-[274px]"} border-separate`}
                 >
                   <tr>
                     <th
@@ -62,7 +62,7 @@ const CompositeTable = ({
                       Year
                     </th>
                     <th
-                      className={` font-medium ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""} border-r border-black border-solid`}
+                      className={` font-medium ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""} border-r border-gray-700 border-solid`}
                       onClick={setColumn("age")}
                     >
                       <div className="px-2 h-full w-full">Age</div>
@@ -71,7 +71,7 @@ const CompositeTable = ({
                     {client.longevityFlag &&
                       scenario.data.people.map((person, i) => (
                         <th
-                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-gray-700" : ""}`}
                           onClick={setColumn(`${i}-alive`)}
                         >
                           {person.name} <br /> alive
@@ -80,7 +80,7 @@ const CompositeTable = ({
                     {client.longevityFlag &&
                       scenario.data.people.length > 1 && (
                         <th
-                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-gray-700" : ""}`}
                           onClick={setColumn("joint-alive")}
                         >
                           At least one <br /> alive
@@ -95,7 +95,7 @@ const CompositeTable = ({
 
                     {client.taxesFlag && scenario.taxType == "Post-Tax" && (
                       <th
-                        className={`px-2 font-medium border-r border-gray-700  ${selectedColumn?.type === "taxes" ? "!bg-slate-200" : ""}`}
+                        className={`px-2 font-medium  ${selectedColumn?.type === "taxes" ? "!bg-slate-200" : ""}`}
                         onClick={setColumn("taxes")}
                       >
                         Taxes
@@ -104,7 +104,7 @@ const CompositeTable = ({
 
                     {client.taxesFlag && scenario.taxType == "Post-Tax" && (
                       <th
-                        className={`px-2 font-medium border-r border-gray-700  ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
+                        className={`px-2 font-medium  ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
                         onClick={setColumn("posttax")}
                       >
                         Post-Tax Income
@@ -237,7 +237,7 @@ const CompositeTable = ({
                         {client.longevityFlag &&
                           scenario.data.people.map((_, i) => (
                             <td
-                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-gray-700" : ""}`}
                             >
                               {Math.round(
                                 (tables[i].table.find(
@@ -250,7 +250,7 @@ const CompositeTable = ({
                         {client.longevityFlag &&
                           scenario.data.people.length > 1 && (
                             <td
-                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-gray-700" : ""}`}
                             >
                               {Math.round(
                                 (joint.find((entry) => entry.year === line)
