@@ -41,7 +41,6 @@ export const calculate = (info: CalculationInfo<OtherIncome>) => {
   if (newAmount?.type === "monthly") {
     yearAmount = yearAmount * 12;
   } else {
-    yearAmount = newAmount.value;
   }
 
   if (isDead(info, income.personId)) {

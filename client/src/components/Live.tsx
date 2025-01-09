@@ -46,6 +46,7 @@ const Live = ({
   disabled?: boolean;
 }) => {
   const [saveOpen, setSaveOpen] = useState(false);
+  const [name, setName] = useState("");
 
   const { data: initial, setField, storeScenarios } = useInfo();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
@@ -134,10 +135,7 @@ const Live = ({
                 isOpen={saveOpen}
                 onClose={() => {
                   setSaveOpen(false);
-                  setSettings({
-                    ...settings,
-                    name: "",
-                  });
+                  setName("");
                 }}
                 onConfirm={() => {
                   setSaveOpen(false);
@@ -147,6 +145,7 @@ const Live = ({
                   });
                   addScenario({
                     ...settings,
+                    name,
                     data: { ...settings.data },
                     spending: { ...spending },
                   });
@@ -155,8 +154,8 @@ const Live = ({
                 <div className="py-3">
                   <Input
                     label="Scenario name"
-                    value={settings.name}
-                    setValue={(name) => setSettings({ ...settings, name })}
+                    value={name}
+                    setValue={(name) => setName(name)}
                     onKeyDown={(e: any) => {
                       if (e.key === "Enter") {
                         setSaveOpen(false);
@@ -167,6 +166,12 @@ const Live = ({
 
                         addScenario({
                           ...settings,
+                          name,
+                          id: client.scenarios.length
+                            ? Math.max(
+                                ...client.scenarios.map((item) => item.id),
+                              ) + 1
+                            : 1,
                           data: { ...settings.data },
                           spending: { ...spending },
                         });
