@@ -95,7 +95,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
         needsFlag={client.needsFlag}
         stackedData={[baseSpending, ...preSpending, ...postSpending, taxes].map(
           (item) => ({
-            name: item[0].name,
+            name: item[0]?.name,
             stable: true,
             values: item.map((i) => i.amount / divisionFactor),
           }),

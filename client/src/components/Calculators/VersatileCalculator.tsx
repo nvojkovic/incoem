@@ -412,16 +412,6 @@ const VersatileCalculator: React.FC = () => {
                 <th
                   className="px-4 py-2"
                   onClick={() =>
-                    selectedCol === "growth"
-                      ? setSelectedCol(null)
-                      : setSelectedCol("growth")
-                  }
-                >
-                  Growth
-                </th>
-                <th
-                  className="px-4 py-2"
-                  onClick={() =>
                     selectedCol === "taxes"
                       ? setSelectedCol(null)
                       : setSelectedCol("taxes")
@@ -489,20 +479,12 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(row.return)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "growth" ? "bg-slate-200" : ""}`}
-                    onClick={() =>
-                      setSelectedRow(selectedRow === index ? null : index)
-                    }
-                  >
-                    {printNumber(row.growth)}
-                  </td>
-                  <td
                     className={`border px-4 py-2 ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
                   >
-                    {printNumber(row.taxes)}
+                    {printNumber(-row.taxes)}
                   </td>
                   <td
                     className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""}`}
