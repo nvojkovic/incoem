@@ -60,7 +60,10 @@ const IncomeCash = () => {
                   e.stopPropagation();
                   setField("nateClient")({
                     ...data.nateClient,
-                    income: [...data.nateClient.income, { personId: -1 }],
+                    income: [
+                      ...data.nateClient.income,
+                      { id: crypto.randomUUID() },
+                    ],
                   });
                 }}
               >
@@ -194,7 +197,10 @@ const IncomeCash = () => {
                   e.stopPropagation();
                   setField("nateClient")({
                     ...data.nateClient,
-                    cashAssets: [...data.nateClient.cashAssets, {}],
+                    cashAssets: [
+                      ...data.nateClient.cashAssets,
+                      { id: crypto.randomUUID() },
+                    ],
                   });
                 }}
               >

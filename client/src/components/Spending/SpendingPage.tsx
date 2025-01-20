@@ -48,14 +48,14 @@ const SpendingPage = () => {
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
-      people: settings.data.people,
+      people: data.data.people,
       income,
       startYear,
       currentYear,
       deathYears: settings.deathYears as any,
       dead: settings.whoDies,
       inflation: settings.inflation,
-      incomes: settings.data.incomes.filter((income) => income.enabled),
+      incomes: data.data.incomes.filter((income) => income.enabled),
       ssSurvivorAge: settings.ssSurvivorAge,
       inflationType: settings.inflationType,
     });

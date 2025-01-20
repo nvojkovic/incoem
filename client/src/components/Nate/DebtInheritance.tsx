@@ -60,7 +60,10 @@ const DebtInheritance = () => {
                   e.stopPropagation();
                   setField("nateClient")({
                     ...data.nateClient,
-                    debts: [...data.nateClient.debts, { personId: -1 }],
+                    debts: [
+                      ...data.nateClient.debts,
+                      { id: crypto.randomUUID() },
+                    ],
                   });
                 }}
               >
