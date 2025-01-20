@@ -3,6 +3,7 @@ import * as d3 from "d3";
 
 const PieChart = ({ data }: any) => {
   const svgRef = useRef(null);
+  const colorArray = ["#002060", "#c00000", "#4471c4", "#00b050"];
 
   useEffect(() => {
     if (!data || !svgRef.current) return;
@@ -27,7 +28,7 @@ const PieChart = ({ data }: any) => {
     const color = d3
       .scaleOrdinal()
       .domain(data.map((d: any) => d.label))
-      .range(d3.schemeCategory10);
+      .range(colorArray);
 
     // Pie generator
     const pie = d3
@@ -67,7 +68,7 @@ const PieChart = ({ data }: any) => {
 
     // Calculate widths
     const textWidths: any[] = [];
-    tempText.each(function () {
+    tempText.each(function() {
       textWidths.push(this.getBBox().width);
     });
     tempText.remove();
