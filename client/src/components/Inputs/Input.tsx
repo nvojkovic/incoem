@@ -12,7 +12,7 @@ interface Props {
   value: any;
   disabled?: boolean;
   vertical?: boolean;
-  tooltip?: string;
+  tooltip?: string | React.ReactElement;
   toggleable?: boolean;
   labelLength?: number;
   invalid?: boolean;
@@ -20,15 +20,15 @@ interface Props {
   errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-  | "money"
-  | "percent"
-  | "text"
-  | "number"
-  | "date"
-  | "toggle"
-  | "password"
-  | "mo/yr"
-  | "textarea";
+    | "money"
+    | "percent"
+    | "text"
+    | "number"
+    | "date"
+    | "toggle"
+    | "password"
+    | "mo/yr"
+    | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
   setValue: (value: any) => void;
@@ -56,6 +56,7 @@ const Input = ({
   tooltip,
   disabled = false,
   width,
+  inlineLabel,
   ...props
 }: Props) => {
   let input = null as any;
@@ -66,7 +67,7 @@ const Input = ({
     setInternalValue(value?.toString());
   }, [value]);
 
-  const basic = `focus:outline-none focus:border-main-orange-light focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width} ${invalid ? "border-red-500 border-2" : ""}`;
+  const basic = `focus:outline-none focus:border-main-orange-light focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width} ${invalid ? "border-red-500 border-2" : ""} ${inlineLabel && "pl-[105px] py-[4px]"}`;
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -199,7 +200,7 @@ const Input = ({
   }
   return (
     <div
-      className={`flex ${vertical ? "flex-col" : "lg:flex-row md:flex-row"} gap-1 w-full  flex-col`}
+      className={`flex ${vertical ? "flex-col justify-start" : "lg:flex-row md:flex-row"} gap-1 w-full  flex-col`}
     >
       <div
         className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}
@@ -238,7 +239,7 @@ const Input = ({
             placement="right-end"
             style="light"
 
-          // className="border-black border"
+            // className="border-black border"
           >
             <div className="relative cursor-pointer">
               {errorMessage && invalid ? (
@@ -253,6 +254,13 @@ const Input = ({
               {input}
             </div>
           </Tooltip>
+        </div>
+      ) : inlineLabel ? (
+        <div className="relative">
+          <div className="absolute mt-[7px] ml-[10px] text-[14px] text-[#9396A0]">
+            {inlineLabel}
+          </div>
+          {input}
         </div>
       ) : (
         input

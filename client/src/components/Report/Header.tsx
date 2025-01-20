@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { imageUrlToBase64 } from "src/utils";
 import { deathText } from "./Cover";
+import { PrintClient, ScenarioSettings } from "src/types";
 
 const Header = ({
   client,

@@ -33,6 +33,14 @@ import NotFound from "./pages/not-found";
 import LongevityPage from "./components/Longevity/LongevityPage";
 import { IncomeProvider } from "./useData";
 import { useState } from "react";
+import IncomeCash from "./components/Nate/IncomeCash";
+import { Client } from "./types";
+import HardAssets from "./components/Nate/HardAssets";
+import DebtInheritance from "./components/Nate/DebtInheritance";
+import SocialInsurancePage from "./components/Nate/SocialInsurance";
+import StatementWealthPage from "./components/Nate/StatementWealth";
+import Analysis from "./components/Nate/Analysis";
+import ContractualWealthPage from "./components/Nate/ContractualWealth";
 
 SuperTokens.init({
   appInfo: {
@@ -96,6 +104,39 @@ export const router = createBrowserRouter([
           {
             path: "basic",
             element: <ClientOverview />,
+          },
+          {
+            path: "nate",
+            children: [
+              {
+                path: "income-cash",
+                element: <IncomeCash />,
+              },
+              {
+                path: "hard-assets",
+                element: <HardAssets />,
+              },
+              {
+                path: "debt-inheritance",
+                element: <DebtInheritance />,
+              },
+              {
+                path: "social-insurance",
+                element: <SocialInsurancePage />,
+              },
+              {
+                path: "statement-wealth",
+                element: <StatementWealthPage />,
+              },
+              {
+                path: "contractual-wealth",
+                element: <ContractualWealthPage />,
+              },
+              {
+                path: "analysis",
+                element: <Analysis />,
+              },
+            ],
           },
           {
             path: "calculator",

@@ -15,6 +15,7 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { Tooltip } from "flowbite-react";
 import { birthday } from "src/calculator/utils";
+import { Person } from "src/types";
 
 export const LongevityScenarioCard = ({
   people,
@@ -324,9 +325,10 @@ const LongevityPage = () => {
                         className={`border px-4 py-2 ${highlightedCol === i + 2 ? "bg-slate-200" : ""}`}
                       >
                         {tables[i].table.length > index &&
-                          `${Math.round(
-                            tables[i].table[index].probability * 1000,
-                          ) / 10
+                          `${
+                            Math.round(
+                              tables[i].table[index].probability * 1000,
+                            ) / 10
                           }%`}
                       </td>
                     </>

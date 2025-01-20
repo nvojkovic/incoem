@@ -5,6 +5,7 @@ import title from "../../calculator/title";
 import { useInfo } from "../../useData";
 import { useUser } from "../../useUser";
 import Input from "../Inputs/Input";
+import { Income } from "src/types";
 
 const IncomeModal = ({
   income,

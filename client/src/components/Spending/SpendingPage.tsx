@@ -7,7 +7,7 @@ import { useInfo } from "../../useData";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
-import YearlyIncrease from "./YearlyIncrease";
+import YearlyIncreaseComponent from "./YearlyIncrease";
 import {
   convertToMoYr,
   getTaxRate,
@@ -19,10 +19,16 @@ import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
 import Confirm from "../Confirm";
 import { useState } from "react";
-import { SmallToggle } from "../Live";
 import SpendingChart from "../Charts/SpendingChart";
 import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
 import calculate from "src/calculator/calculate";
+import SmallToggle from "../Inputs/SmallToggle";
+import {
+  CurrentSpending,
+  Income,
+  NewSpending,
+  ScenarioSettings,
+} from "src/types";
 
 const currentYear = new Date().getFullYear();
 
@@ -185,7 +191,7 @@ const SpendingPage = () => {
                 label="Amount (Today's Dollars)"
               />
             </div>
-            <YearlyIncrease
+            <YearlyIncreaseComponent
               labels
               increase={spending.yearlyIncrease}
               setYearlyIncrease={setField("yearlyIncrease")}
@@ -302,7 +308,7 @@ const SpendingPage = () => {
                     />
                   </td>
                   <td className="px-2 py-2">
-                    <YearlyIncrease
+                    <YearlyIncreaseComponent
                       labels={false}
                       increase={line.increase}
                       setYearlyIncrease={(v) =>
@@ -484,7 +490,7 @@ const SpendingPage = () => {
                     />
                   </td>
                   <td className="px-2 py-2">
-                    <YearlyIncrease
+                    <YearlyIncreaseComponent
                       labels={false}
                       increase={line.increase}
                       setYearlyIncrease={(v) =>
@@ -772,11 +778,12 @@ export const MultiToggle = ({
   value,
   options,
   setValue,
+  disabled,
   vertical = true,
 }: any) => {
   return (
     <div
-      className={`w-full flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
+      className={`w-full   font-medium flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
     >
       <label className={`text-sm text-[#344054] ${vertical ? "w-36" : ""} `}>
         {label}
@@ -785,10 +792,12 @@ export const MultiToggle = ({
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] min-w-[100px] px-4 ${
-              value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            } border  border-gray-300 border-1 ${vertical ? "" : "w-full"}`}
-            onClick={() => setValue(item)}
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${
+              value === item
+                ? "bg-main-orange text-white"
+                : "bg-gray-200 text-[#555860]"
+            } ${vertical ? "" : "w-full"}`}
+            onClick={() => !disabled && setValue(item)}
           >
             {item}
           </button>

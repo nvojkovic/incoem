@@ -2,6 +2,7 @@ import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import MonthPicker from "../Inputs/MonthPicker";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
+import { Person, EmploymentIncome } from "src/types";
 
 interface Props {
   income: EmploymentIncome;
@@ -9,13 +10,13 @@ interface Props {
   setIncome: (income: EmploymentIncome) => void;
 }
 
-const EmploymentIncome = ({ people, income, setIncome }: Props) => {
+const EmploymentIncomeComponent = ({ people, income, setIncome }: Props) => {
   const amount = income.income
     ? income.income
     : {
-      type: "yearly",
-      value: income.annualIncome,
-    };
+        type: "yearly",
+        value: income.annualIncome,
+      };
   return (
     <div className="flex flex-col gap-4">
       {people.length > 1 && (
@@ -92,4 +93,4 @@ const EmploymentIncome = ({ people, income, setIncome }: Props) => {
   );
 };
 
-export default EmploymentIncome;
+export default EmploymentIncomeComponent;

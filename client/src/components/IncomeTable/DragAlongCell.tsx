@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { Cell } from "@tanstack/react-table";
 import { CSSProperties } from "react";
 import { CSS } from "@dnd-kit/utilities";
+import { SelectedColumn } from "src/types";
 
 const DragAlongCell = ({
   cell,

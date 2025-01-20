@@ -1,9 +1,19 @@
+import {
+  BasicAnnuity,
+  CompanyPension,
+  EmploymentIncome,
+  Income,
+  OtherIncome,
+  Paydown,
+  SocialSecurityIncome,
+} from "src/types";
 import { calculateBasicAnnuity } from "./basic-annuity";
 import { calculateCompanyPension } from "./company-pension";
 import { calculateEmploymentIncome } from "./employment-income";
 import { calculateOtherIncome } from "./other-income";
 import { calculatePaydown } from "./paydown";
 import { calculateSocialSecurity } from "./social-security";
+import { CalculationInfo } from "./types";
 
 interface CalculationResult {
   amount: number;

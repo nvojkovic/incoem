@@ -3,6 +3,7 @@ import { jointTable, makeTable } from "../Longevity/calculate";
 import calculate from "src/calculator/calculate";
 import { useFullscreen } from "src/hooks/useFullScreen";
 import { calculateSpendingYear } from "../Spending/calculate";
+import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 
 interface Props {
   scenario: ScenarioSettings;
@@ -48,11 +49,11 @@ const CompositeTable = ({
       {[0, 1, 2, 3, 4].map((tableInd) => {
         return (
           currentYear + scenario.maxYearsShown >
-          currentYear + tableInd * height && (
+            currentYear + tableInd * height && (
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[203px]" : "top-[274px]"} border-separate`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[114px]" : "top-[184px]"} border-separate`}
                 >
                   <tr>
                     <th

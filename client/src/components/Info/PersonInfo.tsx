@@ -1,3 +1,4 @@
+import { Person } from "src/types";
 import { useInfo } from "../../useData";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
@@ -54,7 +55,7 @@ export const PersonInfo = ({ person }: Props) => {
           labelLength={100}
           width="!w-40"
           value={calculateAge(new Date(person.birthday))}
-          setValue={(_) => { }}
+          setValue={(_) => {}}
           disabled
         />
       </div>

@@ -3,6 +3,12 @@ import Header from "./Header";
 import calculate from "src/calculator/calculate";
 import { jointTable, makeTable } from "../Longevity/calculate";
 import { calculateSpendingYear } from "../Spending/calculate";
+import {
+  Income,
+  PrintClient,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "src/types";
 
 const Composite = ({
   scenario,
@@ -32,7 +38,7 @@ const Composite = ({
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
             currentYear + scenario.maxYearsShown >
-            currentYear + tableInd * height && (
+              currentYear + tableInd * height && (
               <div className="w-full">
                 <table className="border bg-white !text-sm w-full">
                   <thead

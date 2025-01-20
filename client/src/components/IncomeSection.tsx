@@ -1,4 +1,3 @@
-import EmploymentIncome from "./Info/EmploymentIncome";
 import CompanyPension from "./Info/CompanyPension";
 import BasicAnnuity from "./Info/BasicAnnuity";
 import Paydown from "./Info/Paydown";
@@ -26,6 +25,8 @@ import SortableItem from "./Sortable/SortableItem";
 import { useInfo } from "../useData";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";
+import { EmploymentIncome, Income, SocialSecurityIncome } from "src/types";
+import EmploymentIncomeComponent from "./Info/EmploymentIncome";
 
 export const IncomeComponent = ({
   income,
@@ -38,7 +39,7 @@ export const IncomeComponent = ({
   const people = data.data.people;
   if (income.type === "employment-income")
     return (
-      <EmploymentIncome
+      <EmploymentIncomeComponent
         key={i}
         people={people}
         income={income as EmploymentIncome}
@@ -59,7 +60,7 @@ export const IncomeComponent = ({
       <BasicAnnuity
         key={i}
         people={people}
-        annuity={income as BasicAnnuity}
+        annuity={income as any}
         setIncome={(income) => setIncome(i, income)}
       />
     );
@@ -68,7 +69,7 @@ export const IncomeComponent = ({
       <OtherIncome
         key={i}
         people={people}
-        annuity={income as OtherIncome}
+        annuity={income as any}
         setIncome={(income) => setIncome(i, income)}
       />
     );
@@ -77,7 +78,7 @@ export const IncomeComponent = ({
       <Paydown
         key={i}
         people={people}
-        paydown={income as Paydown}
+        paydown={income as any}
         setIncome={(income) => setIncome(i, income)}
       />
     );
@@ -86,7 +87,7 @@ export const IncomeComponent = ({
       <CompanyPension
         key={i}
         people={people}
-        pension={income as CompanyPension}
+        pension={income as any}
         setIncome={(income) => setIncome(i, income)}
       />
     );

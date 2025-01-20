@@ -1,3 +1,8 @@
+import {
+  PrintClient,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "src/types";
 import SpendingTable from "../Spending/SpendingTable";
 import Header from "./Header";
 

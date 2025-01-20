@@ -10,6 +10,13 @@ import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
 import Select from "../Inputs/Select";
+import {
+  Client,
+  Person,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+  User,
+} from "src/types";
 
 const PersonInfo = ({
   person,
@@ -68,6 +75,29 @@ const initializeNewClient = (user: User | null): Client => ({
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
   longevityFlag: !!user?.info?.longevityFlag,
   taxesFlag: !!user?.info?.taxesFlag,
+  nateClient: {
+    debts: [],
+    income: [],
+    socialInsurance: [
+      {
+        owner: 0,
+        id: crypto.randomUUID(),
+      },
+      {
+        owner: 1,
+        id: crypto.randomUUID(),
+      },
+    ] as any,
+    hardAssets: [],
+    cashAssets: [],
+    statementWealth: [],
+    inheritance: [],
+    lifeInsurance: [],
+    longTermCare: [],
+    accumulationAnnuity: [],
+    personalPensionAnnuity: [],
+    pension: [],
+  },
   spending: {
     preTaxRate: user?.info?.globalPreRetirementTaxRate,
     postTaxRate: user?.info?.globalPostRetirementTaxRate,
@@ -153,6 +183,16 @@ const NewClient = () => {
                         ...client.data.people,
                         { name: "", birthday: null as any, id: 1 },
                       ],
+                },
+                nateClient: {
+                  ...client.nateClient,
+                  socialInsurance: client.nateClient.socialInsurance.map(
+                    (item) => ({
+                      ...item,
+                      owner: singleMode ? 0 : item.owner,
+                      id: crypto.randomUUID(),
+                    }),
+                  ),
                 },
               });
             }}

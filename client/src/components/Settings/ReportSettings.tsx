@@ -12,6 +12,7 @@ import {
 import SortableItem from "../Sortable/SortableItem";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import Toggle from "../Inputs/Toggle";
+import { ReportSettings } from "src/types";
 
 interface Props {
   settings: ReportSettings;
@@ -79,7 +80,7 @@ const Page = ({ setting, setSetting, index }: any) => {
 //       </div>
 //
 
-const ReportSettings = ({
+const ReportSettingsPage = ({
   flags,
   settings,
   updateSettings,
@@ -149,6 +150,6 @@ const ReportSettings = ({
   );
 };
 
-export default ReportSettings;
+export default ReportSettingsPage;
 
 // style="width: 1200px; height: 800px; background-color: white"

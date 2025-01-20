@@ -1,3 +1,4 @@
+import { YearlyIncrease } from "src/types";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 
@@ -6,7 +7,11 @@ interface Props {
   setYearlyIncrease: (a: YearlyIncrease) => void;
   labels: boolean;
 }
-const YearlyIncrease = ({ increase, setYearlyIncrease, labels }: Props) => {
+const YearlyIncreaseComponent = ({
+  increase,
+  setYearlyIncrease,
+  labels,
+}: Props) => {
   return (
     <div className="flex gap-4">
       <div className={labels ? "" : "mt-1"}>
@@ -45,4 +50,4 @@ const YearlyIncrease = ({ increase, setYearlyIncrease, labels }: Props) => {
   );
 };
 
-export default YearlyIncrease;
+export default YearlyIncreaseComponent;

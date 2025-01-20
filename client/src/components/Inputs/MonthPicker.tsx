@@ -19,11 +19,21 @@ interface MonthPickerProps {
   selected: number;
   setSelected: (id: any) => void;
   label?: string;
+  errorMessage?: string | React.ReactElement;
+  invalid?: boolean;
 }
 
-const MonthPicker = ({ selected, setSelected, label }: MonthPickerProps) => {
+const MonthPicker = ({
+  selected,
+  setSelected,
+  label,
+  errorMessage,
+  invalid,
+}: MonthPickerProps) => {
   return (
     <Select
+      invalid={invalid}
+      errorMessage={errorMessage}
       label={label}
       options={months}
       selected={months.find((i) => i.id == selected) || null}

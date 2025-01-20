@@ -14,7 +14,7 @@ import Spinner from "../Spinner";
 import AdvisorSection from "./AdvisorSection";
 import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
-import ReportSettings from "./ReportSettings";
+import ReportSettingsPage from "./ReportSettings";
 import { arrayMove } from "@dnd-kit/sortable";
 
 const isColorTooLight = (
@@ -369,7 +369,7 @@ const Settings = () => {
                 }
               />
               <div>
-                <ReportSettings
+                <ReportSettingsPage
                   flags={{
                     needsFlag: settings.needsFlag,
                     longevityFlag: settings.longevityFlag,

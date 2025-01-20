@@ -3,6 +3,8 @@ import Input from "../Inputs/Input";
 import MonthPicker from "../Inputs/MonthPicker";
 import { calculateAge } from "./PersonInfo";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
+import { monthsToFullRetirement } from "src/calculator/utils";
+import { Person, SocialSecurityIncome } from "src/types";
 
 interface Props {
   income: SocialSecurityIncome;
@@ -10,7 +12,7 @@ interface Props {
   setIncome: (income: SocialSecurityIncome) => void;
 }
 
-const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
+const SocialSecurity = ({ people, income: pension, setIncome }: Props) => {
   const canRecieve =
     calculateAge(new Date(people[pension.personId].birthday)) >= 62;
 
@@ -21,6 +23,13 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
   const amount = pension.amount
     ? pension.amount
     : { value: pension.annualAmount, type: "yearly" };
+
+  const overage = monthsToFullRetirement(
+    people[pension.personId].birthday,
+    pension.startAgeYear,
+    pension.startAgeMonth,
+  );
+  const invalid = overage < -60 && !!pension.startAgeYear;
   return (
     <>
       <div className="flex-grow">
@@ -104,14 +113,21 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
                   value={pension.startAgeYear}
                   invalid={!!pension.startAgeYear && pension.startAgeYear > 100}
                   errorMessage="Start Age should be the age of the person, not the calendar year"
-                  setValue={(name) =>
-                    setIncome({ ...pension, startAgeYear: name })
+                  setValue={(startAgeYear) =>
+                    setIncome({ ...pension, startAgeYear })
                   }
                 />
               )}
               {!pension.alreadyReceiving && (
                 <MonthPicker
                   label="Start Age Month"
+                  errorMessage={
+                    <div className="w-32">
+                      Start month must be after {people[pension.personId].name}
+                      's 62nd birthday.
+                    </div>
+                  }
+                  invalid={invalid}
                   selected={pension.startAgeMonth} // Use 1 if startAgeMonth is 0 or undefined
                   setSelected={handleStartAgeMonthChange}
                 />
@@ -124,4 +140,4 @@ const BasicAnnuity = ({ people, income: pension, setIncome }: Props) => {
   );
 };
 
-export default BasicAnnuity;
+export default SocialSecurity;

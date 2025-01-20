@@ -3,10 +3,11 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useInfo } from "../../useData";
+import { IncomeType, Person } from "src/types";
 
-interface AddIncomeProps { }
+interface AddIncomeProps {}
 
-const AddIncome = ({ }: AddIncomeProps) => {
+const AddIncome = ({}: AddIncomeProps) => {
   const { addIncome, data } = useInfo();
   const people = data.data.people;
   const incomes = data.data.incomes;
@@ -19,8 +20,9 @@ const AddIncome = ({ }: AddIncomeProps) => {
               <div></div>
             ) : (
               <div
-                className={`${active ? "bg-main-orange text-white" : "text-gray-900"
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                className={`${
+                  active ? "bg-main-orange text-white" : "text-gray-900"
+                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                 onClick={() => {
                   console.log(incomes);
                   addIncome(newIncome(type as IncomeType, person));
@@ -64,42 +66,42 @@ const AddIncome = ({ }: AddIncomeProps) => {
             .map((type) =>
               type == "social-security" && people.length == 2
                 ? [
-                  !incomes?.find(
-                    (item) =>
-                      item.personId === 0 && item.type === "social-security",
-                  ) &&
-                  addItem(
-                    type,
-                    type
-                      .split("-")
-                      .map((i) => (i as any).capitalize())
-                      .join(" ") + ` (${people[0].name})`,
-                    people[0],
-                  ),
+                    !incomes?.find(
+                      (item) =>
+                        item.personId === 0 && item.type === "social-security",
+                    ) &&
+                      addItem(
+                        type,
+                        type
+                          .split("-")
+                          .map((i) => (i as any).capitalize())
+                          .join(" ") + ` (${people[0].name})`,
+                        people[0],
+                      ),
 
-                  !incomes?.find(
-                    (item) =>
-                      item.personId === 1 && item.type === "social-security",
-                  ) &&
-                  addItem(
-                    type,
-                    type
-                      .split("-")
-                      .map((i) => (i as any).capitalize())
-                      .join(" ") + ` (${people[1].name})`,
-                    people[1],
-                  ),
-                ]
+                    !incomes?.find(
+                      (item) =>
+                        item.personId === 1 && item.type === "social-security",
+                    ) &&
+                      addItem(
+                        type,
+                        type
+                          .split("-")
+                          .map((i) => (i as any).capitalize())
+                          .join(" ") + ` (${people[1].name})`,
+                        people[1],
+                      ),
+                  ]
                 : [
-                  addItem(
-                    type,
-                    type
-                      .split("-")
-                      .map((i) => (i as any).capitalize())
-                      .join(" "),
-                    people[0],
-                  ),
-                ],
+                    addItem(
+                      type,
+                      type
+                        .split("-")
+                        .map((i) => (i as any).capitalize())
+                        .join(" "),
+                      people[0],
+                    ),
+                  ],
             )
             .flat()}
         </Menu.Items>

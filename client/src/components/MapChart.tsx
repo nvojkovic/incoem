@@ -1,3 +1,4 @@
+import { Client, Income, ScenarioSettings } from "src/types";
 import calculate from "../calculator/calculate";
 import title from "../calculator/title";
 import { yearRange } from "../utils";
@@ -72,23 +73,23 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (currentYear) =>
-                calculateSpendingYear(
-                  settings.data,
-                  client.spending,
-                  { ...settings, taxType: "Pre-Tax" },
-                  currentYear,
-                ) /
-                divisionFactor +
-                (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
-            )
+                (currentYear) =>
+                  calculateSpendingYear(
+                    settings.data,
+                    client.spending,
+                    { ...settings, taxType: "Pre-Tax" },
+                    currentYear,
+                  ) /
+                    divisionFactor +
+                  (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
+              )
             : []
         }
         taxes={
           client.needsFlag && settings.taxType === "Post-Tax"
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (line) => taxes(line),
-            )
+                (line) => taxes(line),
+              )
             : []
         }
         stability={client.stabilityRatioFlag}

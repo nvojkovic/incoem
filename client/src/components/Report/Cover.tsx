@@ -1,4 +1,5 @@
 import { birthday } from "src/calculator/utils";
+import { Person, PrintClient, ScenarioSettings } from "src/types";
 
 const PrintCard = ({ title, subtitle }: any) => (
   <div className="bg-gray-100 py-3 px-6 rounded-lg border">

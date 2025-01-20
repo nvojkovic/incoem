@@ -1,3 +1,10 @@
+import {
+  IncomeMapData,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+  SpendingResult,
+  YearlyIncrease,
+} from "src/types";
 import { convertToMoYr, moyrToAnnual } from "../../utils";
 import { calculateAge } from "../Info/PersonInfo";
 

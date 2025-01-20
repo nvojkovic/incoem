@@ -7,6 +7,7 @@ import { useUser } from "../useUser";
 import { useInfo } from "../useData";
 import { calculateAge } from "./Info/PersonInfo";
 import { router } from "src/main";
+import { Client } from "src/types";
 
 const NavItem = ({
   name,
@@ -66,6 +67,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
           {active == "data" ||
           active == "calculator" ||
           active == "map" ||
+          active == "nate" ||
           active == "basic" ||
           active == "longevity" ||
           active == "spending" ? (
@@ -98,6 +100,11 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                 name="Calculators"
                 active={active == "calculator"}
                 link={`/client/${data.id}/calculator`}
+              />
+              <NavItem
+                name="Nate"
+                active={active == "nate"}
+                link={`/client/${data.id}/nate/income-cash`}
               />
             </div>
           ) : null}

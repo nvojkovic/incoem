@@ -1,5 +1,10 @@
 import { printNumber, splitDate, yearRange } from "src/utils";
 import { getSpendingItemOverYears } from "./calculate";
+import {
+  IncomeMapData,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "src/types";
 interface SpendingTableProps {
   settings: ScenarioSettings;
   spending: RetirementSpendingSettings;

@@ -5,6 +5,7 @@ import Confirm from "../Confirm";
 import { calculateAge } from "../Info/PersonInfo";
 import { timeAgo } from "src/utils";
 import Input from "../Inputs/Input";
+import { Client } from "src/types";
 
 const ClientOverview = ({
   client,

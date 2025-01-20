@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { Header } from "@tanstack/react-table";
 import { CSS } from "@dnd-kit/utilities";
 import { CSSProperties } from "react";
+import { SelectedColumn } from "src/types";
 
 const DraggableTableHeader = ({
   header,
@@ -37,11 +38,12 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium  ${selectedColumn.type == data.column.type &&
-          selectedColumn.id == data.column.id
+      className={`font-medium  ${
+        selectedColumn.type == data.column.type &&
+        selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-        }
+      }
 
       `}
       colSpan={header.colSpan}
@@ -60,7 +62,7 @@ const DraggableTableHeader = ({
             setTimer(
               setTimeout(() => {
                 selectedColumn.type === data.column.type &&
-                  selectedColumn.id == data.column.id
+                selectedColumn.id == data.column.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn(data.column);
               }, 200),

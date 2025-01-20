@@ -3,6 +3,7 @@ import { getTaxRate, yearRange } from "../utils";
 import SpendingChart from "./Charts/SpendingChart";
 import Header from "./Report/Header";
 import { getSpendingItemOverYears } from "./Spending/calculate";
+import { Client, Income, ScenarioSettings } from "src/types";
 
 interface MapChartProps {
   settings: ScenarioSettings;

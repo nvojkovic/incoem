@@ -1,3 +1,5 @@
+import { MonthlyYearlyAmount, OtherIncome } from "src/types";
+import { CalculationInfo } from "./types";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 export const migrateOtherIncome = (
   income: OtherIncome,

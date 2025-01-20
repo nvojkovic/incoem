@@ -2,19 +2,26 @@ import React from "react";
 import { useContext } from "react";
 import { updateData, updateScenarios } from "./services/client";
 import { debounce, updateAtIndex } from "./utils";
+import {
+  Client,
+  Income,
+  Person,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "./types";
 
 const IncomeContext = React.createContext({
   data: {} as Client,
-  addIncome: (_: Income) => { },
-  removeIncome: (_: number) => { },
-  updateIncomes: (_: Income[]) => { },
-  setIncome: ((_: number, __: Income) => { }) as any,
-  storeScenarios: (_: ScenarioSettings[]) => { },
-  addScenario: (_: ScenarioSettings) => { },
-  setPerson: (_: Person) => { },
-  setField: (_: keyof Client) => (_: any) => { },
-  setSpending: (_: RetirementSpendingSettings) => { },
-  setLocal: (() => { }) as any,
+  addIncome: (_: Income) => {},
+  removeIncome: (_: number) => {},
+  updateIncomes: (_: Income[]) => {},
+  setIncome: ((_: number, __: Income) => {}) as any,
+  storeScenarios: (_: ScenarioSettings[]) => {},
+  addScenario: (_: ScenarioSettings) => {},
+  setPerson: (_: Person) => {},
+  setField: (_: keyof Client) => (_: any) => {},
+  setSpending: (_: RetirementSpendingSettings) => {},
+  setLocal: (() => {}) as any,
 });
 
 const updateRemote = debounce(updateData, 500);

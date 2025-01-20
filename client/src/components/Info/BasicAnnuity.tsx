@@ -1,11 +1,12 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
+import { BasicAnnuity as BasicAnnuityType, Person } from "src/types";
 
 interface Props {
-  annuity: BasicAnnuity;
+  annuity: BasicAnnuityType;
   people: Person[];
-  setIncome: (income: BasicAnnuity) => void;
+  setIncome: (income: BasicAnnuityType) => void;
 }
 
 const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {

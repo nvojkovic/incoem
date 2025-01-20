@@ -8,6 +8,7 @@ import {
 import Header from "./Header";
 import { LongevityScenarioCard } from "../Longevity/LongevityPage";
 import { birthday } from "src/calculator/utils";
+import { PrintClient, ScenarioSettings } from "src/types";
 
 const Longevity = ({
   client,

@@ -1,3 +1,4 @@
+import { PrintClient, ScenarioSettings } from "src/types";
 import Composite from "./Composite";
 import Cover from "./Cover";
 import IncomeChart from "./IncomeChart";

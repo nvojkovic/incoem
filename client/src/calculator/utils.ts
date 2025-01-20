@@ -1,4 +1,14 @@
+import {
+  BasicAnnuity,
+  CompanyPension,
+  EmploymentIncome,
+  Income,
+  OtherIncome,
+  Person,
+  SocialSecurityIncome,
+} from "src/types";
 import { splitDate } from "../utils";
+import { CalculationInfo } from "./types";
 
 export const noNote = (amount: number) => ({ amount, note: "" });
 
