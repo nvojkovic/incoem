@@ -3,18 +3,6 @@ import * as d3 from "d3";
 
 const PieChart = ({ data }: any) => {
   const svgRef = useRef(null);
-  const colorArray = [
-    "#FF6C4680",
-    "#FFB44680",
-    "#6CFF4680",
-    "#46FFC680",
-    "#46C6FF80",
-    "#4693FF80",
-    "#6C46FF80",
-    "#FF46C680",
-    "#FF465A80",
-    "#B24B3180",
-  ];
 
   useEffect(() => {
     if (!data || !svgRef.current) return;
