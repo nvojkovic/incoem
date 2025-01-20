@@ -56,7 +56,7 @@ const Live = ({
   const addScenario = (data: any) => {
     storeScenarios([
       ...initial.scenarios,
-      { ...data, id: initial.scenarios.length + 1 },
+      { ...data, id: Math.round(Math.random() * 1000000) },
     ]);
   };
 
