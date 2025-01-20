@@ -58,7 +58,7 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
   const addScenario = (newData: any) => {
     storeScenarios([
       ...data.scenarios,
-      { ...newData, id: data.scenarios.length + 1 },
+      { ...newData, id: Math.round(Math.random() * 1000000) },
     ]);
   };
   const removeScenario = () => {
