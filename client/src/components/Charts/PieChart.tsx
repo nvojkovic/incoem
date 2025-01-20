@@ -39,7 +39,7 @@ const PieChart = ({ data }: any) => {
     const color = d3
       .scaleOrdinal()
       .domain(data.map((d: any) => d.label))
-      .range(colorArray);
+      .range(d3.schemeCategory10);
 
     // Pie generator
     const pie = d3
