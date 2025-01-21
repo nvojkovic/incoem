@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import { printNumber } from "src/utils";
 
 const PieChart = ({ data }: any) => {
   const svgRef = useRef(null);
@@ -42,6 +43,20 @@ const PieChart = ({ data }: any) => {
       .innerRadius(0)
       .outerRadius(radius - 20);
 
+    // Create tooltip div
+    const tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("position", "absolute")
+      .style("visibility", "hidden")
+      .style("background-color", "white")
+      .style("border", "1px solid #ddd")
+      .style("border-radius", "4px")
+      .style("padding", "8px")
+      .style("font-size", "12px")
+      .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
+
     // Add pie slices
     const arcs = svg
       .selectAll("arc")
@@ -53,7 +68,22 @@ const PieChart = ({ data }: any) => {
     arcs
       .append("path")
       .attr("d", arc as any)
-      .attr("fill", (d: any) => color(d.data.label) as any);
+      .attr("fill", (d: any) => color(d.data.label) as any)
+      .on("mouseover", (event: any, d: any) => {
+        tooltip
+          .style("visibility", "visible")
+          .html(`${d.data.label}: ${printNumber(d.data.value)}`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 10 + "px");
+      })
+      .on("mousemove", (event: any) => {
+        tooltip
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 10 + "px");
+      })
+      .on("mouseout", () => {
+        tooltip.style("visibility", "hidden");
+      });
 
     // Create temporary hidden text elements to measure widths
     const tempText = svg
@@ -111,6 +141,13 @@ const PieChart = ({ data }: any) => {
       .attr("font-size", 12)
       .text((d: any) => d.label);
   }, [data]);
+
+  // Cleanup tooltip on unmount
+  useEffect(() => {
+    return () => {
+      d3.selectAll(".tooltip").remove();
+    };
+  }, []);
 
   return (
     <div className="w-full flex justify-center">

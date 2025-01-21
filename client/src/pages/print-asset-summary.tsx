@@ -5,7 +5,8 @@ import { IncomeProvider } from "src/useData";
 import AssetSummary from "src/components/Report/AssetSummary";
 
 const PrintAssetSummary = () => {
-  const [client, setClient] = useState({} as any);
+  const [client, setClient] = useState(null as any);
+  const [resp, setResp] = useState(null as any);
   const [searchParams, _] = useSearchParams();
   console.log(searchParams);
   const { id } = useParams();
@@ -14,18 +15,15 @@ const PrintAssetSummary = () => {
       .then((data) => data.json())
       .then((data) => {
         setClient(data);
+        setResp(data);
+      })
+      .catch((e) => {
+        setResp(e);
       });
   }, [id]);
 
-  const scenario = {
-    ...client.liveSettings,
-    incomes: client.incomes,
-    people: client.people,
-    spending: client.spending,
-  };
-  console.log(scenario, client);
-  if (!scenario || !client.userdata) return <div>Loading...</div>;
-  scenario.name = "Live";
+  console.log(client);
+  if (!client) return <div>Loading... {resp?.toString()}</div>;
   return (
     <IncomeProvider data={client as any} setLocal={() => { }}>
       <div className="bg-white ">

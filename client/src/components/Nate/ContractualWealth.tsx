@@ -435,18 +435,6 @@ const LongTermCareSection = () => {
           </tr>
         </tbody>
       </table>
-
-      <div className=" text-right pt-3 pr-2 flex gap-2 justify-end">
-        Total:{" "}
-        <div className="font-semibold">
-          {printNumber(
-            data.assetSummary.income
-              .map((i) => i.annualAmount)
-              .filter((i) => i)
-              .reduce((a, b) => a + b, 0),
-          )}
-        </div>
-      </div>
     </MapSection>
   );
 };
@@ -645,18 +633,6 @@ const AccumulationAnnuitySection = () => {
           </tr>
         </tbody>
       </table>
-
-      <div className=" text-right pt-3 pr-2 flex gap-2 justify-end">
-        Total:{" "}
-        <div className="font-semibold">
-          {printNumber(
-            data.assetSummary.income
-              .map((i) => i.annualAmount)
-              .filter((i) => i)
-              .reduce((a, b) => a + b, 0),
-          )}
-        </div>
-      </div>
     </MapSection>
   );
 };
@@ -856,18 +832,6 @@ const PensionAnnuitySection = () => {
           </tr>
         </tbody>
       </table>
-
-      <div className=" text-right pt-3 pr-2 flex gap-2 justify-end">
-        Total:{" "}
-        <div className="font-semibold">
-          {printNumber(
-            data.assetSummary.income
-              .map((i) => i.annualAmount)
-              .filter((i) => i)
-              .reduce((a, b) => a + b, 0),
-          )}
-        </div>
-      </div>
     </MapSection>
   );
 };
@@ -1041,18 +1005,6 @@ const PensionSection = () => {
           </tr>
         </tbody>
       </table>
-
-      <div className=" text-right pt-3 pr-2 flex gap-2 justify-end">
-        Total:{" "}
-        <div className="font-semibold">
-          {printNumber(
-            data.assetSummary.income
-              .map((i) => i.annualAmount)
-              .filter((i) => i)
-              .reduce((a, b) => a + b, 0),
-          )}
-        </div>
-      </div>
     </MapSection>
   );
 };

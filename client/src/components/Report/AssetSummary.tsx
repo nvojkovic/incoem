@@ -1,4 +1,5 @@
-import { imageUrlToBase64, printNumber } from "src/utils";
+import { imageUrlToBase64, printNumber, splitDate } from "src/utils";
+import { NRA } from "src/calculator/utils";
 import { useEffect, useState } from "react";
 import { PrintClient } from "src/types";
 import { calculateAge } from "../Info/PersonInfo";
@@ -37,7 +38,7 @@ const AssetSummary = ({ client }: Props) => {
     });
   }, [logoUrl]);
   return (
-    <div className="p-10 text-sm">
+    <div className="p-10 text-sm px-24">
       <div className="flex justify-end">
         <img
           src={`${logoData}`}
@@ -89,36 +90,585 @@ const AssetSummary = ({ client }: Props) => {
       </div>
 
       <Header text="Income/Cash" color="#1c3664" />
-      <Subtitle>Income</Subtitle>
+      <div className="flex gap-6">
+        <div>
+          <Subtitle>Income</Subtitle>
+          <table className="text-center w-[520px] border-collapse">
+            <thead>
+              <th className="border border-slate-600">Employer</th>
+              <th className="border border-slate-600">Owner</th>
+              <th className="border border-slate-600">Position</th>
+              <th className="border border-slate-600">Annual Income</th>
+            </thead>
+            {client.assetSummary.income.map((income) => (
+              <tr>
+                <td className="border border-slate-600">{income.employer}</td>
+                <td className="border border-slate-600">
+                  {getPerson(income.owner)}
+                </td>
+                <td className="border border-slate-600">{income.position}</td>
+                <td className="border border-slate-600">
+                  {printNumber(income.annualAmount)}
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td className="">{}</td>
+              <td className="">{}</td>
+              <td className="border border-slate-600 font-bold">Total</td>
+
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.income
+                    .map((i) => i.annualAmount)
+                    .reduce((a, b) => a + b, 0),
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div>
+          <Subtitle>Cash Assets</Subtitle>
+          <table className="text-center w-[750px] border-collapse">
+            <thead>
+              <th className="border border-slate-600">Bank</th>
+              <th className="border border-slate-600">Account #</th>
+              <th className="border border-slate-600">Owner</th>
+              <th className="border border-slate-600">Type</th>
+              <th className="border border-slate-600">Interest Rate</th>
+              <th className="border border-slate-600">Balance</th>
+            </thead>
+            {client.assetSummary.cashAssets.map((asset) => (
+              <tr>
+                <td className="border border-slate-600">{asset.bank}</td>
+                <td className="border border-slate-600">
+                  {asset.accountNumber}
+                </td>
+                <td className="border border-slate-600">
+                  {getPerson(asset.owner)}
+                </td>
+                <td className="border border-slate-600">{asset.type}</td>
+                <td className="border border-slate-600">
+                  {asset.interestRate !== undefined && `${asset.interestRate}%`}
+                </td>
+                <td className="border border-slate-600">
+                  {printNumber(asset.balance)}
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td className="">{}</td>
+              <td className="">{}</td>
+              <td className="">{}</td>
+              <td className="">{}</td>
+              <td className="border border-slate-600 font-bold">Total</td>
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.cashAssets
+                    .map((a) => a.balance || 0)
+                    .reduce((a, b) => a + b, 0),
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <Header text="Contractual Wealth" color="#00b050" />
+      <Subtitle>Life Insurance</Subtitle>
       <table className="text-center w-[600px] border-collapse">
         <thead>
-          <th className="border border-slate-600">Employer</th>
-          <th className="border border-slate-600">Owner</th>
-          <th className="border border-slate-600">Position</th>
-          <th className="border border-slate-600">Annual Income</th>
+          <th className="border border-slate-600">Company</th>
+          <th className="border border-slate-600">Policy #</th>
+          <th className="border border-slate-600">Insured</th>
+          <th className="border border-slate-600">Type</th>
+          <th className="border border-slate-600">Annual Premium</th>
+          <th className="border border-slate-600">Cash Value</th>
+          <th className="border border-slate-600">Death Benefit</th>
         </thead>
-        {client.assetSummary.income.map((income) => (
+        {client.assetSummary.lifeInsurance.map((insurance) => (
           <tr>
-            <td className="border border-slate-600">{income.employer}</td>
+            <td className="border border-slate-600">{insurance.company}</td>
             <td className="border border-slate-600">
-              {getPerson(income.owner)}
+              {insurance.policyNumber}
             </td>
-            <td className="border border-slate-600">{income.position}</td>
             <td className="border border-slate-600">
-              {printNumber(income.annualAmount)}
+              {getPerson(insurance.insured)}
+            </td>
+            <td className="border border-slate-600">{insurance.type}</td>
+            <td className="border border-slate-600">
+              {printNumber(insurance.annualPremium)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(insurance.cashValue)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(insurance.deathBenefit)}
             </td>
           </tr>
         ))}
         <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.lifeInsurance.reduce(
+                (sum, i) => sum + (i.annualPremium || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.lifeInsurance.reduce(
+                (sum, i) => sum + (i.cashValue || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.lifeInsurance.reduce(
+                (sum, i) => sum + (i.deathBenefit || 0),
+                0,
+              ),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Subtitle>Long Term Care</Subtitle>
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Company</th>
+          <th className="border border-slate-600">Policy #</th>
+          <th className="border border-slate-600">Insured</th>
+          <th className="border border-slate-600">Elimination Period</th>
+          <th className="border border-slate-600">COLA</th>
+          <th className="border border-slate-600">Annual Premium</th>
+          <th className="border border-slate-600">Monthly Benefit</th>
+        </thead>
+        {client.assetSummary.longTermCare.map((care) => (
+          <tr>
+            <td className="border border-slate-600">{care.company}</td>
+            <td className="border border-slate-600">{care.policyNumber}</td>
+            <td className="border border-slate-600">
+              {getPerson(care.insured)}
+            </td>
+            <td className="border border-slate-600">
+              {care.eliminationPeriod}
+            </td>
+            <td className="border border-slate-600">{care.COLA}%</td>
+            <td className="border border-slate-600">
+              {printNumber(care.annualPremium)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(care.monthlyBenefit)}
+            </td>
+          </tr>
+        ))}
+        <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.longTermCare.reduce(
+                (sum, i) => sum + (i.annualPremium || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.longTermCare.reduce(
+                (sum, i) => sum + (i.monthlyBenefit || 0),
+                0,
+              ),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Subtitle>Accumulation Annuity</Subtitle>
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Company</th>
+          <th className="border border-slate-600">Policy #</th>
+          <th className="border border-slate-600">Owner</th>
+          <th className="border border-slate-600">Tax Status</th>
+          <th className="border border-slate-600">Type</th>
+          <th className="border border-slate-600">Account Value</th>
+        </thead>
+        {client.assetSummary.accumulationAnnuity.map((annuity) => (
+          <tr>
+            <td className="border border-slate-600">{annuity.company}</td>
+            <td className="border border-slate-600">{annuity.policyNumber}</td>
+            <td className="border border-slate-600">
+              {getPerson(annuity.owner)}
+            </td>
+            <td className="border border-slate-600">{annuity.taxStatus}</td>
+            <td className="border border-slate-600">{annuity.type}</td>
+            <td className="border border-slate-600">
+              {printNumber(annuity.accountValue)}
+            </td>
+          </tr>
+        ))}
+        <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.accumulationAnnuity.reduce(
+                (sum, i) => sum + (i.accountValue || 0),
+                0,
+              ),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Subtitle>Personal Pension Annuity</Subtitle>
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Company</th>
+          <th className="border border-slate-600">Policy #</th>
+          <th className="border border-slate-600">Owner</th>
+          <th className="border border-slate-600">Tax Status</th>
+          <th className="border border-slate-600">Effective Date</th>
+          <th className="border border-slate-600">Annual Income</th>
+          <th className="border border-slate-600">Account Value</th>
+        </thead>
+        {client.assetSummary.personalPensionAnnuity.map((annuity) => (
+          <tr>
+            <td className="border border-slate-600">{annuity.company}</td>
+            <td className="border border-slate-600">{annuity.policyNumber}</td>
+            <td className="border border-slate-600">
+              {getPerson(annuity.owner)}
+            </td>
+            <td className="border border-slate-600">{annuity.taxStatus}</td>
+            <td className="border border-slate-600">
+              {new Date(annuity.effectiveDate).toLocaleDateString()}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(annuity.annualIncome)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(annuity.accountValue)}
+            </td>
+          </tr>
+        ))}
+        <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.personalPensionAnnuity.reduce(
+                (sum, i) => sum + (i.annualIncome || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.personalPensionAnnuity.reduce(
+                (sum, i) => sum + (i.accountValue || 0),
+                0,
+              ),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Subtitle>Pension</Subtitle>
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Company</th>
+          <th className="border border-slate-600">Account #</th>
+          <th className="border border-slate-600">Owner</th>
+          <th className="border border-slate-600">Monthly Income</th>
+          <th className="border border-slate-600">Annual Income</th>
+        </thead>
+        {client.assetSummary.pension.map((pension) => (
+          <tr>
+            <td className="border border-slate-600">{pension.company}</td>
+            <td className="border border-slate-600">{pension.accountNumber}</td>
+            <td className="border border-slate-600">
+              {getPerson(pension.owner)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(pension.monthlyIncome)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber((pension.monthlyIncome || 0) * 12)}
+            </td>
+          </tr>
+        ))}
+        <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.pension.reduce(
+                (sum, i) => sum + (i.monthlyIncome || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.pension.reduce(
+                (sum, i) => sum + (i.monthlyIncome || 0) * 12,
+                0,
+              ),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Header text="Social Insurance" color="#4471c4" />
+      <Subtitle>Social Security</Subtitle>
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Name</th>
+          <th className="border border-slate-600">Full Retirement Age</th>
+          <th className="border border-slate-600">Full Retirement Date</th>
+          <th className="border border-slate-600">Monthly Income</th>
+          <th className="border border-slate-600">Annual Income</th>
+        </thead>
+        {client.assetSummary.socialInsurance.map((insurance) => {
+          const person = client.people.find((p) => p.id === insurance.owner);
+          const { year: birthYear } = splitDate(person?.birthday || "");
+          const [retirementYear, retirementMonth] = NRA(birthYear);
+          const birthday = new Date(person?.birthday || "");
+          birthday.setMonth(birthday.getMonth() + retirementMonth);
+          birthday.setFullYear(birthday.getFullYear() + retirementYear);
+
+          return (
+            <tr>
+              <td className="border border-slate-600">
+                {getPerson(insurance.owner)}
+              </td>
+              <td className="border border-slate-600">{`${retirementYear} years ${retirementMonth} months`}</td>
+              <td className="border border-slate-600">
+                {birthday.toLocaleDateString()}
+              </td>
+              <td className="border border-slate-600">
+                {printNumber(insurance.monthlyAmount)}
+              </td>
+              <td className="border border-slate-600">
+                {printNumber(insurance.monthlyAmount * 12)}
+              </td>
+            </tr>
+          );
+        })}
+        <tr>
           <td className="">{}</td>
           <td className="">{}</td>
           <td className="border border-slate-600 font-bold">Total</td>
-
           <td className="border border-slate-600 font-bold">
             {printNumber(
-              client.assetSummary.income
-                .map((i) => i.annualAmount)
+              client.assetSummary.socialInsurance
+                .map((i) => i.monthlyAmount)
                 .reduce((a, b) => a + b, 0),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.socialInsurance
+                .map((i) => i.monthlyAmount * 12)
+                .reduce((a, b) => a + b, 0),
+            )}
+          </td>
+        </tr>
+      </table>
+
+      <Header text="Statement Wealth" color="#c00000" />
+      <div className="flex gap-6">
+        <div>
+          <Subtitle>Qualified Statement Wealth</Subtitle>
+
+          <table className="text-center w-[800px] border-collapse">
+            <thead>
+              <th className="border border-slate-600">Company</th>
+              <th className="border border-slate-600">Account #</th>
+              <th className="border border-slate-600">Owner</th>
+              <th className="border border-slate-600">Type</th>
+              <th className="border border-slate-600">Managed</th>
+              <th className="border border-slate-600">Annual Contribution</th>
+              <th className="border border-slate-600">Market Value</th>
+            </thead>
+            {client.assetSummary.statementWealth
+              .filter((wealth) => wealth.qualified)
+              .map((wealth) => (
+                <tr>
+                  <td className="border border-slate-600">{wealth.company}</td>
+                  <td className="border border-slate-600">
+                    {wealth.accountNumber}
+                  </td>
+                  <td className="border border-slate-600">
+                    {getPerson(wealth.owner)}
+                  </td>
+                  <td className="border border-slate-600">{wealth.type}</td>
+                  <td className="border border-slate-600">
+                    {wealth.managed ? "Yes" : "No"}
+                  </td>
+                  <td className="border border-slate-600">
+                    {printNumber(wealth.annualContribution)}
+                  </td>
+                  <td className="border border-slate-600">
+                    {printNumber(wealth.marketValue)}
+                  </td>
+                </tr>
+              ))}
+            <tr>
+              <td className=""></td>
+              <td className=""></td>
+              <td className=""></td>
+              <td className=""></td>
+              <td className="border border-slate-600 font-bold">Total</td>
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.statementWealth
+                    .filter((w) => w.qualified)
+                    .reduce((sum, w) => sum + (w.annualContribution || 0), 0),
+                )}
+              </td>
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.statementWealth
+                    .filter((w) => w.qualified)
+                    .reduce((sum, w) => sum + (w.marketValue || 0), 0),
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div>
+          <Subtitle>Non-Qualified Statement Wealth</Subtitle>
+          <table className="text-center w-[800px] border-collapse">
+            <thead>
+              <th className="border border-slate-600">Company</th>
+              <th className="border border-slate-600">Account #</th>
+              <th className="border border-slate-600">Owner</th>
+              <th className="border border-slate-600">Type</th>
+              <th className="border border-slate-600">Managed</th>
+              <th className="border border-slate-600">Annual Contribution</th>
+              <th className="border border-slate-600">Market Value</th>
+            </thead>
+            {client.assetSummary.statementWealth
+              .filter((wealth) => !wealth.qualified)
+              .map((wealth) => (
+                <tr>
+                  <td className="border border-slate-600">{wealth.company}</td>
+                  <td className="border border-slate-600">
+                    {wealth.accountNumber}
+                  </td>
+                  <td className="border border-slate-600">
+                    {getPerson(wealth.owner)}
+                  </td>
+                  <td className="border border-slate-600">{wealth.type}</td>
+                  <td className="border border-slate-600">
+                    {wealth.managed ? "Yes" : "No"}
+                  </td>
+                  <td className="border border-slate-600">
+                    {printNumber(wealth.annualContribution)}
+                  </td>
+                  <td className="border border-slate-600">
+                    {printNumber(wealth.marketValue)}
+                  </td>
+                </tr>
+              ))}
+            <tr>
+              <td className=""></td>
+              <td className=""></td>
+              <td className=""></td>
+              <td className=""></td>
+              <td className="border border-slate-600 font-bold">Total</td>
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.statementWealth
+                    .filter((w) => !w.qualified)
+                    .reduce((sum, w) => sum + (w.annualContribution || 0), 0),
+                )}
+              </td>
+              <td className="border border-slate-600 font-bold">
+                {printNumber(
+                  client.assetSummary.statementWealth
+                    .filter((w) => !w.qualified)
+                    .reduce((sum, w) => sum + (w.marketValue || 0), 0),
+                )}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <Header text="Hard Assets" color="#4471c4" />
+      <table className="text-center w-[800px] border-collapse">
+        <thead>
+          <th className="border border-slate-600">Name</th>
+          <th className="border border-slate-600">Type</th>
+          <th className="border border-slate-600">Owner</th>
+          <th className="border border-slate-600">Cost Basis</th>
+          <th className="border border-slate-600">Net Income</th>
+          <th className="border border-slate-600">Market Value</th>
+        </thead>
+        {client.assetSummary.hardAssets.map((asset) => (
+          <tr>
+            <td className="border border-slate-600">{asset.name}</td>
+            <td className="border border-slate-600">{asset.type}</td>
+            <td className="border border-slate-600">
+              {getPerson(asset.owner)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(asset.costBasis)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(asset.netIncome)}
+            </td>
+            <td className="border border-slate-600">
+              {printNumber(asset.marketValue)}
+            </td>
+          </tr>
+        ))}
+        <tr>
+          <td className=""></td>
+          <td className=""></td>
+          <td className="border border-slate-600 font-bold">Total</td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.hardAssets.reduce(
+                (sum, a) => sum + (a.costBasis || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.hardAssets.reduce(
+                (sum, a) => sum + (a.netIncome || 0),
+                0,
+              ),
+            )}
+          </td>
+          <td className="border border-slate-600 font-bold">
+            {printNumber(
+              client.assetSummary.hardAssets.reduce(
+                (sum, a) => sum + (a.marketValue || 0),
+                0,
+              ),
             )}
           </td>
         </tr>

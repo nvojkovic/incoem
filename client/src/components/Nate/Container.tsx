@@ -1,11 +1,12 @@
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 
-const NavItem = ({ name, active, link }: any) => {
+const NavItem = ({ name, active, link, color }: any) => {
   return (
     <Link to={`../${link}`} className="w-full rounded-b-lg block">
       <div
         className={`font-semibold cursor-pointer text-medium rounded-b-lg w-full text-center py-2 ${active ? "bg-main-orange text-white" : "bg-white"}`}
+        style={{ backgroundColor: active && color }}
       >
         {name}
       </div>
@@ -21,26 +22,31 @@ const Container = ({ active, children }: any) => {
           name="Income/Cash"
           active={active === "incomecash"}
           link="income-cash"
+          color="#002060"
         />
         <NavItem
           name="Social Insurance"
           active={active === "social-insurance"}
           link="social-insurance"
+          color="#4471c4"
         />
         <NavItem
           name="Contractual Wealth"
           active={active === "contractual-wealth"}
           link="contractual-wealth"
+          color="#00b050"
         />
         <NavItem
           name="Statement Wealth"
           active={active === "statement-wealth"}
           link="statement-wealth"
+          color="#c00000"
         />
         <NavItem
           name="Hard Assets"
           active={active === "hard-assets"}
           link="hard-assets"
+          color="#4471c4"
         />
         <NavItem
           name="Debt/Inheritance"

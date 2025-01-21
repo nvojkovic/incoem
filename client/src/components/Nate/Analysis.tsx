@@ -46,9 +46,7 @@ const Analysis = () => {
                   className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
                 >
                   <tr className="bg-gray-100">
-                    <th className="px-2 py-3 font-medium rounded-tl-2xl">
-                      Net Worth Summary
-                    </th>
+                    <th className="px-2 py-3 font-medium">Net Worth Summary</th>
                     <th className="px-2 py-3 font-medium">Amount ($)</th>
                   </tr>
                 </thead>
