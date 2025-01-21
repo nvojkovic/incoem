@@ -42,6 +42,7 @@ import StatementWealthPage from "./components/Nate/StatementWealth";
 import Analysis from "./components/Nate/Analysis";
 import ContractualWealthPage from "./components/Nate/ContractualWealth";
 import ExternalDocs from "./pages/external-docs";
+import PrintAssetSummary from "./pages/print-asset-summary";
 
 SuperTokens.init({
   appInfo: {
@@ -162,6 +163,10 @@ export const router = createBrowserRouter([
         element: <HelpCenter />,
       },
     ],
+  },
+  {
+    path: "/print-asset-summary/:id/",
+    element: <PrintAssetSummary />,
   },
   {
     path: "/print-live/:id/",
