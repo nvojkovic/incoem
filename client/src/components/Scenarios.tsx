@@ -23,7 +23,7 @@ import { useInfo } from "src/useData";
 import { useFullscreen } from "src/hooks/useFullScreen";
 import { Spinner } from "flowbite-react";
 
-const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
+const Scenarios = ({ tab, setTab }: any) => {
   const { data, storeScenarios } = useInfo();
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -43,7 +43,7 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
   );
   const print = async () => {
     setPrinting(true);
-    const url = await printReport(data.id, settings.id);
+    const url = await printReport(data.id, tab);
     setPrinting(false);
     window.open(url, "_blank");
   };
@@ -67,13 +67,22 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
     setTab(-1);
   };
 
+  const saveScenario = () => {
+    setSaveOpen(false);
+    addScenario({
+      ...data.liveSettings,
+      name,
+      incomes: [...data.incomes],
+      people: [...data.people],
+      spending: { ...data.spending },
+    });
+  };
   const [removeOpen, setRemoveOpen] = useState(false);
   const [printing, setPrinting] = useState(false);
   return (
     <div
-      className={`flex justify-between items-center print:hidden bg-white sticky z-[5000] ${
-        isFullscreen ? "top-[0px]" : "top-[72px]"
-      } bg-[#f3f4f6]`}
+      className={`flex justify-between items-center print:hidden bg-white sticky z-[5000] ${isFullscreen ? "top-[0px]" : "top-[72px]"
+        } bg-[#f3f4f6]`}
     >
       <DndContext
         sensors={sensors}
@@ -91,7 +100,7 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
               active={tab == -1}
               setActive={() => setTab(-1)}
               live
-              store={() => {}}
+              store={() => { }}
             />
             {scenarios.map((sc, i) => (
               <SortableItem key={sc.id} id={sc.id} onClick={() => setTab(i)}>
@@ -152,17 +161,7 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
                   setName("");
                 }}
                 onConfirm={() => {
-                  setSaveOpen(false);
-                  setSettings({
-                    ...settings,
-                    name: "",
-                  });
-                  addScenario({
-                    ...settings,
-                    name,
-                    data: { ...settings.data },
-                    spending: { ...data.spending },
-                  });
+                  saveScenario();
                 }}
               >
                 <div className="py-3">
@@ -172,23 +171,7 @@ const Scenarios = ({ settings, tab, setTab, setSettings }: any) => {
                     setValue={(name) => setName(name)}
                     onKeyDown={(e: any) => {
                       if (e.key === "Enter") {
-                        setSaveOpen(false);
-                        setSettings({
-                          ...settings,
-                          name: "",
-                        });
-
-                        addScenario({
-                          ...settings,
-                          name,
-                          id: data.scenarios.length
-                            ? Math.max(
-                                ...data.scenarios.map((item) => item.id),
-                              ) + 1
-                            : 1,
-                          data: { ...settings.data },
-                          spending: { ...data.spending },
-                        });
+                        saveScenario();
                       }
                     }}
                     size="full"

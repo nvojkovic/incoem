@@ -35,13 +35,18 @@ export const printNumber = (s: number) => {
 };
 
 export const printReport = async (clientId: number, scenarioId: number) => {
-  const pdfFile = await fetch(
-    import.meta.env.VITE_API_URL +
+  let url;
+  if (scenarioId === -1) {
+    url = import.meta.env.VITE_API_URL + "print/client/pdf-live/" + clientId;
+  } else {
+    url =
+      import.meta.env.VITE_API_URL +
       "print/client/pdf/" +
       clientId +
       "/" +
-      Math.max(scenarioId, 0).toString(),
-  ).then((res) => res.json());
+      scenarioId;
+  }
+  const pdfFile = await fetch(url).then((res) => res.json());
   return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
 };
 

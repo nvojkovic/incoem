@@ -41,16 +41,7 @@ const Summary = () => {
     <Layout page="map">
       <div className="pb-32 border-[#EDEEF1] border">
         <div className={`sticky z-50 ${isFullscreen ? "top-0" : "top-[72px]"}`}>
-          <Scenarios
-            settings={liveSettings}
-            tab={tab}
-            setTab={setTab}
-            setSettings={
-              tab === -1
-                ? (v: any) => setField("liveSettings")({ ...liveSettings, v })
-                : () => { }
-            }
-          />
+          <Scenarios tab={tab} setTab={setTab} />
           <ScenarioHeader client={data} settings={settings} />
           {shownTable === "composite" ? (
             <CompositeTable
