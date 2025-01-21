@@ -6,39 +6,35 @@ import PieChart from "../Charts/PieChart";
 
 const Analysis = () => {
   const {
-    data: { nateClient },
+    data: { assetSummary },
   } = useInfo();
 
-  const cashAssets = nateClient.cashAssets
+  const cashAssets = assetSummary.cashAssets
     .map((i) => i.balance || 0)
     .reduce((a, b) => a + b, 0);
-  const statementWealth = nateClient.statementWealth
+  const statementWealth = assetSummary.statementWealth
     .map((i) => i.marketValue || 0)
     .reduce((a, b) => a + b, 0);
-  const hardAssets = nateClient.hardAssets
+  const hardAssets = assetSummary.hardAssets
     .map((i) => i.marketValue || 0)
-    .reduce((a, b) => a + b, 0);
-
-  const hardAssetLiabilites = nateClient.hardAssets
-    .map((i) => i.debt || 0)
     .reduce((a, b) => a + b, 0);
 
   const contractualWealth =
-    nateClient.lifeInsurance
+    assetSummary.lifeInsurance
       .map((i) => i.cashValue || 0)
       .reduce((a, b) => a + b, 0) +
-    nateClient.accumulationAnnuity
+    assetSummary.accumulationAnnuity
       .map((i) => i.accountValue || 0)
       .reduce((a, b) => a + b, 0) +
-    nateClient.personalPensionAnnuity
+    assetSummary.personalPensionAnnuity
       .map((i) => i.accountValue || 0)
       .reduce((a, b) => a + b, 0);
 
   const assets = cashAssets + statementWealth + hardAssets;
 
-  const liabilities =
-    nateClient.debts.map((i) => i.balance || 0).reduce((a, b) => a + b, 0) +
-    nateClient.hardAssets.map((i) => i.debt || 0).reduce((a, b) => a + b, 0);
+  const liabilities = assetSummary.debts
+    .map((i) => i.balance || 0)
+    .reduce((a, b) => a + b, 0);
   return (
     <Container active="analysis">
       <MapSection title="Analysis" defaultOpen>
@@ -106,19 +102,12 @@ const Analysis = () => {
 
                   <tr className="">
                     <td className="px-2 py-2 ">Hard Assets</td>
-                    <td className="px-2 py-2">
-                      {printNumber(hardAssets - hardAssetLiabilites)}
-                    </td>
+                    <td className="px-2 py-2">{printNumber(hardAssets)}</td>
                   </tr>
                   <tr className="font-semibold">
                     <td className="px-2 py-2 ">Total Assets</td>
                     <td className="px-2 py-2">
-                      {printNumber(
-                        cashAssets +
-                          statementWealth +
-                          hardAssets -
-                          hardAssetLiabilites,
-                      )}
+                      {printNumber(cashAssets + statementWealth + hardAssets)}
                     </td>
                   </tr>
                 </tbody>

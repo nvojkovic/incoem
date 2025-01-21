@@ -59,8 +59,8 @@ const Header = ({
                 Inflation-Adjustment:{" "}
                 <b>{`${scenario.inflationType === "Real" ? scenario.inflation || 0 : 0}%`}</b>
               </div>
-              {scenario.data.people.length > 1 &&
-                scenario.data.people.map(
+              {scenario.people.length > 1 &&
+                scenario.people.map(
                   (person, i) =>
                     scenario.whoDies == i &&
                     scenario.deathYears[i] && (

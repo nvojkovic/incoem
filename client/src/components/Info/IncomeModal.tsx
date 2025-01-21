@@ -20,9 +20,11 @@ const IncomeModal = ({
 }) => {
   const { user } = useUser();
   const { data, setIncome } = useInfo();
-  const incomes = data.data.incomes;
-  const people = data.data.people;
+  const incomes = data.incomes;
+  const people = data.people;
   const index = incomes.findIndex((inc) => inc.id === i);
+
+  console.log("open222", open, data);
   if (!data) return;
   return (
     <>

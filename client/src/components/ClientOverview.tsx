@@ -35,7 +35,7 @@ const ClientOverview = () => {
                 />
               </div>
               <div className="flex gap-12">
-                {data.data.people.map((person, i) => (
+                {data.people.map((person, i) => (
                   <PersonInfo
                     key={i}
                     subtitle="Details about how this works"
@@ -89,7 +89,7 @@ const ClientOverview = () => {
                 tabIndex={5}
               />
 
-              {data.data.people.map((person, i) => (
+              {data.people.map((person, i) => (
                 <Input
                   value={data.liveSettings.deathYears[i]}
                   subtype="number"

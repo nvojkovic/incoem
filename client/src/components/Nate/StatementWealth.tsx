@@ -13,8 +13,8 @@ import { printNumber } from "src/utils";
 const StatementWealthPage = () => {
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
-  if (data.data.people.length == 2) {
+  const options = [...data.people] as any[];
+  if (data.people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
 
@@ -23,9 +23,9 @@ const StatementWealthPage = () => {
     field: keyof StatementWealth,
     value: StatementWealth[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      statementWealth: data.nateClient.statementWealth.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      statementWealth: data.assetSummary.statementWealth.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -44,10 +44,10 @@ const StatementWealthPage = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     statementWealth: [
-                      ...data.nateClient.statementWealth,
+                      ...data.assetSummary.statementWealth,
                       { id: crypto.randomUUID(), qualified: true },
                     ],
                   });
@@ -79,7 +79,7 @@ const StatementWealthPage = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.statementWealth.map((line, index) =>
+            {data.assetSummary.statementWealth.map((line, index) =>
               line.qualified ? (
                 <tr className="">
                   <td className="px-2 py-2 ">
@@ -108,7 +108,7 @@ const StatementWealthPage = () => {
                       selected={
                         line.owner == -1
                           ? { name: "Joint", id: -1 }
-                          : data.data.people[line.owner]
+                          : data.people[line.owner]
                       }
                       setSelected={(i) => setIncome(index, "owner", i.id)}
                       label=""
@@ -118,13 +118,13 @@ const StatementWealthPage = () => {
                     <Select
                       options={(line.qualified
                         ? [
-                            "401(k)",
-                            "Roth 401(k)",
-                            "IRA",
-                            "Rollover IRA",
-                            "Roth IRA",
-                            "457(b)",
-                          ]
+                          "401(k)",
+                          "Roth 401(k)",
+                          "IRA",
+                          "Rollover IRA",
+                          "Roth IRA",
+                          "457(b)",
+                        ]
                         : ["Tax-Free", "Taxable", "Tax-Deferred"]
                       ).map((name) => ({ name, id: name }))}
                       selected={{
@@ -176,10 +176,10 @@ const StatementWealthPage = () => {
                         onClose={() => setPreDeleteIncomeOpen(-1)}
                         onConfirm={() => {
                           setPreDeleteIncomeOpen(-1);
-                          setField("nateClient")({
-                            ...data.nateClient,
+                          setField("assetSummary")({
+                            ...data.assetSummary,
                             statementWealth:
-                              data.nateClient.statementWealth.filter(
+                              data.assetSummary.statementWealth.filter(
                                 (_, ind) => ind !== index,
                               ),
                           });
@@ -205,32 +205,32 @@ const StatementWealthPage = () => {
                 </tr>
               ) : null,
             )}
-            {!!data.nateClient.statementWealth.filter((i) => i.qualified)
+            {!!data.assetSummary.statementWealth.filter((i) => i.qualified)
               .length && (
-              <tr>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium">Total:</td>
-                <td className="px-2 py-3 font-medium text-center">
-                  {printNumber(
-                    data.nateClient.statementWealth
-                      .filter((i) => i.qualified)
-                      .map((i) => i.annualContribution || 0)
-                      .reduce((a, b) => a + b, 0),
-                  )}
-                </td>
-                <td className="px-2 py-3 font-medium text-center">
-                  {printNumber(
-                    data.nateClient.statementWealth
-                      .filter((i) => i.qualified)
-                      .map((i) => i.marketValue || 0)
-                      .reduce((a, b) => a + b, 0),
-                  )}
-                </td>
-              </tr>
-            )}
+                <tr>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium">Total:</td>
+                  <td className="px-2 py-3 font-medium text-center">
+                    {printNumber(
+                      data.assetSummary.statementWealth
+                        .filter((i) => i.qualified)
+                        .map((i) => i.annualContribution || 0)
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </td>
+                  <td className="px-2 py-3 font-medium text-center">
+                    {printNumber(
+                      data.assetSummary.statementWealth
+                        .filter((i) => i.qualified)
+                        .map((i) => i.marketValue || 0)
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </MapSection>
@@ -246,10 +246,10 @@ const StatementWealthPage = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     statementWealth: [
-                      ...data.nateClient.statementWealth,
+                      ...data.assetSummary.statementWealth,
                       { id: crypto.randomUUID(), qualified: false },
                     ],
                   });
@@ -281,7 +281,7 @@ const StatementWealthPage = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.statementWealth.map((line, index) =>
+            {data.assetSummary.statementWealth.map((line, index) =>
               !line.qualified ? (
                 <tr className="">
                   <td className="px-2 py-2 ">
@@ -310,7 +310,7 @@ const StatementWealthPage = () => {
                       selected={
                         line.owner == -1
                           ? { name: "Joint", id: -1 }
-                          : data.data.people[line.owner]
+                          : data.people[line.owner]
                       }
                       setSelected={(i) => setIncome(index, "owner", i.id)}
                       label=""
@@ -320,13 +320,13 @@ const StatementWealthPage = () => {
                     <Select
                       options={(line.qualified
                         ? [
-                            "401(k)",
-                            "Roth 401(k)",
-                            "IRA",
-                            "Rollover IRA",
-                            "Roth IRA",
-                            "457(b)",
-                          ]
+                          "401(k)",
+                          "Roth 401(k)",
+                          "IRA",
+                          "Rollover IRA",
+                          "Roth IRA",
+                          "457(b)",
+                        ]
                         : ["Tax-Free", "Taxable", "Tax-Deferred"]
                       ).map((name) => ({ name, id: name }))}
                       selected={{
@@ -378,10 +378,10 @@ const StatementWealthPage = () => {
                         onClose={() => setPreDeleteIncomeOpen(-1)}
                         onConfirm={() => {
                           setPreDeleteIncomeOpen(-1);
-                          setField("nateClient")({
-                            ...data.nateClient,
+                          setField("assetSummary")({
+                            ...data.assetSummary,
                             statementWealth:
-                              data.nateClient.statementWealth.filter(
+                              data.assetSummary.statementWealth.filter(
                                 (_, ind) => ind !== index,
                               ),
                           });
@@ -407,32 +407,32 @@ const StatementWealthPage = () => {
                 </tr>
               ) : null,
             )}
-            {!!data.nateClient.statementWealth.filter((i) => !i.qualified)
+            {!!data.assetSummary.statementWealth.filter((i) => !i.qualified)
               .length && (
-              <tr>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium"></td>
-                <td className="px-2 py-3 font-medium">Total:</td>
-                <td className="px-2 py-3 font-medium text-center">
-                  {printNumber(
-                    data.nateClient.statementWealth
-                      .filter((i) => !i.qualified)
-                      .map((i) => i.annualContribution || 0)
-                      .reduce((a, b) => a + b, 0),
-                  )}
-                </td>
-                <td className="px-2 py-3 font-medium text-center">
-                  {printNumber(
-                    data.nateClient.statementWealth
-                      .filter((i) => !i.qualified)
-                      .map((i) => i.marketValue || 0)
-                      .reduce((a, b) => a + b, 0),
-                  )}
-                </td>
-              </tr>
-            )}
+                <tr>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium"></td>
+                  <td className="px-2 py-3 font-medium">Total:</td>
+                  <td className="px-2 py-3 font-medium text-center">
+                    {printNumber(
+                      data.assetSummary.statementWealth
+                        .filter((i) => !i.qualified)
+                        .map((i) => i.annualContribution || 0)
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </td>
+                  <td className="px-2 py-3 font-medium text-center">
+                    {printNumber(
+                      data.assetSummary.statementWealth
+                        .filter((i) => !i.qualified)
+                        .map((i) => i.marketValue || 0)
+                        .reduce((a, b) => a + b, 0),
+                    )}
+                  </td>
+                </tr>
+              )}
           </tbody>
         </table>
       </MapSection>

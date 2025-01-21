@@ -65,12 +65,12 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
             </div>
           </Link>
           {active == "data" ||
-          active == "calculator" ||
-          active == "map" ||
-          active == "nate" ||
-          active == "basic" ||
-          active == "longevity" ||
-          active == "spending" ? (
+            active == "calculator" ||
+            active == "map" ||
+            active == "asset-summary" ||
+            active == "basic" ||
+            active == "longevity" ||
+            active == "spending" ? (
             <div className="ml-3 flex gap-0">
               <NavItem
                 name="Income"
@@ -102,9 +102,9 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                 link={`/client/${data.id}/calculator`}
               />
               <NavItem
-                name="Nate"
-                active={active == "nate"}
-                link={`/client/${data.id}/nate/income-cash`}
+                name="Asset Summary"
+                active={active == "asset-summary"}
+                link={`/client/${data.id}/asset-summary/income-cash`}
               />
             </div>
           ) : null}
@@ -114,10 +114,10 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
         {window.location.href.includes("/client/") && (
           <Link to={`/client/${data.id}/basic`}>
             <div className="font-semibold text-[16px] ml-3 max-w-96 text-right text-main-orange cursor-pointer">
-              {client?.data ? ` ${client?.title} ` : ""}{" "}
+              {client?.people ? ` ${client?.title} ` : ""}{" "}
               <div className="font-normal text-gray-500 text-sm">
-                {client?.data?.people
-                  .map(
+                {client?.people
+                  ?.map(
                     (item) =>
                       `${item.name} (${calculateAge(new Date(item.birthday))})`,
                   )
@@ -147,9 +147,8 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                   {({ active }) => (
                     <Link to="/profile">
                       <button
-                        className={`${
-                          active ? "bg-main-orange text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         Settings
                       </button>
@@ -163,9 +162,8 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                       target="_blank"
                     >
                       <button
-                        className={`${
-                          active ? "bg-main-orange text-white" : "text-gray-900"
-                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        className={`${active ? "bg-main-orange text-white" : "text-gray-900"
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       >
                         Help Center
                       </button>
@@ -177,9 +175,8 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      className={`${
-                        active ? "bg-main-orange text-white" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      className={`${active ? "bg-main-orange text-white" : "text-gray-900"
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                       onClick={async () => {
                         await Session.signOut();
                         navigate("/login");

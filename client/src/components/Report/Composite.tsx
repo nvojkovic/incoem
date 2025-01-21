@@ -22,10 +22,10 @@ const Composite = ({
   const currentYear = new Date().getFullYear();
   const height = 100; //Math.floor(scenario.maxYearsShown / 2);
 
-  const tables = scenario.data.people.map((person) => makeTable(person));
+  const tables = scenario.people.map((person) => makeTable(person));
   const joint =
-    scenario.data.people.length > 1
-      ? jointTable(scenario.data.people[0], scenario.data.people[1])
+    scenario.people.length > 1
+      ? jointTable(scenario.people[0], scenario.people[1])
       : [];
 
   const divisionFactor =
@@ -38,7 +38,7 @@ const Composite = ({
         {[0, 1, 2, 3, 4].map((tableInd) => {
           return (
             currentYear + scenario.maxYearsShown >
-              currentYear + tableInd * height && (
+            currentYear + tableInd * height && (
               <div className="w-full">
                 <table className="border bg-white !text-sm w-full">
                   <thead
@@ -51,21 +51,20 @@ const Composite = ({
                       </th>
 
                       {client.longevityFlag &&
-                        scenario.data.people.map((person) => (
+                        scenario.people.map((person) => (
                           <th
-                            className={`px-2 py-3 text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                            className={`px-2 py-3 text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
                           >
                             {person.name} <br /> alive
                           </th>
                         ))}
-                      {client.longevityFlag &&
-                        scenario.data.people.length > 1 && (
-                          <th
-                            className={`px-2 py-3 text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
-                          >
-                            At least one <br /> alive
-                          </th>
-                        )}
+                      {client.longevityFlag && scenario.people.length > 1 && (
+                        <th
+                          className={`px-2 py-3 text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
+                        >
+                          At least one <br /> alive
+                        </th>
+                      )}
                       <th className="px-2 py-3">Income</th>
 
                       {client.taxesFlag && scenario.taxType == "Post-Tax" && (
@@ -107,14 +106,14 @@ const Composite = ({
                         currentYear: number,
                       ) =>
                         calculate({
-                          people: scenario.data.people,
+                          people: scenario.people,
                           income,
                           startYear,
                           currentYear,
                           deathYears: scenario.deathYears as any,
                           dead: scenario.whoDies,
                           inflation: scenario.inflation,
-                          incomes: scenario.data.incomes.filter(
+                          incomes: scenario.incomes.filter(
                             (income) => income.enabled,
                           ),
                           ssSurvivorAge: scenario.ssSurvivorAge,
@@ -123,12 +122,16 @@ const Composite = ({
 
                       const needs =
                         calculateSpendingYear(
-                          scenario.data,
+                          {
+                            people: scenario.people,
+                            incomes: scenario.incomes,
+                            version: 1,
+                          },
                           spending,
                           scenario,
                           line,
                         ) / divisionFactor;
-                      const income = scenario.data.incomes
+                      const income = scenario.incomes
                         .filter((income) => income.enabled)
                         .map(
                           (income) =>
@@ -136,7 +139,7 @@ const Composite = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
-                      const stableIncome = scenario.data.incomes
+                      const stableIncome = scenario.incomes
                         .filter((item) => item.stable)
                         .filter((income) => income.enabled)
                         .map(
@@ -162,15 +165,15 @@ const Composite = ({
                         >
                           <td className="px-2 py-[6px] font-bold">{line}</td>
                           <td className="px-2 py-1 border-r border-black">
-                            {scenario.data.people
+                            {scenario.people
                               .map((p) => line - splitDate(p.birthday).year)
                               .join("/")}
                           </td>
 
                           {client.longevityFlag &&
-                            scenario.data.people.map((_, i) => (
+                            scenario.people.map((_, i) => (
                               <td
-                                className={`px-2 py-[6px] text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                                className={`px-2 py-[6px] text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
                               >
                                 {Math.round(
                                   (tables[i].table.find(
@@ -181,9 +184,9 @@ const Composite = ({
                               </td>
                             ))}
                           {client.longevityFlag &&
-                            scenario.data.people.length > 1 && (
+                            scenario.people.length > 1 && (
                               <td
-                                className={`px-2 py-[6px] text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                                className={`px-2 py-[6px] text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
                               >
                                 {Math.round(
                                   (joint.find((entry) => entry.year === line)

@@ -21,15 +21,15 @@ const LifeInsuranceSection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
+  const options = [...data.people] as any[];
   const setValue = (
     index: number,
     field: keyof LifeInsurance,
     value: LifeInsurance[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      lifeInsurance: data.nateClient.lifeInsurance.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      lifeInsurance: data.assetSummary.lifeInsurance.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -45,10 +45,10 @@ const LifeInsuranceSection = () => {
               className="!py-1"
               onClick={(e) => {
                 e.stopPropagation();
-                setField("nateClient")({
-                  ...data.nateClient,
+                setField("assetSummary")({
+                  ...data.assetSummary,
                   lifeInsurance: [
-                    ...data.nateClient.lifeInsurance,
+                    ...data.assetSummary.lifeInsurance,
                     { id: crypto.randomUUID() },
                   ],
                 });
@@ -80,7 +80,7 @@ const LifeInsuranceSection = () => {
           </tr>
         </thead>
         <tbody>
-          {data.nateClient.lifeInsurance.map((line, index) => (
+          {data.assetSummary.lifeInsurance.map((line, index) => (
             <tr className="">
               <td className="px-2 py-2 ">
                 <Input
@@ -105,7 +105,7 @@ const LifeInsuranceSection = () => {
               <td className="px-2 py-2">
                 <Select
                   options={options}
-                  selected={data.data.people[line.insured]}
+                  selected={data.people[line.insured]}
                   setSelected={(i) => setValue(index, "insured", i.id)}
                   label=""
                 />
@@ -161,9 +161,9 @@ const LifeInsuranceSection = () => {
                     onClose={() => setPreDeleteIncomeOpen(-1)}
                     onConfirm={() => {
                       setPreDeleteIncomeOpen(-1);
-                      setField("nateClient")({
-                        ...data.nateClient,
-                        lifeInsurance: data.nateClient.lifeInsurance.filter(
+                      setField("assetSummary")({
+                        ...data.assetSummary,
+                        lifeInsurance: data.assetSummary.lifeInsurance.filter(
                           (_, ind) => ind !== index,
                         ),
                       });
@@ -195,21 +195,21 @@ const LifeInsuranceSection = () => {
             <td className="px-2 py-3 font-medium">Total:</td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.lifeInsurance
+                data.assetSummary.lifeInsurance
                   .map((i) => i.annualPremium || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.lifeInsurance
+                data.assetSummary.lifeInsurance
                   .map((i) => i.cashValue || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.lifeInsurance
+                data.assetSummary.lifeInsurance
                   .map((i) => i.deathBenefit || 0)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -226,15 +226,15 @@ const LongTermCareSection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
+  const options = [...data.people] as any[];
   const setValue = (
     index: number,
     field: keyof LongTermCare,
     value: LongTermCare[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      longTermCare: data.nateClient.longTermCare.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      longTermCare: data.assetSummary.longTermCare.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -250,10 +250,10 @@ const LongTermCareSection = () => {
               className="!py-1"
               onClick={(e) => {
                 e.stopPropagation();
-                setField("nateClient")({
-                  ...data.nateClient,
+                setField("assetSummary")({
+                  ...data.assetSummary,
                   longTermCare: [
-                    ...data.nateClient.longTermCare,
+                    ...data.assetSummary.longTermCare,
                     { id: crypto.randomUUID() },
                   ],
                 });
@@ -286,7 +286,7 @@ const LongTermCareSection = () => {
           </tr>
         </thead>
         <tbody>
-          {data.nateClient.longTermCare.map((line, index) => (
+          {data.assetSummary.longTermCare.map((line, index) => (
             <tr className="">
               <td className="px-2 py-2 ">
                 <Input
@@ -309,7 +309,7 @@ const LongTermCareSection = () => {
               <td className="px-2 py-2">
                 <Select
                   options={options}
-                  selected={data.data.people[line.insured]}
+                  selected={data.people[line.insured]}
                   setSelected={(i) => setValue(index, "insured", i.id)}
                   label=""
                 />
@@ -378,9 +378,9 @@ const LongTermCareSection = () => {
                     onClose={() => setPreDeleteIncomeOpen(-1)}
                     onConfirm={() => {
                       setPreDeleteIncomeOpen(-1);
-                      setField("nateClient")({
-                        ...data.nateClient,
-                        longTermCare: data.nateClient.longTermCare.filter(
+                      setField("assetSummary")({
+                        ...data.assetSummary,
+                        longTermCare: data.assetSummary.longTermCare.filter(
                           (_, ind) => ind !== index,
                         ),
                       });
@@ -413,21 +413,21 @@ const LongTermCareSection = () => {
             <td className="px-2 py-3 font-medium">Total:</td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.longTermCare
+                data.assetSummary.longTermCare
                   .map((i) => i.annualPremium || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.longTermCare
+                data.assetSummary.longTermCare
                   .map((i) => i.monthlyBenefit || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.longTermCare
+                data.assetSummary.longTermCare
                   .map((i) => i.deathBenefit || 0)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -440,7 +440,7 @@ const LongTermCareSection = () => {
         Total:{" "}
         <div className="font-semibold">
           {printNumber(
-            data.nateClient.income
+            data.assetSummary.income
               .map((i) => i.annualAmount)
               .filter((i) => i)
               .reduce((a, b) => a + b, 0),
@@ -456,16 +456,16 @@ const AccumulationAnnuitySection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
+  const options = [...data.people] as any[];
   const setValue = (
     index: number,
     field: keyof AccumulationAnnuity,
     value: AccumulationAnnuity[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      accumulationAnnuity: data.nateClient.accumulationAnnuity.map((item, i) =>
-        index === i ? { ...item, [field]: value } : item,
+    setField("assetSummary")({
+      ...data.assetSummary,
+      accumulationAnnuity: data.assetSummary.accumulationAnnuity.map(
+        (item, i) => (index === i ? { ...item, [field]: value } : item),
       ),
     });
   };
@@ -480,10 +480,10 @@ const AccumulationAnnuitySection = () => {
               className="!py-1"
               onClick={(e) => {
                 e.stopPropagation();
-                setField("nateClient")({
-                  ...data.nateClient,
+                setField("assetSummary")({
+                  ...data.assetSummary,
                   accumulationAnnuity: [
-                    ...data.nateClient.accumulationAnnuity,
+                    ...data.assetSummary.accumulationAnnuity,
                     { id: crypto.randomUUID() },
                   ],
                 });
@@ -515,7 +515,7 @@ const AccumulationAnnuitySection = () => {
           </tr>
         </thead>
         <tbody>
-          {data.nateClient.accumulationAnnuity.map((line, index) => (
+          {data.assetSummary.accumulationAnnuity.map((line, index) => (
             <tr className="">
               <td className="px-2 py-2 ">
                 <Input
@@ -538,7 +538,7 @@ const AccumulationAnnuitySection = () => {
               <td className="px-2 py-2">
                 <Select
                   options={options}
-                  selected={data.data.people[line.owner]}
+                  selected={data.people[line.owner]}
                   setSelected={(i) => setValue(index, "owner", i.id)}
                   label=""
                 />
@@ -599,10 +599,10 @@ const AccumulationAnnuitySection = () => {
                     onClose={() => setPreDeleteIncomeOpen(-1)}
                     onConfirm={() => {
                       setPreDeleteIncomeOpen(-1);
-                      setField("nateClient")({
-                        ...data.nateClient,
+                      setField("assetSummary")({
+                        ...data.assetSummary,
                         accumulationAnnuity:
-                          data.nateClient.accumulationAnnuity.filter(
+                          data.assetSummary.accumulationAnnuity.filter(
                             (_, ind) => ind !== index,
                           ),
                       });
@@ -637,7 +637,7 @@ const AccumulationAnnuitySection = () => {
 
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.accumulationAnnuity
+                data.assetSummary.accumulationAnnuity
                   .map((i) => i.accountValue || 0)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -650,7 +650,7 @@ const AccumulationAnnuitySection = () => {
         Total:{" "}
         <div className="font-semibold">
           {printNumber(
-            data.nateClient.income
+            data.assetSummary.income
               .map((i) => i.annualAmount)
               .filter((i) => i)
               .reduce((a, b) => a + b, 0),
@@ -666,15 +666,15 @@ const PensionAnnuitySection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
+  const options = [...data.people] as any[];
   const setValue = (
     index: number,
     field: keyof PersonalPensionAnnuity,
     value: PersonalPensionAnnuity[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      personalPensionAnnuity: data.nateClient.personalPensionAnnuity.map(
+    setField("assetSummary")({
+      ...data.assetSummary,
+      personalPensionAnnuity: data.assetSummary.personalPensionAnnuity.map(
         (item, i) => (index === i ? { ...item, [field]: value } : item),
       ),
     });
@@ -690,10 +690,10 @@ const PensionAnnuitySection = () => {
               className="!py-1"
               onClick={(e) => {
                 e.stopPropagation();
-                setField("nateClient")({
-                  ...data.nateClient,
+                setField("assetSummary")({
+                  ...data.assetSummary,
                   personalPensionAnnuity: [
-                    ...data.nateClient.personalPensionAnnuity,
+                    ...data.assetSummary.personalPensionAnnuity,
                     { id: crypto.randomUUID() },
                   ],
                 });
@@ -725,7 +725,7 @@ const PensionAnnuitySection = () => {
           </tr>
         </thead>
         <tbody>
-          {data.nateClient.personalPensionAnnuity.map((line, index) => (
+          {data.assetSummary.personalPensionAnnuity.map((line, index) => (
             <tr className="">
               <td className="px-2 py-2 ">
                 <Input
@@ -748,7 +748,7 @@ const PensionAnnuitySection = () => {
               <td className="px-2 py-2">
                 <Select
                   options={options}
-                  selected={data.data.people[line.owner]}
+                  selected={data.people[line.owner]}
                   setSelected={(i) => setValue(index, "owner", i.id)}
                   label=""
                 />
@@ -804,10 +804,10 @@ const PensionAnnuitySection = () => {
                     onClose={() => setPreDeleteIncomeOpen(-1)}
                     onConfirm={() => {
                       setPreDeleteIncomeOpen(-1);
-                      setField("nateClient")({
-                        ...data.nateClient,
+                      setField("assetSummary")({
+                        ...data.assetSummary,
                         accumulationAnnuity:
-                          data.nateClient.accumulationAnnuity.filter(
+                          data.assetSummary.accumulationAnnuity.filter(
                             (_, ind) => ind !== index,
                           ),
                       });
@@ -841,14 +841,14 @@ const PensionAnnuitySection = () => {
 
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.personalPensionAnnuity
+                data.assetSummary.personalPensionAnnuity
                   .map((i) => i.annualIncome || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.personalPensionAnnuity
+                data.assetSummary.personalPensionAnnuity
                   .map((i) => i.accountValue || 0)
                   .reduce((a, b) => a + b, 0),
               )}
@@ -861,7 +861,7 @@ const PensionAnnuitySection = () => {
         Total:{" "}
         <div className="font-semibold">
           {printNumber(
-            data.nateClient.income
+            data.assetSummary.income
               .map((i) => i.annualAmount)
               .filter((i) => i)
               .reduce((a, b) => a + b, 0),
@@ -877,15 +877,15 @@ const PensionSection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
+  const options = [...data.people] as any[];
   const setValue = (
     index: number,
     field: keyof Pension,
     value: Pension[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      pension: data.nateClient.pension.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      pension: data.assetSummary.pension.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -901,10 +901,10 @@ const PensionSection = () => {
               className="!py-1"
               onClick={(e) => {
                 e.stopPropagation();
-                setField("nateClient")({
-                  ...data.nateClient,
+                setField("assetSummary")({
+                  ...data.assetSummary,
                   pension: [
-                    ...data.nateClient.pension,
+                    ...data.assetSummary.pension,
                     { id: crypto.randomUUID() },
                   ],
                 });
@@ -934,7 +934,7 @@ const PensionSection = () => {
           </tr>
         </thead>
         <tbody>
-          {data.nateClient.pension.map((line, index) => (
+          {data.assetSummary.pension.map((line, index) => (
             <tr className="">
               <td className="px-2 py-2 ">
                 <Input
@@ -959,7 +959,7 @@ const PensionSection = () => {
               <td className="px-2 py-2">
                 <Select
                   options={options}
-                  selected={data.data.people[line.owner]}
+                  selected={data.people[line.owner]}
                   setSelected={(i) => setValue(index, "owner", i.id)}
                   label=""
                 />
@@ -979,7 +979,7 @@ const PensionSection = () => {
                 <Input
                   disabled
                   value={line.monthlyIncome && line.monthlyIncome * 12}
-                  setValue={() => {}}
+                  setValue={() => { }}
                   size="full"
                   subtype="money"
                   label={``}
@@ -993,9 +993,9 @@ const PensionSection = () => {
                     onClose={() => setPreDeleteIncomeOpen(-1)}
                     onConfirm={() => {
                       setPreDeleteIncomeOpen(-1);
-                      setField("nateClient")({
-                        ...data.nateClient,
-                        pension: data.nateClient.pension.filter(
+                      setField("assetSummary")({
+                        ...data.assetSummary,
+                        pension: data.assetSummary.pension.filter(
                           (_, ind) => ind !== index,
                         ),
                       });
@@ -1026,14 +1026,14 @@ const PensionSection = () => {
             <td className="px-2 py-3 font-medium">Total:</td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.pension
+                data.assetSummary.pension
                   .map((i) => i.monthlyIncome || 0)
                   .reduce((a, b) => a + b, 0),
               )}
             </td>
             <td className="px-2 py-3 font-medium text-center">
               {printNumber(
-                data.nateClient.pension
+                data.assetSummary.pension
                   .map((i) => i.monthlyIncome || 0)
                   .reduce((a, b) => a + b, 0) * 12,
               )}
@@ -1046,7 +1046,7 @@ const PensionSection = () => {
         Total:{" "}
         <div className="font-semibold">
           {printNumber(
-            data.nateClient.income
+            data.assetSummary.income
               .map((i) => i.annualAmount)
               .filter((i) => i)
               .reduce((a, b) => a + b, 0),

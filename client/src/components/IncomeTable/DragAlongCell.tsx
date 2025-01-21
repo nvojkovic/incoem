@@ -36,7 +36,6 @@ const DragAlongCell = ({
       className={`${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} ${column.type === "year" ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : ""}`}
       ref={setNodeRef}
       onClick={() => {
-        console.log(data.year, cell);
         if (selectedYear === data.year) setSelectedYear(0);
         else setSelectedYear(data.year);
       }}

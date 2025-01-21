@@ -48,14 +48,14 @@ const SpendingPage = () => {
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
-      people: data.data.people,
+      people: data.people,
       income,
       startYear,
       currentYear,
       deathYears: settings.deathYears as any,
       dead: settings.whoDies,
       inflation: settings.inflation,
-      incomes: data.data.incomes.filter((income) => income.enabled),
+      incomes: data.incomes.filter((income) => income.enabled),
       ssSurvivorAge: settings.ssSurvivorAge,
       inflationType: settings.inflationType,
     });
@@ -100,7 +100,7 @@ const SpendingPage = () => {
     name: "Taxes",
     year,
     amount:
-      data.data.incomes
+      data.incomes
         .filter((income) => income.enabled)
         .map((income) => calculateOne(income, year).amount)
         .filter((t) => typeof t === "number")
@@ -110,7 +110,12 @@ const SpendingPage = () => {
   const calcSett = (settings: ScenarioSettings) =>
     Math.max(
       ...currentYearRange.map((year) =>
-        calculateSpendingYear(data.data, spending, settings, year),
+        calculateSpendingYear(
+          { incomes: data.incomes, people: data.people, version: 1 },
+          spending,
+          settings,
+          year,
+        ),
       ),
     );
 
@@ -130,7 +135,7 @@ const SpendingPage = () => {
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
 
   const baseSpending = getSpendingItemOverYears(
-    data.data,
+    { incomes: data.incomes, people: data.people, version: 1 },
     spending,
     settings,
     currentYear,
@@ -139,7 +144,7 @@ const SpendingPage = () => {
   );
   const preSpending = spending.preSpending.map((item) =>
     getSpendingItemOverYears(
-      data.data,
+      { incomes: data.incomes, people: data.people, version: 1 },
       spending,
       settings,
       currentYear,
@@ -151,7 +156,7 @@ const SpendingPage = () => {
 
   const postSpending = spending.postSpending.map((item) =>
     getSpendingItemOverYears(
-      data.data,
+      { incomes: data.incomes, people: data.people, version: 1 },
       spending,
       settings,
       currentYear,
@@ -196,7 +201,7 @@ const SpendingPage = () => {
               increase={spending.yearlyIncrease}
               setYearlyIncrease={setField("yearlyIncrease")}
             />
-            {data.data.people.map((v, i) => (
+            {data.people.map((v, i) => (
               <div>
                 <Input
                   vertical
@@ -264,8 +269,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-16">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-16">Increase (%)</div>
+                    )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -381,7 +386,7 @@ const SpendingPage = () => {
                       ...spending.postSpending,
                       {
                         increase: { type: "general" },
-                        changeAtDeath: data.data.people.map((_) => 0),
+                        changeAtDeath: data.people.map((_) => 0),
                       },
                     ]);
                   }}
@@ -416,21 +421,20 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${
-                    spending.postSpending.find(
-                      (i) => i.increase.type === "custom",
-                    ) && "w-64"
-                  }`}
+                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                    }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-8">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-8">Increase (%)</div>
+                    )}{" "}
                 </th>
 
-                {data.data.people.map((i) => (
+                {data.people.map((i) => (
                   <th className="px-6 py-3 font-medium">
                     Decrease at <br />
                     {i.name} Death
@@ -498,7 +502,7 @@ const SpendingPage = () => {
                       }
                     />
                   </td>
-                  {data.data.people.map((_, index2) => (
+                  {data.people.map((_, index2) => (
                     <td className="px-2 py-2">
                       <Input
                         vertical
@@ -674,7 +678,7 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="flex gap-6 mb-10">
-            {data.data.people.length > 1 ? (
+            {data.people.length > 1 ? (
               <div className="border rounded-lg p-3 bg-white">
                 <div className="flex flex-col">
                   <div className="text-sm text-[#344054] mb-1">Mortality</div>
@@ -691,7 +695,7 @@ const SpendingPage = () => {
                       title="Both Alive"
                     />
 
-                    {data.data.people.map((person, i) => (
+                    {data.people.map((person, i) => (
                       <WhoDies
                         active={settings.whoDies == i}
                         key={person.id}
@@ -765,7 +769,7 @@ const SpendingPage = () => {
           <SpendingTable
             settings={settings}
             spending={spending}
-            data={data.data}
+            data={{ incomes: data.incomes, people: data.people, version: 1 }}
           />
         </MapSection>
       </div>
@@ -792,11 +796,10 @@ export const MultiToggle = ({
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${
-              value === item
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${value === item
                 ? "bg-main-orange text-white"
                 : "bg-gray-200 text-[#555860]"
-            } ${vertical ? "" : "w-full"}`}
+              } ${vertical ? "" : "w-full"}`}
             onClick={() => !disabled && setValue(item)}
           >
             {item}

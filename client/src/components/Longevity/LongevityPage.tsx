@@ -79,7 +79,7 @@ const LongevityPage = () => {
   const [updating, setUpdating] = useState(false);
 
   const { data: client, setField } = useInfo();
-  const people = client.data.people;
+  const people = client.people;
   if (!people) return null;
 
   const tables = people.map(makeTable);
@@ -112,7 +112,7 @@ const LongevityPage = () => {
 
   const updateDeathFields = () => {
     setUpdating(true);
-    const years = client.data.people.map(
+    const years = client.people.map(
       (person) =>
         findAgeForProbability(makeTable(person).table, longevityPercent).age,
     );
@@ -325,10 +325,9 @@ const LongevityPage = () => {
                         className={`border px-4 py-2 ${highlightedCol === i + 2 ? "bg-slate-200" : ""}`}
                       >
                         {tables[i].table.length > index &&
-                          `${
-                            Math.round(
-                              tables[i].table[index].probability * 1000,
-                            ) / 10
+                          `${Math.round(
+                            tables[i].table[index].probability * 1000,
+                          ) / 10
                           }%`}
                       </td>
                     </>

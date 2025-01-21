@@ -9,8 +9,8 @@ import { printNumber, splitDate } from "src/utils";
 const SocialInsurancePage = () => {
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
-  if (data.data.people.length == 2) {
+  const options = [...data.people] as any[];
+  if (data.people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
 
@@ -19,9 +19,9 @@ const SocialInsurancePage = () => {
     field: keyof SocialInsurance,
     value: SocialInsurance[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      socialInsurance: data.nateClient.socialInsurance.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      socialInsurance: data.assetSummary.socialInsurance.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -50,15 +50,15 @@ const SocialInsurancePage = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.socialInsurance.map(
+            {data.assetSummary.socialInsurance.map(
               (line, index) =>
-                data.data.people[line.owner] && (
+                data.people[line.owner] && (
                   <tr className="">
                     <td className="px-2 py-2 w-[500px]">
                       <Input
                         disabled
-                        value={data.data.people[line.owner].name}
-                        setValue={() => {}}
+                        value={data.people[line.owner].name}
+                        setValue={() => { }}
                         size="full"
                         subtype="text"
                         label={``}
@@ -69,13 +69,13 @@ const SocialInsurancePage = () => {
                         disabled
                         value={(() => {
                           const { year: birthYear } = splitDate(
-                            data.data.people[line.owner].birthday,
+                            data.people[line.owner].birthday,
                           );
                           const [retirementYear, retirementMonth] =
                             NRA(birthYear);
                           return `${retirementYear} years ${retirementMonth} months`;
                         })()}
-                        setValue={() => {}}
+                        setValue={() => { }}
                         size="full"
                         subtype="text"
                         label={``}
@@ -86,10 +86,10 @@ const SocialInsurancePage = () => {
                         disabled
                         value={(() => {
                           const { year: birthYear } = splitDate(
-                            data.data.people[line.owner].birthday,
+                            data.people[line.owner].birthday,
                           );
                           const birthday = new Date(
-                            data.data.people[line.owner].birthday,
+                            data.people[line.owner].birthday,
                           );
                           const [retirementYear, retirementMonth] =
                             NRA(birthYear);
@@ -101,7 +101,7 @@ const SocialInsurancePage = () => {
                           );
                           return birthday.toLocaleDateString();
                         })()}
-                        setValue={() => {}}
+                        setValue={() => { }}
                         size="full"
                         subtype="text"
                         label={``}
@@ -124,7 +124,7 @@ const SocialInsurancePage = () => {
                         vertical
                         size="full"
                         value={line.monthlyAmount && line.monthlyAmount * 12}
-                        setValue={() => {}}
+                        setValue={() => { }}
                         subtype="money"
                       />
                     </td>
@@ -137,7 +137,7 @@ const SocialInsurancePage = () => {
               <td className="px-2 py-3 font-medium">Total:</td>
               <td className="px-2 py-3 font-medium text-center">
                 {printNumber(
-                  data.nateClient.socialInsurance
+                  data.assetSummary.socialInsurance
                     .map((i) => i.monthlyAmount || 0)
                     .reduce((a, b) => a + b, 0),
                 )}{" "}
@@ -145,7 +145,7 @@ const SocialInsurancePage = () => {
               </td>
               <td className="px-2 py-3 font-medium text-center">
                 {printNumber(
-                  data.nateClient.socialInsurance
+                  data.assetSummary.socialInsurance
                     .map((i) => i.monthlyAmount || 0)
                     .reduce((a, b) => a + b, 0) * 12,
                 )}{" "}

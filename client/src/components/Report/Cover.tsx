@@ -84,8 +84,8 @@ const ReportCover = ({ settings, client }: CoverProps) => {
                 subtitle={`${client.spending.postTaxRate}%`}
               />
             ) : null}
-            {settings.data.people.length > 1 &&
-              settings.data.people.map(
+            {settings.people.length > 1 &&
+              settings.people.map(
                 (person, i) =>
                   settings.whoDies == i &&
                   settings.deathYears[i] && (

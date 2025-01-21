@@ -15,9 +15,14 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
   const startYear = new Date().getFullYear();
   const spending = client.spending;
   const currentYear = new Date().getFullYear();
+  const incomeMapInfo = {
+    people: settings.people,
+    incomes: settings.incomes,
+    version: 1 as const,
+  };
 
   const baseSpending = getSpendingItemOverYears(
-    client.data,
+    incomeMapInfo,
     spending,
     settings,
     currentYear,
@@ -26,7 +31,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
   );
   const preSpending = spending.preSpending.map((item) =>
     getSpendingItemOverYears(
-      client.data,
+      incomeMapInfo,
       spending,
       settings,
       currentYear,
@@ -38,7 +43,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
 
   const postSpending = spending.postSpending.map((item) =>
     getSpendingItemOverYears(
-      client.data,
+      incomeMapInfo,
       spending,
       settings,
       currentYear,
@@ -55,14 +60,14 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
-      people: settings.data.people,
+      people: settings.people,
       income,
       startYear,
       currentYear,
       deathYears: settings.deathYears as any,
       dead: settings.whoDies,
       inflation: settings.inflation,
-      incomes: settings.data.incomes.filter((income) => income.enabled),
+      incomes: settings.incomes.filter((income) => income.enabled),
       ssSurvivorAge: settings.ssSurvivorAge,
       inflationType: settings.inflationType,
     });
@@ -76,7 +81,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
     name: "Taxes",
     year,
     amount:
-      client.data.incomes
+      client.incomes
         .filter((income) => income.enabled)
         .map((income) => calculateOne(income, year).amount)
         .filter((t) => typeof t === "number")
@@ -91,7 +96,7 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
         spending={false}
         initialHeight={print ? 620 : 550}
         longevityFlag={client.longevityFlag}
-        people={settings.data.people}
+        people={settings.people}
         stability={client.stabilityRatioFlag}
         needsFlag={client.needsFlag}
         stackedData={[baseSpending, ...preSpending, ...postSpending, taxes].map(

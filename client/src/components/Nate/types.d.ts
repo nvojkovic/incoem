@@ -28,12 +28,12 @@ export interface StatementWealth {
   accountNumber: string;
   owner: id;
   type:
-    | "401(k)"
-    | "Roth 401(k)"
-    | "IRA"
-    | "Rollover IRA"
-    | "Roth IRA"
-    | "457(b)";
+  | "401(k)"
+  | "Roth 401(k)"
+  | "IRA"
+  | "Rollover IRA"
+  | "Roth IRA"
+  | "457(b)";
   managed: boolean;
   annualContribution: number;
   marketValue: number;
@@ -47,7 +47,6 @@ export interface HardAsset {
   owner: id;
   costBasis: number;
   netIncome: number;
-  debt: number;
   marketValue: number;
 }
 
@@ -123,7 +122,7 @@ export interface Pension {
   survivorBenefit: number;
 }
 
-export interface NateClient {
+export interface AssetSummary {
   income: Income[];
   cashAssets: CashAsset[];
   socialInsurance: SocialInsurance[];

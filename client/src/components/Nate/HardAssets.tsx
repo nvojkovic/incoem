@@ -13,8 +13,8 @@ import { printNumber } from "src/utils";
 const HardAssets = () => {
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
-  if (data.data.people.length == 2) {
+  const options = [...data.people] as any[];
+  if (data.people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
 
@@ -23,9 +23,9 @@ const HardAssets = () => {
     field: keyof HardAsset,
     value: HardAsset[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      hardAssets: data.nateClient.hardAssets.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      hardAssets: data.assetSummary.hardAssets.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -44,10 +44,10 @@ const HardAssets = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     hardAssets: [
-                      ...data.nateClient.hardAssets,
+                      ...data.assetSummary.hardAssets,
                       { id: crypto.randomUUID() },
                     ],
                   });
@@ -79,7 +79,7 @@ const HardAssets = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.hardAssets.map((line, index) => (
+            {data.assetSummary.hardAssets.map((line, index) => (
               <tr className="">
                 <td className="px-2 py-2 ">
                   <Input
@@ -113,7 +113,7 @@ const HardAssets = () => {
                     selected={
                       line.owner == -1
                         ? { name: "Joint", id: -1 }
-                        : data.data.people[line.owner]
+                        : data.people[line.owner]
                     }
                     setSelected={(i) => setAsset(index, "owner", i.id)}
                     label=""
@@ -140,16 +140,7 @@ const HardAssets = () => {
                     subtype="money"
                   />
                 </td>
-                <td className="px-2 py-2">
-                  <Input
-                    label=""
-                    vertical
-                    size="full"
-                    value={line.debt}
-                    setValue={(v) => setAsset(index, "debt", v)}
-                    subtype="money"
-                  />
-                </td>
+                <td className="px-2 py-2">TODO</td>
                 <td className="px-2 py-2">
                   <Input
                     label=""
@@ -167,9 +158,9 @@ const HardAssets = () => {
                       onClose={() => setPreDeleteOpen(-1)}
                       onConfirm={() => {
                         setPreDeleteOpen(-1);
-                        setField("nateClient")({
-                          ...data.nateClient,
-                          hardAssets: data.nateClient.hardAssets.filter(
+                        setField("assetSummary")({
+                          ...data.assetSummary,
+                          hardAssets: data.assetSummary.hardAssets.filter(
                             (_, ind) => ind !== index,
                           ),
                         });
@@ -195,7 +186,7 @@ const HardAssets = () => {
               </tr>
             ))}
 
-            {!!data.nateClient.hardAssets.length && (
+            {!!data.assetSummary.hardAssets.length && (
               <tr>
                 <td className="px-2 py-3 font-medium"></td>
                 <td className="px-2 py-3 font-medium"></td>
@@ -203,21 +194,15 @@ const HardAssets = () => {
                 <td className="px-2 py-3 font-medium">Total:</td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
-                    data.nateClient.hardAssets
+                    data.assetSummary.hardAssets
                       .map((i) => i.netIncome || 0)
                       .reduce((a, b) => a + b, 0),
                   )}
                 </td>
+                <td className="px-2 py-3 font-medium text-center">TODO</td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
-                    data.nateClient.hardAssets
-                      .map((i) => i.debt || 0)
-                      .reduce((a, b) => a + b, 0),
-                  )}
-                </td>
-                <td className="px-2 py-3 font-medium text-center">
-                  {printNumber(
-                    data.nateClient.hardAssets
+                    data.assetSummary.hardAssets
                       .map((i) => i.marketValue || 0)
                       .reduce((a, b) => a + b, 0),
                   )}

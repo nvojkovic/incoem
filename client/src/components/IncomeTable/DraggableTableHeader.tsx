@@ -38,12 +38,11 @@ const DraggableTableHeader = ({
   const selectedColumn = data.selectedColumn;
   return (
     <td
-      className={`font-medium  ${
-        selectedColumn.type == data.column.type &&
-        selectedColumn.id == data.column.id
+      className={`font-medium  ${selectedColumn.type == data.column.type &&
+          selectedColumn.id == data.column.id
           ? "bg-slate-200"
           : ""
-      }
+        }
 
       `}
       colSpan={header.colSpan}
@@ -62,15 +61,16 @@ const DraggableTableHeader = ({
             setTimer(
               setTimeout(() => {
                 selectedColumn.type === data.column.type &&
-                selectedColumn.id == data.column.id
+                  selectedColumn.id == data.column.id
                   ? setSelectedColumn({ type: "none", id: 0 })
                   : setSelectedColumn(data.column);
               }, 200),
             );
           }
           if (e.detail === 2) {
+            console.log("open@", data);
             clearTimeout(timer);
-            setOpenModal(data.index);
+            setOpenModal(data.incomeId);
           }
           console.log("asdas ");
         }}

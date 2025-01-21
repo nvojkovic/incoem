@@ -55,7 +55,7 @@ export const PersonInfo = ({ person }: Props) => {
           labelLength={100}
           width="!w-40"
           value={calculateAge(new Date(person.birthday))}
-          setValue={(_) => {}}
+          setValue={(_) => { }}
           disabled
         />
       </div>
@@ -84,7 +84,7 @@ export const PeopleInfo = () => {
           </div>
         </div>
       </div>
-      {data.data.people.map((person, i) => (
+      {data.people.map((person, i) => (
         <PersonInfo
           key={i}
           subtitle="Details about how this works"

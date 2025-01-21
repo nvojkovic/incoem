@@ -36,7 +36,7 @@ export const IncomeComponent = ({
   i: number;
 }) => {
   const { data, setIncome } = useInfo();
-  const people = data.data.people;
+  const people = data.people;
   if (income.type === "employment-income")
     return (
       <EmploymentIncomeComponent
@@ -96,8 +96,8 @@ export const IncomeComponent = ({
 const IncomeSection = () => {
   const [removeOpen, setRemoveOpen] = useState(-1);
   const { data, removeIncome, setIncome, updateIncomes } = useInfo();
-  const incomes = data.data.incomes;
-  const people = data.data.people;
+  const incomes = data.incomes;
+  const people = data.people;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

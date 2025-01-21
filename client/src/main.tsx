@@ -41,6 +41,7 @@ import SocialInsurancePage from "./components/Nate/SocialInsurance";
 import StatementWealthPage from "./components/Nate/StatementWealth";
 import Analysis from "./components/Nate/Analysis";
 import ContractualWealthPage from "./components/Nate/ContractualWealth";
+import ExternalDocs from "./pages/external-docs";
 
 SuperTokens.init({
   appInfo: {
@@ -106,7 +107,7 @@ export const router = createBrowserRouter([
             element: <ClientOverview />,
           },
           {
-            path: "nate",
+            path: "asset-summary",
             children: [
               {
                 path: "income-cash",
@@ -194,7 +195,10 @@ export const router = createBrowserRouter([
     path: "/auth/verify-email",
     element: <VerifyEmailConfirm />,
   },
-
+  {
+    path: "/external-docs",
+    element: <ExternalDocs />,
+  },
   {
     path: "*",
     element: <NotFound />,

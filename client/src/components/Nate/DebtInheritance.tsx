@@ -13,19 +13,14 @@ import { printNumber } from "src/utils";
 const DebtInheritance = () => {
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
-  if (data.data.people.length == 2) {
-    options.push({ name: "Joint", id: -1 });
-  }
-
   const setDebt = (
     index: number,
     field: keyof Debt,
     value: Debt[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      debts: data.nateClient.debts.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      debts: data.assetSummary.debts.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -36,9 +31,9 @@ const DebtInheritance = () => {
     field: keyof Inheritance,
     value: Inheritance[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      inheritance: data.nateClient.inheritance.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      inheritance: data.assetSummary.inheritance.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -58,10 +53,10 @@ const DebtInheritance = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     debts: [
-                      ...data.nateClient.debts,
+                      ...data.assetSummary.debts,
                       { id: crypto.randomUUID() },
                     ],
                   });
@@ -93,7 +88,7 @@ const DebtInheritance = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.debts.map((line, index) => (
+            {data.assetSummary.debts.map((line, index) => (
               <tr className="">
                 <td className="px-2 py-2 ">
                   <Input
@@ -107,12 +102,12 @@ const DebtInheritance = () => {
                 </td>
                 <td className="px-2 py-2">
                   <Select
-                    options={data.nateClient.hardAssets.map((item) => ({
+                    options={data.assetSummary.hardAssets.map((item) => ({
                       name: item.name,
                       id: item.id,
                     }))}
                     selected={{
-                      name: data.nateClient.hardAssets.find(
+                      name: data.assetSummary.hardAssets.find(
                         (i) => i.id === line.asset,
                       )?.name,
                       id: line.asset,
@@ -185,9 +180,9 @@ const DebtInheritance = () => {
                       onClose={() => setPreDeleteDebtOpen(-1)}
                       onConfirm={() => {
                         setPreDeleteDebtOpen(-1);
-                        setField("nateClient")({
-                          ...data.nateClient,
-                          debts: data.nateClient.debts.filter(
+                        setField("assetSummary")({
+                          ...data.assetSummary,
+                          debts: data.assetSummary.debts.filter(
                             (_, ind) => ind !== index,
                           ),
                         });
@@ -212,7 +207,7 @@ const DebtInheritance = () => {
                 </td>
               </tr>
             ))}
-            {!!data.nateClient.debts.length && (
+            {!!data.assetSummary.debts.length && (
               <tr>
                 <td className="px-2 py-3 font-medium"></td>
                 <td className="px-2 py-3 font-medium"></td>
@@ -221,14 +216,14 @@ const DebtInheritance = () => {
                 <td className="px-2 py-3 font-medium">Total:</td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
-                    data.nateClient.debts
+                    data.assetSummary.debts
                       .map((i) => i.monthlyPayment || 0)
                       .reduce((a, b) => a + b, 0),
                   )}
                 </td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
-                    data.nateClient.debts
+                    data.assetSummary.debts
                       .map((i) => i.balance || 0)
                       .reduce((a, b) => a + b, 0),
                   )}
@@ -250,10 +245,10 @@ const DebtInheritance = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     inheritance: [
-                      ...data.nateClient?.inheritance,
+                      ...data.assetSummary?.inheritance,
                       { id: crypto.randomUUID() },
                     ],
                   });
@@ -281,7 +276,7 @@ const DebtInheritance = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.inheritance?.map((line, index) => (
+            {data.assetSummary.inheritance?.map((line, index) => (
               <tr className="">
                 <td className="px-2 py-2 ">
                   <Input
@@ -330,9 +325,9 @@ const DebtInheritance = () => {
                       onClose={() => setPreDeleteInheritOpen(-1)}
                       onConfirm={() => {
                         setPreDeleteInheritOpen(-1);
-                        setField("nateClient")({
-                          ...data.nateClient,
-                          inheritance: data.nateClient.inheritance.filter(
+                        setField("assetSummary")({
+                          ...data.assetSummary,
+                          inheritance: data.assetSummary.inheritance.filter(
                             (_, ind) => ind !== index,
                           ),
                         });
@@ -357,13 +352,13 @@ const DebtInheritance = () => {
                 </td>
               </tr>
             ))}
-            {!!data.nateClient.inheritance.length && (
+            {!!data.assetSummary.inheritance.length && (
               <tr>
                 <td className="px-2 py-3 font-medium"></td>
                 <td className="px-2 py-3 font-medium">Total:</td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
-                    data.nateClient.inheritance
+                    data.assetSummary.inheritance
                       .map((i) => i.amount || 0)
                       .reduce((a, b) => a + b, 0),
                   )}

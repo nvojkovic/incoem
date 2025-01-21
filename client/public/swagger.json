@@ -1,0 +1,448 @@
+openapi: 3.0.0
+servers:
+  - url: https://dev-api.incomemapper.com/
+info:
+  title: External Income Mapper API
+  version: '1.0'
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    Person:
+      type: object
+      properties:
+        name:
+          type: string
+        birthday:
+          type: string
+        id:
+          type: integer
+        sex:
+          type: string
+          enum: [Male, Female]
+      required:
+        - name
+        - birthday
+        - id
+    AssetSummaryResponse:
+      type: object
+      properties:
+        assetSummary:
+          $ref: '#/components/schemas/AssetSummary'
+        people:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+      required:
+        - assetSummary
+        - people
+    AssetSummary:
+      type: object
+      properties:
+        income:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              employer:
+                type: string
+              owner:
+                type: integer
+              position:
+                type: string
+              annualAmount:
+                type: number
+            required:
+              - id
+        cashAssets:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              bank:
+                type: string
+              accountNumber:
+                type: string
+              owner:
+                type: integer
+              type:
+                type: string
+                enum: [Checking, Savings, CD, "Money Market", Other]
+              interestRate:
+                type: number
+              balance:
+                type: number
+            required:
+              - id
+        socialInsurance:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              owner:
+                type: integer
+              monthlyAmount:
+                type: number
+            required:
+              - id
+        statementWealth:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              accountNumber:
+                type: string
+              owner:
+                type: integer
+              type:
+                type: string
+                enum: ["401(k)", "Roth 401(k)", IRA, "Rollover IRA", "Roth IRA", "457(b)"]
+              managed:
+                type: boolean
+              annualContribution:
+                type: number
+              marketValue:
+                type: number
+              qualified:
+                type: boolean
+            required:
+              - id
+        hardAssets:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+                enum: ["Real Estate", Business, Collectibles, Auto]
+              owner:
+                type: integer
+              costBasis:
+                type: number
+              netIncome:
+                type: number
+              marketValue:
+                type: number
+            required:
+              - id
+        lifeInsurance:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              policyNumber:
+                type: string
+              insured:
+                type: integer
+              type:
+                type: string
+                enum: [Term, "Group Term", Whole, GUL, IUL]
+              annualPremium:
+                type: number
+              cashValue:
+                type: number
+              deathBenefit:
+                type: number
+            required:
+              - id
+        longTermCare:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              policyNumber:
+                type: string
+              insured:
+                type: integer
+              eliminationPeriod:
+                type: string
+              COLA:
+                type: number
+              annualPremium:
+                type: number
+              monthlyBenefit:
+                type: number
+              deathBenefit:
+                type: number
+            required:
+              - id
+        accumulationAnnuity:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              policyNumber:
+                type: string
+              owner:
+                type: integer
+              taxStatus:
+                type: string
+              type:
+                type: string
+              surrenderFree:
+                type: boolean
+              accountValue:
+                type: number
+            required:
+              - id
+        personalPensionAnnuity:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              policyNumber:
+                type: string
+              owner:
+                type: integer
+              taxStatus:
+                type: string
+              effectiveDate:
+                type: string
+              annualIncome:
+                type: number
+              accountValue:
+                type: number
+            required:
+              - id
+        pension:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              company:
+                type: string
+              accountNumber:
+                type: string
+              owner:
+                type: integer
+              monthlyIncome:
+                type: number
+              survivorBenefit:
+                type: number
+            required:
+              - id
+        debts:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              lender:
+                type: string
+              owner:
+                type: integer
+              type:
+                type: string
+                enum: [HELOC, Mortgage, "Auto Loan", "Credit Card"]
+              asset:
+                type: string
+              accountNumber:
+                type: string
+              interestRate:
+                type: number
+              monthlyPayment:
+                type: number
+              balance:
+                type: number
+            required:
+              - id
+        inheritance:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              type:
+                type: string
+                enum: [Cash, "Contractual Wealth", "Statement Wealth", "Hard Assets"]
+              amount:
+                type: number
+            required:
+              - id
+paths:
+  /external/advisor/{email}:
+    get:
+      summary: get advisor's client list
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    createdAt:
+                      type: string
+                    updatedAt:
+                      type: string
+                    people:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Person'
+                  required:
+                    - id
+                    - title
+                    - people
+                    - createdAt
+                    - updatedAt
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /external/asset-summary/{id}:
+    get:
+      summary: get client's asset summary
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetSummaryResponse'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    put:
+      summary: update client's asset summary
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetSummaryResponse'
+      responses:
+        '200':
+          description: updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetSummaryResponse'
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: invalid data 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  details: 
+                    type: object
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string

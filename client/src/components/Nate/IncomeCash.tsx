@@ -13,8 +13,8 @@ import { printNumber } from "src/utils";
 const IncomeCash = () => {
   const { data, setField } = useInfo();
 
-  const options = [...data.data.people] as any[];
-  if (data.data.people.length == 2) {
+  const options = [...data.people] as any[];
+  if (data.people.length == 2) {
     options.push({ name: "Joint", id: -1 });
   }
 
@@ -23,9 +23,9 @@ const IncomeCash = () => {
     field: keyof Income,
     value: Income[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      income: data.nateClient.income.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      income: data.assetSummary.income.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -36,9 +36,9 @@ const IncomeCash = () => {
     field: keyof CashAsset,
     value: CashAsset[typeof field],
   ) => {
-    setField("nateClient")({
-      ...data.nateClient,
-      cashAssets: data.nateClient.cashAssets.map((item, i) =>
+    setField("assetSummary")({
+      ...data.assetSummary,
+      cashAssets: data.assetSummary.cashAssets.map((item, i) =>
         index === i ? { ...item, [field]: value } : item,
       ),
     });
@@ -58,10 +58,10 @@ const IncomeCash = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     income: [
-                      ...data.nateClient.income,
+                      ...data.assetSummary.income,
                       { id: crypto.randomUUID() },
                     ],
                   });
@@ -90,7 +90,7 @@ const IncomeCash = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.income.map((line, index) => (
+            {data.assetSummary.income.map((line, index) => (
               <tr className="">
                 <td className="px-2 py-2 w-[500px]">
                   <Input
@@ -108,7 +108,7 @@ const IncomeCash = () => {
                     selected={
                       line.owner == -1
                         ? { name: "Joint", id: -1 }
-                        : data.data.people[line.owner]
+                        : data.people[line.owner]
                     }
                     setSelected={(i) => setIncome(index, "owner", i.id)}
                     label=""
@@ -141,9 +141,9 @@ const IncomeCash = () => {
                       onClose={() => setPreDeleteIncomeOpen(-1)}
                       onConfirm={() => {
                         setPreDeleteIncomeOpen(-1);
-                        setField("nateClient")({
-                          ...data.nateClient,
-                          income: data.nateClient.income.filter(
+                        setField("assetSummary")({
+                          ...data.assetSummary,
+                          income: data.assetSummary.income.filter(
                             (_, ind) => ind !== index,
                           ),
                         });
@@ -175,7 +175,7 @@ const IncomeCash = () => {
           Total:{" "}
           <div className="font-semibold">
             {printNumber(
-              data.nateClient.income
+              data.assetSummary.income
                 .map((i) => i.annualAmount)
                 .filter((i) => i)
                 .reduce((a, b) => a + b, 0),
@@ -195,10 +195,10 @@ const IncomeCash = () => {
                 className="!py-1"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setField("nateClient")({
-                    ...data.nateClient,
+                  setField("assetSummary")({
+                    ...data.assetSummary,
                     cashAssets: [
-                      ...data.nateClient.cashAssets,
+                      ...data.assetSummary.cashAssets,
                       { id: crypto.randomUUID() },
                     ],
                   });
@@ -229,7 +229,7 @@ const IncomeCash = () => {
             </tr>
           </thead>
           <tbody>
-            {data.nateClient.cashAssets.map((line, index) => (
+            {data.assetSummary.cashAssets.map((line, index) => (
               <tr className="">
                 <td className="px-2 py-2 w-[500px]">
                   <Input
@@ -257,7 +257,7 @@ const IncomeCash = () => {
                     selected={
                       line.owner == -1
                         ? { name: "Joint", id: -1 }
-                        : data.data.people[line.owner]
+                        : data.people[line.owner]
                     }
                     setSelected={(i) => setCash(index, "owner", i.id)}
                     label=""
@@ -307,9 +307,9 @@ const IncomeCash = () => {
                       onClose={() => setPreDeleteCashOpen(-1)}
                       onConfirm={() => {
                         setPreDeleteCashOpen(-1);
-                        setField("nateClient")({
-                          ...data.nateClient,
-                          cashAssets: data.nateClient.cashAssets.filter(
+                        setField("assetSummary")({
+                          ...data.assetSummary,
+                          cashAssets: data.assetSummary.cashAssets.filter(
                             (_, ind) => ind !== index,
                           ),
                         });
@@ -340,7 +340,7 @@ const IncomeCash = () => {
           Total:{" "}
           <div className="font-semibold">
             {printNumber(
-              data.nateClient.cashAssets
+              data.assetSummary.cashAssets
                 .map((i) => i.balance)
                 .filter((i) => i)
                 .reduce((a, b) => a + b, 0),

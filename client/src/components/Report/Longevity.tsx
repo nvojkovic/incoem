@@ -17,7 +17,7 @@ const Longevity = ({
   client: PrintClient;
   scenario: ScenarioSettings;
 }) => {
-  const people = scenario.data.people;
+  const people = scenario.people;
   const longevityPercent =
     scenario.longevityPercent !== undefined ? scenario.longevityPercent : 50;
   return (

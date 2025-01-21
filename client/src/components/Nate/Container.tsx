@@ -15,7 +15,7 @@ const NavItem = ({ name, active, link }: any) => {
 
 const Container = ({ active, children }: any) => {
   return (
-    <Layout page="nate">
+    <Layout page="asset-summary">
       <div className="flex justify-between fixed top-[71px] w-[1400px] z-[500] shadow-md">
         <NavItem
           name="Income/Cash"

@@ -49,13 +49,18 @@ const ResultTable = ({
   setSettings?: (data: any) => void;
 }) => {
   const startYear = new Date().getFullYear();
-  const incomes = settings.data.incomes.filter((inc) => inc.enabled);
+  const incomes = settings.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
+  const incomeMapData = {
+    people: settings.people,
+    incomes: settings.incomes,
+    version: 1 as const,
+  };
 
   const columns = React.useMemo<ColumnDef<any>[]>(
-    () => generateColumns(incomes, settings.data, selectedColumn),
-    [selectedColumn, settings, selectedYear, settings.data, incomes],
+    () => generateColumns(incomes, incomeMapData, selectedColumn),
+    [selectedColumn, settings, selectedYear, incomeMapData, incomes],
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     columns.map((c) => c.id!),
@@ -78,7 +83,7 @@ const ResultTable = ({
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
-      people: settings.data.people,
+      people: settings.people,
       income,
       startYear,
       currentYear,
@@ -107,7 +112,7 @@ const ResultTable = ({
               <div className="w-20 relative">
                 <Tooltip
                   content={(() => {
-                    const people = settings.data.people;
+                    const people = settings.people;
                     const joint =
                       people.length > 1 ? (
                         <div>
@@ -120,7 +125,7 @@ const ResultTable = ({
                           %
                         </div>
                       ) : null;
-                    const table = settings.data.people.map((p) => {
+                    const table = settings.people.map((p) => {
                       const t = makeTable(p);
                       const item = t.table.find((i) => i.year == currentYear);
                       if (!item) return null;
@@ -145,7 +150,7 @@ const ResultTable = ({
                   arrow={false}
                   className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
                 >
-                  {settings.data.people
+                  {settings.people
                     .map((p) => currentYear - splitDate(p.birthday).year)
                     .join("/")}
                 </Tooltip>
@@ -156,7 +161,7 @@ const ResultTable = ({
             incomes.map((income, i) => {
               const result = calculateOne(income, currentYear);
               return [
-                title(incomes, settings.data.people, i),
+                title(incomes, settings.people, i),
                 <div>
                   {result.note ? (
                     <Tooltip
@@ -185,7 +190,7 @@ const ResultTable = ({
                   content={(() => {
                     const needs =
                       calculateSpendingYear(
-                        settings.data,
+                        incomeMapData,
                         client.spending,
                         settings,
                         currentYear,
@@ -263,15 +268,15 @@ const ResultTable = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0) *
-                        (client.taxesFlag &&
+                      (client.taxesFlag &&
                         settings.taxType == "Post-Tax" &&
                         settings.retirementYear
-                          ? 1 -
-                            (currentYear >= settings.retirementYear
-                              ? client.spending.postTaxRate
-                              : client.spending.preTaxRate) /
-                              100
-                          : 1),
+                        ? 1 -
+                        (currentYear >= settings.retirementYear
+                          ? client.spending.postTaxRate
+                          : client.spending.preTaxRate) /
+                        100
+                        : 1),
                     )}
                   </div>
                 </Tooltip>
@@ -280,7 +285,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings, settings.data, divisionFactor, client],
+    [settings, incomeMapData, divisionFactor, client],
   );
 
   const handleDragEnd = (moved: any) => {
@@ -291,7 +296,7 @@ const ResultTable = ({
     if (
       newIndex === 0 ||
       newIndex === 1 ||
-      newIndex == settings.data.incomes.length + 2
+      newIndex == settings.incomes.length + 2
     )
       return;
     setColumnOrder((columnOrder) => {
@@ -299,29 +304,26 @@ const ResultTable = ({
     });
     if (active && over && active.id !== over.id) {
       if (setSettings) {
-        const oldIndex = settings.data.incomes.findIndex(
-          (x) => x.id == active.id,
-        );
-        const newIndex = settings.data.incomes.findIndex(
-          (x) => x.id == over.id,
-        );
-        const incomes = arrayMove(settings.data.incomes, oldIndex, newIndex);
+        const oldIndex = settings.incomes.findIndex((x) => x.id == active.id);
+        const newIndex = settings.incomes.findIndex((x) => x.id == over.id);
+        const incomes = arrayMove(settings.incomes, oldIndex, newIndex);
         updateIncomes(incomes);
       }
     }
   };
+  console.log("open@", settings.id, openModal);
 
   return (
     <>
       <div className="print:hidden"></div>
-      {!settings.name &&
-        settings.id === -1 &&
+      {settings.id === -1 &&
         incomes?.map((income) => (
           <IncomeModal
             income={income}
             setOpen={() => setOpenModal(-1)}
             open={openModal === income.id}
             i={income.id}
+            key={income.id}
           />
         ))}
       <DndContext
@@ -352,14 +354,12 @@ const ResultTable = ({
               >
                 <tr>
                   <td
-                    className={`font-medium  ${
-                      selectedColumn.type == "total" ? "bg-slate-200" : ""
-                    }`}
+                    className={`font-medium  ${selectedColumn.type == "total" ? "bg-slate-200" : ""
+                      }`}
                   >
                     <div
-                      className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
+                      className={`flex flex-col items-start px-2 ${client.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
                       onClick={(e) => {
-                        console.log(selectedColumn);
                         if (e.detail === 1) {
                           setTimeout(() => {
                             selectedColumn.type === "total"

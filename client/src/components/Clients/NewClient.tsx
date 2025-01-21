@@ -62,20 +62,17 @@ const initializeNewClient = (user: User | null): Client => ({
   title: "",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  data: {
-    incomes: [],
-    people: [
-      { name: "", birthday: null as any, id: 0 },
-      { name: "", birthday: null as any, id: 1 },
-    ],
-    version: 1,
-  },
+  incomes: [],
+  people: [
+    { name: "", birthday: null as any, id: 0 },
+    { name: "", birthday: null as any, id: 1 },
+  ],
   scenarios: [],
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
   longevityFlag: !!user?.info?.longevityFlag,
   taxesFlag: !!user?.info?.taxesFlag,
-  nateClient: {
+  assetSummary: {
     debts: [],
     income: [],
     socialInsurance: [
@@ -121,7 +118,8 @@ const initializeNewClient = (user: User | null): Client => ({
     whoDies: -1,
     taxType: "Pre-Tax",
     inflationType: "Nominal",
-    data: {} as any,
+    incomes: [] as any,
+    people: [] as any,
     longevityPercent: 50,
     chartType: "income",
     deathYears: [
@@ -171,22 +169,19 @@ const NewClient = () => {
             subtype="toggle"
             vertical
             label="Single mode"
-            value={client.data.people.length === 1}
+            value={client.people.length === 1}
             setValue={(singleMode) => {
               setClient({
                 ...client,
-                data: {
-                  ...client.data,
-                  people: singleMode
-                    ? [client.data.people[0]]
-                    : [
-                        ...client.data.people,
-                        { name: "", birthday: null as any, id: 1 },
-                      ],
-                },
-                nateClient: {
-                  ...client.nateClient,
-                  socialInsurance: client.nateClient.socialInsurance.map(
+                people: singleMode
+                  ? [client.people[0]]
+                  : [
+                    ...client.people,
+                    { name: "", birthday: null as any, id: 1 },
+                  ],
+                assetSummary: {
+                  ...client.assetSummary,
+                  socialInsurance: client.assetSummary.socialInsurance.map(
                     (item) => ({
                       ...item,
                       owner: singleMode ? 0 : item.owner,
@@ -200,22 +195,19 @@ const NewClient = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        {client.data.people.map((person, i) => (
+        {client.people.map((person, i) => (
           <PersonInfo
             person={person}
             key={i}
             onChange={(updated) => {
               setClient((prev) => ({
                 ...prev,
-                data: {
-                  ...prev.data,
-                  people: updateAtIndex(prev.data.people, i, updated),
-                },
+                people: updateAtIndex(prev.people, i, updated),
               }));
             }}
           />
         ))}
-        {client.data.people.length === 1 && <div className="h-[69px]"></div>}
+        {client.people.length === 1 && <div className="h-[69px]"></div>}
       </div>
     </div>
   );
@@ -253,7 +245,7 @@ const NewClient = () => {
           }
           vertical
         />
-        {client.data.people.map((item, i) => (
+        {client.people.map((item, i) => (
           <Input
             subtype="number"
             label={`${item.name}'s Mortality`}
@@ -347,8 +339,7 @@ const NewClient = () => {
   );
 
   const firstStepFilled =
-    client.title &&
-    client.data.people.every((p) => p.name && p.birthday && p.sex);
+    client.title && client.people.every((p) => p.name && p.birthday && p.sex);
 
   return (
     <>
@@ -383,7 +374,7 @@ const NewClient = () => {
               disabled={
                 (step === 1 && !firstStepFilled) ||
                 (step === 2 &&
-                  !client.data.people.every((p) => p.name && p.birthday))
+                  !client.people.every((p) => p.name && p.birthday))
               }
               onClick={() => (step == 1 ? setStep(2) : addClient())}
             >

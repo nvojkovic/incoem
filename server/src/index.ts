@@ -29,6 +29,17 @@ import {
   updateUser,
   uploadLogo,
 } from "./controllers/user";
+import {
+  externalMiddleware,
+  getAssetSummary,
+  listClients,
+  updateAssetSummary,
+  validateRequest,
+} from "./controllers/external";
+import {
+  assetSummarySchema,
+  updateAssetSummarySchema,
+} from "./schema/assetSummary";
 const port = 3000;
 
 let app = express();
@@ -94,6 +105,15 @@ app.get("/help", async (req, res) => {
   const data = await fetch(url);
   res.send(await data.text());
 });
+
+app.get("/external/advisor/:email", externalMiddleware, listClients);
+app.get("/external/asset-summary/:id", externalMiddleware, getAssetSummary);
+app.put(
+  "/external/asset-summary/:id",
+  externalMiddleware,
+  validateRequest(updateAssetSummarySchema),
+  updateAssetSummary,
+);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);

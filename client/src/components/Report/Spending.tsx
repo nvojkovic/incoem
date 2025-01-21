@@ -16,6 +16,11 @@ const Spending = ({
   client: PrintClient;
 }) => {
   if (!spending || !client.needsFlag) return null;
+  const incomeMapInfo = {
+    people: scenario.people,
+    incomes: scenario.incomes,
+    version: 1 as const,
+  };
   return (
     <div className="mx-5 flex justify-center flex-col pt-6">
       <Header client={client} scenario={scenario} />
@@ -23,7 +28,7 @@ const Spending = ({
       <SpendingTable
         settings={scenario}
         spending={spending}
-        data={scenario.data}
+        data={incomeMapInfo}
       />
     </div>
   );

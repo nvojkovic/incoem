@@ -1,21 +1,21 @@
-import { NateClient } from "./components/Nate/types";
+import { AssetSummary } from "./components/Nate/types";
 
 export interface SelectedColumn {
   type:
-    | "year"
-    | "age"
-    | "income"
-    | "total"
-    | "none"
-    | "spending"
-    | "gap"
-    | "taxes"
-    | "posttax"
-    | "income-stability"
-    | "spending-stability"
-    | "0-alive"
-    | "1-alive"
-    | "joint-alive";
+  | "year"
+  | "age"
+  | "income"
+  | "total"
+  | "none"
+  | "spending"
+  | "gap"
+  | "taxes"
+  | "posttax"
+  | "income-stability"
+  | "spending-stability"
+  | "0-alive"
+  | "1-alive"
+  | "joint-alive";
   id: number;
 }
 
@@ -136,7 +136,8 @@ export interface Client {
   createdAt: string;
   updatedAt: string;
   id: number;
-  data: IncomeMapData;
+  people: Person[];
+  incomes: Income[];
   spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
   calculators: any;
@@ -148,7 +149,7 @@ export interface Client {
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
   reportSettings: ReportSettings;
-  nateClient: NateClient;
+  assetSummary: AssetSummary;
 }
 
 export type PrintClient = Client & {
@@ -198,7 +199,8 @@ export interface ScenarioSettings {
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;
-  data: IncomeMapData;
+  people: Person[];
+  incomes: Income[];
 }
 
 export type YearlyIncrease =

@@ -31,7 +31,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
       className={`flex justify-between items-center sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white px-4`}
     >
       <div className="flex items-center gap-3 z-0 w-full">
-        {settings.data.people.length == 2 && (
+        {settings.people.length == 2 && (
           <div className="flex">
             <WhoDies
               disabled={settings.id !== -1}
@@ -40,7 +40,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
               i={-1}
               title="Both Alive"
             />
-            {settings.data.people.map((person, i) => (
+            {settings.people.map((person, i) => (
               <WhoDies
                 active={settings.whoDies == i}
                 disabled={settings.id !== -1}

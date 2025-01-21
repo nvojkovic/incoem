@@ -29,7 +29,9 @@ const Summary = () => {
 
   const liveSettings = {
     ...data.liveSettings,
-    data: data.data,
+    id: -1,
+    people: data.people,
+    incomes: data.incomes,
     spending: data.spending,
   };
 
@@ -46,7 +48,7 @@ const Summary = () => {
             setSettings={
               tab === -1
                 ? (v: any) => setField("liveSettings")({ ...liveSettings, v })
-                : () => {}
+                : () => { }
             }
           />
           <ScenarioHeader client={data} settings={settings} />
@@ -74,7 +76,7 @@ const Summary = () => {
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => {}}
+              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
               id={tab}
             />
           )}
