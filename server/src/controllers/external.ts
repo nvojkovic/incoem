@@ -67,6 +67,7 @@ export const getAssetSummary: RequestHandler = async (req, res) => {
       id: parseInt(id),
     },
     select: {
+      id: true,
       people: true,
       assetSummary: true,
     },
@@ -97,6 +98,11 @@ export const updateAssetSummary: RequestHandler = async (req, res) => {
         ...JSON.parse(JSON.stringify(oldClient.assetSummary) || "{}"),
         ...assetSummary,
       },
+    },
+    select: {
+      id: true,
+      people: true,
+      assetSummary: true,
     },
   });
   res.json(client);
