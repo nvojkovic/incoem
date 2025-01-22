@@ -143,7 +143,7 @@ const VersatileCalculator: React.FC = () => {
 
   return (
     <Layout page="calculator">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pb-8">
         <div className="flex gap-3 items-center mb-8 justify-between">
           <div className="flex gap-3 items-baseline">
             <Link to={`/client/${client.id}/calculator`}>
@@ -165,7 +165,7 @@ const VersatileCalculator: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 pb-8 sticky top-[72px] bg-[#f3f4f6] py-4 pt-8">
           <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
             <div className="col-span-3">
               <h2 className="text-xl font-semibold mb-4">User Settings</h2>
@@ -320,7 +320,7 @@ const VersatileCalculator: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-full mb-10 gap-5 justify-center">
+        <div className="flex w-full mb-10 gap-5 justify-center sticky top-[315px] bg-[#f3f4f6] pb-3">
           <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
             <div className="uppercase tracking-wide text-sm text-gray-800">
               Ending Balance
@@ -365,13 +365,10 @@ const VersatileCalculator: React.FC = () => {
             tax: i.taxes,
           }))}
         />
-        year, // balance, // tax: yearlyTax, // payment: yearlyPayment, //
-        residual,
-        <div className="h-96"></div>
         <div className="">
           <table className="text-sm w-full bg-white shadow-lg">
             <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[72px] rounded-none !border-none`}
+              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[400px] rounded-none !border-none`}
             >
               <tr>
                 <th
