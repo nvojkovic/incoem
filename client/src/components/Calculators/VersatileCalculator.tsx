@@ -9,6 +9,7 @@ import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
+import VersatileChart from "../Charts/VersatileChart";
 
 interface CalculationRow {
   age: number;
@@ -61,10 +62,11 @@ const VersatileCalculator: React.FC = () => {
         const yearsFromStart = year - settings.payment.startYear;
         if (settings.payment.type === "simple")
           payment =
-            (settings.payment.amount *
+            -(
+              settings.payment.amount *
               Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
-              1) /
-            Math.pow(1 + settings.other.inflation / 100, yearsFromStart);
+              1
+            ) / Math.pow(1 + settings.other.inflation / 100, yearsFromStart);
         else payment = -settings.payment.years[year] || 0;
       }
 
@@ -354,6 +356,18 @@ const VersatileCalculator: React.FC = () => {
             </div>
           </div>
         </div>
+        <VersatileChart
+          data={calculations.map((i) => ({
+            year: i.year,
+            balance: i.endingBalance,
+            residual: i.return - i.taxes,
+            payment: Math.abs(i.totalPayments),
+            tax: i.taxes,
+          }))}
+        />
+        year, // balance, // tax: yearlyTax, // payment: yearlyPayment, //
+        residual,
+        <div className="h-96"></div>
         <div className="">
           <table className="text-sm w-full bg-white shadow-lg">
             <thead
@@ -488,7 +502,7 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(-row.taxes)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""}`}
+                    className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""} ${row.endingBalance < 0 && "text-red-500"}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }

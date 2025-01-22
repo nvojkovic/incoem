@@ -51,6 +51,13 @@ export const printReport = async (clientId: number, scenarioId: number) => {
   return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
 };
 
+export const printSummary = async (clientId: number) => {
+  let url;
+  url = import.meta.env.VITE_API_URL + "print/asset-summary/" + clientId;
+  const pdfFile = await fetch(url).then((res) => res.json());
+  return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
+};
+
 export function timeAgo(date: Date): string {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);

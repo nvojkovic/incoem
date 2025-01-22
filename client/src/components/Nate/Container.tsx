@@ -2,6 +2,8 @@ import { Spinner } from "flowbite-react";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { printSummary } from "src/utils";
+import { useInfo } from "src/useData";
 
 const NavItem = ({ name, active, link, color }: any) => {
   return (
@@ -18,12 +20,15 @@ const NavItem = ({ name, active, link, color }: any) => {
 
 const Container = ({ active, children }: any) => {
   const [printing, setPrinting] = useState(false);
+  const { data } = useInfo();
 
-  const print = () => {
+  const print = async () => {
     setPrinting(true);
-    setTimeout(() => {
-      setPrinting(false);
-    }, 1000);
+    const url = await printSummary(data.id);
+
+    setPrinting(false);
+    window.open(url, "_blank");
+    setPrinting(false);
   };
   return (
     <Layout page="asset-summary">

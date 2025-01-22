@@ -87,6 +87,12 @@ export const getPrintAssetSummary = async (req: Request, res: Response) => {
     "/print-asset-summary/" +
     req.params.id;
 
+  const pdf = await fetch(url);
+  const data = await pdf.arrayBuffer();
+  const filename = `/storage/${id}-asset-summary.pdf`;
+  fs.writeFileSync(filename, Buffer.from(data));
+  return res.json({ file: filename });
+
   fetch(url).then(({ body, headers }) => {
     body?.pipeTo(
       new WritableStream({
