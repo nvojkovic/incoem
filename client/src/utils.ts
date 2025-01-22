@@ -30,6 +30,7 @@ const printNumberOld = (a: number | string) => {
 };
 
 export const printNumber = (s: number) => {
+  if (isNaN(s)) return "";
   if (Math.abs(s) < 0.001) return printNumberOld(0);
   return s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
 };

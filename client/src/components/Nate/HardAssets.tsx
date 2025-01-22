@@ -35,6 +35,7 @@ const HardAssets = () => {
   return (
     <Container active="hard-assets">
       <MapSection
+        toggleabble
         title={
           <div className="flex gap-6 items-center w-full p-2">
             <div> Hard Assets </div>
@@ -65,7 +66,7 @@ const HardAssets = () => {
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Name</th>
@@ -140,7 +141,19 @@ const HardAssets = () => {
                     subtype="money"
                   />
                 </td>
-                <td className="px-2 py-2">TODO</td>
+                <td className="px-2 py-2">
+                  <Input
+                    label=""
+                    size="full"
+                    disabled
+                    value={data.assetSummary.debts
+                      .filter((i) => i.asset == line.id)
+                      .map((i) => i.balance)
+                      .reduce((a, b) => a + b, 0)}
+                    setValue={() => { }}
+                    subtype="money"
+                  />
+                </td>
                 <td className="px-2 py-2">
                   <Input
                     label=""
@@ -199,7 +212,14 @@ const HardAssets = () => {
                       .reduce((a, b) => a + b, 0),
                   )}
                 </td>
-                <td className="px-2 py-3 font-medium text-center">TODO</td>
+                <td className="px-2 py-3 font-medium text-center">
+                  {printNumber(
+                    data.assetSummary.debts
+                      .filter((i) => i.asset)
+                      .map((i) => i.balance)
+                      .reduce((a, b) => a + b, 0),
+                  )}
+                </td>
                 <td className="px-2 py-3 font-medium text-center">
                   {printNumber(
                     data.assetSummary.hardAssets

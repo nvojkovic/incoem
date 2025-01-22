@@ -35,7 +35,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
   const { data } = useInfo();
 
   return (
-    <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-40 ">
+    <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-[5000] ">
       <div className=" flex justify-between items-center h bg-white w-full flex-1">
         <div className="flex items-center justify-start w-full flex-1">
           <Link to="/clients">
@@ -126,7 +126,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
             </div>
           </Link>
         )}
-        <Menu as="div" className="relative inline-block text-left">
+        <Menu as="div" className="relative inline-block text-left z-[5000]">
           <div>
             <Menu.Button className="w-10 h-10 rounded-full bg-[#F2F4F7] flex items-center justify-center cursor-pointer">
               <UserIcon className="h-6 text-[#667085]" />
@@ -141,8 +141,8 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
-              <div className="px-1 py-1">
+            <Menu.Items className="absolute block right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none z-[50000]">
+              <div className="px-1 py-1 z-[50000]">
                 <Menu.Item>
                   {({ active }) => (
                     <Link to="/profile">

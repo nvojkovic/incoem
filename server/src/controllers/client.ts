@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import { Request, Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
+import { request } from "http";
 
 const prisma = new PrismaClient();
 export const allClients = async (req: SessionRequest, res: Response) => {
@@ -74,6 +75,35 @@ const makeReport = async (id: number, page: string, fileName: string) => {
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
   fs.writeFileSync(fileName, Buffer.from(data));
+};
+
+export const getPrintAssetSummary = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const url =
+    process.env.PRINTER_URL +
+    "/asset-summary?url=" +
+    process.env.APP_URL +
+    // "http:im-client:5173" +
+    "/print-asset-summary/" +
+    req.params.id;
+
+  fetch(url).then(({ body, headers }) => {
+    body?.pipeTo(
+      new WritableStream({
+        start() {
+          headers.forEach((v, n) => res.setHeader(n, v));
+        },
+        write(chunk) {
+          res.write(chunk);
+        },
+        close() {
+          res.end();
+        },
+      }),
+    );
+  });
+
+  console.log(url);
 };
 
 export const getPrintClientPdfLive = async (req: Request, res: Response) => {

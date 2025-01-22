@@ -14,6 +14,7 @@ import {
   deleteClient,
   duplicateClient,
   getClient,
+  getPrintAssetSummary,
   getPrintClient,
   getPrintClientPdf,
   getPrintClientPdfLive,
@@ -82,6 +83,7 @@ app.get("/client/:id", verifySession(), getClient);
 app.get("/print/client/pdf/:id/:scenario", verifySession(), getPrintClientPdf);
 app.get("/print/client/pdf-live/:id/", verifySession(), getPrintClientPdfLive);
 app.get("/print/client/:id/", getPrintClient);
+app.get("/print/asset-summary/:id/", getPrintAssetSummary);
 app.post("/client/:id", verifySession(), updateClient);
 app.post("/client/:id/duplicate", verifySession(), duplicateClient);
 app.post("/client/scenarios/:id", verifySession(), updateScenario);

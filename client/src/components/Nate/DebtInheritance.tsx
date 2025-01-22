@@ -44,6 +44,7 @@ const DebtInheritance = () => {
   return (
     <Container active="debt-inheritance">
       <MapSection
+        toggleabble
         title={
           <div className="flex gap-6 items-center w-full p-2">
             <div> Debt </div>
@@ -74,7 +75,7 @@ const DebtInheritance = () => {
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Lender</th>
@@ -262,11 +263,12 @@ const DebtInheritance = () => {
             </div>
           </div>
         }
+        toggleabble
         defaultOpen
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Name</th>

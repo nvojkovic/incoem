@@ -1,5 +1,7 @@
+import { Spinner } from "flowbite-react";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const NavItem = ({ name, active, link, color }: any) => {
   return (
@@ -15,9 +17,17 @@ const NavItem = ({ name, active, link, color }: any) => {
 };
 
 const Container = ({ active, children }: any) => {
+  const [printing, setPrinting] = useState(false);
+
+  const print = () => {
+    setPrinting(true);
+    setTimeout(() => {
+      setPrinting(false);
+    }, 1000);
+  };
   return (
     <Layout page="asset-summary">
-      <div className="flex justify-between fixed top-[71px] w-[1400px] z-[500] shadow-md">
+      <div className="flex justify-between fixed top-[71px] w-[1400px] z-[499] shadow-md bg-white">
         <NavItem
           name="Income/Cash"
           active={active === "incomecash"}
@@ -58,6 +68,17 @@ const Container = ({ active, children }: any) => {
           active={active === "analysis"}
           link="analysis"
         />
+
+        <div
+          className={`flex gap-2 p-2 ${printing ? "w-72" : "w-72"} justify-center`}
+          onClick={print}
+        >
+          {printing ? (
+            <Spinner className="h-5" />
+          ) : (
+            <img src="/icons/print.png" className="h-6  cursor-pointer" />
+          )}
+        </div>
       </div>
       <div className="mt-20">{children}</div>
     </Layout>

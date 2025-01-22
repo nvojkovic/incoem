@@ -49,6 +49,7 @@ const IncomeCash = () => {
   return (
     <Container active="incomecash">
       <MapSection
+        toggleabble
         title={
           <div className="flex gap-6 items-center w-full p-2">
             <div> Income </div>
@@ -79,7 +80,7 @@ const IncomeCash = () => {
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Employer</th>
@@ -186,6 +187,7 @@ const IncomeCash = () => {
       <div className="h-8"></div>
 
       <MapSection
+        toggleabble
         title={
           <div className="flex gap-6 items-center w-full p-2">
             <div> Cash </div>
@@ -216,7 +218,7 @@ const IncomeCash = () => {
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Bank</th>

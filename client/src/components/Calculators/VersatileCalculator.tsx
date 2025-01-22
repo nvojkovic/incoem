@@ -61,9 +61,10 @@ const VersatileCalculator: React.FC = () => {
         const yearsFromStart = year - settings.payment.startYear;
         if (settings.payment.type === "simple")
           payment =
-            settings.payment.amount *
-            Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
-            -1;
+            (settings.payment.amount *
+              Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
+              1) /
+            Math.pow(1 + settings.other.inflation / 100, yearsFromStart);
         else payment = -settings.payment.years[year] || 0;
       }
 

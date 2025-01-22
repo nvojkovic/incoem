@@ -61,11 +61,12 @@ const StatementWealthPage = () => {
             </div>
           </div>
         }
+        toggleabble
         defaultOpen
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Company</th>
@@ -263,11 +264,12 @@ const StatementWealthPage = () => {
             </div>
           </div>
         }
+        toggleabble
         defaultOpen
       >
         <table className="w-full">
           <thead
-            className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+            className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
           >
             <tr>
               <th className="px-6 py-3 font-medium">Company</th>

@@ -54,7 +54,7 @@ const PieChart = ({ data }: any) => {
       .style("border", "1px solid #ddd")
       .style("border-radius", "4px")
       .style("padding", "8px")
-      .style("font-size", "12px")
+      .style("font-size", "14px")
       .style("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
     // Add pie slices
@@ -89,10 +89,10 @@ const PieChart = ({ data }: any) => {
     const tempText = svg
       .append("g")
       .selectAll(".temp-text")
-      .data(data)
+      .data(data.filter((d: any) => d.value > 0))
       .enter()
       .append("text")
-      .attr("font-size", 12)
+      .attr("font-size", 14)
       .text((d: any) => d.label)
       .style("visibility", "hidden");
 
@@ -119,7 +119,7 @@ const PieChart = ({ data }: any) => {
 
     const legendItems = legend
       .selectAll(".legend-item")
-      .data(data)
+      .data(data.filter((d: any) => d.value > 0))
       .enter()
       .append("g")
       .attr("class", "legend-item")
@@ -138,7 +138,7 @@ const PieChart = ({ data }: any) => {
       .append("text")
       .attr("x", rectWidth + textPadding)
       .attr("y", 12)
-      .attr("font-size", 12)
+      .attr("font-size", 14)
       .text((d: any) => d.label);
   }, [data]);
 

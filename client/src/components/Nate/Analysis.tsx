@@ -38,12 +38,12 @@ const Analysis = () => {
   return (
     <Container active="analysis">
       <MapSection title="Analysis" defaultOpen>
-        <div className="flex gap-4 p-4 w-full">
+        <div className="flex gap-4  w-full">
           <div className="flex flex-col gap-4 p-4 w-[500px]">
             <div className="w-full rounded-md">
               <table className="w-full border rounded-md">
                 <thead
-                  className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+                  className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
                 >
                   <tr className="bg-gray-100">
                     <th className="px-2 py-3 font-medium">Net Worth Summary</th>
@@ -71,7 +71,7 @@ const Analysis = () => {
             <div className="w-full">
               <table className="w-full border">
                 <thead
-                  className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+                  className={`text-sm cursor-pointer text-left sticky z-50 border-1 !font-normal`}
                 >
                   <tr className="bg-gray-100">
                     <th className="px-2 py-3 font-medium">

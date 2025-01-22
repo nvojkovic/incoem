@@ -65,12 +65,14 @@ const getAssetSummary = async (browser: Browser, url: string) => {
     });
     const pdf = await page.pdf({
       format: "letter",
-      landscape: true,
       printBackground: true,
       headerTemplate: header,
       displayHeaderFooter: !!header,
       scale: 0.55,
-      margin: {},
+      margin: {
+        top: "30px",
+        bottom: "30px",
+      },
     });
     //
     // await page.addStyleTag({
