@@ -53,7 +53,7 @@ const CompositeTable = ({
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[114px]" : "top-[184px]"} border-separate`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[111px]" : "top-[184px]"} border-separate`}
                 >
                   <tr>
                     <th

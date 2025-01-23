@@ -334,6 +334,15 @@ const NewClient = () => {
             setClient((prev) => ({ ...prev, longevityFlag: flag }))
           }
         />
+        <Input
+          subtype="toggle"
+          labelLength={110}
+          label="Taxes"
+          value={client.taxesFlag}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, taxesFlag: flag }))
+          }
+        />
       </div>
     </div>
   );

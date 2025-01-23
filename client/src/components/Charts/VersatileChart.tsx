@@ -136,7 +136,7 @@ const InvestmentChart = ({ data }: any) => {
         svg
           .append("rect") // Payment
           .attr("x", x(d.year) - barWidth / 2)
-          .attr("y", y2(d.residual + d.payment))
+          .attr("y", y2(0))
           .attr("width", barWidth)
           .attr("height", y2(d.residual) - y2(d.residual + d.payment))
           .attr("fill", "#99ff99")

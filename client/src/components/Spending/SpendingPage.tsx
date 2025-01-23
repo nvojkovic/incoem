@@ -605,58 +605,60 @@ const SpendingPage = () => {
               </div>
             </div>
             <div className="flex gap-6 mb-5 w-full">
-              <div className="border rounded-lg p-3 flex gap-3 bg-white">
-                <div className="mt-1 w-32">
-                  <Input
-                    subtype="toggle"
-                    label="Include Taxes"
-                    value={settings.taxType === "Post-Tax"}
-                    vertical
-                    setValue={(v) =>
-                      setSettings({
-                        ...settings,
-                        taxType: v ? "Post-Tax" : "Pre-Tax",
-                      })
-                    }
-                  />
+              {data.taxesFlag && (
+                <div className="border rounded-lg p-3 flex gap-3 bg-white">
+                  <div className="mt-1 w-32">
+                    <Input
+                      subtype="toggle"
+                      label="Include Taxes"
+                      value={settings.taxType === "Post-Tax"}
+                      vertical
+                      setValue={(v) =>
+                        setSettings({
+                          ...settings,
+                          taxType: v ? "Post-Tax" : "Pre-Tax",
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="mt-1">
+                    <Input
+                      vertical
+                      size="lg"
+                      value={spending.preTaxRate}
+                      setValue={(v) =>
+                        setSpending({ ...spending, preTaxRate: v })
+                      }
+                      subtype="percent"
+                      label={"Pre-Retirement Tax Rate"}
+                    />
+                  </div>
+                  <div className="mt-1">
+                    <Input
+                      vertical
+                      size="lg"
+                      value={spending.postTaxRate}
+                      setValue={(v) =>
+                        setSpending({ ...spending, postTaxRate: v })
+                      }
+                      subtype="percent"
+                      label={"Post-Retirement Tax Rate"}
+                    />
+                  </div>
+                  <div className="mt-1">
+                    <Input
+                      label="Retirement Year"
+                      value={settings.retirementYear}
+                      setValue={(v: any) =>
+                        setSettings({ ...settings, retirementYear: v })
+                      }
+                      subtype="number"
+                      vertical
+                      size="md"
+                    />
+                  </div>
                 </div>
-                <div className="mt-1">
-                  <Input
-                    vertical
-                    size="lg"
-                    value={spending.preTaxRate}
-                    setValue={(v) =>
-                      setSpending({ ...spending, preTaxRate: v })
-                    }
-                    subtype="percent"
-                    label={"Pre-Retirement Tax Rate"}
-                  />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    vertical
-                    size="lg"
-                    value={spending.postTaxRate}
-                    setValue={(v) =>
-                      setSpending({ ...spending, postTaxRate: v })
-                    }
-                    subtype="percent"
-                    label={"Post-Retirement Tax Rate"}
-                  />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    label="Retirement Year"
-                    value={settings.retirementYear}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, retirementYear: v })
-                    }
-                    subtype="number"
-                    vertical
-                    size="md"
-                  />
-                </div>
-              </div>
+              )}
               <div>
                 <SmallToggle
                   item1="Monthly"
