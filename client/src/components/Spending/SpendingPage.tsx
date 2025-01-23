@@ -22,7 +22,6 @@ import { useState } from "react";
 import SpendingChart from "../Charts/SpendingChart";
 import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
 import calculate from "src/calculator/calculate";
-import SmallToggle from "../Inputs/SmallToggle";
 import {
   CurrentSpending,
   Income,
@@ -576,38 +575,124 @@ const SpendingPage = () => {
           toggleabble
           defaultOpen
         >
-          <div className="flex gap-6 p-3">
-            <div className="border rounded-lg p-3 h-[96px] bg-white">
-              <div className="flex gap-4">
-                <div>
+          <div className="flex gap-6 p-2">
+            <div className="p-3 bg-white w-full">
+              <div className="flex justify-between w-full">
+                <div className="flex gap-4 items-end">
+                  {data.people.length > 1 ? (
+                    <div className="flex flex-col">
+                      <div className="flex">
+                        <WhoDies
+                          active={settings.whoDies == -1}
+                          setWhoDies={(i: number) =>
+                            setSettings({
+                              ...settings,
+                              whoDies: i,
+                            })
+                          }
+                          i={-1}
+                          title="Both Alive"
+                        />
+
+                        {data.people.map((person, i) => (
+                          <WhoDies
+                            active={settings.whoDies == i}
+                            key={person.id}
+                            age={settings.deathYears[i]}
+                            setAge={(e: any) =>
+                              setSettings({
+                                ...settings,
+                                deathYears: updateAtIndex(
+                                  settings.deathYears,
+                                  i,
+                                  parseInt(e),
+                                ),
+                              })
+                            }
+                            setWhoDies={(i: number) =>
+                              setSettings({
+                                ...settings,
+                                whoDies: i,
+                              })
+                            }
+                            i={i}
+                            title={`${person.name} Dies At`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+                  <Input
+                    label=""
+                    inlineLabel="Years Shown"
+                    width="!w-[160px] !py-[5px]"
+                    value={settings.maxYearsShown}
+                    setValue={(v: any) =>
+                      setSettings({ ...settings, maxYearsShown: v })
+                    }
+                    subtype="number"
+                    size="md"
+                  />
                   <MultiToggle
                     options={["Real", "Nominal"]}
-                    label="Inflation"
+                    label=""
                     value={settings.inflationType}
                     setValue={(v: any) =>
                       setSettings({ ...settings, inflationType: v })
                     }
                   />
+
+                  <div className="">
+                    <Input
+                      onFocus={(event: any) => {
+                        const input = event.target;
+                        setTimeout(() => {
+                          input.select();
+                        }, 0);
+                      }}
+                      inlineLabel="Inflation rate"
+                      label=""
+                      labelLength={85}
+                      size="xs"
+                      width="!w-[160px] !py-[5px]"
+                      subtype="percent"
+                      value={settings.inflation}
+                      setValue={(e) =>
+                        setSettings({ ...settings, inflation: e })
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="mt-1">
-                  <Input
-                    label="Amount"
-                    width="!w-16"
-                    value={settings.inflation}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, inflation: v })
+
+                <div>
+                  <MultiToggle
+                    options={["Monthly", "Annual"]}
+                    label=""
+                    value={
+                      settings.monthlyYearly === "monthly"
+                        ? "Monthly"
+                        : "Annual"
                     }
-                    subtype="percent"
-                    vertical
-                    size="md"
+                    setValue={() =>
+                      setSettings({
+                        ...settings,
+                        monthlyYearly:
+                          settings.monthlyYearly === "monthly"
+                            ? "yearly"
+                            : "monthly",
+                      })
+                    }
                   />
                 </div>
               </div>
             </div>
-            <div className="flex gap-6 mb-5 w-full">
+          </div>
+          <div className="h-[1px] bg-gray-300 w-full"></div>
+          <div className="flex gap-6 ">
+            <div className="flex gap-6 w-full mx-3">
               {data.taxesFlag && (
-                <div className="border rounded-lg p-3 flex gap-3 bg-white">
-                  <div className="mt-1 w-32">
+                <div className="p-3 flex gap-3 bg-white">
+                  <div className="w-28">
                     <Input
                       subtype="toggle"
                       label="Include Taxes"
@@ -621,7 +706,7 @@ const SpendingPage = () => {
                       }
                     />
                   </div>
-                  <div className="mt-1">
+                  <div className="">
                     <Input
                       vertical
                       size="lg"
@@ -633,7 +718,7 @@ const SpendingPage = () => {
                       label={"Pre-Retirement Tax Rate"}
                     />
                   </div>
-                  <div className="mt-1">
+                  <div className="">
                     <Input
                       vertical
                       size="lg"
@@ -645,7 +730,7 @@ const SpendingPage = () => {
                       label={"Post-Retirement Tax Rate"}
                     />
                   </div>
-                  <div className="mt-1">
+                  <div className="">
                     <Input
                       label="Retirement Year"
                       value={settings.retirementYear}
@@ -659,86 +744,9 @@ const SpendingPage = () => {
                   </div>
                 </div>
               )}
-              <div>
-                <SmallToggle
-                  item1="Monthly"
-                  item2="Annual"
-                  active={
-                    settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
-                  }
-                  toggle={() =>
-                    setSettings({
-                      ...settings,
-                      monthlyYearly:
-                        settings.monthlyYearly === "monthly"
-                          ? "yearly"
-                          : "monthly",
-                    })
-                  }
-                />
-              </div>
             </div>
           </div>
-          <div className="flex gap-6 mb-10">
-            {data.people.length > 1 ? (
-              <div className="border rounded-lg p-3 bg-white">
-                <div className="flex flex-col">
-                  <div className="text-sm text-[#344054] mb-1">Mortality</div>
-                  <div className="flex">
-                    <WhoDies
-                      active={settings.whoDies == -1}
-                      setWhoDies={(i: number) =>
-                        setSettings({
-                          ...settings,
-                          whoDies: i,
-                        })
-                      }
-                      i={-1}
-                      title="Both Alive"
-                    />
-
-                    {data.people.map((person, i) => (
-                      <WhoDies
-                        active={settings.whoDies == i}
-                        key={person.id}
-                        age={settings.deathYears[i]}
-                        setAge={(e: any) =>
-                          setSettings({
-                            ...settings,
-                            deathYears: updateAtIndex(
-                              settings.deathYears,
-                              i,
-                              parseInt(e),
-                            ),
-                          })
-                        }
-                        setWhoDies={(i: number) =>
-                          setSettings({
-                            ...settings,
-                            whoDies: i,
-                          })
-                        }
-                        i={i}
-                        title={`${person.name} Dies At`}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-            <div className="border rounded-lg p-3 bg-white">
-              <Input
-                label="Years Shown"
-                value={settings.maxYearsShown}
-                setValue={(v: any) =>
-                  setSettings({ ...settings, maxYearsShown: v })
-                }
-                subtype="number"
-                vertical
-                size="md"
-              />
-            </div>
-          </div>
+          <div className="h-[1px] bg-gray-300 w-full"></div>
           <div className="bg-white pb-[2px]">
             <SpendingChart
               spending={true}

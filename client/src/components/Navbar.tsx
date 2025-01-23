@@ -34,6 +34,13 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
   const { user } = useUser();
   const { data } = useInfo();
 
+  const assetSummaryVisible = [
+    "nikola.vojkovic@live.com",
+    "nikola.vojkovic@toptal.com",
+    "taylor@ataroke.com",
+    "nclark@envisionrs.com",
+  ].includes(user?.info?.email as any);
+
   return (
     <div className="max-w-[1480px] px-10 m-auto flex justify-between items-center h-[72px] sticky top-10 bg-white z-[5000] ">
       <div className=" flex justify-between items-center h bg-white w-full flex-1">
@@ -101,11 +108,13 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                 active={active == "calculator"}
                 link={`/client/${data.id}/calculator`}
               />
-              <NavItem
-                name="Asset Summary"
-                active={active == "asset-summary"}
-                link={`/client/${data.id}/asset-summary/income-cash`}
-              />
+              {assetSummaryVisible && (
+                <NavItem
+                  name="Asset Summary"
+                  active={active == "asset-summary"}
+                  link={`/client/${data.id}/asset-summary/income-cash`}
+                />
+              )}
             </div>
           ) : null}
         </div>
