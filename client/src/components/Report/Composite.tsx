@@ -1,8 +1,14 @@
-import { printNumber, splitDate, yearRange } from "src/utils";
+import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import Header from "./Header";
-import { calculateSpendingYear } from "../Spending/SpendingPage";
 import calculate from "src/calculator/calculate";
 import { jointTable, makeTable } from "../Longevity/calculate";
+import { calculateSpendingYear } from "../Spending/calculate";
+import {
+  Income,
+  PrintClient,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "src/types";
 
 const Composite = ({
   scenario,
@@ -16,16 +22,16 @@ const Composite = ({
   const currentYear = new Date().getFullYear();
   const height = 100; //Math.floor(scenario.maxYearsShown / 2);
 
-  const tables = scenario.data.people.map((person) => makeTable(person));
+  const tables = scenario.people.map((person) => makeTable(person));
   const joint =
-    scenario.data.people.length > 1
-      ? jointTable(scenario.data.people[0], scenario.data.people[1])
+    scenario.people.length > 1
+      ? jointTable(scenario.people[0], scenario.people[1])
       : [];
 
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
   return (
-    <div className="mx-10 flex justify-center flex-col mt-6">
+    <div className="mx-10 flex justify-center flex-col pt-6">
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto mb-5">Composite</div>
       <div className="flex justify-between flex-wrap">
@@ -45,23 +51,29 @@ const Composite = ({
                       </th>
 
                       {client.longevityFlag &&
-                        scenario.data.people.map((person) => (
+                        scenario.people.map((person) => (
                           <th
-                            className={`px-2 py-3 text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                            className={`px-2 py-3 text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
                           >
                             {person.name} <br /> alive
                           </th>
                         ))}
-                      {client.longevityFlag &&
-                        scenario.data.people.length > 1 && (
-                          <th
-                            className={`px-2 py-3 text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
-                          >
-                            At least one <br /> alive
-                          </th>
-                        )}
+                      {client.longevityFlag && scenario.people.length > 1 && (
+                        <th
+                          className={`px-2 py-3 text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
+                        >
+                          At least one <br /> alive
+                        </th>
+                      )}
                       <th className="px-2 py-3">Income</th>
 
+                      {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                        <th className="px-2 py-3">Taxes</th>
+                      )}
+
+                      {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                        <th className="px-2 py-3">Post-Tax Income</th>
+                      )}
                       {client.needsFlag && (
                         <th className="px-2 py-3">Spending</th>
                       )}
@@ -94,14 +106,14 @@ const Composite = ({
                         currentYear: number,
                       ) =>
                         calculate({
-                          people: scenario.data.people,
+                          people: scenario.people,
                           income,
                           startYear,
                           currentYear,
                           deathYears: scenario.deathYears as any,
                           dead: scenario.whoDies,
                           inflation: scenario.inflation,
-                          incomes: scenario.data.incomes.filter(
+                          incomes: scenario.incomes.filter(
                             (income) => income.enabled,
                           ),
                           ssSurvivorAge: scenario.ssSurvivorAge,
@@ -110,12 +122,16 @@ const Composite = ({
 
                       const needs =
                         calculateSpendingYear(
-                          scenario.data,
+                          {
+                            people: scenario.people,
+                            incomes: scenario.incomes,
+                            version: 1,
+                          },
                           spending,
                           scenario,
                           line,
                         ) / divisionFactor;
-                      const income = scenario.data.incomes
+                      const income = scenario.incomes
                         .filter((income) => income.enabled)
                         .map(
                           (income) =>
@@ -123,7 +139,7 @@ const Composite = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
-                      const stableIncome = scenario.data.incomes
+                      const stableIncome = scenario.incomes
                         .filter((item) => item.stable)
                         .filter((income) => income.enabled)
                         .map(
@@ -132,28 +148,32 @@ const Composite = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0);
-                      const gap = income - needs;
                       const stabilityRatio = Math.round(
                         (stableIncome / income) * 100,
                       );
                       const spendingStability = Math.round(
                         (stableIncome / needs) * 100,
                       );
+
+                      const taxRate = getTaxRate(client, scenario, line);
+                      const taxes = income * taxRate;
+                      const gap = income - needs - taxes;
+
                       return (
                         <tr
                           className={`${index % 2 == 0 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0]`}
                         >
                           <td className="px-2 py-[6px] font-bold">{line}</td>
                           <td className="px-2 py-1 border-r border-black">
-                            {scenario.data.people
+                            {scenario.people
                               .map((p) => line - splitDate(p.birthday).year)
                               .join("/")}
                           </td>
 
                           {client.longevityFlag &&
-                            scenario.data.people.map((_, i) => (
+                            scenario.people.map((_, i) => (
                               <td
-                                className={`px-2 py-[6px] text-center ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                                className={`px-2 py-[6px] text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
                               >
                                 {Math.round(
                                   (tables[i].table.find(
@@ -164,9 +184,9 @@ const Composite = ({
                               </td>
                             ))}
                           {client.longevityFlag &&
-                            scenario.data.people.length > 1 && (
+                            scenario.people.length > 1 && (
                               <td
-                                className={`px-2 py-[6px] text-center ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
+                                className={`px-2 py-[6px] text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
                               >
                                 {Math.round(
                                   (joint.find((entry) => entry.year === line)
@@ -176,6 +196,18 @@ const Composite = ({
                               </td>
                             )}
                           <td className="px-2 py-1">{printNumber(income)}</td>
+                          {client.taxesFlag &&
+                            scenario.taxType == "Post-Tax" && (
+                              <td className="px-2 py-1">
+                                {printNumber(taxes)}
+                              </td>
+                            )}
+                          {client.taxesFlag &&
+                            scenario.taxType == "Post-Tax" && (
+                              <td className="px-2 py-1">
+                                {printNumber(income - taxes)}
+                              </td>
+                            )}
                           {client.needsFlag && (
                             <td className="px-2 py-1">{printNumber(needs)}</td>
                           )}

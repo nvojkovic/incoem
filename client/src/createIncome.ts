@@ -1,3 +1,5 @@
+import { Income, IncomeType, Person, SocialSecurityIncome } from "./types";
+
 const id = () => Math.floor(Math.random() * 1000000);
 export const newEmploymentIncome = (): any => ({
   id: id(),

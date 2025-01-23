@@ -1,5 +1,7 @@
 import { moyrToAnnual } from "src/utils";
 import { adjustForInflation, adjustForIncrease, isDead } from "./utils";
+import { CalculationInfo } from "./types";
+import { BasicAnnuity } from "src/types";
 
 export const calculate = (info: CalculationInfo<BasicAnnuity>) => {
   const { income, startYear, currentYear } = info;

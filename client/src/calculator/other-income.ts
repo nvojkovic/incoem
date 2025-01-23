@@ -1,3 +1,5 @@
+import { MonthlyYearlyAmount, OtherIncome } from "src/types";
+import { CalculationInfo } from "./types";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 export const migrateOtherIncome = (
   income: OtherIncome,
@@ -41,7 +43,6 @@ export const calculate = (info: CalculationInfo<OtherIncome>) => {
   if (newAmount?.type === "monthly") {
     yearAmount = yearAmount * 12;
   } else {
-    yearAmount = newAmount.value;
   }
 
   if (isDead(info, income.personId)) {

@@ -84,6 +84,7 @@ const ResetPassword = () => {
                   placeholder="Enter your email"
                   label="Email"
                   size="full"
+                  type="email"
                   vertical
                   value={email}
                   setValue={setEmail}

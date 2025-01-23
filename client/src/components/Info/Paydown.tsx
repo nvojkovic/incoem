@@ -1,6 +1,7 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import { useState } from "react";
+import { Paydown, Person } from "src/types";
 
 interface Props {
   paydown: Paydown;

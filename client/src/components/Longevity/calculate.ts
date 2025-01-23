@@ -2,6 +2,7 @@ import femaleTables from "src/assets/tables-female.json";
 import maleTables from "src/assets/tables-male.json";
 import { calculateAge } from "../Info/PersonInfo";
 import { birthday } from "src/calculator/utils";
+import { Person } from "src/types";
 
 export const makeTable = (person: Person) => {
   const age = calculateAge(new Date(person.birthday));

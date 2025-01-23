@@ -1,4 +1,6 @@
+import { EmploymentIncome } from "src/types";
 import { moyrToAnnual, splitDate } from "../utils";
+import { CalculationInfo } from "./types";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
 
 const calculate = (info: CalculationInfo<EmploymentIncome>) => {

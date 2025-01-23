@@ -4,6 +4,7 @@ import { jointTable, makeTable } from "../Longevity/calculate";
 
 interface Props {
   years: any;
+  taxes: any;
   stackedData: any;
   lineData: any;
   spending: any;
@@ -20,6 +21,7 @@ const MainChart = ({
   stackedData,
   lineData,
   spending,
+  taxes,
   stability,
   needsFlag,
   longevityFlag,
@@ -41,15 +43,16 @@ const MainChart = ({
   // ];
   // const color = d3.scaleSequential(d3.interpolateSinebow);
   const colorArray = [
-    "#ff000066",
-    "#BBCC33",
-    "#77AADD",
-    "#AAAA00",
-    "#EE8866",
-    "#EEDD88",
-    "#FFAABB",
-    "#99DDFF",
-    "#44BB99",
+    "#FF6C4680",
+    "#FFB44680",
+    "#6CFF4680",
+    "#46FFC680",
+    "#46C6FF80",
+    "#4693FF80",
+    "#6C46FF80",
+    "#FF46C680",
+    "#FF465A80",
+    "#B24B3180",
   ];
 
   useEffect(() => {
@@ -68,6 +71,11 @@ const MainChart = ({
   }, []);
 
   useEffect(() => {
+    svgRef.current.innerHtml = "";
+    d3.select(svgRef.current).selectAll("*").remove();
+    // Remove any existing legend containers
+    d3.select(containerRef.current).selectAll(".legend-container").remove();
+
     if (
       dimensions.width === 0 ||
       !years.length ||
@@ -79,9 +87,6 @@ const MainChart = ({
     const margin = { top: 40, right: 30, bottom: 80, left: 75 };
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
-
-    svgRef.current.innerHtml = "";
-    d3.select(svgRef.current).selectAll("*").remove();
 
     const svg = d3
       .select(svgRef.current)
@@ -140,12 +145,12 @@ const MainChart = ({
       .domain([
         0,
         maxY * 1.1 ||
-        Math.max(
-          (d3 as any).max(processedData as any, (d: any) => {
-            return d3.sum(keys, (key: any) => d[key]);
-          }),
-          lineData ? Math.max(...lineData) : 0,
-        ) * 1.1,
+          Math.max(
+            (d3 as any).max(processedData as any, (d: any) => {
+              return d3.sum(keys, (key: any) => d[key]);
+            }),
+            lineData ? Math.max(...lineData) : 0,
+          ) * 1.1,
       ])
       .range([height, 0]);
 
@@ -298,12 +303,12 @@ const MainChart = ({
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function(_: any, __: any) {
+    const mouseover = function (_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function(event: any, _: any) {
+    const mousemove = function (event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -354,17 +359,45 @@ const MainChart = ({
                 </div>
               </div>`;
           if (needsFlag)
-            tooltipContent += `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+            tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+                ${
+                  taxes.length
+                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
                   <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
-                    <b>Spending: </b>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: white; margin-right: 5px;"></span>
+                    Taxes: 
                   </div>
                   <div>
-                    <b>${formatCurrency.format(lineData[years.indexOf(year)])}</b>
+                    <b>${formatCurrency.format(taxes[years.indexOf(year)])}</b>
+                  </div>
+                </div>`
+                    : ""
+                }
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
+                  <div>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${taxes.length ? "white" : "red"}; margin-right: 5px;"></span>
+                   Spending: 
+                  </div>
+                  <div>
+                    <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0))}</b>
                   </div>
                 </div>
-              </div>
+
+                ${
+                  taxes.length
+                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px; margin-top: 2px;">
+                  <div>
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
+                    <b>Taxes + Spending: </b>
+                  </div>
+                  <div>
+                    <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0) + taxes[years.indexOf(year)])}</b>
+                  </div>
+                </div>`
+                    : ""
+                }
+                              </div>
               <div class="h-[1px] bg-black my-1"/>
 <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-1 ">
@@ -379,10 +412,11 @@ const MainChart = ({
             `;
         }
         const longevityContent = longevityFlag
-          ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${people.length > 1
-            ? `, <span>Joint: (${Math.round((jointTable(people[0], people[1]).find((i: any) => i.year === year)?.probability || 0) * 100)}%)</span>`
-            : ""
-          }</div></div></div>`
+          ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${
+              people.length > 1
+                ? `, <span>Joint: (${Math.round((jointTable(people[0], people[1]).find((i: any) => i.year === year)?.probability || 0) * 100)}%)</span>`
+                : ""
+            }</div></div></div>`
           : "";
         tooltip.html(
           `<div class="mb-4"><strong>Year: ${year}</strong><br>${longevityContent}${tooltipContent}</div>`,
@@ -411,7 +445,7 @@ const MainChart = ({
       }
     };
 
-    const mouseleave = function(_: any, __: any) {
+    const mouseleave = function (_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };
@@ -425,9 +459,6 @@ const MainChart = ({
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
-
-    // Remove any existing legend containers
-    d3.select(containerRef.current).selectAll(".legend-container").remove();
 
     // Add legend container
     const legendContainer = d3

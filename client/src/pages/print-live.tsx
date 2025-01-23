@@ -19,15 +19,15 @@ const PrintLivePage = () => {
 
   const scenario = {
     ...client.liveSettings,
-    data: client.data,
+    incomes: client.incomes,
+    people: client.people,
     spending: client.spending,
-  }; //JSON.parse(searchParams.get("data") || "null");
+  };
   console.log(scenario, client);
   if (!scenario || !client.userdata) return <div>Loading...</div>;
-  console.log("sc", scenario);
   scenario.name = "Live";
   return (
-    <IncomeProvider data={client as any} setLocal={() => {}}>
+    <IncomeProvider data={client as any} setLocal={() => { }}>
       <div className="bg-white ">
         <Report
           client={client}

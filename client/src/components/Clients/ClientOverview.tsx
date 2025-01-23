@@ -5,6 +5,7 @@ import Confirm from "../Confirm";
 import { calculateAge } from "../Info/PersonInfo";
 import { timeAgo } from "src/utils";
 import Input from "../Inputs/Input";
+import { Client } from "src/types";
 
 const ClientOverview = ({
   client,
@@ -31,7 +32,7 @@ const ClientOverview = ({
         {client.updatedAt && timeAgo(new Date(client.updatedAt))}
       </td>
       <td className="px-2 py-1 text-sm text-gray-500">
-        {client.data.people
+        {client.people
           .map(
             (person) =>
               `${person.name} (${calculateAge(new Date(person.birthday))})`,

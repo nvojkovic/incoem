@@ -1,3 +1,5 @@
+import { Paydown } from "src/types";
+import { CalculationInfo } from "./types";
 import { adjustForInflation, isDead } from "./utils";
 
 export const calculate = (info: CalculationInfo<Paydown>) => {

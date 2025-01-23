@@ -1,3 +1,5 @@
+import { Client, MonthlyYearlyAmount, ScenarioSettings } from "./types";
+
 export function updateAtIndex<T>(arr: T[], index: number, update: T) {
   return arr.map((v, i) => (i === index ? update : v));
 }
@@ -28,18 +30,31 @@ const printNumberOld = (a: number | string) => {
 };
 
 export const printNumber = (s: number) => {
+  if (isNaN(s)) return "";
   if (Math.abs(s) < 0.001) return printNumberOld(0);
   return s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
 };
 
 export const printReport = async (clientId: number, scenarioId: number) => {
-  const pdfFile = await fetch(
-    import.meta.env.VITE_API_URL +
+  let url;
+  if (scenarioId === -1) {
+    url = import.meta.env.VITE_API_URL + "print/client/pdf-live/" + clientId;
+  } else {
+    url =
+      import.meta.env.VITE_API_URL +
       "print/client/pdf/" +
       clientId +
       "/" +
-      Math.max(scenarioId, 0).toString(),
-  ).then((res) => res.json());
+      scenarioId;
+  }
+  const pdfFile = await fetch(url).then((res) => res.json());
+  return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
+};
+
+export const printSummary = async (clientId: number) => {
+  let url;
+  url = import.meta.env.VITE_API_URL + "print/asset-summary/" + clientId;
+  const pdfFile = await fetch(url).then((res) => res.json());
   return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
 };
 
@@ -141,3 +156,17 @@ export const convertToMoYr = (amount: number) => ({
   type: "yearly" as const,
   value: amount,
 });
+
+export const getTaxRate = (
+  client: Client,
+  scenario: ScenarioSettings,
+  year: number,
+) => {
+  if (!client.taxesFlag || scenario.taxType === "Pre-Tax") return 0;
+
+  if (year >= (scenario.retirementYear || 0)) {
+    return (client.spending.postTaxRate || 0) / 100;
+  } else {
+    return (client.spending.preTaxRate || 0) / 100;
+  }
+};

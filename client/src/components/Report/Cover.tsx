@@ -1,4 +1,5 @@
 import { birthday } from "src/calculator/utils";
+import { Person, PrintClient, ScenarioSettings } from "src/types";
 
 const PrintCard = ({ title, subtitle }: any) => (
   <div className="bg-gray-100 py-3 px-6 rounded-lg border">
@@ -83,8 +84,8 @@ const ReportCover = ({ settings, client }: CoverProps) => {
                 subtitle={`${client.spending.postTaxRate}%`}
               />
             ) : null}
-            {settings.data.people.length > 1 &&
-              settings.data.people.map(
+            {settings.people.length > 1 &&
+              settings.people.map(
                 (person, i) =>
                   settings.whoDies == i &&
                   settings.deathYears[i] && (

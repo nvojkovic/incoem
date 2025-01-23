@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { Header } from "@tanstack/react-table";
 import { CSS } from "@dnd-kit/utilities";
 import { CSSProperties } from "react";
+import { SelectedColumn } from "src/types";
 
 const DraggableTableHeader = ({
   header,
@@ -67,8 +68,9 @@ const DraggableTableHeader = ({
             );
           }
           if (e.detail === 2) {
+            console.log("open@", data);
             clearTimeout(timer);
-            setOpenModal(data.index);
+            setOpenModal(data.incomeId);
           }
           console.log("asdas ");
         }}

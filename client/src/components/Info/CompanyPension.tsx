@@ -1,11 +1,12 @@
 import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
+import { Person, CompanyPension as CompanyPensionType } from "src/types";
 
 interface Props {
-  pension: CompanyPension;
+  pension: CompanyPensionType;
   people: Person[];
-  setIncome: (income: CompanyPension) => void;
+  setIncome: (income: CompanyPensionType) => void;
 }
 
 const CompanyPension = ({ people, pension, setIncome }: Props) => {

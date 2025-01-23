@@ -2,6 +2,7 @@ import Select from "../Inputs/Select";
 import Input from "../Inputs/Input";
 import IncomeYearlyIncrease from "./IncomeYearlyIncrease";
 import { migrateOtherIncome } from "src/calculator/other-income";
+import { OtherIncome, Person } from "src/types";
 
 interface Props {
   annuity: OtherIncome;

@@ -23,18 +23,20 @@ const ScenarioTab = ({
     store(x);
   };
   return (
-    <div className={active ? "bg-white" : "bg-[#f3f4f6]"}>
+    <div className={active ? "bg-white" : ""}>
       <div
-        className={`${
-          live ? "px-6" : "px-5"
-        } text-sm cursor-pointer border-b-2 h-[44px] flex justify-center items-center w-auto font-semibold ${
-          active ? "border-main-orange text-main-orange " : "text-[#667085]"
-        } z-50 w-full`}
-        style={{
-          backgroundColor: active
-            ? "rgba(var(--primary-color-segment),0.1)"
-            : "",
-        }}
+        className={`${live ? "px-6" : "px-5"
+          } text-sm cursor-pointer h-[44px] flex justify-center items-center w-auto font-medium ${active
+            ? "border-b-2 border-main-orange text-black bg-[#ffdad0]"
+            : "text-[#667085]"
+          } z-50 w-full`}
+        style={
+          {
+            // backgroundColor: active
+            //   ? "rgba(var(--primary-color-segment),0.1)"
+            //   : "",
+          }
+        }
         onClick={setActive}
         onDoubleClick={() => !live && setEditing(true)}
       >

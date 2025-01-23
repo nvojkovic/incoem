@@ -3,13 +3,14 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useInfo } from "../../useData";
+import { IncomeType, Person } from "src/types";
 
 interface AddIncomeProps { }
 
 const AddIncome = ({ }: AddIncomeProps) => {
   const { addIncome, data } = useInfo();
-  const people = data.data.people;
-  const incomes = data.data.incomes;
+  const people = data.people;
+  const incomes = data.incomes;
   const addItem = useMemo(() => {
     return (type: string, title: string, person: Person) => (
       <div className="px-1 py-1" key={type + person.name}>

@@ -1,3 +1,5 @@
+import { Client } from "src/types";
+
 const API = import.meta.env.VITE_API_URL;
 
 export const helpUrl = `${API}help`;

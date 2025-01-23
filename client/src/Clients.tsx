@@ -6,6 +6,7 @@ import { deleteClient, duplicateClient, getClients } from "./services/client";
 import Spinner from "./components/Spinner";
 import Input from "./components/Inputs/Input";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import { Client } from "./types";
 
 const Clients = () => {
   const [clients, setClients] = useState<Client[]>(null as any);
@@ -125,9 +126,9 @@ const Clients = () => {
                       if (sortKey === "updated_at") {
                         return sortDir === "up"
                           ? new Date(a.updatedAt).getTime() -
-                          new Date(b.updatedAt).getTime()
+                              new Date(b.updatedAt).getTime()
                           : new Date(b.updatedAt).getTime() -
-                          new Date(a.updatedAt).getTime();
+                              new Date(a.updatedAt).getTime();
                       }
                       return 0;
                     })

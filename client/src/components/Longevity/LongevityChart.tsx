@@ -1,3 +1,4 @@
+import { Person } from "src/types";
 import SurvivalChart from "../Charts/LifeExpectancyChart";
 import { jointTable, makeTable } from "./calculate";
 

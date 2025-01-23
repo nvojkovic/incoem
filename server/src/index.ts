@@ -14,6 +14,7 @@ import {
   deleteClient,
   duplicateClient,
   getClient,
+  getPrintAssetSummary,
   getPrintClient,
   getPrintClientPdf,
   getPrintClientPdfLive,
@@ -29,6 +30,14 @@ import {
   updateUser,
   uploadLogo,
 } from "./controllers/user";
+import {
+  externalMiddleware,
+  getAssetSummary,
+  listClients,
+  updateAssetSummary,
+  validateRequest,
+} from "./controllers/external";
+import { updateAssetSummarySchema } from "./schema/assetSummary";
 const port = 3000;
 
 let app = express();
@@ -74,6 +83,7 @@ app.get("/client/:id", verifySession(), getClient);
 app.get("/print/client/pdf/:id/:scenario", verifySession(), getPrintClientPdf);
 app.get("/print/client/pdf-live/:id/", verifySession(), getPrintClientPdfLive);
 app.get("/print/client/:id/", getPrintClient);
+app.get("/print/asset-summary/:id/", getPrintAssetSummary);
 app.post("/client/:id", verifySession(), updateClient);
 app.post("/client/:id/duplicate", verifySession(), duplicateClient);
 app.post("/client/scenarios/:id", verifySession(), updateScenario);
@@ -94,6 +104,15 @@ app.get("/help", async (req, res) => {
   const data = await fetch(url);
   res.send(await data.text());
 });
+
+app.get("/external/advisor/:email", externalMiddleware, listClients);
+app.get("/external/asset-summary/:id", externalMiddleware, getAssetSummary);
+app.put(
+  "/external/asset-summary/:id",
+  externalMiddleware,
+  validateRequest(updateAssetSummarySchema),
+  updateAssetSummary,
+);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);

@@ -8,11 +8,11 @@ import { Tooltip } from "flowbite-react";
 import { useEffect, useState } from "react";
 
 interface Props {
-  label: string;
+  label: string | React.ReactElement;
   value: any;
   disabled?: boolean;
   vertical?: boolean;
-  tooltip?: string;
+  tooltip?: string | React.ReactElement;
   toggleable?: boolean;
   labelLength?: number;
   invalid?: boolean;
@@ -56,6 +56,7 @@ const Input = ({
   tooltip,
   disabled = false,
   width,
+  inlineLabel,
   ...props
 }: Props) => {
   let input = null as any;
@@ -66,7 +67,7 @@ const Input = ({
     setInternalValue(value?.toString());
   }, [value]);
 
-  const basic = `focus:outline-none focus:border-main-orange-light focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width} ${invalid ? "border-red-500 border-2" : ""}`;
+  const basic = `focus:outline-none focus:border-main-orange-light focus:ring-1 focus:ring-main-orange rounded-lg border border-[#D0D5DD] px-3 py-[6px] text-m disabled:bg-gray-100 ${width} ${invalid ? "border-red-500 border-2" : ""} ${inlineLabel && "pl-[105px] py-[4px]"}`;
   if (subtype === "money") {
     input = (
       <CurrencyInput
@@ -199,14 +200,14 @@ const Input = ({
   }
   return (
     <div
-      className={`flex ${vertical ? "flex-col" : "lg:flex-row md:flex-row"} gap-1 w-full  flex-col`}
+      className={`flex ${vertical ? "flex-col justify-start" : "lg:flex-row md:flex-row"} gap-1 w-full  flex-col`}
     >
       <div
         className={`flex gap-2 ${vertical ? "items-start text-left" : "items-center"}`}
       >
         {label && (
           <label
-            htmlFor={label}
+            htmlFor={label as any}
             className={`text-sm text-[#344054] ${!vertical && labelLength === 0 && "min-w-36"} `}
             style={labelLength !== 0 ? { width: `${labelLength}px` } : {}}
           >
@@ -253,6 +254,13 @@ const Input = ({
               {input}
             </div>
           </Tooltip>
+        </div>
+      ) : inlineLabel ? (
+        <div className="relative">
+          <div className="absolute mt-[7px] ml-[10px] text-[14px] text-[#9396A0]">
+            {inlineLabel}
+          </div>
+          {input}
         </div>
       ) : (
         input

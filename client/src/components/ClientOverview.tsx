@@ -14,6 +14,7 @@ const ClientOverview = () => {
 
   const reportSettings = data.reportSettings.filter((s) => {
     if (s.name === "spending" && !data.needsFlag) return false;
+    if (s.name === "spending-chart" && !data.needsFlag) return false;
     if (s.name === "longevity" && !data.longevityFlag) return false;
     return true;
   });
@@ -34,7 +35,7 @@ const ClientOverview = () => {
                 />
               </div>
               <div className="flex gap-12">
-                {data.data.people.map((person, i) => (
+                {data.people.map((person, i) => (
                   <PersonInfo
                     key={i}
                     subtitle="Details about how this works"
@@ -88,7 +89,7 @@ const ClientOverview = () => {
                 tabIndex={5}
               />
 
-              {data.data.people.map((person, i) => (
+              {data.people.map((person, i) => (
                 <Input
                   value={data.liveSettings.deathYears[i]}
                   subtype="number"
@@ -130,6 +131,13 @@ const ClientOverview = () => {
                 value={data.longevityFlag}
                 setValue={setField("longevityFlag")}
                 label="Longevity"
+                size="full"
+                subtype="toggle"
+              />
+              <Input
+                value={data.taxesFlag}
+                setValue={setField("taxesFlag")}
+                label="Taxes"
                 size="full"
                 subtype="toggle"
               />

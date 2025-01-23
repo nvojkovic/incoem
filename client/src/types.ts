@@ -1,4 +1,6 @@
-interface SelectedColumn {
+import { AssetSummary } from "./components/Nate/types";
+
+export interface SelectedColumn {
   type:
   | "year"
   | "age"
@@ -7,6 +9,8 @@ interface SelectedColumn {
   | "none"
   | "spending"
   | "gap"
+  | "taxes"
+  | "posttax"
   | "income-stability"
   | "spending-stability"
   | "0-alive"
@@ -15,19 +19,20 @@ interface SelectedColumn {
   id: number;
 }
 
-interface Person {
+export interface Person {
   name: string;
   birthday: string;
   id: number;
   sex?: "Male" | "Female";
 }
-interface IncomeMapData {
+
+export interface IncomeMapData {
   people: Person[];
   incomes: Income[];
   version: 1;
 }
 
-interface Income {
+export interface Income {
   id: number;
   personId: number;
   type: IncomeType;
@@ -35,7 +40,7 @@ interface Income {
   stable: boolean;
 }
 
-type IncomeType =
+export type IncomeType =
   | "employment-income"
   | "social-security"
   | "company-pension"
@@ -43,12 +48,12 @@ type IncomeType =
   | "other-income"
   | "paydown";
 
-interface MonthlyYearlyAmount {
+export interface MonthlyYearlyAmount {
   type: "monthly" | "yearly";
   value: number;
 }
 
-interface EmploymentIncome extends Income {
+export interface EmploymentIncome extends Income {
   type: "employment-income";
   startAge: number;
   name: string;
@@ -61,7 +66,7 @@ interface EmploymentIncome extends Income {
   retirementAgeMonth: number;
 }
 
-interface SocialSecurityIncome extends Income {
+export interface SocialSecurityIncome extends Income {
   type: "social-security";
   calculationMethod: "manual" | "pia";
   pia: number;
@@ -74,7 +79,7 @@ interface SocialSecurityIncome extends Income {
   startAgeMonth: number;
 }
 
-interface CompanyPension extends Income {
+export interface CompanyPension extends Income {
   type: "company-pension";
   name: string;
   personId: number;
@@ -87,7 +92,7 @@ interface CompanyPension extends Income {
   firstYearProRatePercent: number;
 }
 
-interface BasicAnnuity extends Income {
+export interface BasicAnnuity extends Income {
   type: "annuity";
   name: string;
   personId: number;
@@ -100,7 +105,7 @@ interface BasicAnnuity extends Income {
   firstYearProRatePercent: number;
 }
 
-interface OtherIncome extends Income {
+export interface OtherIncome extends Income {
   type: "other-income";
   name: string;
   personId: number;
@@ -115,7 +120,7 @@ interface OtherIncome extends Income {
   firstYearProRatePercent: number;
 }
 
-interface Paydown extends Income {
+export interface Paydown extends Income {
   type: "paydown";
   name: string;
   personId: number;
@@ -126,41 +131,32 @@ interface Paydown extends Income {
   interestRate: number;
 }
 
-interface CalculationInfo<T extends Income> {
-  people: Person[];
-  incomes: Income[];
-  inflation?: number;
-  income: T;
-  startYear: number;
-  currentYear: number;
-  deathYears: number[];
-  inflationType: string;
-  ssSurvivorAge: (number | null)[];
-  dead: number;
-}
-
-interface Client {
+export interface Client {
   title: string;
   createdAt: string;
   updatedAt: string;
   id: number;
-  data: IncomeMapData;
+  people: Person[];
+  incomes: Income[];
   spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
   calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
+  taxesFlag: boolean;
   longevityFlag: boolean;
   allInOneCalculator: any[];
   versatileCalculator: any;
   liveSettings: ScenarioSettings;
   reportSettings: ReportSettings;
+  assetSummary: AssetSummary;
 }
-type PrintClient = Client & {
+
+export type PrintClient = Client & {
   userdata: UserInfo;
 };
 
-interface User {
+export interface User {
   info?: UserInfo;
   createdAt: number;
   intercomHash: string;
@@ -168,13 +164,14 @@ interface User {
   // Add other user properties as needed
 }
 
-interface UserInfo {
+export interface UserInfo {
   firmName: string;
   disclosures: string;
   subsciptionStatus?: string;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
   longevityFlag: boolean;
+  taxesFlag: boolean;
   logo?: string;
   email: string;
   name?: string;
@@ -187,7 +184,7 @@ interface UserInfo {
   globalReportSettings: ReportSettings;
 }
 
-interface ScenarioSettings {
+export interface ScenarioSettings {
   id: number;
   name: string;
   maxYearsShown: number;
@@ -195,21 +192,29 @@ interface ScenarioSettings {
   ssSurvivorAge: (number | null)[];
   mapType: "result" | "composite";
   monthlyYearly: "monthly" | "yearly";
+  chartType: "income" | "spending";
   inflation: number;
   taxType: "Pre-Tax" | "Post-Tax";
   longevityPercent: number;
   inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;
-  data: IncomeMapData;
+  people: Person[];
+  incomes: Income[];
 }
 
-type YearlyIncrease =
+export type YearlyIncrease =
   | { type: "general" }
   | { type: "none" }
   | { type: "custom"; percent: number };
 
-interface RetirementSpendingSettings {
+export interface SpendingResult {
+  type: "base" | "pre" | "post";
+  category?: string;
+  amount: number;
+}
+
+export interface RetirementSpendingSettings {
   currentSpending: number;
   newCurrentSpending: MonthlyYearlyAmount;
   yearlyIncrease: YearlyIncrease;
@@ -220,7 +225,7 @@ interface RetirementSpendingSettings {
   postSpending: NewSpending[];
 }
 
-interface CurrentSpending {
+export interface CurrentSpending {
   category: string;
   amount: number;
   newAmount: MonthlyYearlyAmount;
@@ -228,7 +233,7 @@ interface CurrentSpending {
   increase: YearlyIncrease;
 }
 
-interface NewSpending {
+export interface NewSpending {
   category: string;
   amount: number;
   newAmount: MonthlyYearlyAmount;
@@ -238,41 +243,48 @@ interface NewSpending {
   changeAtDeath: [number, number];
 }
 
-interface CoverPage {
+export interface CoverPage {
   id: string;
   name: "cover";
   settings: object;
 }
 
-interface IncomesPage {
+export interface IncomesPage {
   id: string;
   name: "incomes";
   settings: object;
 }
 
-interface IncomeChartPage {
+export interface IncomeChartPage {
   id: string;
   name: "income-chart";
   settings: object;
 }
 
-interface SpendingPage {
+export interface SpendingPage {
   id: string;
   name: "spending";
   settings: object;
 }
 
-interface LongevityPage {
+export interface SpendingChartPage {
+  id: string;
+  name: "spending-chart";
+  settings: object;
+}
+
+export interface LongevityPage {
   id: string;
   name: "longevity";
   settings: object;
 }
 
-type ReportPage =
+export type ReportPage =
   | CoverPage
   | IncomesPage
   | IncomeChartPage
   | SpendingPage
+  | SpendingChartPage
   | LongevityPage;
 
-type ReportSettings = ReportPage[];
+export type ReportSettings = ReportPage[];

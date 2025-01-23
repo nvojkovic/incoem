@@ -13,16 +13,20 @@ model Client {
   title               String
   userId              String
   data                Json      @default("{}")
+  people              Json      @default("[]")
+  incomes             Json      @default("[]")
   scenarios           Json      @default("[]")
   spending            Json      @default("{\"preSpending\":[],\"postSpending\":[],\"yearlyIncrease\":{\"type\":\"general\"},\"currentSpending\":null,\"decreaseAtDeath\":[0,0]}")
   stabilityRatioFlag  Boolean   @default(false)
   needsFlag           Boolean   @default(false)
   longevityFlag       Boolean   @default(false)
+  taxesFlag           Boolean   @default(false)
   updatedAt           DateTime?
   allInOneCalculator  Json      @default("[]")
   versatileCalculator Json      @default("{\"user\":{\"startAge\":0,\"presentValue\":0,\"endYear\":10},\"payment\":{\"amount\":0,\"timing\":\"beginning\",\"increase\":0,\"startYear\":0,\"years\":{},\"type\":\"simple\"},\"other\":{\"rateOfReturn\":0,\"taxRate\":0,\"inflation\":0}}")
   liveSettings        Json      @default("{\"maxYearsShown\":30,\"deathYears\":[null,null],\"inflation\":0,\"whoDies\":-1,\"name\":\"\",\"inflationType\":\"Nominal\",\"taxType\":\"Pre-Tax\"}")
   reportSettings      Json      @default("[{\"id\":\"fc819519-a14c-4e86-b4a8-abe7b285fa7b\",\"name\":\"cover\",\"settings\":{},\"enabled\":true},{\"id\":\"a08ec725-9108-4e00-a3f4-e973c3cb9fce\",\"name\":\"incomes\",\"settings\":{},\"enabled\":true},{\"id\":\"d3c43f54-4250-41e1-8c67-2e37ff53fe91\",\"name\":\"income-chart\",\"settings\":{},\"enabled\":true},{\"id\":\"d3ad16db-f1e5-43f7-b254-e967e35a8115\",\"name\":\"spending\",\"settings\":{},\"enabled\":true},{\"id\":\"d4ad16db-f1e5-43f7-b254-e967e35a811a\",\"name\":\"longevity\",\"settings\":{},\"enabled\":true},{\"id\":\"d6ad16db-f1e5-43f7-b254-e967e35a811f\",\"name\":\"composite\",\"settings\":{},\"enabled\":true}]")
+  assetSummary        Json      @default("{\"debts\":[],\"income\":[],\"socialInsurance\":[{\"owner\":0,\"id\":\"6003ae58-567f-4b53-a73b-43017a0975d1\"},{\"owner\":1,\"id\":\"624e3c20-c49b-4979-83c6-e925534c5619\"}],\"hardAssets\":[],\"cashAssets\":[],\"statementWealth\":[],\"inheritance\":[],\"lifeInsurance\":[],\"longTermCare\":[],\"accumulationAnnuity\":[],\"personalPensionAnnuity\":[],\"pension\":[]}")
 }
 
 model UserInfo {
@@ -38,6 +42,7 @@ model UserInfo {
   stabilityRatioFlag          Boolean @default(false)
   needsFlag                   Boolean @default(false)
   longevityFlag               Boolean @default(false)
+  taxesFlag                   Boolean @default(false)
   globalInflation             Float?  @default(2.5)
   globalYearsShown            Int?    @default(30)
   globalLifeExpectancy        Int?    @default(78)

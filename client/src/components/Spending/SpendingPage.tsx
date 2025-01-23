@@ -7,223 +7,27 @@ import { useInfo } from "../../useData";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
-import YearlyIncrease from "./YearlyIncrease";
+import YearlyIncreaseComponent from "./YearlyIncrease";
 import {
   convertToMoYr,
-  moyrToAnnual,
+  getTaxRate,
   updateAtIndex,
   yearRange,
 } from "../../utils";
-import { calculateAge } from "../Info/PersonInfo";
 import Layout from "../Layout";
 import SpendingTable from "./SpendingTable";
 import WhoDies from "../WhoDies";
-import MainChart from "../Charts/MainChart";
 import Confirm from "../Confirm";
 import { useState } from "react";
-import { SmallToggle } from "../Live";
-
-export const calculateSpendingYear = (
-  data: IncomeMapData,
-  spending: RetirementSpendingSettings | undefined,
-  settings: ScenarioSettings,
-  year: number,
-) => {
-  if (!spending) return 0;
-  const years = year - 2024;
-
-  const inflationRate = (inflation: YearlyIncrease) => {
-    if (!inflation || inflation.type == "none") return 0;
-    else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
-    else if (inflation.type == "general") return settings.inflation / 100 || 0;
-    else return -10e9;
-  };
-
-  const inflateAmount = (amount: number, inflation: YearlyIncrease) => {
-    return amount * Math.pow(1 + inflationRate(inflation), years);
-  };
-
-  // back out existing spending
-  const existing = spending.preSpending
-    .map((item) =>
-      moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-
-  let result =
-    moyrToAnnual(
-      spending.newCurrentSpending
-        ? spending.newCurrentSpending
-        : convertToMoYr(spending.currentSpending),
-    ) - existing;
-
-  //back out death reduction
-  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
-    const age =
-      calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
-    if (age > (settings.deathYears[settings.whoDies] as any)) {
-      result = result * (1 - spending.decreaseAtDeath[settings.whoDies] / 100);
-    }
-  }
-  // inflate by general
-  result = inflateAmount(result, spending.yearlyIncrease);
-
-  // add pre back in
-  const pre = spending.preSpending
-    ?.filter((item) => year <= item.endYear)
-    .map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        item.increase,
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  result += pre;
-
-  // add post spending
-  const post = spending.postSpending
-    ?.filter(
-      (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
-    )
-    .map((item) => {
-      let amount = moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      );
-      if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
-        const age =
-          calculateAge(new Date(data.people[settings.whoDies].birthday)) +
-          years;
-        if (age > (settings.deathYears[settings.whoDies] as any)) {
-          amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
-        }
-      }
-      return inflateAmount(amount, item.increase);
-    })
-    .reduce((a, b) => a + b, 0);
-  result += post;
-
-  if (settings.taxType == "Pre-Tax") {
-    if (year <= (settings.retirementYear || 0)) {
-      result /= 1 - (spending.preTaxRate || 0) / 100;
-    } else {
-      result /= 1 - (spending.postTaxRate || 0) / 100;
-    }
-  }
-  if (settings.inflationType == "Real") {
-    result = calculatePV(result, (settings.inflation || 0) / 100, years);
-  }
-
-  return Math.round(isNaN(result) ? 0 : result);
-};
-export const calculateSendingYear = (
-  data: IncomeMapData,
-  spending: RetirementSpendingSettings | undefined,
-  settings: ScenarioSettings,
-  year: number,
-) => {
-  if (!spending) return 0;
-  const years = year - 2024;
-  let result = 0;
-  const inflationRate = (inflation?: YearlyIncrease) => {
-    if (!inflation || inflation.type == "none") return 0;
-    else if (inflation.type == "custom") return (inflation.percent || 0) / 100;
-    else if (inflation.type == "general") return settings.inflation / 100 || 0;
-    else return -10e9;
-  };
-
-  const inflateAmount = (amount: number, inflation: number) => {
-    return amount * Math.pow(1 + inflation, years);
-  };
-
-  const pre = spending.preSpending
-    ?.filter((item) => year > item.endYear)
-    .map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        inflationRate(item.increase),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-
-  const uninflatedPre = spending.preSpending
-    ?.map((item) =>
-      moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount) || 0,
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  const inflatedPre = spending.preSpending
-    ?.map((item) =>
-      inflateAmount(
-        moyrToAnnual(
-          item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-        ),
-        inflationRate(item.increase),
-      ),
-    )
-    .reduce((a, b) => a + b, 0);
-  const post = spending.postSpending
-    ?.filter(
-      (item) => (item.endYear || 2100) >= year && (item.startYear || 0) <= year,
-    )
-    .map((item) => {
-      let amount = moyrToAnnual(
-        item.newAmount ? item.newAmount : convertToMoYr(item.amount || 0),
-      );
-      if (settings.whoDies !== -1 && settings.deathYears[settings.whoDies]) {
-        const age =
-          calculateAge(new Date(data.people[settings.whoDies].birthday)) +
-          years;
-        if (age > (settings.deathYears[settings.whoDies] as any)) {
-          amount *= 1 - item.changeAtDeath[settings.whoDies] / 100;
-        }
-      }
-      return inflateAmount(amount, inflationRate(item.increase));
-    })
-    .reduce((a, b) => a + b, 0);
-
-  result -= pre;
-  result += post;
-
-  let current = moyrToAnnual(
-    spending.newCurrentSpending
-      ? spending.newCurrentSpending
-      : convertToMoYr(spending.currentSpending),
-  );
-  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
-    const age =
-      calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
-    if (age > (settings.deathYears[settings.whoDies] as any)) {
-      current =
-        (current + result) * 1 -
-        spending.decreaseAtDeath[settings.whoDies] / 100;
-    }
-  }
-
-  result +=
-    inflateAmount(
-      current - uninflatedPre,
-      inflationRate(spending.yearlyIncrease),
-    ) + inflatedPre;
-  if (settings.taxType == "Pre-Tax") {
-    if (year <= (settings.retirementYear || 0)) {
-      result /= 1 - (spending.preTaxRate || 0) / 100;
-    } else {
-      result /= 1 - (spending.postTaxRate || 0) / 100;
-    }
-  }
-  if (settings.inflationType == "Real") {
-    result = calculatePV(result, (settings.inflation || 0) / 100, years);
-  }
-
-  return Math.round(isNaN(result) ? 0 : result);
-};
+import SpendingChart from "../Charts/SpendingChart";
+import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
+import calculate from "src/calculator/calculate";
+import {
+  CurrentSpending,
+  Income,
+  NewSpending,
+  ScenarioSettings,
+} from "src/types";
 
 const currentYear = new Date().getFullYear();
 
@@ -234,6 +38,31 @@ const SpendingPage = () => {
   const setSettings = set("liveSettings");
   const setField = (key: string) => (val: any) => {
     setSpending({ ...spending, [key]: val });
+  };
+
+  const startYear = currentYear;
+  const years = yearRange(startYear, startYear + settings.maxYearsShown);
+
+  const divisionFactor = settings.monthlyYearly === "monthly" ? 12 : 1;
+
+  const calculateOne = (income: Income, currentYear: number) => {
+    const result = calculate({
+      people: data.people,
+      income,
+      startYear,
+      currentYear,
+      deathYears: settings.deathYears as any,
+      dead: settings.whoDies,
+      inflation: settings.inflation,
+      incomes: data.incomes.filter((income) => income.enabled),
+      ssSurvivorAge: settings.ssSurvivorAge,
+      inflationType: settings.inflationType,
+    });
+
+    return {
+      ...result,
+      amount: result.amount / divisionFactor,
+    };
   };
 
   const setPreSpending = (
@@ -266,25 +95,80 @@ const SpendingPage = () => {
     currentYear,
     currentYear + settings.maxYearsShown,
   );
+  const taxes = years.map((year) => ({
+    name: "Taxes",
+    year,
+    amount:
+      data.incomes
+        .filter((income) => income.enabled)
+        .map((income) => calculateOne(income, year).amount)
+        .filter((t) => typeof t === "number")
+        .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
+  }));
+
   const calcSett = (settings: ScenarioSettings) =>
     Math.max(
       ...currentYearRange.map((year) =>
-        calculateSpendingYear(data.data, spending, settings, year),
+        calculateSpendingYear(
+          { incomes: data.incomes, people: data.people, version: 1 },
+          spending,
+          settings,
+          year,
+        ),
       ),
     );
 
   const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
   const maxY =
-    Math.max(
+    (Math.max(
       ...[
         calcSett({ ...settings, whoDies: -1 }),
         // calcSett({ ...settings, whoDies: 0 }),
         // calcSett({ ...settings, whoDies: 1 }),
       ],
-    ) / factor;
+    ) +
+      Math.max(...taxes.map((i) => i.amount))) /
+    factor;
 
   const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
+
+  const baseSpending = getSpendingItemOverYears(
+    { incomes: data.incomes, people: data.people, version: 1 },
+    spending,
+    settings,
+    currentYear,
+    currentYear + settings.maxYearsShown,
+    "base",
+  );
+  const preSpending = spending.preSpending.map((item) =>
+    getSpendingItemOverYears(
+      { incomes: data.incomes, people: data.people, version: 1 },
+      spending,
+      settings,
+      currentYear,
+      currentYear + settings.maxYearsShown,
+      "pre",
+      item.category,
+    ),
+  );
+
+  const postSpending = spending.postSpending.map((item) =>
+    getSpendingItemOverYears(
+      { incomes: data.incomes, people: data.people, version: 1 },
+      spending,
+      settings,
+      currentYear,
+      currentYear + settings.maxYearsShown,
+      "post",
+      item.category,
+    ),
+  );
+
+  // const taxes = yearRange(
+  //   startYear,
+  //   startYear + settings.maxYearsShown - 1,
+  // ).map((year) => {});
 
   return (
     <Layout page="spending">
@@ -311,12 +195,12 @@ const SpendingPage = () => {
                 label="Amount (Today's Dollars)"
               />
             </div>
-            <YearlyIncrease
+            <YearlyIncreaseComponent
               labels
               increase={spending.yearlyIncrease}
               setYearlyIncrease={setField("yearlyIncrease")}
             />
-            {data.data.people.map((v, i) => (
+            {data.people.map((v, i) => (
               <div>
                 <Input
                   vertical
@@ -384,8 +268,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-16">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-16">Increase (%)</div>
+                    )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -428,7 +312,7 @@ const SpendingPage = () => {
                     />
                   </td>
                   <td className="px-2 py-2">
-                    <YearlyIncrease
+                    <YearlyIncreaseComponent
                       labels={false}
                       increase={line.increase}
                       setYearlyIncrease={(v) =>
@@ -501,7 +385,7 @@ const SpendingPage = () => {
                       ...spending.postSpending,
                       {
                         increase: { type: "general" },
-                        changeAtDeath: data.data.people.map((_) => 0),
+                        changeAtDeath: data.people.map((_) => 0),
                       },
                     ]);
                   }}
@@ -536,21 +420,20 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${
-                    spending.postSpending.find(
-                      (i) => i.increase.type === "custom",
-                    ) && "w-64"
-                  }`}
+                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                    }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-8">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-8">Increase (%)</div>
+                    )}{" "}
                 </th>
 
-                {data.data.people.map((i) => (
+                {data.people.map((i) => (
                   <th className="px-6 py-3 font-medium">
                     Decrease at <br />
                     {i.name} Death
@@ -610,7 +493,7 @@ const SpendingPage = () => {
                     />
                   </td>
                   <td className="px-2 py-2">
-                    <YearlyIncrease
+                    <YearlyIncreaseComponent
                       labels={false}
                       increase={line.increase}
                       setYearlyIncrease={(v) =>
@@ -618,7 +501,7 @@ const SpendingPage = () => {
                       }
                     />
                   </td>
-                  {data.data.people.map((_, index2) => (
+                  {data.people.map((_, index2) => (
                     <td className="px-2 py-2">
                       <Input
                         vertical
@@ -692,165 +575,181 @@ const SpendingPage = () => {
           toggleabble
           defaultOpen
         >
-          <div className="flex gap-6 p-3">
-            <div className="border rounded-lg p-3 h-[96px] bg-white">
-              <div className="flex gap-4">
-                <div>
+          <div className="flex gap-6 p-2">
+            <div className="p-3 bg-white w-full">
+              <div className="flex justify-between w-full">
+                <div className="flex gap-4 items-end">
+                  {data.people.length > 1 ? (
+                    <div className="flex flex-col">
+                      <div className="flex">
+                        <WhoDies
+                          active={settings.whoDies == -1}
+                          setWhoDies={(i: number) =>
+                            setSettings({
+                              ...settings,
+                              whoDies: i,
+                            })
+                          }
+                          i={-1}
+                          title="Both Alive"
+                        />
+
+                        {data.people.map((person, i) => (
+                          <WhoDies
+                            active={settings.whoDies == i}
+                            key={person.id}
+                            age={settings.deathYears[i]}
+                            setAge={(e: any) =>
+                              setSettings({
+                                ...settings,
+                                deathYears: updateAtIndex(
+                                  settings.deathYears,
+                                  i,
+                                  parseInt(e),
+                                ),
+                              })
+                            }
+                            setWhoDies={(i: number) =>
+                              setSettings({
+                                ...settings,
+                                whoDies: i,
+                              })
+                            }
+                            i={i}
+                            title={`${person.name} Dies At`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+                  <Input
+                    label=""
+                    inlineLabel="Years Shown"
+                    width="!w-[160px] !py-[5px]"
+                    value={settings.maxYearsShown}
+                    setValue={(v: any) =>
+                      setSettings({ ...settings, maxYearsShown: v })
+                    }
+                    subtype="number"
+                    size="md"
+                  />
                   <MultiToggle
                     options={["Real", "Nominal"]}
-                    label="Inflation"
+                    label=""
                     value={settings.inflationType}
                     setValue={(v: any) =>
                       setSettings({ ...settings, inflationType: v })
                     }
                   />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    label="Amount"
-                    width="!w-16"
-                    value={settings.inflation}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, inflation: v })
-                    }
-                    subtype="percent"
-                    vertical
-                    size="md"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-6 mb-5 w-full">
-              <div className="border rounded-lg p-3 flex gap-3 bg-white">
-                <div className="w-60">
-                  <MultiToggle
-                    options={["Pre-Tax", "Post-Tax"]}
-                    label="Taxation"
-                    value={settings.taxType}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, taxType: v })
-                    }
-                  />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    vertical
-                    size="lg"
-                    value={spending.preTaxRate}
-                    setValue={(v) =>
-                      setSpending({ ...spending, preTaxRate: v })
-                    }
-                    subtype="percent"
-                    label={"Pre-Retirement Tax Rate"}
-                  />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    vertical
-                    size="lg"
-                    value={spending.postTaxRate}
-                    setValue={(v) =>
-                      setSpending({ ...spending, postTaxRate: v })
-                    }
-                    subtype="percent"
-                    label={"Post-Retirement Tax Rate"}
-                  />
-                </div>
-                <div className="mt-1">
-                  <Input
-                    label="Retirement Year"
-                    value={settings.retirementYear}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, retirementYear: v })
-                    }
-                    subtype="number"
-                    vertical
-                    size="md"
-                  />
-                </div>
-              </div>
-              <div>
-                <SmallToggle
-                  item1="Monthly"
-                  item2="Annual"
-                  active={
-                    settings.monthlyYearly === "monthly" ? "Monthly" : "Annual"
-                  }
-                  toggle={() =>
-                    setSettings({
-                      ...settings,
-                      monthlyYearly:
-                        settings.monthlyYearly === "monthly"
-                          ? "yearly"
-                          : "monthly",
-                    })
-                  }
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-6 mb-10">
-            {data.data.people.length > 1 ? (
-              <div className="border rounded-lg p-3 bg-white">
-                <div className="flex flex-col">
-                  <div className="text-sm text-[#344054] mb-1">Mortality</div>
-                  <div className="flex">
-                    <WhoDies
-                      active={settings.whoDies == -1}
-                      setWhoDies={(i: number) =>
-                        setSettings({
-                          ...settings,
-                          whoDies: i,
-                        })
-                      }
-                      i={-1}
-                      title="Both Alive"
-                    />
 
-                    {data.data.people.map((person, i) => (
-                      <WhoDies
-                        active={settings.whoDies == i}
-                        key={person.id}
-                        age={settings.deathYears[i]}
-                        setAge={(e: any) =>
-                          setSettings({
-                            ...settings,
-                            deathYears: updateAtIndex(
-                              settings.deathYears,
-                              i,
-                              parseInt(e),
-                            ),
-                          })
-                        }
-                        setWhoDies={(i: number) =>
-                          setSettings({
-                            ...settings,
-                            whoDies: i,
-                          })
-                        }
-                        i={i}
-                        title={`${person.name} Dies At`}
-                      />
-                    ))}
+                  <div className="">
+                    <Input
+                      onFocus={(event: any) => {
+                        const input = event.target;
+                        setTimeout(() => {
+                          input.select();
+                        }, 0);
+                      }}
+                      inlineLabel="Inflation rate"
+                      label=""
+                      labelLength={85}
+                      size="xs"
+                      width="!w-[160px] !py-[5px]"
+                      subtype="percent"
+                      value={settings.inflation}
+                      setValue={(e) =>
+                        setSettings({ ...settings, inflation: e })
+                      }
+                    />
                   </div>
                 </div>
+
+                <div>
+                  <MultiToggle
+                    options={["Monthly", "Annual"]}
+                    label=""
+                    value={
+                      settings.monthlyYearly === "monthly"
+                        ? "Monthly"
+                        : "Annual"
+                    }
+                    setValue={() =>
+                      setSettings({
+                        ...settings,
+                        monthlyYearly:
+                          settings.monthlyYearly === "monthly"
+                            ? "yearly"
+                            : "monthly",
+                      })
+                    }
+                  />
+                </div>
               </div>
-            ) : null}
-            <div className="border rounded-lg p-3 bg-white">
-              <Input
-                label="Years Shown"
-                value={settings.maxYearsShown}
-                setValue={(v: any) =>
-                  setSettings({ ...settings, maxYearsShown: v })
-                }
-                subtype="number"
-                vertical
-                size="md"
-              />
             </div>
           </div>
+          <div className="h-[1px] bg-gray-300 w-full"></div>
+          <div className="flex gap-6 ">
+            <div className="flex gap-6 w-full mx-3">
+              {data.taxesFlag && (
+                <div className="p-3 flex gap-3 bg-white">
+                  <div className="w-28">
+                    <Input
+                      subtype="toggle"
+                      label="Include Taxes"
+                      value={settings.taxType === "Post-Tax"}
+                      vertical
+                      setValue={(v) =>
+                        setSettings({
+                          ...settings,
+                          taxType: v ? "Post-Tax" : "Pre-Tax",
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="">
+                    <Input
+                      vertical
+                      size="lg"
+                      value={spending.preTaxRate}
+                      setValue={(v) =>
+                        setSpending({ ...spending, preTaxRate: v })
+                      }
+                      subtype="percent"
+                      label={"Pre-Retirement Tax Rate"}
+                    />
+                  </div>
+                  <div className="">
+                    <Input
+                      vertical
+                      size="lg"
+                      value={spending.postTaxRate}
+                      setValue={(v) =>
+                        setSpending({ ...spending, postTaxRate: v })
+                      }
+                      subtype="percent"
+                      label={"Post-Retirement Tax Rate"}
+                    />
+                  </div>
+                  <div className="">
+                    <Input
+                      label="Retirement Year"
+                      value={settings.retirementYear}
+                      setValue={(v: any) =>
+                        setSettings({ ...settings, retirementYear: v })
+                      }
+                      subtype="number"
+                      vertical
+                      size="md"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="h-[1px] bg-gray-300 w-full"></div>
           <div className="bg-white pb-[2px]">
-            <MainChart
+            <SpendingChart
+              spending={true}
               maxY={maxY}
               longevityFlag={false}
               people={[]}
@@ -861,29 +760,18 @@ const SpendingPage = () => {
                 currentYear,
                 currentYear + settings.maxYearsShown,
               )}
-              lineData={yearRange(
-                currentYear,
-                currentYear + settings.maxYearsShown,
-              ).map((_) => 0)}
               stackedData={[
-                {
-                  name: "Spending",
-                  stable: true,
-                  values: yearRange(
-                    currentYear,
-                    currentYear + settings.maxYearsShown,
-                  ).map(
-                    (year) =>
-                      calculateSpendingYear(
-                        data.data,
-                        spending,
-                        settings,
-                        year,
-                      ) / factor,
-                  ),
-                },
-              ]}
-              spending={true}
+                baseSpending,
+                ...preSpending,
+                ...postSpending,
+                taxes,
+              ].map((item) => ({
+                name: item[0].name,
+                stable: true,
+                values: item.map((i) =>
+                  i.name == "Taxes" ? i.amount : i.amount / factor,
+                ),
+              }))}
             />
           </div>
         </MapSection>
@@ -891,7 +779,7 @@ const SpendingPage = () => {
           <SpendingTable
             settings={settings}
             spending={spending}
-            data={data.data}
+            data={{ incomes: data.incomes, people: data.people, version: 1 }}
           />
         </MapSection>
       </div>
@@ -899,18 +787,30 @@ const SpendingPage = () => {
   );
 };
 
-export const MultiToggle = ({ label, value, options, setValue }: any) => {
+export const MultiToggle = ({
+  label,
+  value,
+  options,
+  setValue,
+  disabled,
+  vertical = true,
+}: any) => {
   return (
-    <div className="">
-      <label className="text-sm text-[#344054] w-36 ">{label}</label>
-      <div className="flex mt-[3px] border-collapse">
+    <div
+      className={`w-full   font-medium flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
+    >
+      <label className={`text-sm text-[#344054] ${vertical ? "w-36" : ""} `}>
+        {label}
+      </label>
+      <div className={`flex ${vertical ? "mt-[3px]" : ""} border-collapse`}>
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-lg" : ""} ${i == options.length - 1 ? "rounded-r-lg ml-[-1px]" : ""} border text-sm flex-1 py-[7px] px-4 ${
-              value === item ? "bg-main-orange text-white" : "bg-gray-200"
-            } border  border-gray-300 border-1`}
-            onClick={() => setValue(item)}
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${value === item
+                ? "bg-main-orange text-white"
+                : "bg-gray-200 text-[#555860]"
+              } ${vertical ? "" : "w-full"}`}
+            onClick={() => !disabled && setValue(item)}
           >
             {item}
           </button>
@@ -919,9 +819,5 @@ export const MultiToggle = ({ label, value, options, setValue }: any) => {
     </div>
   );
 };
-
-function calculatePV(futureValue: any, interestRate: any, periods: any) {
-  return futureValue / Math.pow(1 + interestRate, periods);
-}
 
 export default SpendingPage;

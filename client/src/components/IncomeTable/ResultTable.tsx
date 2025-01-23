@@ -1,7 +1,7 @@
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import calculate from "src/calculator/calculate";
 import title from "src/calculator/title";
-import { printNumber, splitDate, yearRange } from "src/utils";
+import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import { useMemo, useState } from "react";
 import { Tooltip } from "flowbite-react";
 import IncomeModal from "src/components/Info/IncomeModal";
@@ -21,15 +21,14 @@ import { arrayMove } from "@dnd-kit/sortable";
 import React from "react";
 import { useInfo } from "src/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
-import { calculateSpendingYear } from "src/components/Spending/SpendingPage";
 import DraggableTable from "./DraggableTable";
 import { jointTable, makeTable } from "../Longevity/calculate";
-import ScenarioHeader from "./ScenarioHeader";
+import { calculateSpendingYear } from "../Spending/calculate";
+import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 
 const ResultTable = ({
   client,
   settings,
-  removeScenario,
   fullScreen,
   selectedYear,
   setSelectedYear,
@@ -50,13 +49,18 @@ const ResultTable = ({
   setSettings?: (data: any) => void;
 }) => {
   const startYear = new Date().getFullYear();
-  const incomes = settings.data.incomes.filter((inc) => inc.enabled);
+  const incomes = settings.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
   const [hoverRow, setHoverRow] = useState(-1);
+  const incomeMapData = {
+    people: settings.people,
+    incomes: settings.incomes,
+    version: 1 as const,
+  };
 
   const columns = React.useMemo<ColumnDef<any>[]>(
-    () => generateColumns(incomes, settings.data, selectedColumn),
-    [selectedColumn, settings, selectedYear, settings.data, incomes],
+    () => generateColumns(incomes, incomeMapData, selectedColumn),
+    [selectedColumn, settings, selectedYear, incomeMapData, incomes],
   );
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
     columns.map((c) => c.id!),
@@ -79,7 +83,7 @@ const ResultTable = ({
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
-      people: settings.data.people,
+      people: settings.people,
       income,
       startYear,
       currentYear,
@@ -108,7 +112,7 @@ const ResultTable = ({
               <div className="w-20 relative">
                 <Tooltip
                   content={(() => {
-                    const people = settings.data.people;
+                    const people = settings.people;
                     const joint =
                       people.length > 1 ? (
                         <div>
@@ -121,7 +125,7 @@ const ResultTable = ({
                           %
                         </div>
                       ) : null;
-                    const table = settings.data.people.map((p) => {
+                    const table = settings.people.map((p) => {
                       const t = makeTable(p);
                       const item = t.table.find((i) => i.year == currentYear);
                       if (!item) return null;
@@ -146,7 +150,7 @@ const ResultTable = ({
                   arrow={false}
                   className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
                 >
-                  {settings.data.people
+                  {settings.people
                     .map((p) => currentYear - splitDate(p.birthday).year)
                     .join("/")}
                 </Tooltip>
@@ -157,7 +161,7 @@ const ResultTable = ({
             incomes.map((income, i) => {
               const result = calculateOne(income, currentYear);
               return [
-                title(incomes, settings.data.people, i),
+                title(incomes, settings.people, i),
                 <div>
                   {result.note ? (
                     <Tooltip
@@ -186,7 +190,7 @@ const ResultTable = ({
                   content={(() => {
                     const needs =
                       calculateSpendingYear(
-                        settings.data,
+                        incomeMapData,
                         client.spending,
                         settings,
                         currentYear,
@@ -200,15 +204,23 @@ const ResultTable = ({
                       .map((income) => calculateOne(income, currentYear).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
-                    const gap = income - needs;
+
+                    const taxRate = getTaxRate(client, settings, currentYear);
+                    const gap = income - needs - taxRate * income;
                     const stabilityRatio = Math.round(
                       (stableIncome / income) * 100,
                     );
                     const needsStable = Math.round(
-                      (stableIncome / needs) * 100,
+                      ((stableIncome * (1 - taxRate)) / needs) * 100,
                     );
                     return (
                       <div className="z-[5000000] bg-white w-44 sticky">
+                        {client.taxesFlag && (
+                          <>
+                            <div>Total Income: {printNumber(income)}</div>
+                            <div>Taxes: {printNumber(taxRate * income)}</div>
+                          </>
+                        )}
                         {client.spending && client.needsFlag && (
                           <>
                             <div>
@@ -255,7 +267,16 @@ const ResultTable = ({
                           (income) => calculateOne(income, currentYear).amount,
                         )
                         .filter((t) => typeof t === "number")
-                        .reduce((a, b) => a + b, 0),
+                        .reduce((a, b) => a + b, 0) *
+                      (client.taxesFlag &&
+                        settings.taxType == "Post-Tax" &&
+                        settings.retirementYear
+                        ? 1 -
+                        (currentYear >= settings.retirementYear
+                          ? client.spending.postTaxRate
+                          : client.spending.preTaxRate) /
+                        100
+                        : 1),
                     )}
                   </div>
                 </Tooltip>
@@ -264,7 +285,7 @@ const ResultTable = ({
           ),
         }),
       ),
-    [settings, settings.data, divisionFactor, client],
+    [settings, incomeMapData, divisionFactor, client],
   );
 
   const handleDragEnd = (moved: any) => {
@@ -275,7 +296,7 @@ const ResultTable = ({
     if (
       newIndex === 0 ||
       newIndex === 1 ||
-      newIndex == settings.data.incomes.length + 2
+      newIndex == settings.incomes.length + 2
     )
       return;
     setColumnOrder((columnOrder) => {
@@ -283,121 +304,106 @@ const ResultTable = ({
     });
     if (active && over && active.id !== over.id) {
       if (setSettings) {
-        const oldIndex = settings.data.incomes.findIndex(
-          (x) => x.id == active.id,
-        );
-        const newIndex = settings.data.incomes.findIndex(
-          (x) => x.id == over.id,
-        );
-        const incomes = arrayMove(settings.data.incomes, oldIndex, newIndex);
-        console.log(
-          "new ",
-          oldIndex,
-          newIndex,
-          incomes.map((i) => i.id),
-        );
+        const oldIndex = settings.incomes.findIndex((x) => x.id == active.id);
+        const newIndex = settings.incomes.findIndex((x) => x.id == over.id);
+        const incomes = arrayMove(settings.incomes, oldIndex, newIndex);
         updateIncomes(incomes);
       }
     }
   };
+  console.log("open@", settings.id, openModal);
 
   return (
-    <DndContext
-      collisionDetection={closestCenter}
-      modifiers={[restrictToHorizontalAxis]}
-      onDragEnd={handleDragEnd}
-      sensors={sensors}
-    >
-      <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
-        <div className="print:hidden">
-          <ScenarioHeader
-            removeScenario={removeScenario}
-            client={client}
-            settings={settings}
+    <>
+      <div className="print:hidden"></div>
+      {settings.id === -1 &&
+        incomes?.map((income) => (
+          <IncomeModal
+            income={income}
+            setOpen={() => setOpenModal(-1)}
+            open={openModal === income.id}
+            i={income.id}
+            key={income.id}
           />
-        </div>
-        {!settings.name &&
-          settings.id === -1 &&
-          incomes?.map((income) => (
-            <IncomeModal
-              income={income}
-              setOpen={() => setOpenModal(-1)}
-              open={openModal === income.id}
-              i={income.id}
+        ))}
+      <DndContext
+        collisionDetection={closestCenter}
+        modifiers={[restrictToHorizontalAxis]}
+        onDragEnd={handleDragEnd}
+        sensors={sensors}
+      >
+        <div className="rounded-xl border-[#EAECF0] border print:border-0 ">
+          <div className="flex">
+            <DraggableTable
+              columns={columns}
+              setSelectedYear={setSelectedYear}
+              fullScreen={fullScreen}
+              tableData={tableData}
+              selectedYear={selectedYear}
+              hoverRow={hoverRow}
+              setHoverRow={setHoverRow}
+              columnOrder={columnOrder}
+              setColumnOrder={setColumnOrder}
+              setSelectedColumn={setSelectedColumn}
+              selectedColumn={selectedColumn}
+              setOpenModal={setOpenModal}
             />
-          ))}
-        <div className="flex">
-          <DraggableTable
-            columns={columns}
-            setSelectedYear={setSelectedYear}
-            fullScreen={fullScreen}
-            tableData={tableData}
-            selectedYear={selectedYear}
-            hoverRow={hoverRow}
-            setHoverRow={setHoverRow}
-            columnOrder={columnOrder}
-            setColumnOrder={setColumnOrder}
-            setSelectedColumn={setSelectedColumn}
-            selectedColumn={selectedColumn}
-            setOpenModal={setOpenModal}
-          />
-          <table className="pr-3 ml-[-3px]">
-            <thead
-              className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[44px]" : "top-[114px]"} ${fullScreen ? "a" : "b"}`}
-            >
-              <tr>
-                <td
-                  className={`font-medium  ${
-                    selectedColumn.type == "total" ? "bg-slate-200" : ""
-                  }`}
-                >
-                  <div
-                    className={`flex flex-col items-start px-2 ${client.data.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
-                    onClick={(e) => {
-                      console.log(selectedColumn);
-                      if (e.detail === 1) {
-                        setTimeout(() => {
-                          selectedColumn.type === "total"
-                            ? setSelectedColumn({ type: "none", id: 0 })
-                            : setSelectedColumn({ type: "total", id: 0 });
-                        }, 200);
-                      }
-                    }}
-                  >
-                    Total
-                  </div>
-                </td>
-              </tr>
-            </thead>
-            <tbody className="text-sm">
-              {tableData.map((row, i) => (
-                <tr
-                  key={i}
-                  onMouseEnter={() => {
-                    setHoverRow(i);
-                  }}
-                  onMouseLeave={() => {
-                    setHoverRow(-1);
-                  }}
-                  className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} ${hoverRow === i ? "!bg-slate-100" : ""}  border-y border-[#EAECF0] ${selectedYear === 0 && ""}`}
-                >
+            <table className="pr-3 ml-[-3px]">
+              <thead
+                className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[110px]" : "top-[180px]"}`}
+              >
+                <tr>
                   <td
-                    onClick={() =>
-                      selectedYear == row.year
-                        ? setSelectedYear(-1)
-                        : setSelectedYear(row.year)
-                    }
-                    className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} px-2 py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
+                    className={`font-medium  ${selectedColumn.type == "total" ? "bg-slate-200" : ""
+                      }`}
                   >
-                    {row.total}
+                    <div
+                      className={`flex flex-col items-start px-2 ${client.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
+                      onClick={(e) => {
+                        if (e.detail === 1) {
+                          setTimeout(() => {
+                            selectedColumn.type === "total"
+                              ? setSelectedColumn({ type: "none", id: 0 })
+                              : setSelectedColumn({ type: "total", id: 0 });
+                          }, 200);
+                        }
+                      }}
+                    >
+                      {client.taxesFlag ? settings.taxType : ""} Total
+                    </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-sm">
+                {tableData.map((row, i) => (
+                  <tr
+                    key={i}
+                    onMouseEnter={() => {
+                      setHoverRow(i);
+                    }}
+                    onMouseLeave={() => {
+                      setHoverRow(-1);
+                    }}
+                    className={`${i % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} ${hoverRow === i ? "!bg-slate-100" : ""}  border-y border-[#EAECF0] ${selectedYear === 0 && ""}`}
+                  >
+                    <td
+                      onClick={() =>
+                        selectedYear == row.year
+                          ? setSelectedYear(-1)
+                          : setSelectedYear(row.year)
+                      }
+                      className={`${["year", "age", "total"].includes("total") ? "font-medium text-black " : "text-[#475467]"} px-2 py-[0.45rem] print:py-[0.2rem] ${selectedColumn.type == "total" || selectedYear === row.year ? "bg-slate-200" : ""}`}
+                    >
+                      {row.total}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-    </DndContext>
+      </DndContext>
+    </>
   );
 };
 

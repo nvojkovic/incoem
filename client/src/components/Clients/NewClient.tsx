@@ -10,6 +10,13 @@ import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
 import Select from "../Inputs/Select";
+import {
+  Client,
+  Person,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+  User,
+} from "src/types";
 
 const PersonInfo = ({
   person,
@@ -55,18 +62,39 @@ const initializeNewClient = (user: User | null): Client => ({
   title: "",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  data: {
-    incomes: [],
-    people: [
-      { name: "", birthday: null as any, id: 0 },
-      { name: "", birthday: null as any, id: 1 },
-    ],
-    version: 1,
-  },
+  incomes: [],
+  people: [
+    { name: "", birthday: null as any, id: 0 },
+    { name: "", birthday: null as any, id: 1 },
+  ],
   scenarios: [],
   needsFlag: !!user?.info?.needsFlag,
   stabilityRatioFlag: !!user?.info?.stabilityRatioFlag,
   longevityFlag: !!user?.info?.longevityFlag,
+  taxesFlag: !!user?.info?.taxesFlag,
+  assetSummary: {
+    debts: [],
+    income: [],
+    socialInsurance: [
+      {
+        owner: 0,
+        id: crypto.randomUUID(),
+      },
+      {
+        owner: 1,
+        id: crypto.randomUUID(),
+      },
+    ] as any,
+    hardAssets: [],
+    cashAssets: [],
+    statementWealth: [],
+    inheritance: [],
+    lifeInsurance: [],
+    longTermCare: [],
+    accumulationAnnuity: [],
+    personalPensionAnnuity: [],
+    pension: [],
+  },
   spending: {
     preTaxRate: user?.info?.globalPreRetirementTaxRate,
     postTaxRate: user?.info?.globalPostRetirementTaxRate,
@@ -90,8 +118,10 @@ const initializeNewClient = (user: User | null): Client => ({
     whoDies: -1,
     taxType: "Pre-Tax",
     inflationType: "Nominal",
-    data: {} as any,
+    incomes: [] as any,
+    people: [] as any,
     longevityPercent: 50,
+    chartType: "income",
     deathYears: [
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,
@@ -139,18 +169,25 @@ const NewClient = () => {
             subtype="toggle"
             vertical
             label="Single mode"
-            value={client.data.people.length === 1}
+            value={client.people.length === 1}
             setValue={(singleMode) => {
               setClient({
                 ...client,
-                data: {
-                  ...client.data,
-                  people: singleMode
-                    ? [client.data.people[0]]
-                    : [
-                        ...client.data.people,
-                        { name: "", birthday: null as any, id: 1 },
-                      ],
+                people: singleMode
+                  ? [client.people[0]]
+                  : [
+                    ...client.people,
+                    { name: "", birthday: null as any, id: 1 },
+                  ],
+                assetSummary: {
+                  ...client.assetSummary,
+                  socialInsurance: client.assetSummary.socialInsurance.map(
+                    (item) => ({
+                      ...item,
+                      owner: singleMode ? 0 : item.owner,
+                      id: crypto.randomUUID(),
+                    }),
+                  ),
                 },
               });
             }}
@@ -158,22 +195,19 @@ const NewClient = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        {client.data.people.map((person, i) => (
+        {client.people.map((person, i) => (
           <PersonInfo
             person={person}
             key={i}
             onChange={(updated) => {
               setClient((prev) => ({
                 ...prev,
-                data: {
-                  ...prev.data,
-                  people: updateAtIndex(prev.data.people, i, updated),
-                },
+                people: updateAtIndex(prev.people, i, updated),
               }));
             }}
           />
         ))}
-        {client.data.people.length === 1 && <div className="h-[69px]"></div>}
+        {client.people.length === 1 && <div className="h-[69px]"></div>}
       </div>
     </div>
   );
@@ -211,7 +245,7 @@ const NewClient = () => {
           }
           vertical
         />
-        {client.data.people.map((item, i) => (
+        {client.people.map((item, i) => (
           <Input
             subtype="number"
             label={`${item.name}'s Mortality`}
@@ -232,6 +266,8 @@ const NewClient = () => {
             vertical
           />
         ))}
+      </div>
+      <div className="grid grid-cols-2 gap-4">
         <Input
           subtype="percent"
           label="Pre-Retirement Tax Rate (%)"
@@ -272,7 +308,7 @@ const NewClient = () => {
       <div className="border-b text-left font-semibold pb-1">
         Extra Features
       </div>
-      <div className="">
+      <div className="grid grid-cols-2 gap-x-4 w-[380px]">
         <Input
           subtype="toggle"
           labelLength={110}
@@ -300,13 +336,21 @@ const NewClient = () => {
             setClient((prev) => ({ ...prev, longevityFlag: flag }))
           }
         />
+        <Input
+          subtype="toggle"
+          labelLength={110}
+          label="Taxes"
+          value={client.taxesFlag}
+          setValue={(flag) =>
+            setClient((prev) => ({ ...prev, taxesFlag: flag }))
+          }
+        />
       </div>
     </div>
   );
 
   const firstStepFilled =
-    client.title &&
-    client.data.people.every((p) => p.name && p.birthday && p.sex);
+    client.title && client.people.every((p) => p.name && p.birthday && p.sex);
 
   return (
     <>
@@ -341,7 +385,7 @@ const NewClient = () => {
               disabled={
                 (step === 1 && !firstStepFilled) ||
                 (step === 2 &&
-                  !client.data.people.every((p) => p.name && p.birthday))
+                  !client.people.every((p) => p.name && p.birthday))
               }
               onClick={() => (step == 1 ? setStep(2) : addClient())}
             >

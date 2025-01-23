@@ -1,3 +1,5 @@
+import { Income, Person } from "src/types";
+
 const title = (income: Income[], people: Person[], i: number) => {
   let person: any = people.find((p) => p.id === income[i].personId);
   if (!person) {
@@ -45,7 +47,7 @@ const title = (income: Income[], people: Person[], i: number) => {
   }
 };
 
-(String.prototype as any).capitalize = function() {
+(String.prototype as any).capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 

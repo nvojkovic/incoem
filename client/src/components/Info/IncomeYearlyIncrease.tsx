@@ -1,3 +1,4 @@
+import { YearlyIncrease } from "src/types";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 

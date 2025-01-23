@@ -15,6 +15,7 @@ import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import { Tooltip } from "flowbite-react";
 import { birthday } from "src/calculator/utils";
+import { Person } from "src/types";
 
 export const LongevityScenarioCard = ({
   people,
@@ -78,7 +79,7 @@ const LongevityPage = () => {
   const [updating, setUpdating] = useState(false);
 
   const { data: client, setField } = useInfo();
-  const people = client.data.people;
+  const people = client.people;
   if (!people) return null;
 
   const tables = people.map(makeTable);
@@ -111,7 +112,7 @@ const LongevityPage = () => {
 
   const updateDeathFields = () => {
     setUpdating(true);
-    const years = client.data.people.map(
+    const years = client.people.map(
       (person) =>
         findAgeForProbability(makeTable(person).table, longevityPercent).age,
     );

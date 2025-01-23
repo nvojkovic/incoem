@@ -1,8 +1,9 @@
-import { printNumber, splitDate, yearRange } from "src/utils";
+import { getTaxRate, printNumber, splitDate, yearRange } from "src/utils";
 import { jointTable, makeTable } from "../Longevity/calculate";
 import calculate from "src/calculator/calculate";
-import { calculateSpendingYear } from "../Spending/SpendingPage";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import { calculateSpendingYear } from "../Spending/calculate";
+import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 
 interface Props {
   scenario: ScenarioSettings;
@@ -25,10 +26,10 @@ const CompositeTable = ({
   const height = 100;
   const { isFullscreen } = useFullscreen();
 
-  const tables = scenario.data.people.map((person) => makeTable(person));
+  const tables = scenario.people.map((person) => makeTable(person));
   const joint =
-    scenario.data.people.length > 1
-      ? jointTable(scenario.data.people[0], scenario.data.people[1])
+    scenario.people.length > 1
+      ? jointTable(scenario.people[0], scenario.people[1])
       : [];
 
   const setColumn = (name: string) => () => {
@@ -52,7 +53,7 @@ const CompositeTable = ({
             <div className="w-full">
               <table className="border bg-white !text-sm w-full">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[172px]" : "top-[243px]"} border-separate`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 ${isFullscreen ? "top-[111px]" : "top-[184px]"} border-separate`}
                 >
                   <tr>
                     <th
@@ -62,36 +63,53 @@ const CompositeTable = ({
                       Year
                     </th>
                     <th
-                      className={` font-medium ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""} border-r border-black border-solid`}
+                      className={` font-medium ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""} border-r border-gray-700 border-solid`}
                       onClick={setColumn("age")}
                     >
                       <div className="px-2 h-full w-full">Age</div>
                     </th>
 
                     {client.longevityFlag &&
-                      scenario.data.people.map((person, i) => (
+                      scenario.people.map((person, i) => (
                         <th
-                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.people.length == 1 ? "border-r border-gray-700" : ""}`}
                           onClick={setColumn(`${i}-alive`)}
                         >
                           {person.name} <br /> alive
                         </th>
                       ))}
-                    {client.longevityFlag &&
-                      scenario.data.people.length > 1 && (
-                        <th
-                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
-                          onClick={setColumn("joint-alive")}
-                        >
-                          At least one <br /> alive
-                        </th>
-                      )}
+                    {client.longevityFlag && scenario.people.length > 1 && (
+                      <th
+                        className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
+                        onClick={setColumn("joint-alive")}
+                      >
+                        At least one <br /> alive
+                      </th>
+                    )}
                     <th
                       className={`px-2 font-medium ${selectedColumn?.type === "total" ? "!bg-slate-200" : ""}`}
                       onClick={setColumn("total")}
                     >
                       Income
                     </th>
+
+                    {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                      <th
+                        className={`px-2 font-medium  ${selectedColumn?.type === "taxes" ? "!bg-slate-200" : ""}`}
+                        onClick={setColumn("taxes")}
+                      >
+                        Taxes
+                      </th>
+                    )}
+
+                    {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                      <th
+                        className={`px-2 font-medium  ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
+                        onClick={setColumn("posttax")}
+                      >
+                        Post-Tax Income
+                      </th>
+                    )}
 
                     {client.needsFlag && (
                       <th
@@ -141,14 +159,14 @@ const CompositeTable = ({
                       currentYear: number,
                     ) => {
                       const result = calculate({
-                        people: scenario.data.people,
+                        people: scenario.people,
                         income,
                         startYear,
                         currentYear,
                         deathYears: scenario.deathYears as any,
                         dead: scenario.whoDies,
                         inflation: scenario.inflation,
-                        incomes: scenario.data.incomes.filter(
+                        incomes: scenario.incomes.filter(
                           (income) => income.enabled,
                         ),
                         ssSurvivorAge: scenario.ssSurvivorAge,
@@ -162,36 +180,46 @@ const CompositeTable = ({
                     };
                     const needs =
                       calculateSpendingYear(
-                        scenario.data,
+                        {
+                          people: scenario.people,
+                          incomes: scenario.incomes,
+                          version: 1,
+                        },
                         client.spending,
                         scenario,
                         line,
                       ) / divisionFactor;
-                    const income = client.data.incomes
+                    const income = client.incomes
                       .filter((income) => income.enabled)
                       .map((income) => calculateOne(income, line).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
                     console.log(
                       line,
-                      client.data.incomes
+                      client.incomes
                         .map((income) => calculateOne(income, line).amount)
                         .filter((t) => typeof t === "number"),
-                      client.data.incomes,
+                      client.incomes,
                     );
-                    const stableIncome = client.data.incomes
+                    const stableIncome = client.incomes
                       .filter((item) => item.stable)
                       .filter((income) => income.enabled)
                       .map((income) => calculateOne(income, line).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
-                    const gap = income - needs;
                     const stabilityRatio = Math.round(
                       (stableIncome / income) * 100,
                     );
+
+                    const taxRate = getTaxRate(client, scenario, line);
+
                     const spendingStability = Math.round(
-                      (stableIncome / needs) * 100,
+                      ((stableIncome * (1 - taxRate)) / needs) * 100,
                     );
+
+                    const taxes = income * taxRate;
+
+                    const gap = income - needs - taxes;
                     return (
                       <tr
                         className={`${index % 2 == 1 ? "bg-[#F9FAFB]" : "bg-white"} border-y border-[#EAECF0] ${selectedYear === line ? "!bg-slate-200" : ""}`}
@@ -205,15 +233,15 @@ const CompositeTable = ({
                         <td
                           className={`px-2 py-[0.45rem] font-medium border-r border-gray-700 ${selectedColumn?.type === "age" ? "!bg-slate-200" : ""}`}
                         >
-                          {scenario.data.people
+                          {scenario.people
                             .map((p) => line - splitDate(p.birthday).year)
                             .join("/")}
                         </td>
 
                         {client.longevityFlag &&
-                          scenario.data.people.map((_, i) => (
+                          scenario.people.map((_, i) => (
                             <td
-                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length == 1 ? "border-r border-black" : ""}`}
+                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.people.length == 1 ? "border-r border-gray-700" : ""}`}
                             >
                               {Math.round(
                                 (tables[i].table.find(
@@ -223,23 +251,38 @@ const CompositeTable = ({
                               %
                             </td>
                           ))}
-                        {client.longevityFlag &&
-                          scenario.data.people.length > 1 && (
-                            <td
-                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.data.people.length > 1 ? "border-r border-black" : ""}`}
-                            >
-                              {Math.round(
-                                (joint.find((entry) => entry.year === line)
-                                  ?.probability || 0) * 100,
-                              )}
-                              %
-                            </td>
-                          )}
+                        {client.longevityFlag && scenario.people.length > 1 && (
+                          <td
+                            className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
+                          >
+                            {Math.round(
+                              (joint.find((entry) => entry.year === line)
+                                ?.probability || 0) * 100,
+                            )}
+                            %
+                          </td>
+                        )}
                         <td
                           className={`px-2 py-1 ${selectedColumn?.type === "total" ? "!bg-slate-200" : ""}`}
                         >
                           {printNumber(income)}
                         </td>
+
+                        {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                          <td
+                            className={`px-2 py-1 ${selectedColumn?.type === "taxes" ? "!bg-slate-200" : ""}`}
+                          >
+                            {printNumber(taxes)}
+                          </td>
+                        )}
+
+                        {client.taxesFlag && scenario.taxType == "Post-Tax" && (
+                          <td
+                            className={`px-2 py-1 ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
+                          >
+                            {printNumber(income - taxes)}
+                          </td>
+                        )}
                         {client.needsFlag && (
                           <td
                             className={`px-2 py-1 ${selectedColumn?.type === "spending" ? "!bg-slate-200" : ""}`}

@@ -52,8 +52,8 @@ const AllInOneCalculator: React.FC<any> = () => {
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
-    const oldIndex = data.findIndex((s) => s.id === active.id);
-    const newIndex = data.findIndex((s) => s.id === over.id);
+    const oldIndex = data.findIndex((s: any) => s.id === active.id);
+    const newIndex = data.findIndex((s: any) => s.id === over.id);
     if (oldIndex !== newIndex) {
       setData(arrayMove([...data], oldIndex, newIndex));
     }
@@ -96,12 +96,12 @@ const AllInOneCalculator: React.FC<any> = () => {
                         data.flatMap((item: any, i: any) =>
                           i === index
                             ? [
-                              item,
-                              {
-                                ...item,
-                                id: Math.round(Math.random() * 100000),
-                              },
-                            ]
+                                item,
+                                {
+                                  ...item,
+                                  id: Math.round(Math.random() * 100000),
+                                },
+                              ]
                             : [item],
                         ),
                       )

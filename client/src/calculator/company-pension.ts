@@ -1,5 +1,7 @@
+import { CompanyPension } from "src/types";
 import { moyrToAnnual, splitDate } from "../utils";
 import { adjustForIncrease, adjustForInflation, isDead } from "./utils";
+import { CalculationInfo } from "./types";
 
 export const calculate = (info: CalculationInfo<CompanyPension>) => {
   const { people, income, startYear, currentYear } = info;

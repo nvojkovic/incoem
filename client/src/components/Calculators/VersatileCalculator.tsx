@@ -5,13 +5,19 @@ import Select from "../Inputs/Select";
 import { printNumber } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
-import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
+import { Tooltip } from "flowbite-react";
 
 interface CalculationRow {
   age: number;
+  ranOut: boolean;
   year: number;
   beginning: number;
   totalPayments: number;
@@ -61,14 +67,32 @@ const VersatileCalculator: React.FC = () => {
         const yearsFromStart = year - settings.payment.startYear;
         if (settings.payment.type === "simple")
           payment =
-            settings.payment.amount *
-            Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
-            -1;
+            -(
+              settings.payment.amount *
+              Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
+              1
+            ) / Math.pow(1 + settings.other.inflation / 100, yearsFromStart);
         else payment = -settings.payment.years[year] || 0;
       }
 
       let ending = beginning;
-      if (settings.payment.timing === "beginning") ending += payment;
+      if (settings.payment.timing === "beginning") {
+        if (-payment >= ending) {
+          rows.push({
+            age: settings.user.startAge + year,
+            year,
+            beginning,
+            totalPayments: ending,
+            return: 0,
+            growth: 0,
+            taxes: 0,
+            endingBalance: 0,
+            ranOut: true,
+          });
+          break;
+        }
+        ending += payment;
+      }
 
       ending /= 1 + settings.other.inflation / 100;
 
@@ -76,7 +100,23 @@ const VersatileCalculator: React.FC = () => {
       const taxes = returnAmount * (settings.other.taxRate / 100);
       const growth = returnAmount - taxes;
 
-      if (settings.payment.timing === "end") ending += payment;
+      if (settings.payment.timing === "end") {
+        if (-payment >= ending) {
+          rows.push({
+            age: settings.user.startAge + year,
+            year,
+            beginning,
+            totalPayments: ending,
+            return: 0,
+            growth: 0,
+            taxes: 0,
+            endingBalance: 0,
+            ranOut: true,
+          });
+          break;
+        }
+        ending += payment;
+      }
       ending += growth;
 
       rows.push({
@@ -88,6 +128,7 @@ const VersatileCalculator: React.FC = () => {
         growth,
         taxes,
         endingBalance: ending,
+        ranOut: false,
       });
 
       balance = ending;
@@ -140,7 +181,7 @@ const VersatileCalculator: React.FC = () => {
 
   return (
     <Layout page="calculator">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 pb-8">
         <div className="flex gap-3 items-center mb-8 justify-between">
           <div className="flex gap-3 items-baseline">
             <Link to={`/client/${client.id}/calculator`}>
@@ -162,201 +203,218 @@ const VersatileCalculator: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
-            <div className="col-span-3">
-              <h2 className="text-xl font-semibold mb-4">User Settings</h2>
-            </div>
-            <div className="flex gap-6">
-              <Input
-                labelLength={100}
-                label="Present Value"
-                subtype="money"
-                value={settings.user.presentValue}
-                setValue={(value) =>
-                  updateSettings("user", "presentValue", value)
-                }
-              />
-            </div>
-
-            <div className="flex gap-6">
-              <Input
-                label="Start Age"
-                labelLength={100}
-                subtype="number"
-                value={settings.user.startAge}
-                setValue={(value) => updateSettings("user", "startAge", value)}
-              />
-              <Input
-                label="Years"
-                subtype="number"
-                labelLength={60}
-                value={settings.user.endYear}
-                setValue={(value) => updateSettings("user", "endYear", value)}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
-            <div className="flex gap-7 justify-between items-center mb-[16px]">
-              <h2 className="text-xl font-semibold">Payment</h2>
-              <div className="flex w-60 text-sm">
-                <div
-                  className={`w-full text-center py-1 ${settings.payment.type === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-                  onClick={() => updateSettings("payment", "type", "simple")}
-                >
-                  Simple
-                </div>
-                <div
-                  className={`w-full text-center py-1 ${settings.payment.type === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-                  onClick={() => updateSettings("payment", "type", "detailed")}
-                >
-                  Detailed
-                </div>
+        <div className="sticky top-[72px] bg-[#f3f4f6] pb-3">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 pb-8  py-4 pt-8">
+            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+              <div className="col-span-3">
+                <h2 className="text-xl font-semibold mb-4">User Settings</h2>
               </div>
-            </div>
-            {settings.payment.type === "detailed" && (
-              <div className="w-32 mx-auto mt-1 mb-1">
-                <Button type="primary" onClick={() => setOpenYears(true)}>
-                  Open Years{" "}
-                </Button>
-              </div>
-            )}
-            {settings.payment.type === "simple" && (
               <div className="flex gap-6">
                 <Input
-                  labelLength={90}
-                  label="Payment ($)"
+                  labelLength={100}
+                  label="Present Value"
                   subtype="money"
-                  size="md"
-                  value={settings.payment.amount}
+                  value={settings.user.presentValue}
                   setValue={(value) =>
-                    updateSettings("payment", "amount", value)
+                    updateSettings("user", "presentValue", value)
+                  }
+                />
+              </div>
+
+              <div className="flex gap-6">
+                <Input
+                  label="Start Age"
+                  labelLength={100}
+                  subtype="number"
+                  value={settings.user.startAge}
+                  setValue={(value) =>
+                    updateSettings("user", "startAge", value)
                   }
                 />
                 <Input
-                  label="Increase (%)"
-                  labelLength={90}
-                  subtype="percent"
-                  value={settings.payment.increase}
-                  setValue={(value) =>
-                    updateSettings("payment", "increase", value)
-                  }
+                  label="Years"
+                  subtype="number"
+                  labelLength={60}
+                  value={settings.user.endYear}
+                  setValue={(value) => updateSettings("user", "endYear", value)}
                 />
               </div>
-            )}
-            <div className="flex gap-6">
-              {" "}
-              <Input
-                label="Start Year"
-                subtype="number"
-                labelLength={90}
-                value={settings.payment.startYear}
-                setValue={(value) =>
-                  updateSettings("payment", "startYear", value)
-                }
-              />
-              <div className="w-[208px]">
-                <Select
-                  labelLength={163}
-                  label="Timing"
-                  options={[
-                    { id: "beginning", name: "BoY" },
-                    { id: "end", name: "EoY" },
-                  ]}
-                  selected={{
-                    id: settings.payment.timing,
-                    name:
-                      settings.payment.timing === "beginning" ? "BoY" : "EoY",
-                  }}
-                  setSelected={(option) =>
-                    updateSettings("payment", "timing", option.id)
-                  }
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
-            <div className="col-span-3">
-              <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
             </div>
 
-            <div className="flex gap-6">
-              <Input
-                label="Return (%)"
-                labelLength={80}
-                subtype="percent"
-                value={settings.other.rateOfReturn}
-                setValue={(value) =>
-                  updateSettings("other", "rateOfReturn", value)
-                }
-              />
-              <div className="w-[440px]">
-                <Button type="primary" onClick={handleSolveRateOfReturn}>
-                  Solve
-                </Button>
+            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+              <div className="flex gap-7 justify-between items-center mb-[16px]">
+                <h2 className="text-xl font-semibold">Payment</h2>
+                <div className="flex w-60 text-sm">
+                  <div
+                    className={`w-full text-center py-1 ${settings.payment.type === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+                    onClick={() => updateSettings("payment", "type", "simple")}
+                  >
+                    Simple
+                  </div>
+                  <div
+                    className={`w-full text-center py-1 ${settings.payment.type === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+                    onClick={() =>
+                      updateSettings("payment", "type", "detailed")
+                    }
+                  >
+                    Detailed
+                  </div>
+                </div>
+              </div>
+              {settings.payment.type === "detailed" && (
+                <div className="w-32 mx-auto mt-1 mb-1">
+                  <Button type="primary" onClick={() => setOpenYears(true)}>
+                    Open Years{" "}
+                  </Button>
+                </div>
+              )}
+              {settings.payment.type === "simple" && (
+                <div className="flex gap-6">
+                  <Input
+                    labelLength={90}
+                    label="Payment ($)"
+                    subtype="money"
+                    size="md"
+                    value={settings.payment.amount}
+                    setValue={(value) =>
+                      updateSettings("payment", "amount", value)
+                    }
+                  />
+                  <Input
+                    label="Increase (%)"
+                    labelLength={90}
+                    subtype="percent"
+                    value={settings.payment.increase}
+                    setValue={(value) =>
+                      updateSettings("payment", "increase", value)
+                    }
+                  />
+                </div>
+              )}
+              <div className="flex gap-6">
+                {" "}
+                <Input
+                  label="Start Year"
+                  subtype="number"
+                  labelLength={90}
+                  value={settings.payment.startYear}
+                  setValue={(value) =>
+                    updateSettings("payment", "startYear", value)
+                  }
+                />
+                <div className="w-[208px]">
+                  <Select
+                    labelLength={163}
+                    label="Timing"
+                    options={[
+                      { id: "beginning", name: "BoY" },
+                      { id: "end", name: "EoY" },
+                    ]}
+                    selected={{
+                      id: settings.payment.timing,
+                      name:
+                        settings.payment.timing === "beginning" ? "BoY" : "EoY",
+                    }}
+                    setSelected={(option) =>
+                      updateSettings("payment", "timing", option.id)
+                    }
+                  />
+                </div>
               </div>
             </div>
-            <div className="flex gap-6">
-              <Input
-                label="Taxes (%)"
-                labelLength={80}
-                subtype="percent"
-                value={settings.other.taxRate}
-                setValue={(value) => updateSettings("other", "taxRate", value)}
-              />
-              <Input
-                label="Inflation (%)"
-                labelLength={90}
-                subtype="percent"
-                value={settings.other.inflation}
-                setValue={(value) =>
-                  updateSettings("other", "inflation", value)
-                }
-              />
+            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+              <div className="col-span-3">
+                <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
+              </div>
+
+              <div className="flex gap-6">
+                <Input
+                  label="Return (%)"
+                  labelLength={80}
+                  subtype="percent"
+                  value={settings.other.rateOfReturn}
+                  setValue={(value) =>
+                    updateSettings("other", "rateOfReturn", value)
+                  }
+                />
+                <div className="w-[440px]">
+                  <Button type="primary" onClick={handleSolveRateOfReturn}>
+                    Solve
+                  </Button>
+                </div>
+              </div>
+              <div className="flex gap-6">
+                <Input
+                  label="Taxes (%)"
+                  labelLength={80}
+                  subtype="percent"
+                  value={settings.other.taxRate}
+                  setValue={(value) =>
+                    updateSettings("other", "taxRate", value)
+                  }
+                />
+                <Input
+                  label="Inflation (%)"
+                  labelLength={90}
+                  subtype="percent"
+                  value={settings.other.inflation}
+                  setValue={(value) =>
+                    updateSettings("other", "inflation", value)
+                  }
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex w-full mb-10 gap-5 justify-center">
-          <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
-            <div className="uppercase tracking-wide text-sm text-gray-800">
-              Ending Balance
+          <div className="flex w-full mb-10 gap-5 justify-center  pb-3">
+            <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+              <div className="uppercase tracking-wide text-sm text-gray-800">
+                Ending Balance
+              </div>
+              <div className="font-semibold text-lg mt-[2px]">
+                <span
+                  className={
+                    calculations.length &&
+                      calculations[calculations.length - 1].endingBalance < 0
+                      ? "text-red-500"
+                      : ""
+                  }
+                >
+                  {printNumber(
+                    calculations.length &&
+                    calculations[calculations.length - 1].endingBalance,
+                  )}
+                </span>
+              </div>
             </div>
-            <div className="font-semibold text-lg mt-[2px]">
-              <span
-                className={
-                  calculations.length &&
-                    calculations[calculations.length - 1].endingBalance < 0
-                    ? "text-red-500"
-                    : ""
-                }
-              >
+            <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+              <div className="uppercase tracking-wide text-sm text-gray-800">
+                Total Payments
+              </div>
+              <div className="font-semibold text-lg mt-[2px]">
                 {printNumber(
-                  calculations.length &&
-                  calculations[calculations.length - 1].endingBalance,
-                )}
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
-            <div className="uppercase tracking-wide text-sm text-gray-800">
-              Total Payments
-            </div>
-            <div className="font-semibold text-lg mt-[2px]">
-              {printNumber(
-                Math.abs(
-                  calculations
-                    .map((i) => i.totalPayments)
-                    .reduce((a, b) => a + b, 0),
-                ),
-              )}{" "}
+                  Math.abs(
+                    calculations
+                      .map((i) => i.totalPayments)
+                      .reduce((a, b) => a + b, 0),
+                  ),
+                )}{" "}
+              </div>
             </div>
           </div>
         </div>
+        {/*<VersatileChart
+          data={calculations.map((i) => ({
+            year: i.year,
+            balance: i.endingBalance,
+            residual: i.return - i.taxes,
+            payment: Math.abs(i.totalPayments),
+            tax: i.taxes,
+          }))}
+        />*/}
         <div className="">
           <table className="text-sm w-full bg-white shadow-lg">
             <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[72px] rounded-none !border-none`}
+              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[430px] rounded-none !border-none`}
             >
               <tr>
                 <th
@@ -408,16 +466,6 @@ const VersatileCalculator: React.FC = () => {
                   }
                 >
                   Return
-                </th>
-                <th
-                  className="px-4 py-2"
-                  onClick={() =>
-                    selectedCol === "growth"
-                      ? setSelectedCol(null)
-                      : setSelectedCol("growth")
-                  }
-                >
-                  Growth
                 </th>
                 <th
                   className="px-4 py-2"
@@ -489,28 +537,35 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(row.return)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "growth" ? "bg-slate-200" : ""}`}
-                    onClick={() =>
-                      setSelectedRow(selectedRow === index ? null : index)
-                    }
-                  >
-                    {printNumber(row.growth)}
-                  </td>
-                  <td
                     className={`border px-4 py-2 ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
                   >
-                    {printNumber(row.taxes)}
+                    {printNumber(-row.taxes)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""}`}
+                    className={`border px-4 py-2 ${selectedCol === "end" ? "bg-slate-200" : ""} ${row.endingBalance < 0 && "text-red-500"}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
                   >
-                    {printNumber(row.endingBalance)}
+                    <div className="flex gap-2">
+                      {printNumber(row.endingBalance)}
+                      {row.ranOut && (
+                        <Tooltip
+                          content={"Account depleted."}
+                          theme={{ target: "" }}
+                          placement="top"
+                          style="light"
+                          className="!z-[50000] bg-white print:hidden"
+                        >
+                          <div className="cursor-pointer flex items-center gap-2 ">
+                            <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] print:hidden" />
+                          </div>
+                        </Tooltip>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -14,7 +14,7 @@ import Spinner from "../Spinner";
 import AdvisorSection from "./AdvisorSection";
 import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
-import ReportSettings from "./ReportSettings";
+import ReportSettingsPage from "./ReportSettings";
 import { arrayMove } from "@dnd-kit/sortable";
 
 const isColorTooLight = (
@@ -311,7 +311,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="text-gray-400 text-nowrap text-sm text-left">
-                      Include Longevity / Life Expectancy calculation.
+                      Include Longevity / Life Expectancy calculation
                     </div>
                   </div>
                   <div>
@@ -319,6 +319,32 @@ const Settings = () => {
                       name="longevityFlag"
                       tooltip="Apply this Longevity setting to existing clients"
                       value={settings.longevityFlag}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-5 items-center w-full">
+                  <div className="flex gap-5 items-center w-[730px]">
+                    <div>
+                      <Input
+                        value={settings.taxesFlag}
+                        tabIndex={12}
+                        setValue={(e) =>
+                          setSettings({ ...settings, taxesFlag: e })
+                        }
+                        label="Taxes"
+                        size="full"
+                        subtype="toggle"
+                      />
+                    </div>
+                    <div className="text-gray-400 text-nowrap text-sm text-left">
+                      Include Tax calculations
+                    </div>
+                  </div>
+                  <div>
+                    <ApplyToCurrent
+                      name="taxesFlag"
+                      tooltip="Apply this Longevity setting to existing clients"
+                      value={settings.taxesFlag}
                     />
                   </div>
                 </div>
@@ -343,7 +369,7 @@ const Settings = () => {
                 }
               />
               <div>
-                <ReportSettings
+                <ReportSettingsPage
                   flags={{
                     needsFlag: settings.needsFlag,
                     longevityFlag: settings.longevityFlag,

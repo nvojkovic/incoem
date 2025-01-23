@@ -2,6 +2,13 @@ import React from "react";
 import { useContext } from "react";
 import { updateData, updateScenarios } from "./services/client";
 import { debounce, updateAtIndex } from "./utils";
+import {
+  Client,
+  Income,
+  Person,
+  RetirementSpendingSettings,
+  ScenarioSettings,
+} from "./types";
 
 const IncomeContext = React.createContext({
   data: {} as Client,
@@ -49,10 +56,7 @@ export const IncomeProvider = ({
       console.log("whtf", incomes);
       return {
         ...data,
-        data: {
-          ...data.data,
-          incomes,
-        },
+        incomes,
       };
     });
   };
@@ -65,33 +69,24 @@ export const IncomeProvider = ({
   };
 
   const addIncome = (income: Income) => {
-    console.log("addIncome", income, "old", data.data.incomes);
+    console.log("addIncome", income, "old", data.incomes);
     setData((data) => ({
       ...data,
-      data: {
-        ...data.data,
-        incomes: [...data.data.incomes, income],
-      },
+      incomes: [...data.incomes, income],
     }));
   };
 
   const removeIncome = (index: number) => {
     setData((data) => ({
       ...data,
-      data: {
-        ...data.data,
-        incomes: data.data.incomes.filter((_, i) => i !== index),
-      },
+      incomes: data.incomes.filter((_, i) => i !== index),
     }));
   };
   const setIncome = (index: number, income: Income) => {
     console.log("setting income", data);
     setData((data) => ({
       ...data,
-      data: {
-        ...data.data,
-        incomes: updateAtIndex(data.data.incomes, index, income),
-      },
+      incomes: updateAtIndex(data.incomes, index, income),
     }));
   };
   const storeScenarios = (scenarios: ScenarioSettings[]) => {
@@ -108,19 +103,13 @@ export const IncomeProvider = ({
   const setPerson = (person: Person) => {
     setData((data) => ({
       ...data,
-      data: {
-        ...data.data,
-        people: updateAtIndex(data.data.people, person.id, person),
-      },
+      people: updateAtIndex(data.people, person.id, person),
     }));
   };
 
   const setSpending = (spending: RetirementSpendingSettings) => {
     setData((data) => ({
       ...data,
-      data: {
-        ...data.data,
-      },
       spending,
     }));
   };

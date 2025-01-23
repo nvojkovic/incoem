@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/react";
 import { getUser, updateSettings } from "./services/client";
 import { router } from "./main";
 import { debounce } from "./utils";
+import { User } from "./types";
 
 interface UserContextType {
   user: User | null;

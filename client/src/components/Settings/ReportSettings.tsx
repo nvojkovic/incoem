@@ -12,6 +12,7 @@ import {
 import SortableItem from "../Sortable/SortableItem";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import Toggle from "../Inputs/Toggle";
+import { ReportSettings } from "src/types";
 
 interface Props {
   settings: ReportSettings;
@@ -25,9 +26,11 @@ interface Props {
 
 const names: any = {
   cover: "Cover",
-  incomes: "Incomes",
-  "income-chart": "Chart",
+  incomes: "Income",
+  "income-chart": "Income Chart",
   spending: "Spending",
+
+  "spending-chart": "Spending Chart",
   longevity: "Longevity",
   composite: "Composite",
 };
@@ -77,7 +80,7 @@ const Page = ({ setting, setSetting, index }: any) => {
 //       </div>
 //
 
-const ReportSettings = ({
+const ReportSettingsPage = ({
   flags,
   settings,
   updateSettings,
@@ -109,7 +112,8 @@ const ReportSettings = ({
   const filtered = settings.filter(
     (s) =>
       !(s.name === "longevity" && !flags.longevityFlag) &&
-      !(s.name === "spending" && !flags.needsFlag),
+      !(s.name === "spending" && !flags.needsFlag) &&
+      !(s.name === "spending-chart" && !flags.needsFlag),
   );
   console.log(filtered);
   return (
@@ -127,7 +131,7 @@ const ReportSettings = ({
             <SortableItem
               key={sc.id}
               id={sc.id}
-            // onClick={() => setTab(i)}
+              // onClick={() => setTab(i)}
             >
               <Page
                 setting={sc}
@@ -146,6 +150,6 @@ const ReportSettings = ({
   );
 };
 
-export default ReportSettings;
+export default ReportSettingsPage;
 
 // style="width: 1200px; height: 800px; background-color: white"

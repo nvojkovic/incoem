@@ -1,5 +1,7 @@
+import { EmploymentIncome, SocialSecurityIncome } from "src/types";
 import { moyrToAnnual, printNumber, splitDate } from "../utils";
 import { calculateEmploymentIncome } from "./employment-income";
+import { CalculationInfo } from "./types";
 import {
   adjustCompoundInterest,
   adjustForIncrease,
@@ -116,7 +118,6 @@ export const calculateOwnSocialSecurity = (
   } else {
     const prorate =
       age === income.startAgeYear ? (12 - startAgeMonth + 1) / 12 : 1;
-    console.log("prorate", prorate, age, income.startAgeYear, startAgeMonth);
     ownAmount =
       (income.pia *
         12 *
@@ -168,7 +169,6 @@ export const calculateSurvivorSocialSecurity = (
   const years = currentYear - (deathYear + birthYear);
   ownAmount = adjustCompoundInterest(ownAmount, years, income.cola);
 
-  console.log("death", birthYear + deathYear);
   ownAmount = adjustForInflation(info, ownAmount, birthYear + deathYear);
   return ownAmount;
 };
@@ -191,11 +191,11 @@ const reduceByIncome = (
 
     const a = calculateEmploymentIncome(newInfo).amount;
     const r = retirementYear(person.birthday);
-    if (currentYear < r && a > 22320) {
-      ownAmount = Math.max(ownAmount - (a - 22320) / 2, 0);
+    if (currentYear < r && a > 23400) {
+      ownAmount = Math.max(ownAmount - (a - 23400) / 2, 0);
     }
-    if (currentYear == r && a > 59520) {
-      ownAmount = Math.max(ownAmount - (a - 59520) / 3, 0);
+    if (currentYear == r && a > 62160) {
+      ownAmount = Math.max(ownAmount - (a - 62160) / 3, 0);
     }
     return { result: ownAmount, income: a };
   }

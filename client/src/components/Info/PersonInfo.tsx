@@ -1,3 +1,4 @@
+import { Person } from "src/types";
 import { useInfo } from "../../useData";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
@@ -83,7 +84,7 @@ export const PeopleInfo = () => {
           </div>
         </div>
       </div>
-      {data.data.people.map((person, i) => (
+      {data.people.map((person, i) => (
         <PersonInfo
           key={i}
           subtitle="Details about how this works"

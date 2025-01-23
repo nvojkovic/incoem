@@ -1,9 +1,11 @@
-import MapChart from "../MapChart";
+import { PrintClient, ScenarioSettings } from "src/types";
 import Composite from "./Composite";
 import Cover from "./Cover";
+import IncomeChart from "./IncomeChart";
+import IncomeTable from "./IncomeTable";
 import Longevity from "./Longevity";
-import Print from "./Print";
 import Spending from "./Spending";
+import SpendingChart from "./SpendingChart";
 
 interface ReportProps {
   scenario: ScenarioSettings;
@@ -16,9 +18,11 @@ const Report = ({ scenario, client, page }: ReportProps) => {
   if (page.name == "cover")
     return <Cover settings={scenario} client={client} />;
   if (page.name == "incomes")
-    return <Print scenario={scenario} client={client} />;
+    return <IncomeTable scenario={scenario} client={client} />;
   if (page.name == "income-chart")
-    return <MapChart settings={scenario} client={client} print />;
+    return <IncomeChart scenario={scenario} client={client} print />;
+  if (page.name == "spending-chart")
+    return <SpendingChart scenario={scenario} client={client} print />;
   if (page.name == "spending")
     return (
       <Spending
@@ -43,3 +47,5 @@ const Report = ({ scenario, client, page }: ReportProps) => {
 };
 
 export default Report;
+
+// <div className="text-2xl mx-auto mb-5">Composite</div>

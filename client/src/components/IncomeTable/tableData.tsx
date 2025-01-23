@@ -1,4 +1,5 @@
 import title from "src/calculator/title";
+import { Income, SelectedColumn } from "src/types";
 
 interface Col {
   accessorFn: (row: any) => any;
