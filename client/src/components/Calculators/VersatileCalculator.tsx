@@ -5,10 +5,15 @@ import Select from "../Inputs/Select";
 import { printNumber } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
-import { ArrowDownIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
+import { Tooltip } from "flowbite-react";
 
 interface CalculationRow {
   age: number;
@@ -545,10 +550,22 @@ const VersatileCalculator: React.FC = () => {
                       setSelectedRow(selectedRow === index ? null : index)
                     }
                   >
-                    {printNumber(row.endingBalance)}
-                    {row.ranOut && (
-                      <span className="text-red-500"> (ran out of money)</span>
-                    )}
+                    <div className="flex gap-2">
+                      {printNumber(row.endingBalance)}
+                      {row.ranOut && (
+                        <Tooltip
+                          content={"Account depleted."}
+                          theme={{ target: "" }}
+                          placement="top"
+                          style="light"
+                          className="!z-[50000] bg-white print:hidden"
+                        >
+                          <div className="cursor-pointer flex items-center gap-2 ">
+                            <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] print:hidden" />
+                          </div>
+                        </Tooltip>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

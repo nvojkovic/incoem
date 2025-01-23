@@ -266,6 +266,8 @@ const NewClient = () => {
             vertical
           />
         ))}
+      </div>
+      <div className="grid grid-cols-2 gap-4">
         <Input
           subtype="percent"
           label="Pre-Retirement Tax Rate (%)"
@@ -306,7 +308,7 @@ const NewClient = () => {
       <div className="border-b text-left font-semibold pb-1">
         Extra Features
       </div>
-      <div className="">
+      <div className="grid grid-cols-2 gap-x-4 w-[380px]">
         <Input
           subtype="toggle"
           labelLength={110}
