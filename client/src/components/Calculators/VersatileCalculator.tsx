@@ -25,6 +25,7 @@ interface CalculationRow {
   growth: number;
   taxes: number;
   endingBalance: number;
+  realBalance: number;
 }
 
 const VersatileCalculator: React.FC = () => {
@@ -87,6 +88,7 @@ const VersatileCalculator: React.FC = () => {
             growth: 0,
             taxes: 0,
             endingBalance: 0,
+            realBalance: ending + payment,
             ranOut: true,
           });
           break;
@@ -111,6 +113,7 @@ const VersatileCalculator: React.FC = () => {
             growth: 0,
             taxes: 0,
             endingBalance: 0,
+            realBalance: ending + payment,
             ranOut: true,
           });
           break;
@@ -128,6 +131,7 @@ const VersatileCalculator: React.FC = () => {
         growth,
         taxes,
         endingBalance: ending,
+        realBalance: ending,
         ranOut: false,
       });
 
@@ -156,12 +160,12 @@ const VersatileCalculator: React.FC = () => {
 
       const lastRow = calculations[calculations.length - 1];
 
-      console.log(mid, low, high, lastRow.endingBalance);
-      if (Math.abs(lastRow.endingBalance - targetEndingBalance) < tolerance) {
+      console.log(mid, low, high, lastRow.realBalance);
+      if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
         break;
       }
 
-      if (lastRow.endingBalance > targetEndingBalance) {
+      if (lastRow.realBalance > targetEndingBalance) {
         high = mid;
       } else {
         low = mid;
