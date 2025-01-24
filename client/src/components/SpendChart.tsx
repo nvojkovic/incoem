@@ -21,6 +21,9 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
     version: 1 as const,
   };
 
+  const divisionFactor =
+    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
+
   const baseSpending = getSpendingItemOverYears(
     incomeMapInfo,
     spending,
@@ -54,9 +57,6 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
   );
 
   const years = yearRange(startYear, startYear + settings.maxYearsShown - 1);
-
-  const divisionFactor =
-    client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 
   const calculateOne = (income: Income, currentYear: number) => {
     const result = calculate({
@@ -103,7 +103,9 @@ const SpendChart = ({ settings, client, print }: MapChartProps) => {
           (item) => ({
             name: item[0]?.name,
             stable: true,
-            values: item.map((i) => i.amount / divisionFactor),
+            values: item.map((i) =>
+              i.name == "Taxes" ? i.amount : i.amount / divisionFactor,
+            ),
           }),
         )}
       />

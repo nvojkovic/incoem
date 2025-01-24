@@ -20,7 +20,7 @@ import WhoDies from "../WhoDies";
 import Confirm from "../Confirm";
 import { useState } from "react";
 import SpendingChart from "../Charts/SpendingChart";
-import { calculateSpendingYear, getSpendingItemOverYears } from "./calculate";
+import { getSpendingItemOverYears } from "./calculate";
 import calculate from "src/calculator/calculate";
 import {
   CurrentSpending,
@@ -45,7 +45,11 @@ const SpendingPage = () => {
 
   const divisionFactor = settings.monthlyYearly === "monthly" ? 12 : 1;
 
-  const calculateOne = (income: Income, currentYear: number) => {
+  const calculateOne = (
+    income: Income,
+    currentYear: number,
+    settings: ScenarioSettings,
+  ) => {
     const result = calculate({
       people: data.people,
       income,
@@ -101,34 +105,84 @@ const SpendingPage = () => {
     amount:
       data.incomes
         .filter((income) => income.enabled)
-        .map((income) => calculateOne(income, year).amount)
+        .map((income) => calculateOne(income, year, settings).amount)
         .filter((t) => typeof t === "number")
         .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
   }));
 
-  const calcSett = (settings: ScenarioSettings) =>
-    Math.max(
-      ...currentYearRange.map((year) =>
-        calculateSpendingYear(
-          { incomes: data.incomes, people: data.people, version: 1 },
-          spending,
-          settings,
-          year,
-        ),
+  const calcSett = (settings: ScenarioSettings) => {
+    const taxes = years.map((year) => ({
+      name: "Taxes",
+      year,
+      amount:
+        data.incomes
+          .filter((income) => income.enabled)
+          .map((income) => calculateOne(income, year, settings).amount)
+          .filter((t) => typeof t === "number")
+          .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
+    }));
+    const baseSpending = getSpendingItemOverYears(
+      { incomes: data.incomes, people: data.people, version: 1 },
+      spending,
+      settings,
+      currentYear,
+      currentYear + settings.maxYearsShown,
+      "base",
+    );
+    const preSpending = spending.preSpending.map((item) =>
+      getSpendingItemOverYears(
+        { incomes: data.incomes, people: data.people, version: 1 },
+        spending,
+        settings,
+        currentYear,
+        currentYear + settings.maxYearsShown,
+        "pre",
+        item.category,
       ),
     );
 
+    const postSpending = spending.postSpending.map((item) =>
+      getSpendingItemOverYears(
+        { incomes: data.incomes, people: data.people, version: 1 },
+        spending,
+        settings,
+        currentYear,
+        currentYear + settings.maxYearsShown,
+        "post",
+        item.category,
+      ),
+    );
+    const list = currentYearRange.map(
+      (_, i) =>
+        baseSpending[i].amount +
+        preSpending.reduce((a, b) => a + b[i].amount, 0) +
+        postSpending.reduce((a, b) => a + b[i].amount, 0) +
+        taxes[i].amount * divisionFactor,
+    );
+    console.log(
+      "lll",
+      settings.whoDies,
+      taxes.map((i) => i.amount),
+      list,
+      Math.max(...list),
+    );
+    return Math.max(...list);
+  };
+
   const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
+  console.log("aaa", [
+    calcSett({ ...settings, whoDies: -1 }),
+    calcSett({ ...settings, whoDies: 0 }),
+    calcSett({ ...settings, whoDies: 1 }),
+  ]);
   const maxY =
-    (Math.max(
+    Math.max(
       ...[
         calcSett({ ...settings, whoDies: -1 }),
-        // calcSett({ ...settings, whoDies: 0 }),
-        // calcSett({ ...settings, whoDies: 1 }),
+        calcSett({ ...settings, whoDies: 0 }),
+        calcSett({ ...settings, whoDies: 1 }),
       ],
-    ) +
-      Math.max(...taxes.map((i) => i.amount))) /
-    factor;
+    ) / divisionFactor;
 
   const [postDeleteOpen, setPostDeleteOpen] = useState(-1);
   const [preDeleteOpen, setPreDeleteOpen] = useState(-1);
@@ -268,8 +322,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-16">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-16">Increase (%)</div>
+                  )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -420,17 +474,18 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                    }`}
+                  className={`px-6 py-3 font-medium ${
+                    spending.postSpending.find(
+                      (i) => i.increase.type === "custom",
+                    ) && "w-64"
+                  }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-8">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-8">Increase (%)</div>
+                  )}{" "}
                 </th>
 
                 {data.people.map((i) => (
@@ -806,10 +861,11 @@ export const MultiToggle = ({
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${value === item
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${
+              value === item
                 ? "bg-main-orange text-white"
                 : "bg-gray-200 text-[#555860]"
-              } ${vertical ? "" : "w-full"}`}
+            } ${vertical ? "" : "w-full"}`}
             onClick={() => !disabled && setValue(item)}
           >
             {item}
