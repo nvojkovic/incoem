@@ -577,10 +577,10 @@ const SpendingPage = () => {
         >
           <div className="flex gap-6 p-2">
             <div className="p-3 bg-white w-full">
-              <div className="flex justify-between w-full">
+              <div className="flex justify-between w-full items-center">
                 <div className="flex gap-4 items-end">
                   {data.people.length > 1 ? (
-                    <div className="flex flex-col">
+                    <div className="flex items-center">
                       <div className="flex">
                         <WhoDies
                           active={settings.whoDies == -1}
@@ -622,17 +622,6 @@ const SpendingPage = () => {
                       </div>
                     </div>
                   ) : null}
-                  <Input
-                    label=""
-                    inlineLabel="Years Shown"
-                    width="!w-[160px] !py-[5px]"
-                    value={settings.maxYearsShown}
-                    setValue={(v: any) =>
-                      setSettings({ ...settings, maxYearsShown: v })
-                    }
-                    subtype="number"
-                    size="md"
-                  />
                   <MultiToggle
                     options={["Real", "Nominal"]}
                     label=""
@@ -664,7 +653,18 @@ const SpendingPage = () => {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex gap-4">
+                  <Input
+                    label=""
+                    inlineLabel="Years Shown"
+                    width="!w-[160px] !py-[4px]"
+                    value={settings.maxYearsShown}
+                    setValue={(v: any) =>
+                      setSettings({ ...settings, maxYearsShown: v })
+                    }
+                    subtype="number"
+                    size="md"
+                  />
                   <MultiToggle
                     options={["Monthly", "Annual"]}
                     label=""
