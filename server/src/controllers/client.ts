@@ -56,12 +56,9 @@ const makeReport = async (id: number, page: string, fileName: string) => {
   pages = pages.filter((p: any) => {
     if (!client?.longevityFlag && p.name === "longevity") return false;
     if (!client?.needsFlag && p.name === "spending") return false;
+    if (!client?.needsFlag && p.name === "spending-chart") return false;
     return true;
   });
-  console.log(
-    "printing",
-    pages.map((item: any) => item.name),
-  );
 
   const url =
     process.env.PRINTER_URL +

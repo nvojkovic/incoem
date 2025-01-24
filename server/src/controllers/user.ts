@@ -130,12 +130,16 @@ export const getLogo = async (req: any, res: Response) => {
 };
 
 export const getReport = async (req: any, res: Response) => {
-  let { report } = req.query;
+  try {
+    let { report } = req.query;
 
-  let file = fs.readFileSync(report);
-  if (file) {
-    res.setHeader("Content-Type", "application/pdf");
-    return res.send(file);
+    let file = fs.readFileSync(report);
+    if (file) {
+      res.setHeader("Content-Type", "application/pdf");
+      return res.send(file);
+    }
+  } catch (e) {
+    return res.send("Not available");
   }
   return res.status(404).send("Not found");
 };
