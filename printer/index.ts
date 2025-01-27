@@ -88,7 +88,6 @@ const getAssetSummary = async (browser: Browser, url: string) => {
 const getPdf = async (page: Page, base: string, data: any) => {
   try {
     const url = `${base}?page=${JSON.stringify(data)}`;
-    console.log("printing", url);
     await page.setViewport({ width: 1200, height: 800 });
     await page.goto(url as any, {
       waitUntil: ["networkidle0", "load", "domcontentloaded"],
@@ -104,7 +103,6 @@ const getPdf = async (page: Page, base: string, data: any) => {
       if (!headerElement) return "";
       return headerElement.innerHTML;
     });
-    console.log("making PDF", data.name);
     const pdf = await page.pdf({
       format: "letter",
       landscape: true,
@@ -130,7 +128,7 @@ const getPdf = async (page: Page, base: string, data: any) => {
 (async () => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_PAGE,
-    maxConcurrency: 7,
+    maxConcurrency: 20,
     puppeteerOptions: {
       executablePath: "/usr/bin/google-chrome",
       ignoreDefaultArgs: ["--disable-extensions"],
@@ -139,7 +137,6 @@ const getPdf = async (page: Page, base: string, data: any) => {
   });
 
   await cluster.task(async ({ page, data }) => {
-    console.log("Using data", data);
     const pdf = await getPdf(page, data.url, data.data);
     return pdf;
   });
@@ -156,13 +153,15 @@ const getPdf = async (page: Page, base: string, data: any) => {
     });
 
     const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
-    console.log("");
 
+    // log timing performance
+    const start = Date.now();
     const printedPages = await Promise.all(
       toPrint.map((page: any) => cluster.execute({ url, data: page })),
     );
+    console.log("merging PDFs", Date.now() - start);
     const result = await mergeAllPDFs(printedPages);
-    console.log("merging PDFs");
+    console.log("done", Date.now() - start);
     browser.close();
 
     res.contentType("application/pdf");
