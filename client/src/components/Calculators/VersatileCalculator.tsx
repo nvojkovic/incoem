@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Input from "../Inputs/Input";
 import Button from "../Inputs/Button";
 import Select from "../Inputs/Select";
-import { printNumber } from "../../utils";
+import { printNumber, yearRange } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
 import {
@@ -34,6 +34,7 @@ const VersatileCalculator: React.FC = () => {
   const settings = client.versatileCalculator;
   console.log("calc", settings);
   const [openYears, setOpenYears] = useState(false);
+  const [openReturns, setOpenReturns] = useState(false);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
   const [calculations, setCalculations] = useState<CalculationRow[]>([]);
@@ -63,61 +64,74 @@ const VersatileCalculator: React.FC = () => {
 
     for (let year = 0; year <= settings.user.endYear; year++) {
       const beginning = balance;
+      const realBalance = beginning;
 
+      // Calculate payment
       let payment = 0;
       if (year >= settings.payment.startYear) {
         const yearsFromStart = year - settings.payment.startYear;
-        if (settings.payment.type === "simple")
+        if (settings.payment.type === "simple") {
           payment =
             -(
               settings.payment.amount *
-              Math.pow(1 + settings.payment.increase / 100, yearsFromStart) *
-              1
+              Math.pow(1 + settings.payment.increase / 100, yearsFromStart)
             ) / Math.pow(1 + settings.other.inflation / 100, yearsFromStart);
-        else payment = -settings.payment.years[year] || 0;
+        } else {
+          payment = -settings.payment.years[year] || 0;
+        }
       }
 
+      // Handle beginning of year payment
       let ending = beginning;
       if (settings.payment.timing === "beginning") {
-        if (-payment >= ending) {
+        if (beginning <= 0 || -payment >= ending) {
           rows.push({
             age: settings.user.startAge + year,
             year,
-            beginning,
-            totalPayments: ending,
+            beginning: beginning <= 0 ? 0 : beginning,
+            totalPayments: 0,
             return: 0,
             growth: 0,
             taxes: 0,
             endingBalance: 0,
-            realBalance: ending + payment,
+            realBalance: realBalance + payment,
             ranOut: true,
           });
-          break;
+          balance = 0;
+          continue;
         }
         ending += payment;
       }
 
+      // Apply inflation
       ending /= 1 + settings.other.inflation / 100;
 
-      const returnAmount = ending * (settings.other.rateOfReturn / 100);
-      const taxes = returnAmount * (settings.other.taxRate / 100);
+      // Calculate returns and taxes
+      let returnRate = settings.other.rateOfReturn;
+      if (settings.other.returnType === "detailed") {
+        returnRate = settings.other.yearlyReturns[year] || 0;
+      }
+      const returnAmount = ending > 0 ? ending * (returnRate / 100) : 0;
+      const taxes = Math.max(returnAmount * (settings.other.taxRate / 100), 0);
       const growth = returnAmount - taxes;
 
+      // Handle end of year payment
       if (settings.payment.timing === "end") {
-        if (-payment >= ending) {
+        if (ending <= 0 || -payment >= ending) {
           rows.push({
             age: settings.user.startAge + year,
             year,
-            beginning,
-            totalPayments: ending,
+            beginning: beginning <= 0 ? 0 : beginning,
+            totalPayments: 0,
             return: 0,
             growth: 0,
             taxes: 0,
             endingBalance: 0,
-            realBalance: ending + payment,
+            realBalance: realBalance + payment,
             ranOut: true,
           });
-          break;
+          balance = 0;
+          continue;
         }
         ending += payment;
       }
@@ -127,8 +141,8 @@ const VersatileCalculator: React.FC = () => {
       rows.push({
         age: settings.user.startAge + year,
         year,
-        beginning,
-        totalPayments: payment,
+        beginning: beginning <= 0 ? 0 : beginning,
+        totalPayments: beginning <= 0 ? 0 : payment,
         return: returnAmount,
         growth,
         taxes,
@@ -142,7 +156,7 @@ const VersatileCalculator: React.FC = () => {
     return rows;
   };
   const handleSolveRateOfReturn = () => {
-    const targetEndingBalance = 0;
+    const targetEndingBalance = settings.user.endValue || 0;
     let low = 0;
     let high = 100;
     let mid = 0;
@@ -209,20 +223,31 @@ const VersatileCalculator: React.FC = () => {
             </Button>
           </div>
         </div>
-        <div className="sticky top-[72px] bg-[#f3f4f6] pb-3">
-          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 pb-8  py-4 pt-8">
+        <div className="sticky top-[72px] bg-[#f3f4f6]">
+          <div className="flex lg:flex-row flex-col gap-6 pb-8 py-4 ">
             <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
               <div className="col-span-3">
                 <h2 className="text-xl font-semibold mb-4">User Settings</h2>
               </div>
-              <div className="flex gap-6">
+              <div className="flex gap-6 flex-col">
                 <Input
                   labelLength={100}
+                  width="!w-[130px]"
                   label="Present Value"
                   subtype="money"
                   value={settings.user.presentValue}
                   setValue={(value) =>
                     updateSettings("user", "presentValue", value)
+                  }
+                />
+                <Input
+                  labelLength={100}
+                  width="!w-[130px]"
+                  label="End Value"
+                  subtype="money"
+                  value={settings.user.endValue}
+                  setValue={(value) =>
+                    updateSettings("user", "endValue", value)
                   }
                 />
               </div>
@@ -281,6 +306,7 @@ const VersatileCalculator: React.FC = () => {
                     label="Payment ($)"
                     subtype="money"
                     size="md"
+                    width="!w-[100px]"
                     value={settings.payment.amount}
                     setValue={(value) =>
                       updateSettings("payment", "amount", value)
@@ -288,7 +314,8 @@ const VersatileCalculator: React.FC = () => {
                   />
                   <Input
                     label="Increase (%)"
-                    labelLength={90}
+                    labelLength={100}
+                    width="!w-[80px]"
                     subtype="percent"
                     value={settings.payment.increase}
                     setValue={(value) =>
@@ -302,7 +329,7 @@ const VersatileCalculator: React.FC = () => {
                 <Input
                   label="Start Year"
                   subtype="number"
-                  labelLength={90}
+                  labelLength={80}
                   value={settings.payment.startYear}
                   setValue={(value) =>
                     updateSettings("payment", "startYear", value)
@@ -328,28 +355,60 @@ const VersatileCalculator: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white max-w-[320px]">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-semibold mb-4">Return</h2>
+                <div className="flex w-48 text-sm">
+                  <div
+                    className={`w-full text-center py-1 ${settings.other.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+                    onClick={() =>
+                      updateSettings("other", "returnType", "simple")
+                    }
+                  >
+                    Simple
+                  </div>
+                  <div
+                    className={`w-full text-center py-1 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+                    onClick={() =>
+                      updateSettings("other", "returnType", "detailed")
+                    }
+                  >
+                    Detailed
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-7 justify-between items-center mb-[16px]"></div>
+              {settings.other.returnType === "detailed" && (
+                <div className="w-32 mx-auto mt-1 mb-1">
+                  <Button type="primary" onClick={() => setOpenReturns(true)}>
+                    Open Years
+                  </Button>
+                </div>
+              )}
+              {settings.other.returnType === "simple" && (
+                <div className="flex flex-col gap-6">
+                  <Input
+                    label="Return (%)"
+                    labelLength={80}
+                    subtype="percent"
+                    value={settings.other.rateOfReturn}
+                    setValue={(value) =>
+                      updateSettings("other", "rateOfReturn", value)
+                    }
+                  />
+                  <div className="">
+                    <Button type="primary" onClick={handleSolveRateOfReturn}>
+                      Solve
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white ">
               <div className="col-span-3">
                 <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
               </div>
-
-              <div className="flex gap-6">
-                <Input
-                  label="Return (%)"
-                  labelLength={80}
-                  subtype="percent"
-                  value={settings.other.rateOfReturn}
-                  setValue={(value) =>
-                    updateSettings("other", "rateOfReturn", value)
-                  }
-                />
-                <div className="w-[440px]">
-                  <Button type="primary" onClick={handleSolveRateOfReturn}>
-                    Solve
-                  </Button>
-                </div>
-              </div>
-              <div className="flex gap-6">
+              <div className="flex gap-6 flex-col">
                 <Input
                   label="Taxes (%)"
                   labelLength={80}
@@ -408,12 +467,9 @@ const VersatileCalculator: React.FC = () => {
             </div>
           </div>
         </div>
-        <VersatileBalance
-          data={calculations.map((i) => ({
-            time: i.year,
-            value: i.endingBalance,
-          }))}
-        />
+        <div className="mt-[-15px]">
+          <VersatileBalance data={calculations} />
+        </div>
         {/*<VersatileChart
           data={calculations.map((i) => ({
             year: i.year,
@@ -426,7 +482,7 @@ const VersatileCalculator: React.FC = () => {
         <div className="">
           <table className="text-sm w-full bg-white shadow-lg">
             <thead
-              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[430px] rounded-none !border-none`}
+              className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[410px] rounded-none !border-none`}
             >
               <tr>
                 <th
@@ -478,6 +534,16 @@ const VersatileCalculator: React.FC = () => {
                   }
                 >
                   Return
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
+                    selectedCol === "return-percent"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("return-percent")
+                  }
+                >
+                  Return (%)
                 </th>
                 <th
                   className="px-4 py-2"
@@ -549,6 +615,16 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(row.return)}
                   </td>
                   <td
+                    className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
+                    {row.beginning
+                      ? `${Math.round((10000 * row.return) / row.beginning) / 100}%`
+                      : ""}
+                  </td>
+                  <td
                     className={`border px-4 py-2 ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
@@ -589,60 +665,125 @@ const VersatileCalculator: React.FC = () => {
         <div>
           <div className="mb-3 font-semibold text-lg">Manual Input</div>
           <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
-            {[
-              ...Array(
-                Math.max(
-                  (settings.user.endYear || 0) - settings.payment.startYear + 1,
-                  0,
-                ),
-              ).keys(),
-            ].map((i) => (
-              <div className="flex gap-3">
-                <Input
-                  label={`Year ${i + settings.payment.startYear}`}
-                  subtype="money"
-                  value={settings.payment.years[i + settings.payment.startYear]}
-                  setValue={(value) =>
-                    updateSettings("payment", "years", {
-                      ...settings.payment.years,
-                      [i + settings.payment.startYear]: value,
-                    })
-                  }
-                />
-                <div className="w-12">
-                  <Button
-                    type="secondary"
-                    onClick={() => {
-                      updateSettings(
-                        "payment",
-                        "years",
-                        Object.fromEntries(
-                          [
-                            ...Array(
-                              Math.max(
-                                (settings.user.endYear || 0) -
-                                  settings.payment.startYear +
-                                  1,
-                              ),
-                            ).keys(),
-                          ].map((k) => {
-                            console.log(k);
-                            if (k > i) return [k, settings.payment.years[i]];
-                            else return [k, settings.payment.years[k]];
-                          }),
-                        ) as any,
-                      );
+            {yearRange(settings.payment.startYear, settings.user.endYear).map(
+              (i) => (
+                <div className="flex gap-3">
+                  <Input
+                    label={`Year ${i}`}
+                    subtype="money"
+                    onPaste={(e: any) => {
+                      e.preventDefault();
+                      const text = e.clipboardData.getData("text");
+                      const values = text.split("\n") as any[];
+                      const newValues = values
+                        .filter((i) => i)
+                        .map((v) => parseFloat(v))
+                        .filter((i) => !isNaN(i));
+                      console.log(text, values, newValues);
+                      if (newValues.length === 1) {
+                        updateSettings("payment", "years", {
+                          ...settings.payment.years,
+                          [i + settings.payment.startYear]: newValues[0],
+                        });
+                      } else {
+                        updateSettings("payment", "years", {
+                          ...settings.payment.years,
+                          ...(Object.fromEntries(
+                            newValues.map((v, j) => [j + i, v]),
+                          ) as any),
+                        });
+                      }
                     }}
-                  >
-                    <div className="flex items-center justify-center h-6">
-                      <ArrowDownIcon className="w-4 h-4" />
-                    </div>
-                  </Button>
+                    value={settings.payment.years[i]}
+                    setValue={(value) =>
+                      updateSettings("payment", "years", {
+                        ...settings.payment.years,
+                        [i]: value,
+                      })
+                    }
+                  />
+                  <div className="w-12">
+                    <Button
+                      type="secondary"
+                      onClick={() => {
+                        updateSettings(
+                          "payment",
+                          "years",
+                          Object.fromEntries(
+                            yearRange(
+                              settings.payment.startYear,
+                              settings.user.endYear,
+                            ).map((k) => {
+                              if (k > i) return [k, settings.payment.years[i]];
+                              else return [k, settings.payment.years[k]];
+                            }),
+                          ) as any,
+                        );
+                      }}
+                    >
+                      <div className="flex items-center justify-center h-6">
+                        <ArrowDownIcon className="w-4 h-4" />
+                      </div>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
+      </Modal>
+      <Modal isOpen={openReturns} onClose={() => setOpenReturns(false)}>
+        {settings.other.returnType === "detailed" && (
+          <div>
+            <div className="mb-3 font-semibold text-lg">
+              Return Rates by Year
+            </div>
+            <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
+              {[...Array(settings.user.endYear + 1).keys()].map((year) => (
+                <div className="flex gap-3" key={year}>
+                  <Input
+                    label={`Year ${year}`}
+                    subtype="percent"
+                    value={settings.other.yearlyReturns[year]}
+                    setValue={(value) =>
+                      updateSettings("other", "yearlyReturns", {
+                        ...settings.other.yearlyReturns,
+                        [year]: value,
+                      })
+                    }
+                  />
+                  <div className="w-12">
+                    <Button
+                      type="secondary"
+                      onClick={() => {
+                        updateSettings(
+                          "other",
+                          "yearlyReturns",
+                          Object.fromEntries(
+                            [...Array(settings.user.endYear + 1).keys()].map(
+                              (k) => {
+                                if (k > year)
+                                  return [
+                                    k,
+                                    settings.other.yearlyReturns[year],
+                                  ];
+                                return [k, settings.other.yearlyReturns[k]];
+                              },
+                            ),
+                          ) as any,
+                        );
+                      }}
+                    >
+                      <div className="flex items-center justify-center h-6">
+                        <ArrowDownIcon className="w-4 h-4" />
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Modal>
     </Layout>
   );

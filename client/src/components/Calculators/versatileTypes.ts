@@ -16,6 +16,8 @@ export interface CalculatorSettings {
     rateOfReturn: number;
     taxRate: number;
     inflation: number;
+    returnType: "simple" | "detailed";
+    yearlyReturns: { [key: number]: number };
   };
 }
 
@@ -37,5 +39,7 @@ export const initialVersatileSettings: CalculatorSettings = {
     rateOfReturn: 0,
     taxRate: 0,
     inflation: 0,
+    returnType: "simple" as const,
+    yearlyReturns: {},
   },
 };
