@@ -14,6 +14,7 @@ import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { Tooltip } from "flowbite-react";
+import VersatileBalance from "../Charts/VersatileBalance";
 
 interface CalculationRow {
   age: number;
@@ -120,6 +121,7 @@ const VersatileCalculator: React.FC = () => {
         }
         ending += payment;
       }
+
       ending += growth;
 
       rows.push({
@@ -378,14 +380,14 @@ const VersatileCalculator: React.FC = () => {
                 <span
                   className={
                     calculations.length &&
-                      calculations[calculations.length - 1].endingBalance < 0
+                    calculations[calculations.length - 1].endingBalance < 0
                       ? "text-red-500"
                       : ""
                   }
                 >
                   {printNumber(
                     calculations.length &&
-                    calculations[calculations.length - 1].endingBalance,
+                      calculations[calculations.length - 1].endingBalance,
                   )}
                 </span>
               </div>
@@ -406,6 +408,12 @@ const VersatileCalculator: React.FC = () => {
             </div>
           </div>
         </div>
+        <VersatileBalance
+          data={calculations.map((i) => ({
+            time: i.year,
+            value: i.endingBalance,
+          }))}
+        />
         {/*<VersatileChart
           data={calculations.map((i) => ({
             year: i.year,
@@ -613,8 +621,8 @@ const VersatileCalculator: React.FC = () => {
                             ...Array(
                               Math.max(
                                 (settings.user.endYear || 0) -
-                                settings.payment.startYear +
-                                1,
+                                  settings.payment.startYear +
+                                  1,
                               ),
                             ).keys(),
                           ].map((k) => {
