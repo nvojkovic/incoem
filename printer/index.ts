@@ -133,6 +133,7 @@ const getPdf = async (page: Page, base: string, data: any) => {
       executablePath: "/usr/bin/google-chrome",
       ignoreDefaultArgs: ["--disable-extensions"],
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
     },
   });
 
