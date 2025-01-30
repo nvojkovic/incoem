@@ -140,6 +140,7 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
               <div style="font-weight: bold; margin-bottom: 4px">Year: ${d.year} (Age: ${d.age})</div>
               <div>Beginning Balance: ${printNumber(d.beginning)}</div>
               <div>Payment: ${printNumber(-d.totalPayments)}</div>
+              <div>Investment fee: ${printNumber(-d.investmentFee)}</div>
               <div>Return: ${printNumber(d.return)}</div>
               <div>Taxes: ${printNumber(-d.taxes)}</div>
               <div>Ending Balance: ${printNumber(d.endingBalance)}</div>

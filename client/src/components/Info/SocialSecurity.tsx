@@ -107,7 +107,7 @@ const SocialSecurity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {!pension.alreadyReceiving && (
                 <Input
-                  label="Start Age Year"
+                  label="Start Age"
                   subtype="number"
                   size="lg"
                   value={pension.startAgeYear}
@@ -120,7 +120,7 @@ const SocialSecurity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {!pension.alreadyReceiving && (
                 <MonthPicker
-                  label="Start Age Month"
+                  label="Start Month"
                   errorMessage={
                     <div className="w-32">
                       Start month must be after {people[pension.personId].name}

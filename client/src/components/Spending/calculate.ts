@@ -15,7 +15,7 @@ export const calculateSingleSpending = (
   year: number,
 ): SpendingResult[] => {
   if (!spending) return [];
-  const years = year - 2024;
+  const years = year - new Date().getFullYear();
 
   const inflationRate = (inflation: YearlyIncrease) => {
     if (!inflation || inflation.type == "none") return 0;
