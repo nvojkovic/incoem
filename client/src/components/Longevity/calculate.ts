@@ -10,6 +10,7 @@ export const makeTable = (person: Person) => {
   const selectedTable: any = person.sex === "Male" ? maleTables : femaleTables;
   const table = selectedTable[birthYear.toString()];
   const result = [];
+  const currentYear = new Date().getFullYear();
   let aliveProbability = 1;
   for (let current = age; current < 120; current++) {
     const row = table[current];
@@ -17,7 +18,7 @@ export const makeTable = (person: Person) => {
     const probability = aliveProbability * (1 - q);
     aliveProbability = probability;
     result.push({
-      year: birthYear + current,
+      year: currentYear + current - age,
       age: current,
       q,
       probability: probability,

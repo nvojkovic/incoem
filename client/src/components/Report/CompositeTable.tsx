@@ -31,6 +31,7 @@ const CompositeTable = ({
     scenario.people.length > 1
       ? jointTable(scenario.people[0], scenario.people[1])
       : [];
+  console.log("joint", joint);
 
   const setColumn = (name: string) => () => {
     console.log(name);
@@ -257,7 +258,7 @@ const CompositeTable = ({
                           >
                             {Math.round(
                               (joint.find((entry) => entry.year === line)
-                                ?.probability || 0) * 100,
+                                ?.oneAlive || 0) * 100,
                             )}
                             %
                           </td>
