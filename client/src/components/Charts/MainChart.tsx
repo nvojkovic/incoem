@@ -145,12 +145,12 @@ const MainChart = ({
       .domain([
         0,
         maxY * 1.1 ||
-          Math.max(
-            (d3 as any).max(processedData as any, (d: any) => {
-              return d3.sum(keys, (key: any) => d[key]);
-            }),
-            lineData ? Math.max(...lineData) : 0,
-          ) * 1.1,
+        Math.max(
+          (d3 as any).max(processedData as any, (d: any) => {
+            return d3.sum(keys, (key: any) => d[key]);
+          }),
+          lineData ? Math.max(...lineData) : 0,
+        ) * 1.1,
       ])
       .range([height, 0]);
 
@@ -303,12 +303,12 @@ const MainChart = ({
       maximumFractionDigits: 0,
     });
 
-    const mouseover = function (_: any, __: any) {
+    const mouseover = function(_: any, __: any) {
       tooltip.style("opacity", 1);
       guideline.style("opacity", 1);
     };
 
-    const mousemove = function (event: any, _: any) {
+    const mousemove = function(event: any, _: any) {
       const [xPos] = d3.pointer(event);
       const year = Math.round(x.invert(xPos));
       const selectedData = processedData.find((d: any) => d.year === year);
@@ -360,9 +360,8 @@ const MainChart = ({
               </div>`;
           if (needsFlag)
             tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
-                ${
-                  taxes.length
-                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
+                ${taxes.length
+                ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: white; margin-right: 5px;"></span>
                     Taxes: 
@@ -371,8 +370,8 @@ const MainChart = ({
                     <b>${formatCurrency.format(taxes[years.indexOf(year)])}</b>
                   </div>
                 </div>`
-                    : ""
-                }
+                : ""
+              }
 
 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
                   <div>
@@ -384,9 +383,8 @@ const MainChart = ({
                   </div>
                 </div>
 
-                ${
-                  taxes.length
-                    ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px; margin-top: 2px;">
+                ${taxes.length
+                ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px; margin-top: 2px;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: red; margin-right: 5px;"></span>
                     <b>Taxes + Spending: </b>
@@ -395,8 +393,8 @@ const MainChart = ({
                     <b>${formatCurrency.format(lineData[years.indexOf(year)] - (taxes[years.indexOf(year)] || 0) + taxes[years.indexOf(year)])}</b>
                   </div>
                 </div>`
-                    : ""
-                }
+                : ""
+              }
                               </div>
               <div class="h-[1px] bg-black my-1"/>
 <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
@@ -412,11 +410,10 @@ const MainChart = ({
             `;
         }
         const longevityContent = longevityFlag
-          ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${
-              people.length > 1
-                ? `, <span>Joint: (${Math.round((jointTable(people[0], people[1]).find((i: any) => i.year === year)?.probability || 0) * 100)}%)</span>`
-                : ""
-            }</div></div></div>`
+          ? `<div class="text-xs mt-1 mb-2 text-gray-700 py-2 border-y border-black"><div><div class="text-black">Longevity</div> <div>${people?.map((person: any) => `${person.name} (${Math.round(1000 * (makeTable(person) as any).table.find((i: any) => i.year === year)?.probability) / 10}%)`).join(", ")}${people.length > 1
+            ? `, <span>Joint: (${Math.round((jointTable(people[0], people[1]).find((i: any) => i.year === year)?.oneAlive || 0) * 100)}%)</span>`
+            : ""
+          }</div></div></div>`
           : "";
         tooltip.html(
           `<div class="mb-4"><strong>Year: ${year}</strong><br>${longevityContent}${tooltipContent}</div>`,
@@ -445,7 +442,7 @@ const MainChart = ({
       }
     };
 
-    const mouseleave = function (_: any, __: any) {
+    const mouseleave = function(_: any, __: any) {
       tooltip.style("opacity", 0);
       guideline.style("opacity", 0);
     };

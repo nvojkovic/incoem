@@ -190,7 +190,7 @@ const Composite = ({
                               >
                                 {Math.round(
                                   (joint.find((entry) => entry.year === line)
-                                    ?.probability || 0) * 100,
+                                    ?.oneAlive || 0) * 100,
                                 )}
                                 %
                               </td>
