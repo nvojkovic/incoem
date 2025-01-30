@@ -25,6 +25,7 @@ interface CalculationRow {
   return: number;
   growth: number;
   taxes: number;
+  investmentFee: number;
   endingBalance: number;
   realBalance: number;
 }
@@ -111,9 +112,10 @@ const VersatileCalculator: React.FC = () => {
       if (settings.other.returnType === "detailed") {
         returnRate = settings.other.yearlyReturns[year] || 0;
       }
+      const investmentFee = ending > 0 ? ending * (settings.other.investmentFee / 100) : 0;
       const returnAmount = ending > 0 ? ending * (returnRate / 100) : 0;
       const taxes = Math.max(returnAmount * (settings.other.taxRate / 100), 0);
-      const growth = returnAmount - taxes;
+      const growth = returnAmount - taxes - investmentFee;
 
       // Handle end of year payment
       if (settings.payment.timing === "end") {
@@ -560,6 +562,16 @@ const VersatileCalculator: React.FC = () => {
                 <th
                   className="px-4 py-2"
                   onClick={() =>
+                    selectedCol === "fees"
+                      ? setSelectedCol(null)
+                      : setSelectedCol("fees")
+                  }
+                >
+                  Investment Fees
+                </th>
+                <th
+                  className="px-4 py-2"
+                  onClick={() =>
                     selectedCol === "taxes"
                       ? setSelectedCol(null)
                       : setSelectedCol("taxes")
@@ -635,6 +647,14 @@ const VersatileCalculator: React.FC = () => {
                     {row.beginning
                       ? `${convertToParens((Math.round((10000 * row.return) / row.beginning) / 100).toString() + `%`)}`
                       : ""}
+                  </td>
+                  <td
+                    className={`border px-4 py-2 ${selectedCol === "fees" ? "bg-slate-200" : ""}`}
+                    onClick={() =>
+                      setSelectedRow(selectedRow === index ? null : index)
+                    }
+                  >
+                    {printNumber(-row.investmentFee)}
                   </td>
                   <td
                     className={`border px-4 py-2 ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
