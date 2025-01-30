@@ -151,6 +151,8 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
   let {
     data,
     title,
+    incomes,
+    people,
     spending,
     stabilityRatioFlag,
     needsFlag,
@@ -171,6 +173,8 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
     data: {
       data,
       title,
+      incomes,
+      people,
       spending,
       needsFlag,
       stabilityRatioFlag,
