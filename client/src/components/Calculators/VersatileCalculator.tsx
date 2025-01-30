@@ -488,9 +488,10 @@ const VersatileCalculator: React.FC = () => {
           data={calculations.map((i) => ({
             year: i.year,
             balance: i.endingBalance,
-            residual: i.return - i.taxes,
+            residual: i.return - i.taxes - i.investmentFee,
             payment: Math.abs(i.totalPayments),
             tax: i.taxes,
+            investmentFee: i.investmentFee,
           }))}
         />*/}
         <div className="">
