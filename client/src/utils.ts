@@ -35,6 +35,10 @@ export const printNumber = (s: number) => {
   return s < 0 ? `(${printNumberOld(s).replace("-", "")})` : printNumberOld(s);
 };
 
+export const convertToParens = (s: string) => {
+  return s.includes("-") ? `(${s.toString().replace("-", "")})` : s.toString();
+};
+
 export const printReport = async (clientId: number, scenarioId: number) => {
   let url;
   if (scenarioId === -1) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Input from "../Inputs/Input";
 import Button from "../Inputs/Button";
 import Select from "../Inputs/Select";
-import { printNumber, yearRange } from "../../utils";
+import { convertToParens, printNumber, yearRange } from "../../utils";
 import Modal from "../Modal";
 import { CalculatorSettings, initialVersatileSettings } from "./versatileTypes";
 import {
@@ -31,7 +31,7 @@ interface CalculationRow {
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
-  const settings = client.versatileCalculator;
+  const settings = client.versatileCalculator as CalculatorSettings;
   console.log("calc", settings);
   const [openYears, setOpenYears] = useState(false);
   const [openReturns, setOpenReturns] = useState(false);
@@ -155,14 +155,15 @@ const VersatileCalculator: React.FC = () => {
     }
     return rows;
   };
+
   const handleSolveRateOfReturn = () => {
     const targetEndingBalance = settings.user.endValue || 0;
     let low = 0;
     let high = 100;
     let mid = 0;
     let iteration = 0;
-    const maxIterations = 100;
-    const tolerance = 100;
+    const maxIterations = 200;
+    const tolerance = 0.001;
 
     const testSettings = structuredClone(settings);
     while (iteration < maxIterations) {
@@ -193,7 +194,7 @@ const VersatileCalculator: React.FC = () => {
       ...settings,
       other: {
         ...settings.other,
-        rateOfReturn: parseFloat(mid.toFixed(3)),
+        rateOfReturn: mid,
       },
     });
   };
@@ -391,7 +392,9 @@ const VersatileCalculator: React.FC = () => {
                     label="Return (%)"
                     labelLength={80}
                     subtype="percent"
-                    value={settings.other.rateOfReturn}
+                    value={
+                      Math.round(settings.other.rateOfReturn * 1000) / 1000
+                    }
                     setValue={(value) =>
                       updateSettings("other", "rateOfReturn", value)
                     }
@@ -427,6 +430,15 @@ const VersatileCalculator: React.FC = () => {
                     updateSettings("other", "inflation", value)
                   }
                 />
+                <Input
+                  label="Investment Fee (%)"
+                  labelLength={90}
+                  subtype="percent"
+                  value={settings.other.investmentFee}
+                  setValue={(value) =>
+                    updateSettings("other", "investmentFee", value)
+                  }
+                />
               </div>
             </div>
           </div>
@@ -439,14 +451,14 @@ const VersatileCalculator: React.FC = () => {
                 <span
                   className={
                     calculations.length &&
-                    calculations[calculations.length - 1].endingBalance < 0
+                      calculations[calculations.length - 1].endingBalance < 0
                       ? "text-red-500"
                       : ""
                   }
                 >
                   {printNumber(
                     calculations.length &&
-                      calculations[calculations.length - 1].endingBalance,
+                    calculations[calculations.length - 1].endingBalance,
                   )}
                 </span>
               </div>
@@ -607,7 +619,7 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(row.totalPayments)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""}`}
+                    className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""} ${row.return < 0 ? "text-red-500" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
@@ -615,13 +627,13 @@ const VersatileCalculator: React.FC = () => {
                     {printNumber(row.return)}
                   </td>
                   <td
-                    className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}`}
+                    className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${row.return < 0 ? "text-red-500" : ""}`}
                     onClick={() =>
                       setSelectedRow(selectedRow === index ? null : index)
                     }
                   >
                     {row.beginning
-                      ? `${Math.round((10000 * row.return) / row.beginning) / 100}%`
+                      ? `${convertToParens((Math.round((10000 * row.return) / row.beginning) / 100).toString() + `%`)}`
                       : ""}
                   </td>
                   <td
@@ -664,6 +676,16 @@ const VersatileCalculator: React.FC = () => {
       <Modal isOpen={openYears} onClose={() => setOpenYears(false)}>
         <div>
           <div className="mb-3 font-semibold text-lg">Manual Input</div>
+          <div className="mb-5 w-64 mx-auto">
+            <Input
+              label="Increase (%)"
+              subtype="percent"
+              value={settings.payment.detailedIncrease}
+              setValue={(value) =>
+                updateSettings("payment", "detailedIncrease", value)
+              }
+            />
+          </div>
           <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
             {yearRange(settings.payment.startYear, settings.user.endYear).map(
               (i) => (
@@ -699,7 +721,7 @@ const VersatileCalculator: React.FC = () => {
                       updateSettings("payment", "years", {
                         ...settings.payment.years,
                         [i]: value,
-                      })
+                      } as any)
                     }
                   />
                   <div className="w-12">
@@ -714,7 +736,18 @@ const VersatileCalculator: React.FC = () => {
                               settings.payment.startYear,
                               settings.user.endYear,
                             ).map((k) => {
-                              if (k > i) return [k, settings.payment.years[i]];
+                              if (k > i)
+                                return [
+                                  k,
+                                  settings.payment.years[i] *
+                                  Math.pow(
+                                    1 +
+                                    (settings.payment.detailedIncrease ||
+                                      0) /
+                                    100,
+                                    k - i,
+                                  ),
+                                ];
                               else return [k, settings.payment.years[k]];
                             }),
                           ) as any,
@@ -749,7 +782,7 @@ const VersatileCalculator: React.FC = () => {
                       updateSettings("other", "yearlyReturns", {
                         ...settings.other.yearlyReturns,
                         [year]: value,
-                      })
+                      } as any)
                     }
                   />
                   <div className="w-12">
