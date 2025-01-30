@@ -18,7 +18,7 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       bottom: 40,
       left: 50 + 12 * Math.log10(largest),
     };
-    const width = 1350 - margin.left - margin.right;
+    const width = 1050 - margin.left - margin.right;
     const height = 350 - margin.top - margin.bottom;
 
     const x = d3

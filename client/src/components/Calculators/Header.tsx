@@ -129,7 +129,7 @@ const Header = () => {
     }
   };
   return (
-    <div className="flex lg:flex-row flex-col gap-6 pb-8 py-4 ">
+    <div className="flex flex-col gap-6 pb-8 py-4 ">
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="col-span-3">
           <h2 className="text-xl font-semibold mb-4">User Settings</h2>
