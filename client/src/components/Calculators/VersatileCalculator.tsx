@@ -112,10 +112,11 @@ const VersatileCalculator: React.FC = () => {
       if (settings.other.returnType === "detailed") {
         returnRate = settings.other.yearlyReturns[year] || 0;
       }
-      const investmentFee = ending > 0 ? ending * (settings.other.investmentFee / 100) : 0;
+      const investmentFee = beginning > 0 ? beginning * (settings.other.investmentFee / 100) : 0;
       const returnAmount = ending > 0 ? ending * (returnRate / 100) : 0;
       const taxes = Math.max(returnAmount * (settings.other.taxRate / 100), 0);
       const growth = returnAmount - taxes - investmentFee;
+      ending -= investmentFee;
 
       // Handle end of year payment
       if (settings.payment.timing === "end") {
