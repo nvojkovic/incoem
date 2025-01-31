@@ -1,14 +1,15 @@
 import { useState } from "react";
 import Input from "../Inputs/Input";
-import { CalculatorSettings, calculateProjection } from "./versatileTypes";
+import { CalculatorSettings } from "./versatileTypes";
 import { useInfo } from "src/useData";
 import Button from "../Inputs/Button";
 import { ArrowDownIcon, TableCellsIcon } from "@heroicons/react/24/outline";
 import Select from "../Inputs/Select";
 import Modal from "../Modal";
 import { yearRange } from "src/utils";
+import { Tooltip } from "flowbite-react";
 
-const Header = () => {
+const VersatileSettings = () => {
   const { data: client, setField } = useInfo();
   const settings = client.versatileCalculator as CalculatorSettings;
   console.log("calc", settings);
@@ -29,146 +30,51 @@ const Header = () => {
     });
   };
 
-  const solveOptions = [
-    { id: "return", name: "Rate of Return" },
-    { id: "presentValue", name: "Present Value" },
-  ];
-  const handleSolveRateOfReturn = () => {
-    const targetEndingBalance = settings.user.endValue || 0;
-    let low = 0;
-    let high = 100;
-    let mid = 0;
-    let iteration = 0;
-    const maxIterations = 200;
-    const tolerance = 0.001;
-
-    const testSettings = structuredClone(settings);
-    testSettings.other.returnType = "simple";
-    while (iteration < maxIterations) {
-      mid = (low + high) / 2;
-      testSettings.other.rateOfReturn = mid;
-      setField("versatileCalculator")({
-        ...settings,
-        other: { ...settings.other, rateOfReturn: mid },
-      });
-      const calculations = calculateProjection(testSettings);
-
-      const lastRow = calculations[calculations.length - 1];
-
-      console.log(mid, low, high, lastRow.realBalance);
-      if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
-        break;
-      }
-
-      if (lastRow.realBalance > targetEndingBalance) {
-        high = mid;
-      } else {
-        low = mid;
-      }
-
-      iteration++;
-    }
-    setField("versatileCalculator")({
-      ...settings,
-      other: {
-        ...settings.other,
-        rateOfReturn: mid,
-        returnType: "simple",
-      },
-    });
-  };
-
-  const handleSolvePresentValue = () => {
-    const targetEndingBalance = settings.user.endValue || 0;
-    let low = 0;
-    let high = 10000000;
-    let mid = 0;
-    let iteration = 0;
-    const maxIterations = 200;
-    const tolerance = 0.001;
-
-    const testSettings = structuredClone(settings);
-    while (iteration < maxIterations) {
-      mid = (low + high) / 2;
-      testSettings.user.presentValue = mid;
-      setField("versatileCalculator")({
-        ...settings,
-        user: { ...settings.other, presentValue: mid },
-      });
-      const calculations = calculateProjection(testSettings);
-
-      const lastRow = calculations[calculations.length - 1];
-
-      console.log(mid, low, high, lastRow.realBalance);
-      if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
-        break;
-      }
-
-      if (lastRow.realBalance > targetEndingBalance) {
-        high = mid;
-      } else {
-        low = mid;
-      }
-
-      iteration++;
-    }
-    setField("versatileCalculator")({
-      ...settings,
-      user: {
-        ...settings.user,
-        presentValue: Math.round(mid),
-      },
-    });
-  };
-
-  const solve = () => {
-    if (settings.solve.field === "return" || !settings.solve.field) {
-      handleSolveRateOfReturn();
-    } else if (settings.solve.field === "presentValue") {
-      handleSolvePresentValue();
-    }
-  };
   return (
-    <div className="flex flex-col gap-6 pb-8 py-4 ">
+    <div className="flex flex-col gap-6 sticky top-[100px]">
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="col-span-3">
-          <h2 className="text-xl font-semibold mb-4">User Settings</h2>
+          <h2 className="text-xl font-semibold">User Settings</h2>
         </div>
-        <div className="flex gap-6 flex-col">
-          <Input
-            labelLength={100}
-            width="!w-[130px]"
-            label="Present Value"
-            subtype="money"
-            value={settings.user.presentValue}
-            setValue={(value) => updateSettings("user", "presentValue", value)}
-          />
-          <Input
-            labelLength={100}
-            width="!w-[130px]"
-            label="End Value"
-            subtype="money"
-            value={settings.user.endValue}
-            setValue={(value) => updateSettings("user", "endValue", value)}
-          />
-        </div>
-
-        <div className="flex gap-6">
-          <Input
-            label="Start Age"
-            labelLength={60}
-            width="!w-[50px]"
-            subtype="number"
-            value={settings.user.startAge}
-            setValue={(value) => updateSettings("user", "startAge", value)}
-          />
-          <Input
-            label="Years"
-            subtype="number"
-            labelLength={40}
-            value={settings.user.endYear}
-            setValue={(value) => updateSettings("user", "endYear", value)}
-          />
+        <div className="flex gap-3 justify-between">
+          <div className="flex flex-col gap-3">
+            <Input
+              labelLength={100}
+              width="!w-[130px]"
+              label="Present Value"
+              subtype="money"
+              value={settings.user.presentValue}
+              setValue={(value) =>
+                updateSettings("user", "presentValue", value)
+              }
+            />{" "}
+            <Input
+              labelLength={100}
+              width="!w-[130px]"
+              label="End Value"
+              subtype="money"
+              value={settings.user.endValue}
+              setValue={(value) => updateSettings("user", "endValue", value)}
+            />
+          </div>
+          <div className="flex flex-col gap-3">
+            <Input
+              label="Start Age"
+              labelLength={80}
+              width="!w-[50px]"
+              subtype="number"
+              value={settings.user.startAge}
+              setValue={(value) => updateSettings("user", "startAge", value)}
+            />
+            <Input
+              label="Years"
+              subtype="number"
+              labelLength={80}
+              width="!w-[50px]"
+              value={settings.user.endYear}
+              setValue={(value) => updateSettings("user", "endYear", value)}
+            />
+          </div>
         </div>
       </div>
 
@@ -209,23 +115,29 @@ const Header = () => {
                 value={settings.payment.amount}
                 setValue={(value) => updateSettings("payment", "amount", value)}
               />
-              <Button
-                type="secondary"
-                onClick={() => {
-                  updateSettings(
-                    "payment",
-                    "years",
-                    Object.fromEntries(
-                      yearRange(
-                        settings.payment.startYear,
-                        settings.user.endYear,
-                      ).map((i) => [i, settings.payment.amount]),
-                    ) as any,
-                  );
-                }}
+
+              <Tooltip
+                content="Copy payment to every year in detailed."
+                theme={{ target: "" }}
               >
-                <TableCellsIcon className="h-5 w-5" />
-              </Button>
+                <Button
+                  type="secondary"
+                  onClick={() => {
+                    updateSettings(
+                      "payment",
+                      "years",
+                      Object.fromEntries(
+                        yearRange(
+                          settings.payment.startYear,
+                          settings.user.endYear,
+                        ).map((i) => [i, settings.payment.amount]),
+                      ) as any,
+                    );
+                  }}
+                >
+                  <TableCellsIcon className="h-5 w-5" />
+                </Button>
+              </Tooltip>
             </div>
             <Input
               label="Increase (%)"
@@ -265,9 +177,9 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white max-w-[320px]">
-        <div className="flex flex-col justify-between items-center">
-          <h2 className="text-xl font-semibold mb-4">Return</h2>
+      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">Return</h2>
           <div className="flex w-48 text-sm">
             <div
               className={`w-full text-center py-1 ${settings.other.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
@@ -283,7 +195,6 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-7 justify-between items-center mb-[16px]"></div>
         {settings.other.returnType === "detailed" && (
           <div className="w-32 mx-auto mt-1 mb-1">
             <Button type="primary" onClick={() => setOpenReturns(true)}>
@@ -292,35 +203,40 @@ const Header = () => {
           </div>
         )}
         {settings.other.returnType === "simple" && (
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-6 w-full">
+            <div className="flex gap-2 w-[230px]">
               <Input
                 label="Return (%)"
-                vertical
+                labelLength={80}
                 subtype="percent"
                 value={Math.round(settings.other.rateOfReturn * 100) / 100}
                 setValue={(value) =>
                   updateSettings("other", "rateOfReturn", value)
                 }
               />
-              <div className="w-12">
-                <Button
-                  type="secondary"
-                  onClick={() => {
-                    updateSettings(
-                      "other",
-                      "yearlyReturns",
-                      Object.fromEntries(
-                        yearRange(0, settings.user.endYear).map((i) => [
-                          i,
-                          Math.round(100 * settings.other.rateOfReturn) / 100,
-                        ]),
-                      ) as any,
-                    );
-                  }}
+              <div className="w-10">
+                <Tooltip
+                  content="Copy returns to every year in detailed."
+                  theme={{ target: "" }}
                 >
-                  <TableCellsIcon className="h-5 w-5" />
-                </Button>
+                  <Button
+                    type="secondary"
+                    onClick={() => {
+                      updateSettings(
+                        "other",
+                        "yearlyReturns",
+                        Object.fromEntries(
+                          yearRange(0, settings.user.endYear).map((i) => [
+                            i,
+                            Math.round(100 * settings.other.rateOfReturn) / 100,
+                          ]),
+                        ) as any,
+                      );
+                    }}
+                  >
+                    <TableCellsIcon className="h-5 w-5" />
+                  </Button>
+                </Tooltip>
               </div>
             </div>
           </div>
@@ -330,7 +246,7 @@ const Header = () => {
         <div className="col-span-3">
           <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
         </div>
-        <div className="flex gap-6 flex-col">
+        <div className="grid grid-cols-2 gap-6 flex-col">
           <Input
             label="Taxes (%)"
             labelLength={80}
@@ -347,41 +263,15 @@ const Header = () => {
           />
           <Input
             label="Investment Fee (%)"
-            labelLength={90}
+            tooltip="Half of fee is applied at the beginning of year, half at end of year"
+            labelLength={150}
+            width="!w-[100px]"
             subtype="percent"
             value={settings.other.investmentFee}
             setValue={(value) =>
               updateSettings("other", "investmentFee", value)
             }
           />
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white ">
-        <div className="col-span-3">
-          <h2 className="text-xl font-semibold mb-4">Solve</h2>
-        </div>
-        <div className="flex gap-6 flex-col">
-          <Select
-            vertical
-            width="!w-[160px]"
-            label="Field"
-            options={solveOptions}
-            selected={
-              solveOptions.find((o) => o.id === settings.solve.field) || {
-                id: "return",
-                name: "Rate of Return",
-              }
-            }
-            setSelected={(option) =>
-              updateSettings("solve", "field", option.id)
-            }
-          />
-        </div>
-        <div className="">
-          <Button type="primary" onClick={solve}>
-            Solve
-          </Button>
         </div>
       </div>
 
@@ -536,4 +426,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default VersatileSettings;

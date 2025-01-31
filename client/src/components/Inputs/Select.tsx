@@ -31,9 +31,8 @@ function Select({
 }: Props) {
   return (
     <div
-      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
-        vertical ? "items-start" : "lg:items-center"
-      } `}
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
+        } `}
     >
       {label && (
         <label
@@ -75,7 +74,7 @@ function Select({
                       theme={{ target: "" }}
                       placement="right-end"
                       style="light"
-                      // className="border-black border"
+                    // className="border-black border"
                     >
                       <div className="relative cursor-pointer">
                         {errorMessage && invalid ? (
@@ -100,15 +99,14 @@ function Select({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-[5000]">
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-[50000]">
                   {options.map((person: any, personIdx: number) => (
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${
-                          active
-                            ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
-                            : "text-gray-900"
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 z-[6000] ${active
+                          ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
+                          : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -116,9 +114,8 @@ function Select({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
+                            className={`block truncate ${selected ? "font-medium" : "font-normal"
+                              }`}
                           >
                             {person.name}
                           </span>

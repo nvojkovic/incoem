@@ -7,16 +7,13 @@ import {
   calculateProjection,
   initialVersatileSettings,
 } from "./versatileTypes";
-import {
-  ArrowLeftIcon,
-  QuestionMarkCircleIcon,
-} from "@heroicons/react/24/outline";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
-import { Link } from "react-router-dom";
 import { Tooltip } from "flowbite-react";
 import VersatileBalance from "../Charts/VersatileBalance";
-import Header from "./Header";
+import VersatileSettings from "./VersatileSettings";
+import Solve from "./Solve";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
@@ -34,36 +31,14 @@ const VersatileCalculator: React.FC = () => {
   return (
     <Layout page="calculator">
       <div className="container mx-auto px-4 pb-8  ml-[-200px]">
-        <div className="flex gap-3 items-center mb-8 justify-between">
-          <div className="flex gap-3 items-baseline">
-            <Link to={`/client/${client.id}/calculator`}>
-              <div className="rounded-full border border-gray-400 h-8 w-8 flex justify-center items-center cursor-pointer">
-                <ArrowLeftIcon className="h-5 text-gray-500" />
-              </div>
-            </Link>
-            <h1 className="text-3xl font-bold">Versatile Calculator</h1>
-          </div>
-          <div className="w-40">
-            <Button
-              type="secondary"
-              onClick={() => {
-                console.log("setting to", initialVersatileSettings);
-                setField("versatileCalculator")(initialVersatileSettings);
-              }}
-            >
-              Reset
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
+        <div className="flex gap-12">
           <div>
-            <Header />
+            <VersatileSettings />
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[72px] bg-[#f3f4f6] w-[1500px]">
-              <div className="flex w-full mb-10 gap-5 justify-center  pb-3">
-                <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+            <div className="sticky top-[100px] bg-[#f3f4f6] flex justify-between items-center gap-5 mb-3 z-[100000]">
+              <div className="flex gap-4">
+                <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
                     Ending Balance
                   </div>
@@ -83,7 +58,7 @@ const VersatileCalculator: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col items-center justify-center bg-white px-6 py-3 rounded-lg shadow-md border">
+                <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
                     Total Payments
                   </div>
@@ -98,8 +73,22 @@ const VersatileCalculator: React.FC = () => {
                   </div>
                 </div>
               </div>
+              <div className="flex gap-4">
+                <Solve />
+                <div className="w-40">
+                  <Button
+                    type="secondary"
+                    onClick={() => {
+                      console.log("setting to", initialVersatileSettings);
+                      setField("versatileCalculator")(initialVersatileSettings);
+                    }}
+                  >
+                    Reset Inputs
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="mt-[-15px]">
+            <div className="mt-[-15px] shadow-md sticky top-[210px]">
               <VersatileBalance data={calculations} />
             </div>
             {/*<VersatileChart
@@ -115,7 +104,7 @@ const VersatileCalculator: React.FC = () => {
             <div className="">
               <table className="text-sm w-full bg-white shadow-lg">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[410px] rounded-none !border-none`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[550px] rounded-none !border-none`}
                 >
                   <tr>
                     <th
