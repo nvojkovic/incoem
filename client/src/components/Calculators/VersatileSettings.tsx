@@ -108,6 +108,7 @@ const VersatileSettings = () => {
             <div className="flex gap-2">
               <Input
                 labelLength={90}
+                vertical
                 label="Payment ($)"
                 subtype="money"
                 size="md"
@@ -141,6 +142,7 @@ const VersatileSettings = () => {
             </div>
             <Input
               label="Increase (%)"
+              vertical
               labelLength={100}
               width="!w-[80px]"
               subtype="percent"
@@ -154,6 +156,7 @@ const VersatileSettings = () => {
           <Input
             label="Start Year"
             subtype="number"
+            vertical
             labelLength={80}
             value={settings.payment.startYear}
             setValue={(value) => updateSettings("payment", "startYear", value)}
@@ -162,6 +165,7 @@ const VersatileSettings = () => {
             <Select
               labelLength={163}
               label="Timing"
+              vertical
               options={[
                 { id: "beginning", name: "BoY" },
                 { id: "end", name: "EoY" },

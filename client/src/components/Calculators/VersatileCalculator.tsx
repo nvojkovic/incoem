@@ -15,6 +15,7 @@ import { Tooltip } from "flowbite-react";
 import VersatileBalance from "../Charts/VersatileBalance";
 import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
+import MapSection from "../MapSection";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
@@ -89,8 +90,10 @@ const VersatileCalculator: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-[-15px] shadow-md sticky top-[200px]">
-              <VersatileBalance data={calculations} />
+            <div className="mt-20 shadow-md sticky top-[200px]">
+              <MapSection title=" " defaultOpen toggleabble>
+                <VersatileBalance data={calculations} />
+              </MapSection>
             </div>
 
             <div className="mt-[140px]">
