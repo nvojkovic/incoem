@@ -33,7 +33,7 @@ export interface CalculatorSettings {
     taxRate: number;
     inflation: number;
     investmentFee: number;
-    returnType: "simple" | "detailed";
+    returnType: "simple" | "detailed" | "random";
     yearlyReturns: { [key: number]: number };
   };
   solve: {

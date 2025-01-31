@@ -112,7 +112,7 @@ const VersatileSettings = () => {
                 subtype="money"
                 size="md"
                 width="!w-[100px]"
-                value={settings.payment.amount}
+                value={Math.round(settings.payment.amount)}
                 setValue={(value) => updateSettings("payment", "amount", value)}
               />
 
@@ -180,22 +180,22 @@ const VersatileSettings = () => {
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Return</h2>
-          <div className="flex w-48 text-sm">
+          <div className="flex  text-sm">
             <div
-              className={`w-full text-center py-1 ${settings.other.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              className={`w-full text-center py-1 px-4 ${settings.other.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
               onClick={() => updateSettings("other", "returnType", "simple")}
             >
               Simple
             </div>
             <div
-              className={`w-full text-center py-1 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              className={`w-full text-center py-1  px-4 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
               onClick={() => updateSettings("other", "returnType", "detailed")}
             >
               Detailed
             </div>
             <div
-              className={`w-full text-center py-1 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("other", "returnType", "detailed")}
+              className={`w-full text-center py-1  px-4 ${settings.other.returnType === "random" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              onClick={() => updateSettings("other", "returnType", "random")}
             >
               Random
             </div>
@@ -244,6 +244,55 @@ const VersatileSettings = () => {
                   </Button>
                 </Tooltip>
               </div>
+            </div>
+          </div>
+        )}
+
+        {settings.other.returnType === "random" && (
+          <div className="flex  gap-6 w-full items-center justify-between">
+            <div className="flex gap-2 flex-col w-[250px] ">
+              <Input
+                label="Median Return"
+                labelLength={180}
+                subtype="percent"
+                value={Math.round(settings.other.rateOfReturn * 100) / 100}
+                setValue={(value) =>
+                  updateSettings("other", "rateOfReturn", value)
+                }
+              />
+              <Input
+                label="Return Standard Deviation"
+                labelLength={180}
+                subtype="percent"
+                value={Math.round(settings.other.rateOfReturn * 100) / 100}
+                setValue={(value) =>
+                  updateSettings("other", "rateOfReturn", value)
+                }
+              />
+            </div>
+            <div className="w-[100px]">
+              <Tooltip
+                content="Generate new sequence of returns."
+                theme={{ target: "" }}
+              >
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    updateSettings(
+                      "other",
+                      "yearlyReturns",
+                      Object.fromEntries(
+                        yearRange(0, settings.user.endYear).map((i) => [
+                          i,
+                          Math.round(100 * settings.other.rateOfReturn) / 100,
+                        ]),
+                      ) as any,
+                    );
+                  }}
+                >
+                  Rerun
+                </Button>
+              </Tooltip>
             </div>
           </div>
         )}

@@ -74,7 +74,7 @@ const Solve = () => {
       ...settings,
       payment: {
         ...settings.payment,
-        amount: Math.round(mid),
+        amount: mid,
         type: "simple",
       },
     });
