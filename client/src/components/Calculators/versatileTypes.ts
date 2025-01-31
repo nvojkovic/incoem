@@ -31,17 +31,17 @@ export interface CalculatorSettings {
     type: "simple" | "detailed";
   };
   other: {
-    rateOfReturn: number;
     taxRate: number;
     inflation: number;
     investmentFee: number;
-    returnType: "simple" | "detailed" | "random";
-    yearlyReturns: { [key: number]: number };
   };
   solve: {
     field: "return" | "payment" | "presentValue";
   };
   returns: {
+    rateOfReturn: number;
+    returnType: "simple" | "detailed" | "random";
+    yearlyReturns: { [key: number]: number };
     mean: number;
     std: number;
     selectedRandom: "mean" | "worst" | "best";
@@ -66,17 +66,17 @@ export const initialVersatileSettings: CalculatorSettings = {
     type: "simple" as const,
   },
   other: {
-    rateOfReturn: 0,
     investmentFee: 0,
     taxRate: 0,
     inflation: 0,
-    returnType: "simple" as const,
-    yearlyReturns: {},
   },
   solve: {
     field: "return",
   },
   returns: {
+    rateOfReturn: 0,
+    yearlyReturns: {},
+    returnType: "simple" as const,
     mean: 0,
     std: 0,
     selectedRandom: "mean",
@@ -86,15 +86,15 @@ export const initialVersatileSettings: CalculatorSettings = {
 
 export const getReturns = (settings: CalculatorSettings) => {
   const seqs =
-    settings.other.returnType === "random"
+    settings.returns.returnType === "random"
       ? getSelectedSequences(settings)
       : [[]];
   return (year: number) => {
-    if (settings.other.returnType === "detailed") {
-      return settings.other.yearlyReturns[year] || 0;
-    } else if (settings.other.returnType === "simple") {
-      return settings.other.rateOfReturn;
-    } else if (settings.other.returnType === "random") {
+    if (settings.returns.returnType === "detailed") {
+      return settings.returns.yearlyReturns[year] || 0;
+    } else if (settings.returns.returnType === "simple") {
+      return settings.returns.rateOfReturn;
+    } else if (settings.returns.returnType === "random") {
       if (settings.returns.selectedRandom === "worst") {
         return seqs[0][year - 1];
       } else if (settings.returns.selectedRandom === "best") {

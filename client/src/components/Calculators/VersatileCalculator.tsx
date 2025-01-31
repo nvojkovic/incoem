@@ -30,7 +30,7 @@ const VersatileCalculator: React.FC = () => {
   const [open, setOpen] = useState(true);
 
   const chartData =
-    settings.other.returnType === "random"
+    settings.returns.returnType === "random"
       ? [
         {
           label: "Best",
@@ -68,9 +68,9 @@ const VersatileCalculator: React.FC = () => {
       ]
       : [
         {
-          label: "",
+          label: "Balance",
           data: calculations,
-          color: "#FFB44680", // Indigo color
+          color: "#3498db", // Indigo color
         },
       ];
 

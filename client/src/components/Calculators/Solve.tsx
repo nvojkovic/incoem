@@ -90,13 +90,13 @@ const Solve = () => {
     const tolerance = 0.001;
 
     const testSettings = structuredClone(settings);
-    testSettings.other.returnType = "simple";
+    testSettings.returns.returnType = "simple";
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
-      testSettings.other.rateOfReturn = mid;
+      testSettings.returns.rateOfReturn = mid;
       setField("versatileCalculator")({
         ...settings,
-        other: { ...settings.other, rateOfReturn: mid },
+        returns: { ...settings.returns, rateOfReturn: mid },
       });
       const calculations = calculateProjection(testSettings);
 

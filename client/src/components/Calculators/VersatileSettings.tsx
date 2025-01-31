@@ -182,42 +182,44 @@ const VersatileSettings = () => {
           <h2 className="text-xl font-semibold">Return</h2>
           <div className="flex  text-sm">
             <div
-              className={`w-full text-center py-1 px-4 ${settings.other.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("other", "returnType", "simple")}
+              className={`w-full text-center py-1 px-4 ${settings.returns.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              onClick={() => updateSettings("returns", "returnType", "simple")}
             >
               Simple
             </div>
             <div
-              className={`w-full text-center py-1  px-4 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("other", "returnType", "detailed")}
+              className={`w-full text-center py-1  px-4 ${settings.returns.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              onClick={() =>
+                updateSettings("returns", "returnType", "detailed")
+              }
             >
               Detailed
             </div>
             <div
-              className={`w-full text-center py-1  px-4 ${settings.other.returnType === "random" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("other", "returnType", "random")}
+              className={`w-full text-center py-1  px-4 ${settings.returns.returnType === "random" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              onClick={() => updateSettings("returns", "returnType", "random")}
             >
               Random
             </div>
           </div>
         </div>
-        {settings.other.returnType === "detailed" && (
+        {settings.returns.returnType === "detailed" && (
           <div className="w-32 mx-auto mt-1 mb-1">
             <Button type="primary" onClick={() => setOpenReturns(true)}>
               Open Years
             </Button>
           </div>
         )}
-        {settings.other.returnType === "simple" && (
+        {settings.returns.returnType === "simple" && (
           <div className="flex flex-col gap-6 w-full">
             <div className="flex gap-2 w-[230px]">
               <Input
                 label="Return (%)"
                 labelLength={80}
                 subtype="percent"
-                value={Math.round(settings.other.rateOfReturn * 100) / 100}
+                value={Math.round(settings.returns.rateOfReturn * 100) / 100}
                 setValue={(value) =>
-                  updateSettings("other", "rateOfReturn", value)
+                  updateSettings("returns", "rateOfReturn", value)
                 }
               />
               <div className="w-10">
@@ -229,12 +231,13 @@ const VersatileSettings = () => {
                     type="secondary"
                     onClick={() => {
                       updateSettings(
-                        "other",
+                        "returns",
                         "yearlyReturns",
                         Object.fromEntries(
                           yearRange(0, settings.user.endYear).map((i) => [
                             i,
-                            Math.round(100 * settings.other.rateOfReturn) / 100,
+                            Math.round(100 * settings.returns.rateOfReturn) /
+                            100,
                           ]),
                         ) as any,
                       );
@@ -248,7 +251,7 @@ const VersatileSettings = () => {
           </div>
         )}
 
-        {settings.other.returnType === "random" && (
+        {settings.returns.returnType === "random" && (
           <div className="flex gap-6 w-full items-center justify-between">
             <div className="flex gap-4 flex-col !w-[55px]">
               <Input
@@ -434,7 +437,7 @@ const VersatileSettings = () => {
         </div>
       </Modal>
       <Modal isOpen={openReturns} onClose={() => setOpenReturns(false)}>
-        {settings.other.returnType === "detailed" && (
+        {settings.returns.returnType === "detailed" && (
           <div>
             <div className="mb-3 font-semibold text-lg">
               Return Rates by Year
@@ -445,10 +448,10 @@ const VersatileSettings = () => {
                   <Input
                     label={`Year ${year}`}
                     subtype="percent"
-                    value={settings.other.yearlyReturns[year]}
+                    value={settings.returns.yearlyReturns[year]}
                     setValue={(value) =>
-                      updateSettings("other", "yearlyReturns", {
-                        ...settings.other.yearlyReturns,
+                      updateSettings("returns", "yearlyReturns", {
+                        ...settings.returns.yearlyReturns,
                         [year]: value,
                       } as any)
                     }
@@ -458,7 +461,7 @@ const VersatileSettings = () => {
                       type="secondary"
                       onClick={() => {
                         updateSettings(
-                          "other",
+                          "returns",
                           "yearlyReturns",
                           Object.fromEntries(
                             [...Array(settings.user.endYear + 1).keys()].map(
@@ -466,9 +469,9 @@ const VersatileSettings = () => {
                                 if (k > year)
                                   return [
                                     k,
-                                    settings.other.yearlyReturns[year],
+                                    settings.returns.yearlyReturns[year],
                                   ];
-                                return [k, settings.other.yearlyReturns[k]];
+                                return [k, settings.returns.yearlyReturns[k]];
                               },
                             ),
                           ) as any,

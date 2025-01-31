@@ -55,8 +55,8 @@ export const getSelectedSequences = (settings: CalculatorSettings) => {
   const results = sequences.map((seq) => {
     console.log(settings);
     const sett = structuredClone(settings);
-    sett.other.returnType = "detailed";
-    sett.other.yearlyReturns = seq;
+    sett.returns.returnType = "detailed";
+    sett.returns.yearlyReturns = seq;
     const proj = calculateProjection(sett);
     return { seq, val: proj.pop()?.realBalance as number };
   });
