@@ -116,22 +116,30 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                       className={`${selectedRow === year ? "bg-slate-200" : "hover:bg-slate-100"}`}
                       onClick={() => setSelectedRow(selectedRow === year ? null : year)}
                     >
-                      <td className="px-6 print:px-3 py-1  font-bold">
+                      <td className={`px-6 print:px-3 py-1 font-bold ${selectedCol === "year" ? "bg-slate-200" : ""}`}>
                         {year}
                       </td>
-                      <td className="px-6 print:px-3 py-1 ">
+                      <td className={`px-6 print:px-3 py-1 ${selectedCol === "age" ? "bg-slate-200" : ""}`}>
                         {data.people
                           .map((p) => year - splitDate(p.birthday).year)
                           .join("/")}
                       </td>
-                      {results.map((item) => (
-                        <td className="px-6 print:px-3 py-1 ">
+                      {results.map((item, index) => (
+                        <td 
+                          className={`px-6 print:px-3 py-1 ${
+                            selectedCol === "base" && index === 0 ? "bg-slate-200" : 
+                            selectedCol?.startsWith("pre-") && index - 1 < spending.preSpending.length && 
+                            selectedCol === `pre-${spending.preSpending[index - 1].category}` ? "bg-slate-200" :
+                            selectedCol?.startsWith("post-") && index - 1 - spending.preSpending.length < spending.postSpending.length &&
+                            selectedCol === `post-${spending.postSpending[index - 1 - spending.preSpending.length].category}` ? "bg-slate-200" : ""
+                          }`}
+                        >
                           {printNumber(
                             item[year - currentYear].amount / factor,
                           )}
                         </td>
                       ))}
-                      <td className="px-6 py-1 print:px-3 ">
+                      <td className={`px-6 py-1 print:px-3 ${selectedCol === "total" ? "bg-slate-200" : ""}`}>
                         {printNumber(
                           results
                             .map((item) => item[year - currentYear].amount)
