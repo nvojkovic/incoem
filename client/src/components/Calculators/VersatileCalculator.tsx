@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Button from "../Inputs/Button";
 import { convertToParens, printNumber } from "../../utils";
 import {
   CalculationRow,
   CalculatorSettings,
+  cagr,
   calculateProjection,
   getReturns,
   initialVersatileSettings,
 } from "./versatileTypes";
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useInfo } from "../../useData";
 import Layout from "../Layout";
 import { Tooltip } from "flowbite-react";
 import VersatileBalance from "../Charts/VersatileBalance";
 import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
-import MapSection from "../MapSection";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
@@ -24,15 +28,18 @@ const VersatileCalculator: React.FC = () => {
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
   const [calculations, setCalculations] = useState<CalculationRow[]>([]);
-
+  const [open, setOpen] = useState(true);
   useEffect(() => {
     const rows = calculateProjection(settings);
     setCalculations(rows);
   }, [settings]);
 
+  const returnsMemo = useMemo(() => getReturns(settings), [settings]);
+  console.log("RERERE");
+
   return (
     <Layout page="calculator" wide>
-      <div className="container mx-auto px-4 pb-8 mt-[-25px]">
+      <div className="container mx-auto px-4 mt-[-25px]">
         <div className="flex gap-12">
           <div>
             <VersatileSettings />
@@ -66,16 +73,22 @@ const VersatileCalculator: React.FC = () => {
                   </div>
                   <div className="font-semibold text-lg mt-[2px]">
                     {printNumber(
-                      Math.abs(
-                        calculations
-                          .map((i) => i.totalPayments)
-                          .reduce((a, b) => a + b, 0),
-                      ),
+                      calculations
+                        .map((i) => i.totalPayments)
+                        .reduce((a, b) => a + b, 0),
                     )}{" "}
                   </div>
                 </div>
+                <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border w-40">
+                  <div className="uppercase tracking-wide text-sm text-gray-800">
+                    CAGR
+                  </div>
+                  <div className="font-semibold text-lg mt-[2px]">
+                    {cagr(calculations.map((y) => returnsMemo(y.year)))}%
+                  </div>
+                </div>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 items-end">
                 <Solve />
                 <div className="w-40">
                   <Button
@@ -90,16 +103,32 @@ const VersatileCalculator: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-20 shadow-md sticky top-[200px]">
-              <MapSection title=" " defaultOpen toggleabble>
-                <VersatileBalance data={calculations} />
-              </MapSection>
-            </div>
 
-            <div className="mt-[140px]">
+            <div className="bg-white p-3 border rounded-lg mt-20 shadow-md sticky top-[200px]">
+              {
+                <div
+                  className={`flex justify-end border-b border-[#EAECF0] font-semibold text-2xl cursor-pointer ${"z-50 sticky top-[72px]"}`}
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? (
+                    <ChevronUpIcon className="text-[#475467] w-6" />
+                  ) : (
+                    <ChevronDownIcon className="text-[#475467] w-6" />
+                  )}
+                </div>
+              }
+              <div
+                className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
+              >
+                <VersatileBalance data={calculations} />
+              </div>
+            </div>
+            <div className=""></div>
+
+            <div className="mt-[40px]">
               <table className="text-sm w-full bg-white shadow-lg">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 top-[550px] rounded-none !border-none`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 ${open ? "top-[600px]" : "top-[250px]"} rounded-none !border-none`}
                 >
                   <tr>
                     <th
@@ -255,9 +284,7 @@ const VersatileCalculator: React.FC = () => {
                           setSelectedRow(selectedRow === index ? null : index)
                         }
                       >
-                        {row.beginning
-                          ? `${convertToParens((Math.round(100 * getReturns(settings, row.year)) / 100).toString() + `%`)}`
-                          : ""}
+                        {`${convertToParens((Math.round(100 * returnsMemo(row.year)) / 100).toString() + `%`)}`}
                       </td>
                       <td
                         className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""} ${row.return < 0 ? "text-red-500" : ""}`}

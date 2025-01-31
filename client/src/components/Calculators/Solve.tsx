@@ -169,9 +169,10 @@ const Solve = () => {
   };
 
   return (
-    <div className="flex gap-6">
-      <div className="w-72">
+    <div className="flex gap-6 items-end">
+      <div className="w-48">
         <Select
+          vertical
           label="Solve for:"
           options={solveOptions}
           selected={
@@ -183,7 +184,7 @@ const Solve = () => {
           setSelected={(option) => updateSettings("solve", "field", option.id)}
         />
       </div>
-      <div className="w-40">
+      <div className="w-28">
         <Button type="primary" onClick={solve}>
           Solve
         </Button>

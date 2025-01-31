@@ -1,3 +1,5 @@
+import { CalculatorSettings, calculateProjection } from "./versatileTypes";
+
 class SeededRandom {
   seed: number;
   constructor(seed = 123456789) {
@@ -20,11 +22,46 @@ class SeededRandom {
 }
 
 export const sequenceOfReturns = (
+  random: SeededRandom,
+  mean: number,
+  std: number,
+  length: number,
+) => {
+  return Array.from({ length }, () => random.normal(mean, std));
+};
+
+export const getSequences = (
   seed: number,
   mean: number,
   std: number,
   length: number,
 ) => {
   const random = new SeededRandom(seed);
-  return Array.from({ length }, () => random.normal(mean, std));
+  const seqs = Array.from({ length: 1000 }, (_) =>
+    sequenceOfReturns(random, mean, std, length),
+  );
+  console.log(seqs);
+  return seqs;
+};
+
+export const getSelectedSequences = (settings: CalculatorSettings) => {
+  const sequences = getSequences(
+    settings.returns.seed || 0,
+    settings.returns.mean,
+    settings.returns.std,
+    settings.user.endYear,
+  );
+  console.log("using seed", settings.returns.seed);
+  const results = sequences.map((seq) => {
+    console.log(settings);
+    const sett = structuredClone(settings);
+    sett.other.returnType = "detailed";
+    sett.other.yearlyReturns = seq;
+    const proj = calculateProjection(sett);
+    return { seq, val: proj.pop()?.realBalance as number };
+  });
+
+  const sorted = results.sort((a, b) => a.val - b.val);
+  console.log(sorted);
+  return [sorted[0].seq, sorted[500].seq, sorted[999].seq];
 };

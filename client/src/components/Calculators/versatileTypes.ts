@@ -1,3 +1,5 @@
+import { getSelectedSequences } from "./randomReturn";
+
 export interface CalculationRow {
   age: number;
   ranOut: boolean;
@@ -39,6 +41,12 @@ export interface CalculatorSettings {
   solve: {
     field: "return" | "payment" | "presentValue";
   };
+  returns: {
+    mean: number;
+    std: number;
+    selectedRandom: "mean" | "worst" | "best";
+    seed: number;
+  };
 }
 
 export const initialVersatileSettings: CalculatorSettings = {
@@ -68,22 +76,43 @@ export const initialVersatileSettings: CalculatorSettings = {
   solve: {
     field: "return",
   },
+  returns: {
+    mean: 0,
+    std: 0,
+    selectedRandom: "mean",
+    seed: 0,
+  },
 };
 
-export const getReturns = (settings: CalculatorSettings, year: number) => {
-  if (settings.other.returnType === "detailed") {
-    return settings.other.yearlyReturns[year] || 0;
-  } else if (settings.other.returnType === "simple") {
-    return settings.other.rateOfReturn;
-  } else {
-    return 0;
-  }
+export const getReturns = (settings: CalculatorSettings) => {
+  const seqs =
+    settings.other.returnType === "random"
+      ? getSelectedSequences(settings)
+      : [[]];
+  return (year: number) => {
+    if (settings.other.returnType === "detailed") {
+      return settings.other.yearlyReturns[year] || 0;
+    } else if (settings.other.returnType === "simple") {
+      return settings.other.rateOfReturn;
+    } else if (settings.other.returnType === "random") {
+      if (settings.returns.selectedRandom === "worst") {
+        return seqs[0][year - 1];
+      } else if (settings.returns.selectedRandom === "best") {
+        return seqs[2][year - 1];
+      } else {
+        return seqs[1][year - 1];
+      }
+    } else {
+      return 0;
+    }
+  };
 };
 
 export const calculateProjection = (settings: CalculatorSettings) => {
   const rows: CalculationRow[] = [];
   let balance = settings.user.presentValue;
 
+  const returnsMemo = getReturns(settings);
   for (let year = 1; year <= settings.user.endYear; year++) {
     const beginning = balance;
     const realBalance = beginning;
@@ -135,12 +164,15 @@ export const calculateProjection = (settings: CalculatorSettings) => {
     ending /= 1 + settings.other.inflation / 100;
 
     // Calculate returns and taxes
-    let returnRate = getReturns(settings, year);
+    let returnRate = returnsMemo(year);
     ending -= investmentFee / 2;
     const returnAmount = ending > 0 ? ending * (returnRate / 100) : 0;
     const taxes = Math.max(returnAmount * (settings.other.taxRate / 100), 0);
     const growth = returnAmount - taxes;
-    ending -= investmentFee / 2;
+    const endOfYearInvestmentFee =
+      ((ending + growth) * (settings.other.investmentFee / 100)) / 2;
+    const totalInvestmentFee = investmentFee / 2 + endOfYearInvestmentFee;
+    ending -= endOfYearInvestmentFee;
 
     // Handle end of year payment
     if (settings.payment.timing === "end") {
@@ -148,7 +180,7 @@ export const calculateProjection = (settings: CalculatorSettings) => {
         rows.push({
           age: settings.user.startAge + year,
           year,
-          investmentFee,
+          investmentFee: totalInvestmentFee,
           beginning: beginning <= 0 ? 0 : beginning,
           totalPayments: -ending,
           return: 0,
@@ -174,7 +206,7 @@ export const calculateProjection = (settings: CalculatorSettings) => {
       return: returnAmount,
       growth,
       taxes,
-      investmentFee,
+      investmentFee: totalInvestmentFee,
       endingBalance: ending,
       realBalance: ending,
       ranOut: false,
@@ -183,4 +215,10 @@ export const calculateProjection = (settings: CalculatorSettings) => {
     balance = ending;
   }
   return rows;
+};
+
+export const cagr = (returns: number[]) => {
+  const final = returns.reduce((prev, x) => prev * (1 + x / 100), 1);
+  const cagr = Math.pow(final, 1 / returns.length) - 1;
+  return Math.round(cagr * 10000) / 100;
 };

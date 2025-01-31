@@ -49,9 +49,9 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("x", width / 2)
-      .attr("y", height + margin.bottom - 10)
+      .attr("y", height + margin.bottom + 0)
       .text("Years")
-      .style("font-size", "14px");
+      .style("font-size", "18px");
 
     // Add Y axis and label
     svg
@@ -71,7 +71,7 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       .attr("y", -margin.left + 20)
       .attr("x", -height / 2)
       .text("Balance")
-      .style("font-size", "20px");
+      .style("font-size", "18px");
 
     const line = d3
       .line()
@@ -142,12 +142,8 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${d.year} (Age: ${d.age})</div>
-              <div><span class="">Beginning Balance:</span> ${printNumber(d.beginning)}</div>
+              <div>Ending Balance: ${printNumber(d.endingBalance)} | <span class="${d.return < 0 && "text-red-500"}"> ${printNumber(d.return)}</span></div>
               <div>Payment: ${printNumber(d.totalPayments)}</div>
-              <div>Investment Fee: ${printNumber(-d.investmentFee)}</div>
-              <div>Return: ${printNumber(d.return)}</div>
-              <div>Taxes: ${printNumber(-d.taxes)}</div>
-              <div>Ending Balance: ${printNumber(d.endingBalance)}</div>
             </div>
           `);
       })
@@ -175,7 +171,7 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
               <div><span class="">Beginning Balance:</span> ${printNumber(d.beginning)}</div>
               <div>Payment: ${printNumber(d.totalPayments)}</div>
               <div>Investment Fee: ${printNumber(-d.investmentFee)}</div>
-              <div>Return: ${printNumber(d.return)}</div>
+              <div class="${d.return < 0 && "text-red-500"}">Return: ${printNumber(d.return)}</div>
               <div>Taxes: ${printNumber(-d.taxes)}</div>
               <div>Ending Balance: ${printNumber(d.endingBalance)}</div>
             </div>

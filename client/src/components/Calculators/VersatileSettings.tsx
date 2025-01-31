@@ -253,28 +253,42 @@ const VersatileSettings = () => {
         )}
 
         {settings.other.returnType === "random" && (
-          <div className="flex  gap-6 w-full items-center justify-between">
-            <div className="flex gap-2 flex-col w-[250px] ">
+          <div className="flex gap-6 w-full items-center justify-between">
+            <div className="flex gap-2 flex-col">
               <Input
-                label="Median Return"
-                labelLength={180}
+                label="Mean Return"
+                labelLength={120}
+                width="!w-[80px]"
                 subtype="percent"
-                value={Math.round(settings.other.rateOfReturn * 100) / 100}
-                setValue={(value) =>
-                  updateSettings("other", "rateOfReturn", value)
-                }
+                value={settings.returns.mean}
+                setValue={(value) => updateSettings("returns", "mean", value)}
               />
               <Input
-                label="Return Standard Deviation"
-                labelLength={180}
+                label="Return Std. Dev."
+                labelLength={120}
+                width="!w-[80px]"
                 subtype="percent"
-                value={Math.round(settings.other.rateOfReturn * 100) / 100}
-                setValue={(value) =>
-                  updateSettings("other", "rateOfReturn", value)
-                }
+                value={settings.returns.std}
+                setValue={(value) => updateSettings("returns", "std", value)}
               />
             </div>
-            <div className="w-[100px]">
+            <div className="flex flex-col gap-2  w-[200px]">
+              <Select
+                labelLength={163}
+                label="Sequence shown"
+                options={[
+                  { id: "worst", name: "Worst" },
+                  { id: "median", name: "Median" },
+                  { id: "best", name: "Best" },
+                ]}
+                selected={{
+                  id: settings.returns.selectedRandom,
+                  name: settings.returns.selectedRandom?.capitalize(),
+                }}
+                setSelected={(option) =>
+                  updateSettings("returns", "selectedRandom", option.id)
+                }
+              />
               <Tooltip
                 content="Generate new sequence of returns."
                 theme={{ target: "" }}
@@ -283,14 +297,9 @@ const VersatileSettings = () => {
                   type="primary"
                   onClick={() => {
                     updateSettings(
-                      "other",
-                      "yearlyReturns",
-                      Object.fromEntries(
-                        yearRange(0, settings.user.endYear).map((i) => [
-                          i,
-                          Math.round(100 * settings.other.rateOfReturn) / 100,
-                        ]),
-                      ) as any,
+                      "returns",
+                      "seed",
+                      (settings.returns.seed || 0) + 1,
                     );
                   }}
                 >
@@ -354,28 +363,28 @@ const VersatileSettings = () => {
                   <Input
                     label={`Year ${i}`}
                     subtype="money"
-                    onPaste={(e: any) => {
-                      e.preventDefault();
-                      const text = e.clipboardData.getData("text");
-                      const values = text.split("\n") as any[];
-                      const newValues = values
-                        .filter((i) => i)
-                        .map((v) => parseFloat(v))
-                        .filter((i) => !isNaN(i));
-                      console.log(text, values, newValues);
-                      if (newValues.length === 1) {
-                        updateSettings("payment", "years", {
-                          ...settings.payment.years,
-                          [i + settings.payment.startYear]: newValues[0],
-                        } as any);
-                      } else {
-                        updateSettings("payment", "years", {
-                          ...settings.payment.years,
-                          ...(Object.fromEntries(
-                            newValues.map((v, j) => [j + i, v]),
-                          ) as any),
-                        });
-                      }
+                    onPaste={(_: any) => {
+                      // e.preventDefault();
+                      // const text = e.clipboardData.getData("text");
+                      // const values = text.split("\n") as any[];
+                      // const newValues = values
+                      //   .filter((i) => i)
+                      //   .map((v) => parseFloat(v))
+                      //   .filter((i) => !isNaN(i));
+                      // console.log(text, values, newValues);
+                      // if (newValues.length === 1) {
+                      //   updateSettings("payment", "years", {
+                      //     ...settings.payment.years,
+                      //     [i + settings.payment.startYear]: newValues[0],
+                      //   } as any);
+                      // } else {
+                      //   updateSettings("payment", "years", {
+                      //     ...settings.payment.years,
+                      //     ...(Object.fromEntries(
+                      //       newValues.map((v, j) => [j + i, v]),
+                      //     ) as any),
+                      //   });
+                      // }
                     }}
                     value={settings.payment.years[i]}
                     setValue={(value) =>
