@@ -2,15 +2,23 @@ import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { printNumber } from "src/utils";
 
-const D3TimeseriesChart = ({ data }: { data: any[] }) => {
+interface ChartData {
+  label: string;
+  data: any[];
+  color: string;
+}
+
+const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
 
   useEffect(() => {
-    if (!data || !data.length) return;
+    if (!datasets || !datasets.length || !datasets[0].data.length) return;
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const largest = d3.max(data, (d) => d.endingBalance) as number;
+    const largest = d3.max(datasets, (series) => 
+      d3.max(series.data, (d) => d.endingBalance)
+    ) as number;
 
     const margin = {
       top: 20,
@@ -23,12 +31,12 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
 
     const x = d3
       .scaleLinear()
-      .domain(d3.extent(data, (d) => d.year) as any)
+      .domain(d3.extent(datasets[0].data, (d) => d.year) as any)
       .range([0, width]);
 
     const y = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.endingBalance) * 1.05])
+      .domain([0, largest * 1.05])
       .range([height, 0]);
 
     const svg = d3
@@ -78,13 +86,41 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       .x((d: any) => x(d.year))
       .y((d: any) => y(d.endingBalance));
 
-    svg
-      .append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", line);
+    // Add lines for each dataset
+    datasets.forEach((series) => {
+      svg
+        .append("path")
+        .datum(series.data)
+        .attr("fill", "none")
+        .attr("stroke", series.color)
+        .attr("stroke-width", 1.5)
+        .attr("d", line);
+    });
+
+    // Add legend
+    const legend = svg
+      .append("g")
+      .attr("class", "legend")
+      .attr("transform", `translate(${width - 100}, 20)`);
+
+    datasets.forEach((series, i) => {
+      const legendRow = legend
+        .append("g")
+        .attr("transform", `translate(0, ${i * 20})`);
+
+      legendRow
+        .append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", series.color);
+
+      legendRow
+        .append("text")
+        .attr("x", 15)
+        .attr("y", 9)
+        .attr("font-size", "12px")
+        .text(series.label);
+    });
 
     const tooltip = d3
       .select("body")
@@ -128,22 +164,32 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       })
       .on("mousemove", (event) => {
         const mouseX = d3.pointer(event)[0];
-        const x0 = x.invert(mouseX);
-        const bisect = d3.bisector((d: any) => d.year).left;
-        const i = bisect(data, x0);
-        const d0 = data[i - 1];
-        const d1 = data[i];
-        if (!d0 || !d1) return;
-        const d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+        const year = Math.round(x.invert(mouseX));
+        const values = datasets.map(series => {
+          const d = series.data.find(d => d.year === year);
+          return {
+            label: series.label,
+            color: series.color,
+            data: d
+          };
+        }).filter(d => d.data);
+        
+        if (!values.length) return;
 
         vertical.attr("transform", `translate(${x(d.year)},0)`);
         tooltip
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
-              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${d.year} (Age: ${d.age})</div>
-              <div>Ending Balance: ${printNumber(d.endingBalance)} | <span class="${d.return < 0 && "text-red-500"}"> ${printNumber(d.return)}</span></div>
-              <div>Payment: ${printNumber(d.totalPayments)}</div>
+              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
+              ${values.map(v => `
+                <div style="color: ${v.color}">
+                  <strong>${v.label}:</strong> ${printNumber(v.data.endingBalance)}
+                  <span class="${v.data.return < 0 ? "text-red-500" : ""}">
+                    (${printNumber(v.data.return)})
+                  </span>
+                </div>
+              `).join('')}
             </div>
           `);
       })

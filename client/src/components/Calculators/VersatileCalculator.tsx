@@ -120,7 +120,13 @@ const VersatileCalculator: React.FC = () => {
               <div
                 className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
               >
-                <VersatileBalance data={calculations} />
+                <VersatileBalance datasets={[
+                  {
+                    label: "Base Scenario",
+                    data: calculations,
+                    color: "#4F46E5" // Indigo color
+                  }
+                ]} />
               </div>
             </div>
             <div className=""></div>
