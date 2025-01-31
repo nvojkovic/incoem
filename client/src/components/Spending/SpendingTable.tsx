@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { printNumber, splitDate, yearRange } from "src/utils";
 import { getSpendingItemOverYears } from "./calculate";
 import {
@@ -5,6 +6,7 @@ import {
   RetirementSpendingSettings,
   ScenarioSettings,
 } from "src/types";
+
 interface SpendingTableProps {
   settings: ScenarioSettings;
   spending: RetirementSpendingSettings;
@@ -12,6 +14,8 @@ interface SpendingTableProps {
 }
 
 const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
+  const [selectedCol, setSelectedCol] = useState(null as any);
+  const [selectedRow, setSelectedRow] = useState(null as any);
   const currentYear = new Date().getFullYear();
   const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
   const l = 56;
@@ -58,17 +62,46 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                   className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
                 >
                   <tr>
-                    <th className="px-6 print:px-3 py-3">Year</th>
-                    <th className="px-6 print:px-3 py-3">Age</th>
-                    <th className="px-6 print:px-3 py-3">Base Spending</th>
+                    <th 
+                      className={`px-6 print:px-3 py-3 ${selectedCol === "year" ? "bg-slate-200" : ""}`}
+                      onClick={() => setSelectedCol(selectedCol === "year" ? null : "year")}
+                    >
+                      Year
+                    </th>
+                    <th 
+                      className={`px-6 print:px-3 py-3 ${selectedCol === "age" ? "bg-slate-200" : ""}`}
+                      onClick={() => setSelectedCol(selectedCol === "age" ? null : "age")}
+                    >
+                      Age
+                    </th>
+                    <th 
+                      className={`px-6 print:px-3 py-3 ${selectedCol === "base" ? "bg-slate-200" : ""}`}
+                      onClick={() => setSelectedCol(selectedCol === "base" ? null : "base")}
+                    >
+                      Base Spending
+                    </th>
                     {spending.preSpending.map((i) => (
-                      <th className="px-6 print:px-3 py-3">{i.category}</th>
+                      <th 
+                        className={`px-6 print:px-3 py-3 ${selectedCol === `pre-${i.category}` ? "bg-slate-200" : ""}`}
+                        onClick={() => setSelectedCol(selectedCol === `pre-${i.category}` ? null : `pre-${i.category}`)}
+                      >
+                        {i.category}
+                      </th>
                     ))}
                     {spending.postSpending.map((i) => (
-                      <th className="px-6 print:px-3  py-3">{i.category}</th>
+                      <th 
+                        className={`px-6 print:px-3 py-3 ${selectedCol === `post-${i.category}` ? "bg-slate-200" : ""}`}
+                        onClick={() => setSelectedCol(selectedCol === `post-${i.category}` ? null : `post-${i.category}`)}
+                      >
+                        {i.category}
+                      </th>
                     ))}
-
-                    <th className="px-6 print:px-3 py-3">Total</th>
+                    <th 
+                      className={`px-6 print:px-3 py-3 ${selectedCol === "total" ? "bg-slate-200" : ""}`}
+                      onClick={() => setSelectedCol(selectedCol === "total" ? null : "total")}
+                    >
+                      Total
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="print:text-sm">
@@ -79,7 +112,10 @@ const SpendingTable = ({ settings, spending, data }: SpendingTableProps) => {
                       currentYear + settings.maxYearsShown,
                     ),
                   ).map((year) => (
-                    <tr className="">
+                    <tr 
+                      className={`${selectedRow === year ? "bg-slate-200" : "hover:bg-slate-100"}`}
+                      onClick={() => setSelectedRow(selectedRow === year ? null : year)}
+                    >
                       <td className="px-6 print:px-3 py-1  font-bold">
                         {year}
                       </td>
