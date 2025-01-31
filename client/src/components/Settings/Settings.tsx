@@ -63,20 +63,20 @@ export const ApplyToCurrent = ({
   const [updating, setUpdateTimer] = useState(false);
 
   return (
-    <Tooltip content={tooltip} style="light">
-      <div className={`flex ${"gap-3"} items-center justify-center`}>
+    <div className={`flex ${"gap-3"} items-center`}>
+      <Tooltip content={tooltip}>
         <div>
           <Button type="primary" onClick={updateSetting}>
             {content}
           </Button>
         </div>
-        <div
-          className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
-        >
-          Clients updated!
-        </div>
+      </Tooltip>
+      <div
+        className={`mt-2 text-sm  text-center text-main-orange transition ease-in-out ${updating ? "opacity-100" : "opacity-0"}`}
+      >
+        Clients updated!
       </div>
-    </Tooltip>
+    </div>
   );
 };
 
@@ -188,7 +188,6 @@ const Settings = () => {
                     }
                     theme={{ target: "" }}
                     placement="right-end"
-                    style="light"
                   >
                     <div className="w-32">
                       <Button

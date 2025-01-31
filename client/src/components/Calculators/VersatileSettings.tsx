@@ -252,7 +252,7 @@ const VersatileSettings = () => {
         )}
 
         {settings.returns.returnType === "random" && (
-          <div className="flex gap-6 w-full items-center justify-between">
+          <div className="flex gap-6 w-full items-center justify-between min-w-[440px]">
             <div className="flex gap-4 flex-col !w-[55px]">
               <Input
                 label="Mean Return"

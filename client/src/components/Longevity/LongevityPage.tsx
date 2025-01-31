@@ -201,7 +201,6 @@ const LongevityPage = () => {
             <Tooltip
               content="Update mortality assumptions"
               theme={{ target: "" }}
-              style="light"
             >
               <Button type="primary" onClick={updateDeathFields}>
                 <div className="flex justify-center items-center gap-1">

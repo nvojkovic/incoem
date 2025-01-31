@@ -363,7 +363,6 @@ const VersatileCalculator: React.FC = () => {
                               content={"Account depleted."}
                               theme={{ target: "" }}
                               placement="top"
-                              style="light"
                               className="!z-[50000] bg-white print:hidden"
                             >
                               <div className="cursor-pointer flex items-center gap-2 ">

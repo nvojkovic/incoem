@@ -71,6 +71,7 @@ const CompositeTable = ({
                     </th>
 
                     {client.longevityFlag &&
+                      scenario.people.every((p) => p.sex) &&
                       scenario.people.map((person, i) => (
                         <th
                           className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.people.length == 1 ? "border-r border-gray-700" : ""}`}
@@ -79,14 +80,16 @@ const CompositeTable = ({
                           {person.name} <br /> alive
                         </th>
                       ))}
-                    {client.longevityFlag && scenario.people.length > 1 && (
-                      <th
-                        className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
-                        onClick={setColumn("joint-alive")}
-                      >
-                        At least one <br /> alive
-                      </th>
-                    )}
+                    {client.longevityFlag &&
+                      scenario.people.every((p) => p.sex) &&
+                      scenario.people.length > 1 && (
+                        <th
+                          className={`px-2 py-[0.45rem] text-center font-medium ${selectedColumn?.type === "joint-alive" ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
+                          onClick={setColumn("joint-alive")}
+                        >
+                          At least one <br /> alive
+                        </th>
+                      )}
                     <th
                       className={`px-2 font-medium ${selectedColumn?.type === "total" ? "!bg-slate-200" : ""}`}
                       onClick={setColumn("total")}
@@ -240,6 +243,7 @@ const CompositeTable = ({
                         </td>
 
                         {client.longevityFlag &&
+                          scenario.people.every((p) => p.sex) &&
                           scenario.people.map((_, i) => (
                             <td
                               className={`px-2 py-[6px] text-center ${selectedColumn?.type === `${i}-alive` ? "!bg-slate-200" : ""} ${scenario.people.length == 1 ? "border-r border-gray-700" : ""}`}
@@ -252,17 +256,19 @@ const CompositeTable = ({
                               %
                             </td>
                           ))}
-                        {client.longevityFlag && scenario.people.length > 1 && (
-                          <td
-                            className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
-                          >
-                            {Math.round(
-                              (joint.find((entry) => entry.year === line)
-                                ?.oneAlive || 0) * 100,
-                            )}
-                            %
-                          </td>
-                        )}
+                        {client.longevityFlag &&
+                          scenario.people.every((p) => p.sex) &&
+                          scenario.people.length > 1 && (
+                            <td
+                              className={`px-2 py-[6px] text-center ${selectedColumn?.type === `joint-alive` ? "!bg-slate-200" : ""} ${scenario.people.length > 1 ? "border-r border-gray-700" : ""}`}
+                            >
+                              {Math.round(
+                                (joint.find((entry) => entry.year === line)
+                                  ?.oneAlive || 0) * 100,
+                              )}
+                              %
+                            </td>
+                          )}
                         <td
                           className={`px-2 py-1 ${selectedColumn?.type === "total" ? "!bg-slate-200" : ""}`}
                         >
