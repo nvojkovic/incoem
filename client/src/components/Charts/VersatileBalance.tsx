@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { printNumber } from "src/utils";
+import { convertToParens, printNumber } from "src/utils";
 import { CalculationRow } from "../Calculators/versatileTypes";
 
 interface ChartData {
   label: string;
   data: CalculationRow[];
+  returns: number[];
   color: string;
 }
 
@@ -173,6 +174,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
               label: series.label,
               color: series.color,
               data: d,
+              return: Math.round(series.returns[year - 1] * 100) / 100,
             };
           })
           .filter((d) => d.data);
@@ -192,7 +194,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
                 <div style="">
                   <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
                   <span class="${v.data.return < 0 ? "text-red-500" : ""}">
-                    ${printNumber(v.data.return)}
+                      ${`${convertToParens(v.return.toString() + `%`)}`}
                   </span>
                 </div>
               `,
@@ -251,6 +253,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
             </div>
           `);
       });
+
+    d3.select(svgRef.current).selectAll(".tooltip").remove();
   }, [datasets]);
 
   return (

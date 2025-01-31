@@ -43,7 +43,7 @@ const VersatileSettings = () => {
               width="!w-[130px]"
               label="Present Value"
               subtype="money"
-              value={settings.user.presentValue}
+              value={Math.round(settings.user.presentValue)}
               setValue={(value) =>
                 updateSettings("user", "presentValue", value)
               }
@@ -272,22 +272,27 @@ const VersatileSettings = () => {
               />
             </div>
             <div className="flex flex-col gap-4 w-[230px]">
-              <Select
-                labelLength={260}
-                label="Sequence shown"
-                options={[
-                  { id: "worst", name: "Worst" },
-                  { id: "median", name: "Median" },
-                  { id: "best", name: "Best" },
-                ]}
-                selected={{
-                  id: settings.returns.selectedRandom,
-                  name: (settings.returns.selectedRandom as any)?.capitalize(),
-                }}
-                setSelected={(option) =>
-                  updateSettings("returns", "selectedRandom", option.id)
-                }
-              />
+              <div className="w-60">
+                <Select
+                  tooltip="This will determine what values are used in the Table, Summary, and Solve"
+                  labelLength={260}
+                  label="Sequence shown"
+                  options={[
+                    { id: "worst", name: "Worst" },
+                    { id: "median", name: "Median" },
+                    { id: "best", name: "Best" },
+                  ]}
+                  selected={{
+                    id: settings.returns.selectedRandom,
+                    name: (
+                      settings.returns.selectedRandom as any
+                    )?.capitalize(),
+                  }}
+                  setSelected={(option) =>
+                    updateSettings("returns", "selectedRandom", option.id)
+                  }
+                />
+              </div>
               <Tooltip
                 content="Generate new sequence of returns."
                 theme={{ target: "" }}

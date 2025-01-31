@@ -3,6 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import {
   ChevronUpDownIcon,
   ExclamationTriangleIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "flowbite-react";
 
@@ -16,6 +17,7 @@ interface Props {
   errorMessage?: string | React.ReactElement;
   invalid?: boolean;
   setSelected: (s: any) => void;
+  tooltip?: string;
 }
 
 function Select({
@@ -28,6 +30,7 @@ function Select({
   labelLength = 0,
   errorMessage,
   invalid,
+  tooltip,
 }: Props) {
   return (
     <div
@@ -59,26 +62,29 @@ function Select({
                 <div className="relative w-full">{selected?.name}</div>
               </span>
               <span className=" flex items-center pr-2">
-                {errorMessage && invalid ? (
+                {tooltip || (errorMessage && invalid) ? (
                   <div className={""}>
                     <Tooltip
                       content={
-                        <div>
-                          {errorMessage && invalid && (
-                            <div className="text-red-500 w-32">
-                              {errorMessage}
-                            </div>
-                          )}
+                        <div
+                          className={`${invalid && "text-red-500"} w-32 z-[50000]`}
+                        >
+                          {errorMessage || tooltip}
                         </div>
                       }
                       theme={{ target: "" }}
-                      placement="right-end"
-                      style="light"
+                      placement="left-end"
+                      style={invalid ? "light" : "dark"}
                     // className="border-black border"
                     >
                       <div className="relative cursor-pointer">
                         {errorMessage && invalid ? (
                           <ExclamationTriangleIcon
+                            className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} `}
+                          />
+                        ) : null}
+                        {tooltip ? (
+                          <QuestionMarkCircleIcon
                             className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} `}
                           />
                         ) : null}

@@ -89,6 +89,7 @@ export const getReturns = (settings: CalculatorSettings) => {
     settings.returns.returnType === "random"
       ? getSelectedSequences(settings)
       : [[]];
+
   return (year: number) => {
     if (settings.returns.returnType === "detailed") {
       return settings.returns.yearlyReturns[year] || 0;
@@ -108,11 +109,13 @@ export const getReturns = (settings: CalculatorSettings) => {
   };
 };
 
-export const calculateProjection = (settings: CalculatorSettings) => {
+export const calculateProjection = (
+  settings: CalculatorSettings,
+  returnsMemo: (y: number) => number,
+) => {
   const rows: CalculationRow[] = [];
   let balance = settings.user.presentValue;
 
-  const returnsMemo = getReturns(settings);
   for (let year = 1; year <= settings.user.endYear; year++) {
     const beginning = balance;
     const realBalance = beginning;

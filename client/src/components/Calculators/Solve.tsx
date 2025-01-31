@@ -1,5 +1,9 @@
 import { useInfo } from "src/useData";
-import { CalculatorSettings, calculateProjection } from "./versatileTypes";
+import {
+  CalculatorSettings,
+  calculateProjection,
+  getReturns,
+} from "./versatileTypes";
 import Select from "../Inputs/Select";
 import Button from "../Inputs/Button";
 
@@ -41,19 +45,19 @@ const Solve = () => {
     let high = 1000000;
     let mid = 0;
     let iteration = 0;
-    const maxIterations = 500;
+    const maxIterations = 10000;
     const tolerance = 0.001;
 
     const testSettings = structuredClone(settings);
     testSettings.payment.type = "simple";
+
+    const returnsMemo = getReturns(settings);
+    console.log("cc", "start");
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
       testSettings.payment.amount = mid;
-      setField("versatileCalculator")({
-        ...settings,
-        payment: { ...settings.payment, amount: mid },
-      });
-      const calculations = calculateProjection(testSettings);
+
+      const calculations = calculateProjection(testSettings, returnsMemo);
 
       const lastRow = calculations[calculations.length - 1];
 
@@ -86,19 +90,18 @@ const Solve = () => {
     let high = 100;
     let mid = 0;
     let iteration = 0;
-    const maxIterations = 200;
+    const maxIterations = 10000;
     const tolerance = 0.001;
 
     const testSettings = structuredClone(settings);
     testSettings.returns.returnType = "simple";
+
     while (iteration < maxIterations) {
+      const returnsMemo = (_: number) => mid;
       mid = (low + high) / 2;
       testSettings.returns.rateOfReturn = mid;
-      setField("versatileCalculator")({
-        ...settings,
-        returns: { ...settings.returns, rateOfReturn: mid },
-      });
-      const calculations = calculateProjection(testSettings);
+
+      const calculations = calculateProjection(testSettings, returnsMemo);
 
       const lastRow = calculations[calculations.length - 1];
 
@@ -117,8 +120,9 @@ const Solve = () => {
     }
     setField("versatileCalculator")({
       ...settings,
-      other: {
-        ...settings.other,
+
+      returns: {
+        ...settings.returns,
         rateOfReturn: mid,
         returnType: "simple",
       },
@@ -128,21 +132,20 @@ const Solve = () => {
   const handleSolvePresentValue = () => {
     const targetEndingBalance = settings.user.endValue || 0;
     let low = 0;
-    let high = 10000000;
+    let high = 100000000;
     let mid = 0;
     let iteration = 0;
-    const maxIterations = 200;
+    const maxIterations = 100000;
     const tolerance = 0.001;
 
     const testSettings = structuredClone(settings);
+
+    const returnsMemo = getReturns(settings);
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
       testSettings.user.presentValue = mid;
-      // setField("versatileCalculator")({
-      //   ...settings,
-      //   user: { ...settings.other, presentValue: mid },
-      // });
-      const calculations = calculateProjection(testSettings);
+
+      const calculations = calculateProjection(testSettings, returnsMemo);
 
       const lastRow = calculations[calculations.length - 1];
 
@@ -163,7 +166,7 @@ const Solve = () => {
       ...settings,
       user: {
         ...settings.user,
-        presentValue: Math.round(mid),
+        presentValue: mid,
       },
     });
   };

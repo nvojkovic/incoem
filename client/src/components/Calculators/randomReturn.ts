@@ -1,4 +1,4 @@
-import { CalculatorSettings, calculateProjection } from "./versatileTypes";
+import { CalculatorSettings } from "./versatileTypes";
 
 class SeededRandom {
   seed: number;
@@ -30,35 +30,25 @@ export const sequenceOfReturns = (
   return Array.from({ length }, () => random.normal(mean, std));
 };
 
-export const getSequences = (
-  seed: number,
-  mean: number,
-  std: number,
-  length: number,
-) => {
-  const random = new SeededRandom(seed);
-  const seqs = Array.from({ length: 1000 }, (_) =>
-    sequenceOfReturns(random, mean, std, length),
-  );
-  console.log(seqs);
-  return seqs;
-};
-
 export const getSelectedSequences = (settings: CalculatorSettings) => {
-  const sequences = getSequences(
-    settings.returns.seed || 0,
-    settings.returns.mean,
-    settings.returns.std,
-    settings.user.endYear,
+  const random = new SeededRandom(settings.returns.seed || 0);
+  const sequences = Array.from({ length: 1000 }, (_) =>
+    sequenceOfReturns(
+      random,
+      settings.returns.mean,
+      settings.returns.std,
+      settings.user.endYear,
+    ),
   );
-  console.log("using seed", settings.returns.seed);
+
   const results = sequences.map((seq) => {
-    console.log(settings);
+    console.log("aaa", settings);
     const sett = structuredClone(settings);
     sett.returns.returnType = "detailed";
     sett.returns.yearlyReturns = seq;
-    const proj = calculateProjection(sett);
-    return { seq, val: proj.pop()?.realBalance as number };
+    const cagr = seq.map((i) => i / 100 + 1).reduce((a, b) => a * b, 1);
+    // const proj = calculateProjection(sett, (y) => seq[y - 1]);
+    return { seq, val: cagr };
   });
 
   const sorted = results.sort((a, b) => a.val - b.val);

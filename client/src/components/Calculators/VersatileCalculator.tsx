@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Button from "../Inputs/Button";
-import { convertToParens, printNumber } from "../../utils";
+import { convertToParens, printNumber, yearRange } from "../../utils";
 import {
   CalculatorSettings,
   cagr,
@@ -26,43 +26,41 @@ const VersatileCalculator: React.FC = () => {
   console.log("calc", settings);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
-  const calculations = calculateProjection(settings);
+
+  const returnsMemo = getReturns(settings);
+  const calculations = calculateProjection(settings, returnsMemo);
   const [open, setOpen] = useState(true);
+  const getRandom = (type: "best" | "mean" | "worst") => {
+    const sett = {
+      ...settings,
+      returns: {
+        ...settings.returns,
+        selectedRandom: type as any,
+      },
+    };
+    const s = getReturns(sett);
+    return {
+      data: calculateProjection(sett, s),
+      returns: yearRange(1, settings.user.endYear).map((i) => s(i)),
+    };
+  };
 
   const chartData =
     settings.returns.returnType === "random"
       ? [
         {
           label: "Best",
-          data: calculateProjection({
-            ...settings,
-            returns: {
-              ...settings.returns,
-              selectedRandom: "best",
-            },
-          }),
+          ...getRandom("best"),
           color: "#2ecc71", // Indigo color
         },
         {
           label: "Median",
-          data: calculateProjection({
-            ...settings,
-            returns: {
-              ...settings.returns,
-              selectedRandom: "mean",
-            },
-          }),
+          ...getRandom("mean"),
           color: "#3498db", // Indigo color
         },
         {
           label: "Worst",
-          data: calculateProjection({
-            ...settings,
-            returns: {
-              ...settings.returns,
-              selectedRandom: "worst",
-            },
-          }),
+          ...getRandom("worst"),
           color: "#e74c3c", // Indigo color
         },
       ]
@@ -70,16 +68,18 @@ const VersatileCalculator: React.FC = () => {
         {
           label: "Balance",
           data: calculations,
+          returns: yearRange(1, settings.user.endYear).map((i) =>
+            returnsMemo(i),
+          ),
           color: "#3498db", // Indigo color
         },
       ];
 
-  const returnsMemo = useMemo(() => getReturns(settings), [settings]);
   console.log("RERERE");
 
   return (
     <Layout page="calculator" wide>
-      <div className="container mx-auto px-4 mt-[-25px]">
+      <div className="max-w-[1600px] mx-auto px-4 mt-[-25px]">
         <div className="flex gap-12">
           <div>
             <VersatileSettings />
