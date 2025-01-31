@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { printNumber } from "src/utils";
+import { CalculationRow } from "../Calculators/versatileTypes";
 
 interface ChartData {
   label: string;
-  data: any[];
+  data: CalculationRow[];
   color: string;
 }
 
@@ -16,8 +17,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const largest = d3.max(datasets, (series) => 
-      d3.max(series.data, (d) => d.endingBalance)
+    const largest = d3.max(datasets, (series) =>
+      d3.max(series.data, (d) => d.endingBalance),
     ) as number;
 
     const margin = {
@@ -93,8 +94,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         .datum(series.data)
         .attr("fill", "none")
         .attr("stroke", series.color)
-        .attr("stroke-width", 1.5)
-        .attr("d", line);
+        .attr("stroke-width", 2.5)
+        .attr("d", line as any);
     });
 
     // Add legend
@@ -165,65 +166,92 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .on("mousemove", (event) => {
         const mouseX = d3.pointer(event)[0];
         const year = Math.round(x.invert(mouseX));
-        const values = datasets.map(series => {
-          const d = series.data.find(d => d.year === year);
-          return {
-            label: series.label,
-            color: series.color,
-            data: d
-          };
-        }).filter(d => d.data);
-        
+        const values: any[] = datasets
+          .map((series) => {
+            const d = series.data.find((d) => d.year === year);
+            return {
+              label: series.label,
+              color: series.color,
+              data: d,
+            };
+          })
+          .filter((d) => d.data);
+
         if (!values.length) return;
 
-        vertical.attr("transform", `translate(${x(d.year)},0)`);
+        vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
         tooltip
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
-              ${values.map(v => `
-                <div style="color: ${v.color}">
-                  <strong>${v.label}:</strong> ${printNumber(v.data.endingBalance)}
+              <div class="flex flex-col gap-1">
+              ${values
+              .map(
+                (v: any) => `
+                <div style="">
+                  <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
                   <span class="${v.data.return < 0 ? "text-red-500" : ""}">
-                    (${printNumber(v.data.return)})
+                    ${printNumber(v.data.return)}
                   </span>
                 </div>
-              `).join('')}
+              `,
+              )
+              .join("")}
+<div style="">
+                  <strong style="width:70px; display:inline-block; color: ">Payment:</strong>                   <span class="">
+                    ${printNumber(values[0]?.data?.totalPayments)}
+                  </span>
+                </div>
+              </div>
             </div>
           `);
       })
       .on("wheel", (event) => {
-        console.log(
-          "scroll",
-          d3.pointer(event),
-          d3.pointer(event, svgRef.current),
-        );
         const mouseX = d3.pointer(event)[0];
-        const x0 = x.invert(mouseX);
-        const bisect = d3.bisector((d: any) => d.year).left;
-        const i = bisect(data, x0);
-        const d0 = data[i - 1];
-        const d1 = data[i];
-        if (!d0 || !d1) return;
-        const d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+        const year = Math.round(x.invert(mouseX));
+        const values: any[] = datasets
+          .map((series) => {
+            const d = series.data.find((d) => d.year === year);
+            return {
+              label: series.label,
+              color: series.color,
+              data: d,
+            };
+          })
+          .filter((d) => d.data);
 
-        vertical.attr("transform", `translate(${x(d.year)},0)`);
+        if (!values.length) return;
+
+        vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
         tooltip
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
-              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${d.year} (Age: ${d.age})</div>
-              <div><span class="">Beginning Balance:</span> ${printNumber(d.beginning)}</div>
-              <div>Payment: ${printNumber(d.totalPayments)}</div>
-              <div>Investment Fee: ${printNumber(-d.investmentFee)}</div>
-              <div class="${d.return < 0 && "text-red-500"}">Return: ${printNumber(d.return)}</div>
-              <div>Taxes: ${printNumber(-d.taxes)}</div>
-              <div>Ending Balance: ${printNumber(d.endingBalance)}</div>
+              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
+              <div class="flex flex-col gap-1">
+              ${values
+              .map(
+                (v: any) => `
+                <div style="">
+                  <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
+                  <span class="${v.data.return < 0 ? "text-red-500" : ""}">
+                    ${printNumber(v.data.return)}
+                  </span>
+                </div>
+              `,
+              )
+              .join("")}
+<div style="">
+                  <strong style="width:70px; display:inline-block; color: ">Payment:</strong>                   <span class="">
+                    ${printNumber(values[0]?.data?.totalPayments)}
+                  </span>
+                </div>
+              </div>
             </div>
           `);
       });
-  }, [data]);
+  }, [datasets]);
 
   return (
     <div className="bg-white px-5 rounded-lg pb-5">

@@ -20,15 +20,15 @@ interface Props {
   errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-    | "money"
-    | "percent"
-    | "text"
-    | "number"
-    | "date"
-    | "toggle"
-    | "password"
-    | "mo/yr"
-    | "textarea";
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "mo/yr"
+  | "textarea";
   size?: "xs" | "sm" | "md" | "lg" | "full";
   width?: string;
   setValue: (value: any) => void;
@@ -237,9 +237,8 @@ const Input = ({
             }
             theme={{ target: "" }}
             placement="right-end"
-            style="light"
 
-            // className="border-black border"
+          // className="border-black border"
           >
             <div className="relative cursor-pointer">
               {errorMessage && invalid ? (

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Button from "../Inputs/Button";
 import { convertToParens, printNumber } from "../../utils";
 import {
-  CalculationRow,
   CalculatorSettings,
   cagr,
   calculateProjection,
@@ -27,12 +26,53 @@ const VersatileCalculator: React.FC = () => {
   console.log("calc", settings);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
-  const [calculations, setCalculations] = useState<CalculationRow[]>([]);
+  const calculations = calculateProjection(settings);
   const [open, setOpen] = useState(true);
-  useEffect(() => {
-    const rows = calculateProjection(settings);
-    setCalculations(rows);
-  }, [settings]);
+
+  const chartData =
+    settings.other.returnType === "random"
+      ? [
+        {
+          label: "Best",
+          data: calculateProjection({
+            ...settings,
+            returns: {
+              ...settings.returns,
+              selectedRandom: "best",
+            },
+          }),
+          color: "#2ecc71", // Indigo color
+        },
+        {
+          label: "Median",
+          data: calculateProjection({
+            ...settings,
+            returns: {
+              ...settings.returns,
+              selectedRandom: "mean",
+            },
+          }),
+          color: "#3498db", // Indigo color
+        },
+        {
+          label: "Worst",
+          data: calculateProjection({
+            ...settings,
+            returns: {
+              ...settings.returns,
+              selectedRandom: "worst",
+            },
+          }),
+          color: "#e74c3c", // Indigo color
+        },
+      ]
+      : [
+        {
+          label: "",
+          data: calculations,
+          color: "#FFB44680", // Indigo color
+        },
+      ];
 
   const returnsMemo = useMemo(() => getReturns(settings), [settings]);
   console.log("RERERE");
@@ -120,13 +160,7 @@ const VersatileCalculator: React.FC = () => {
               <div
                 className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
               >
-                <VersatileBalance datasets={[
-                  {
-                    label: "Base Scenario",
-                    data: calculations,
-                    color: "#4F46E5" // Indigo color
-                  }
-                ]} />
+                <VersatileBalance datasets={chartData} />
               </div>
             </div>
             <div className=""></div>

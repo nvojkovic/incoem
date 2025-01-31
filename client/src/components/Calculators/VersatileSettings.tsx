@@ -108,7 +108,6 @@ const VersatileSettings = () => {
             <div className="flex gap-2">
               <Input
                 labelLength={90}
-                vertical
                 label="Payment ($)"
                 subtype="money"
                 size="md"
@@ -142,7 +141,6 @@ const VersatileSettings = () => {
             </div>
             <Input
               label="Increase (%)"
-              vertical
               labelLength={100}
               width="!w-[80px]"
               subtype="percent"
@@ -156,7 +154,6 @@ const VersatileSettings = () => {
           <Input
             label="Start Year"
             subtype="number"
-            vertical
             labelLength={80}
             value={settings.payment.startYear}
             setValue={(value) => updateSettings("payment", "startYear", value)}
@@ -165,7 +162,6 @@ const VersatileSettings = () => {
             <Select
               labelLength={163}
               label="Timing"
-              vertical
               options={[
                 { id: "beginning", name: "BoY" },
                 { id: "end", name: "EoY" },
@@ -254,11 +250,11 @@ const VersatileSettings = () => {
 
         {settings.other.returnType === "random" && (
           <div className="flex gap-6 w-full items-center justify-between">
-            <div className="flex gap-2 flex-col">
+            <div className="flex gap-4 flex-col !w-[55px]">
               <Input
                 label="Mean Return"
                 labelLength={120}
-                width="!w-[80px]"
+                width="!w-[60px]"
                 subtype="percent"
                 value={settings.returns.mean}
                 setValue={(value) => updateSettings("returns", "mean", value)}
@@ -266,15 +262,15 @@ const VersatileSettings = () => {
               <Input
                 label="Return Std. Dev."
                 labelLength={120}
-                width="!w-[80px]"
+                width="!w-[60px]"
                 subtype="percent"
                 value={settings.returns.std}
                 setValue={(value) => updateSettings("returns", "std", value)}
               />
             </div>
-            <div className="flex flex-col gap-2  w-[200px]">
+            <div className="flex flex-col gap-4 w-[230px]">
               <Select
-                labelLength={163}
+                labelLength={260}
                 label="Sequence shown"
                 options={[
                   { id: "worst", name: "Worst" },
@@ -283,7 +279,7 @@ const VersatileSettings = () => {
                 ]}
                 selected={{
                   id: settings.returns.selectedRandom,
-                  name: settings.returns.selectedRandom?.capitalize(),
+                  name: (settings.returns.selectedRandom as any)?.capitalize(),
                 }}
                 setSelected={(option) =>
                   updateSettings("returns", "selectedRandom", option.id)
