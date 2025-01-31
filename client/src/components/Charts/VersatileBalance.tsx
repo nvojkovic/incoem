@@ -93,9 +93,13 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
       .style("position", "absolute")
       .style("background", "white")
       .style("padding", "8px")
-      .style("border", "1px solid #ddd")
-      .style("border-radius", "4px")
+      .style("border", "1px solid black")
+      .style("border-radius", "8px")
       .style("pointer-events", "none")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "1px")
+      .style("border-radius", "5px")
       .style("opacity", 0);
 
     // Create vertical line for hover effect
@@ -136,9 +140,39 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
         tooltip
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 10 + "px").html(`
-            <div style="font-family: sans-serif">
-              <div style="font-weight: bold; margin-bottom: 4px">Year: ${d.year} (Age: ${d.age})</div>
-              <div>Beginning Balance: ${printNumber(d.beginning)}</div>
+            <div style="font-family: sans-serif; font-size: 14px;">
+              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${d.year} (Age: ${d.age})</div>
+              <div><span class="">Beginning Balance:</span> ${printNumber(d.beginning)}</div>
+              <div>Payment: ${printNumber(-d.totalPayments)}</div>
+              <div>Investment fee: ${printNumber(-d.investmentFee)}</div>
+              <div>Return: ${printNumber(d.return)}</div>
+              <div>Taxes: ${printNumber(-d.taxes)}</div>
+              <div>Ending Balance: ${printNumber(d.endingBalance)}</div>
+            </div>
+          `);
+      })
+      .on("wheel", (event) => {
+        console.log(
+          "scroll",
+          d3.pointer(event),
+          d3.pointer(event, svgRef.current),
+        );
+        const mouseX = d3.pointer(event)[0];
+        const x0 = x.invert(mouseX);
+        const bisect = d3.bisector((d: any) => d.year).left;
+        const i = bisect(data, x0);
+        const d0 = data[i - 1];
+        const d1 = data[i];
+        if (!d0 || !d1) return;
+        const d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+
+        vertical.attr("transform", `translate(${x(d.year)},0)`);
+        tooltip
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 10 + "px").html(`
+            <div style="font-family: sans-serif; font-size: 14px;">
+              <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${d.year} (Age: ${d.age})</div>
+              <div><span class="">Beginning Balance:</span> ${printNumber(d.beginning)}</div>
               <div>Payment: ${printNumber(-d.totalPayments)}</div>
               <div>Investment fee: ${printNumber(-d.investmentFee)}</div>
               <div>Return: ${printNumber(d.return)}</div>
@@ -150,7 +184,7 @@ const D3TimeseriesChart = ({ data }: { data: any[] }) => {
   }, [data]);
 
   return (
-    <div className="bg-white px-5 rounded-lg mb-5">
+    <div className="bg-white px-5 rounded-lg pb-5">
       <svg ref={svgRef} />
     </div>
   );

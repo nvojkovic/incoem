@@ -5,6 +5,7 @@ import {
   CalculationRow,
   CalculatorSettings,
   calculateProjection,
+  getReturns,
   initialVersatileSettings,
 } from "./versatileTypes";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
@@ -29,14 +30,14 @@ const VersatileCalculator: React.FC = () => {
   }, [settings]);
 
   return (
-    <Layout page="calculator">
-      <div className="container mx-auto px-4 pb-8  ml-[-200px]">
+    <Layout page="calculator" wide>
+      <div className="container mx-auto px-4 pb-8 mt-[-25px]">
         <div className="flex gap-12">
           <div>
             <VersatileSettings />
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[100px] bg-[#f3f4f6] flex justify-between items-center gap-5 mb-3 z-[100000]">
+            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-8 z-[10] pt-12 mt-[-150px]">
               <div className="flex gap-4">
                 <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
@@ -88,27 +89,18 @@ const VersatileCalculator: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-[-15px] shadow-md sticky top-[210px]">
+            <div className="mt-[-15px] shadow-md sticky top-[200px]">
               <VersatileBalance data={calculations} />
             </div>
-            {/*<VersatileChart
-          data={calculations.map((i) => ({
-            year: i.year,
-            balance: i.endingBalance,
-            residual: i.return - i.taxes - i.investmentFee,
-            payment: Math.abs(i.totalPayments),
-            tax: i.taxes,
-            investmentFee: i.investmentFee,
-          }))}
-        />*/}
-            <div className="">
+
+            <div className="mt-[140px]">
               <table className="text-sm w-full bg-white shadow-lg">
                 <thead
-                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 top-[550px] rounded-none !border-none`}
+                  className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 top-[550px] rounded-none !border-none`}
                 >
                   <tr>
                     <th
-                      className="px-4 py-2 !rounded-none"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "year" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "year"
                           ? setSelectedCol(null)
@@ -118,7 +110,7 @@ const VersatileCalculator: React.FC = () => {
                       Year
                     </th>
                     <th
-                      className="px-4 py-2 !rounded-none"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "age" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "age"
                           ? setSelectedCol(null)
@@ -128,7 +120,7 @@ const VersatileCalculator: React.FC = () => {
                       Age
                     </th>
                     <th
-                      className="px-4 py-2"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "beginning" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "beginning"
                           ? setSelectedCol(null)
@@ -138,7 +130,7 @@ const VersatileCalculator: React.FC = () => {
                       Beginning Balance
                     </th>
                     <th
-                      className="px-4 py-2"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "total" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "total"
                           ? setSelectedCol(null)
@@ -148,7 +140,18 @@ const VersatileCalculator: React.FC = () => {
                       Payment
                     </th>
                     <th
-                      className="px-4 py-2"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "return-percent" ? "bg-slate-200" : ""}`}
+                      onClick={() =>
+                        selectedCol === "return-percent"
+                          ? setSelectedCol(null)
+                          : setSelectedCol("return-percent")
+                      }
+                    >
+                      Return (%)
+                    </th>
+
+                    <th
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "return" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "return"
                           ? setSelectedCol(null)
@@ -158,17 +161,7 @@ const VersatileCalculator: React.FC = () => {
                       Return
                     </th>
                     <th
-                      className="px-4 py-2"
-                      onClick={() =>
-                        selectedCol === "return-percent"
-                          ? setSelectedCol(null)
-                          : setSelectedCol("return-percent")
-                      }
-                    >
-                      Return (%)
-                    </th>
-                    <th
-                      className="px-4 py-2"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "fees" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "fees"
                           ? setSelectedCol(null)
@@ -178,7 +171,7 @@ const VersatileCalculator: React.FC = () => {
                       Investment Fees
                     </th>
                     <th
-                      className="px-4 py-2"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "taxes" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "taxes"
                           ? setSelectedCol(null)
@@ -188,7 +181,7 @@ const VersatileCalculator: React.FC = () => {
                       Taxes
                     </th>
                     <th
-                      className="px-4 py-2 !rounded-none"
+                      className={`px-4 py-2 !rounded-none ${selectedCol === "end" ? "bg-slate-200" : ""}`}
                       onClick={() =>
                         selectedCol === "end"
                           ? setSelectedCol(null)
@@ -252,6 +245,16 @@ const VersatileCalculator: React.FC = () => {
                       }}
                     />*/}
                         {printNumber(row.totalPayments)}
+                      </td>{" "}
+                      <td
+                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${row.return < 0 ? "text-red-500" : ""}`}
+                        onClick={() =>
+                          setSelectedRow(selectedRow === index ? null : index)
+                        }
+                      >
+                        {row.beginning
+                          ? `${convertToParens((Math.round(100 * getReturns(settings, row.year)) / 100).toString() + `%`)}`
+                          : ""}
                       </td>
                       <td
                         className={`border px-4 py-2 ${selectedCol === "return" ? "bg-slate-200" : ""} ${row.return < 0 ? "text-red-500" : ""}`}
@@ -260,16 +263,6 @@ const VersatileCalculator: React.FC = () => {
                         }
                       >
                         {printNumber(row.return)}
-                      </td>
-                      <td
-                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${row.return < 0 ? "text-red-500" : ""}`}
-                        onClick={() =>
-                          setSelectedRow(selectedRow === index ? null : index)
-                        }
-                      >
-                        {row.beginning
-                          ? `${convertToParens((Math.round((10000 * row.return) / row.beginning) / 100).toString() + `%`)}`
-                          : ""}
                       </td>
                       <td
                         className={`border px-4 py-2 ${selectedCol === "fees" ? "bg-slate-200" : ""}`}

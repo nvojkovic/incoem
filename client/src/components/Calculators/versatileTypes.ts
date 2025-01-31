@@ -52,7 +52,7 @@ export const initialVersatileSettings: CalculatorSettings = {
     amount: 0,
     timing: "beginning" as const,
     increase: 0,
-    startYear: 0,
+    startYear: 1,
     years: {},
     detailedIncrease: 0,
     type: "simple" as const,
@@ -70,11 +70,21 @@ export const initialVersatileSettings: CalculatorSettings = {
   },
 };
 
+export const getReturns = (settings: CalculatorSettings, year: number) => {
+  if (settings.other.returnType === "detailed") {
+    return settings.other.yearlyReturns[year] || 0;
+  } else if (settings.other.returnType === "simple") {
+    return settings.other.rateOfReturn;
+  } else {
+    return 0;
+  }
+};
+
 export const calculateProjection = (settings: CalculatorSettings) => {
   const rows: CalculationRow[] = [];
   let balance = settings.user.presentValue;
 
-  for (let year = 0; year <= settings.user.endYear; year++) {
+  for (let year = 1; year <= settings.user.endYear; year++) {
     const beginning = balance;
     const realBalance = beginning;
 
@@ -107,7 +117,7 @@ export const calculateProjection = (settings: CalculatorSettings) => {
           investmentFee,
           year,
           beginning: beginning <= 0 ? 0 : beginning,
-          totalPayments: 0,
+          totalPayments: -ending,
           return: 0,
           growth: 0,
           taxes: 0,
@@ -125,14 +135,12 @@ export const calculateProjection = (settings: CalculatorSettings) => {
     ending /= 1 + settings.other.inflation / 100;
 
     // Calculate returns and taxes
-    let returnRate = settings.other.rateOfReturn;
-    if (settings.other.returnType === "detailed") {
-      returnRate = settings.other.yearlyReturns[year] || 0;
-    }
+    let returnRate = getReturns(settings, year);
+    ending -= investmentFee / 2;
     const returnAmount = ending > 0 ? ending * (returnRate / 100) : 0;
     const taxes = Math.max(returnAmount * (settings.other.taxRate / 100), 0);
-    const growth = returnAmount - taxes - investmentFee;
-    ending -= investmentFee;
+    const growth = returnAmount - taxes;
+    ending -= investmentFee / 2;
 
     // Handle end of year payment
     if (settings.payment.timing === "end") {
@@ -142,7 +150,7 @@ export const calculateProjection = (settings: CalculatorSettings) => {
           year,
           investmentFee,
           beginning: beginning <= 0 ? 0 : beginning,
-          totalPayments: 0,
+          totalPayments: -ending,
           return: 0,
           growth: 0,
           taxes: 0,

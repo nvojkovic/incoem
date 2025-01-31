@@ -117,7 +117,7 @@ const VersatileSettings = () => {
               />
 
               <Tooltip
-                content="Copy payment to every year in detailed."
+                content="Copy payment to every year in Detailed."
                 theme={{ target: "" }}
               >
                 <Button
@@ -193,6 +193,12 @@ const VersatileSettings = () => {
             >
               Detailed
             </div>
+            <div
+              className={`w-full text-center py-1 ${settings.other.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
+              onClick={() => updateSettings("other", "returnType", "detailed")}
+            >
+              Random
+            </div>
           </div>
         </div>
         {settings.other.returnType === "detailed" && (
@@ -216,7 +222,7 @@ const VersatileSettings = () => {
               />
               <div className="w-10">
                 <Tooltip
-                  content="Copy returns to every year in detailed."
+                  content="Copy returns to every year in Detailed."
                   theme={{ target: "" }}
                 >
                   <Button
@@ -376,7 +382,7 @@ const VersatileSettings = () => {
               Return Rates by Year
             </div>
             <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
-              {[...Array(settings.user.endYear + 1).keys()].map((year) => (
+              {yearRange(1, settings.user.endYear).map((year) => (
                 <div className="flex gap-3" key={year}>
                   <Input
                     label={`Year ${year}`}
