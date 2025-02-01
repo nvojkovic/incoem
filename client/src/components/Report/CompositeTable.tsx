@@ -198,13 +198,7 @@ const CompositeTable = ({
                       .map((income) => calculateOne(income, line).amount)
                       .filter((t) => typeof t === "number")
                       .reduce((a, b) => a + b, 0);
-                    console.log(
-                      line,
-                      client.incomes
-                        .map((income) => calculateOne(income, line).amount)
-                        .filter((t) => typeof t === "number"),
-                      client.incomes,
-                    );
+
                     const stableIncome = client.incomes
                       .filter((item) => item.stable)
                       .filter((income) => income.enabled)

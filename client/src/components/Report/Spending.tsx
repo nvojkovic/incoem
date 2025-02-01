@@ -26,6 +26,7 @@ const Spending = ({
       <Header client={client} scenario={scenario} />
       <div className="text-2xl mx-auto pb-3">Spending</div>
       <SpendingTable
+        client={client}
         settings={scenario}
         spending={spending}
         data={incomeMapInfo}

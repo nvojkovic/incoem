@@ -34,7 +34,11 @@ const currentYear = new Date().getFullYear();
 const SpendingPage = () => {
   const { data, setSpending, setField: set } = useInfo();
 
-  const settings = data.liveSettings;
+  const settings = {
+    ...data.liveSettings,
+    incomes: data.incomes,
+    people: data.people,
+  };
   const setSettings = set("liveSettings");
   const setField = (key: string) => (val: any) => {
     setSpending({ ...spending, [key]: val });
@@ -322,8 +326,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-16">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-16">Increase (%)</div>
+                    )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -474,18 +478,17 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${
-                    spending.postSpending.find(
-                      (i) => i.increase.type === "custom",
-                    ) && "w-64"
-                  }`}
+                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
+                    (i) => i.increase.type === "custom",
+                  ) && "w-64"
+                    }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                    <div className="inline-block ml-8">Increase (%)</div>
-                  )}{" "}
+                      <div className="inline-block ml-8">Increase (%)</div>
+                    )}{" "}
                 </th>
 
                 {data.people.map((i) => (
@@ -832,6 +835,7 @@ const SpendingPage = () => {
         </MapSection>
         <MapSection defaultOpen title="">
           <SpendingTable
+            client={data}
             settings={settings}
             spending={spending}
             data={{ incomes: data.incomes, people: data.people, version: 1 }}
@@ -852,7 +856,7 @@ export const MultiToggle = ({
 }: any) => {
   return (
     <div
-      className={`w-full   font-medium flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
+      className={`w-full  font-medium flex ${vertical ? "flex-col" : "flex-row items-center gap-2"}`}
     >
       <label className={`text-sm text-[#344054] ${vertical ? "w-36" : ""} `}>
         {label}
@@ -861,11 +865,10 @@ export const MultiToggle = ({
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${
-              value === item
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${value === item
                 ? "bg-main-orange text-white"
                 : "bg-gray-200 text-[#555860]"
-            } ${vertical ? "" : "w-full"}`}
+              } ${vertical ? "" : "w-full"}`}
             onClick={() => !disabled && setValue(item)}
           >
             {item}
