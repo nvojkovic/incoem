@@ -17,6 +17,7 @@ import {
   ScenarioSettings,
   User,
 } from "src/types";
+import { initialVersatileSettings } from "../Calculators/versatileTypes";
 
 const PersonInfo = ({
   person,
@@ -108,7 +109,7 @@ const initializeNewClient = (user: User | null): Client => ({
   } as RetirementSpendingSettings,
   calculators: undefined as any,
   allInOneCalculator: [],
-  versatileCalculator: undefined as any,
+  versatileCalculator: initialVersatileSettings,
   liveSettings: {
     id: -1,
     name: "",
