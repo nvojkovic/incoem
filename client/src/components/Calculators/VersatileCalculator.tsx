@@ -119,11 +119,20 @@ const VersatileCalculator: React.FC = () => {
                     )}{" "}
                   </div>
                 </div>
-                <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border w-40">
-                  <div className="uppercase tracking-wide text-sm text-gray-800">
-                    CAGR
+                <div className="flex flex-col items-center bg-white px-6 py-3 rounded-lg shadow-md border w-40 relative">
+                  <div className="uppercase tracking-wide text-sm text-gray-800 flex gap-2">
+                    <Tooltip
+                      content="Compound Annual Growth Rate"
+                      placement="bottom-end"
+                      className="normal-case "
+                    >
+                      <div className="flex gap-2">
+                        <div>CAGR</div>
+                        <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] print:hidden" />
+                      </div>
+                    </Tooltip>
                   </div>
-                  <div className="font-semibold text-lg mt-[2px]">
+                  <div className="font-semibold text-lg mt-[2px] ml-[10px]">
                     {cagr(calculations.map((y) => returnsMemo(y.year)))}%
                   </div>
                 </div>

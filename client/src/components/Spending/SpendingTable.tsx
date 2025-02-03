@@ -67,7 +67,7 @@ const SpendingTable = ({
         (tableInd) =>
           currentYear + settings.maxYearsShown > currentYear + tableInd * l && (
             <div className="w-full">
-              <table className="w-full border bg-white">
+              <table className="w-full border print:border-none bg-white">
                 <thead
                   className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-b-gray-500 print:border-b-2 border-black`}
                 >

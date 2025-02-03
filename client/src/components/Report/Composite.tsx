@@ -40,7 +40,7 @@ const Composite = ({
             currentYear + scenario.maxYearsShown >
             currentYear + tableInd * height && (
               <div className="w-full">
-                <table className="border bg-white !text-sm w-full">
+                <table className="bg-white !text-sm w-full">
                   <thead
                     className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 print:border-b-black print:border-b-2`}
                   >
