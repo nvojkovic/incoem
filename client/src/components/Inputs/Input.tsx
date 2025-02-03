@@ -29,7 +29,7 @@ interface Props {
   | "password"
   | "mo/yr"
   | "textarea";
-  size?: "xs" | "sm" | "md" | "lg" | "full";
+  size?: string;
   width?: string;
   setValue: (value: any) => void;
   [key: string]: any;
@@ -40,6 +40,7 @@ const calcSize = (s: any) => {
   if (s == "md") return "w-36";
   if (s == "lg") return "w-[200px]";
   if (s == "full") return "w-full";
+  else return s;
 };
 const Input = ({
   subtype = "text",

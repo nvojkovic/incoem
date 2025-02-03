@@ -51,7 +51,12 @@ export const calculateSingleSpending = (
 
   baseAmount = inflateAmount(baseAmount - toRemove, spending.yearlyIncrease);
   // Apply death reduction to base
-  if (settings.whoDies != -1 && settings.deathYears[settings.whoDies]) {
+  if (
+    settings.whoDies !== undefined &&
+    settings.whoDies != -1 &&
+    settings.deathYears[settings.whoDies]
+  ) {
+    console.log("death reduction", settings.whoDies, data.people);
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
     if (age > (settings.deathYears[settings.whoDies] as any)) {

@@ -125,6 +125,7 @@ const SpendingPage = () => {
           .filter((t) => typeof t === "number")
           .reduce((a, b) => a + b, 0) * getTaxRate(data, settings, year),
     }));
+    console.log("settt", settings);
     const baseSpending = getSpendingItemOverYears(
       { incomes: data.incomes, people: data.people, version: 1 },
       spending,
@@ -174,17 +175,12 @@ const SpendingPage = () => {
   };
 
   const factor = settings.monthlyYearly === "monthly" ? 12 : 1;
-  console.log("aaa", [
-    calcSett({ ...settings, whoDies: -1 }),
-    calcSett({ ...settings, whoDies: 0 }),
-    calcSett({ ...settings, whoDies: 1 }),
-  ]);
   const maxY =
     Math.max(
       ...[
         calcSett({ ...settings, whoDies: -1 }),
         calcSett({ ...settings, whoDies: 0 }),
-        calcSett({ ...settings, whoDies: 1 }),
+        data.people.length > 1 ? calcSett({ ...settings, whoDies: 1 }) : 0,
       ],
     ) / divisionFactor;
 

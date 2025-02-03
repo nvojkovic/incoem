@@ -51,8 +51,12 @@ const VersatileSettings = () => {
             <Input
               labelLength={100}
               width="!w-[130px]"
+              size="!w-[130px]"
               label="End Value"
               subtype="money"
+              tooltip={
+                'Ending value is only used when using "Solve" functionality'
+              }
               value={settings.user.endValue}
               setValue={(value) => updateSettings("user", "endValue", value)}
             />

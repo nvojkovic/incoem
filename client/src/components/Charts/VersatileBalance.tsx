@@ -14,6 +14,11 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
 
   useEffect(() => {
+    d3.select(svgRef.current).selectAll(".tooltip").remove();
+
+    document.querySelectorAll(".tooltip").forEach((el) => {
+      el.remove();
+    });
     if (!datasets || !datasets.length || !datasets[0].data.length) return;
 
     d3.select(svgRef.current).selectAll("*").remove();
