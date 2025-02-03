@@ -145,7 +145,7 @@ export const calculateProjection = (
     if (settings.payment.timing === "beginning") {
       if (beginning <= 0 || -payment >= ending) {
         rows.push({
-          age: settings.user.startAge + year,
+          age: settings.user.startAge + year - 1,
           investmentFee,
           year,
           beginning: beginning <= 0 ? 0 : beginning,
@@ -181,7 +181,7 @@ export const calculateProjection = (
     if (settings.payment.timing === "end") {
       if (ending <= 0 || -payment >= ending) {
         rows.push({
-          age: settings.user.startAge + year,
+          age: settings.user.startAge + year - 1,
           year,
           investmentFee: totalInvestmentFee,
           beginning: beginning <= 0 ? 0 : beginning,
@@ -202,7 +202,7 @@ export const calculateProjection = (
     ending += growth;
 
     rows.push({
-      age: settings.user.startAge + year,
+      age: settings.user.startAge + year - 1,
       year,
       beginning: beginning <= 0 ? 0 : beginning,
       totalPayments: beginning <= 0 ? 0 : payment,
