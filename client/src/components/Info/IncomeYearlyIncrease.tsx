@@ -23,6 +23,11 @@ const IncomeYearlyIncrease = ({
         <Select
           width={increase.type === "custom" ? "!w-[120px]" : ""}
           label={labels ? "Yearly Increase" : ""}
+          tooltip={
+            increase.type === "general"
+              ? 'General will set the yearly increase equal to the "inflation" input set throughout the client file'
+              : ""
+          }
           options={[
             { value: "general", name: "General" },
             { value: "none", name: "None" },

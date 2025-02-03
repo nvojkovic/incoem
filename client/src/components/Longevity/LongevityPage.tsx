@@ -103,8 +103,8 @@ const LongevityPage = () => {
         </div>
         <div className="flex justify-center mt-10 w-full">
           <div className="bg-white border rounded-lg p-6 shadow-md">
-            Every member of household needs to have sex set for Longevity
-            feature to work.
+            Please select the sex of each household member to enable Longevity
+            feature feature to work.
           </div>
         </div>
       </Layout>
@@ -201,7 +201,6 @@ const LongevityPage = () => {
             <Tooltip
               content="Update mortality assumptions"
               theme={{ target: "" }}
-              style="light"
             >
               <Button type="primary" onClick={updateDeathFields}>
                 <div className="flex justify-center items-center gap-1">

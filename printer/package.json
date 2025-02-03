@@ -20,7 +20,8 @@
     "muhammara": "^5.2.0",
     "pdf-lib": "^1.17.1",
     "pdf-merger-js": "^5.1.2",
-    "puppeteer": "^22.6.1"
+    "puppeteer": "^22.6.1",
+    "puppeteer-cluster": "^0.24.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

@@ -145,7 +145,9 @@ const ResultTable = ({
                   })()}
                   theme={{ target: "" }}
                   placement="right"
-                  hidden={!client.longevityFlag}
+                  hidden={
+                    !client.longevityFlag || !client.people.every((p) => p.sex)
+                  }
                   style="light"
                   arrow={false}
                   className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
@@ -168,7 +170,6 @@ const ResultTable = ({
                       content={result.note}
                       theme={{ target: "" }}
                       placement="top"
-                      style="light"
                       className="!z-[50000] bg-white print:hidden"
                     >
                       <div className="cursor-pointer flex items-center gap-2 ">

@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import puppeteer, { Browser } from "puppeteer";
+import puppeteer, { Browser, Page } from "puppeteer";
 import { PDFDocument } from "pdf-lib";
+import { Cluster } from "puppeteer-cluster";
 dotenv.config();
 const port = 3002;
 
@@ -84,26 +85,24 @@ const getAssetSummary = async (browser: Browser, url: string) => {
   }
 };
 
-const getPdf = async (browser: Browser, base: string, data: any) => {
+const getPdf = async (page: Page, base: string, data: any) => {
   try {
     const url = `${base}?page=${JSON.stringify(data)}`;
-    const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 800 });
     await page.goto(url as any, {
       waitUntil: ["networkidle0", "load", "domcontentloaded"],
     });
 
     //wait a second
-    console.log("waiting");
-    await new Promise((r) => setTimeout(r, 2000));
-    console.log("done waiting");
+    // console.log("waiting");
+    // await new Promise((r) => setTimeout(r, 2000));
+    // console.log("done waiting");
 
     const header = await page.evaluate(() => {
       const headerElement = document.getElementById("print-header");
       if (!headerElement) return "";
       return headerElement.innerHTML;
     });
-    console.log("making PDF", data.name);
     const pdf = await page.pdf({
       format: "letter",
       landscape: true,
@@ -126,29 +125,50 @@ const getPdf = async (browser: Browser, base: string, data: any) => {
   }
 };
 
-app.get("/", async (req, res) => {
-  const { url, pages } = req.query;
-  if (!url) {
-    return res.status(400).send("Missing url query parameter");
-  }
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/google-chrome",
-    ignoreDefaultArgs: ["--disable-extensions"],
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+(async () => {
+  const cluster = await Cluster.launch({
+    concurrency: Cluster.CONCURRENCY_PAGE,
+    maxConcurrency: 20,
+    puppeteerOptions: {
+      executablePath: "/usr/bin/google-chrome",
+      ignoreDefaultArgs: ["--disable-extensions"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      headless: true,
+    },
   });
 
-  const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
+  await cluster.task(async ({ page, data }) => {
+    const pdf = await getPdf(page, data.url, data.data);
+    return pdf;
+  });
 
-  const printedPages = await Promise.all(
-    toPrint.map((page: any) => getPdf(browser, url as string, page)),
-  );
-  const result = await mergeAllPDFs(printedPages);
-  console.log("merging PDFs");
-  browser.close();
+  app.get("/", async (req, res) => {
+    const { url, pages } = req.query;
+    if (!url) {
+      return res.status(400).send("Missing url query parameter");
+    }
+    const browser = await puppeteer.launch({
+      executablePath: "/usr/bin/google-chrome",
+      ignoreDefaultArgs: ["--disable-extensions"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
 
-  res.contentType("application/pdf");
-  res.send(result);
-});
+    const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
+
+    // log timing performance
+    const start = Date.now();
+    const printedPages = await Promise.all(
+      toPrint.map((page: any) => cluster.execute({ url, data: page })),
+    );
+    console.log("merging PDFs", Date.now() - start);
+    const result = await mergeAllPDFs(printedPages);
+    console.log("done", Date.now() - start);
+    browser.close();
+
+    res.contentType("application/pdf");
+    res.send(result);
+  });
+})();
 
 app.get("/asset-summary", async (req, res) => {
   const { url } = req.query;
@@ -168,7 +188,6 @@ app.get("/asset-summary", async (req, res) => {
   console.log(result);
   res.send(Buffer.from(result as any));
 });
-
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });

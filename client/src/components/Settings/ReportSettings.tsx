@@ -29,7 +29,6 @@ const names: any = {
   incomes: "Income",
   "income-chart": "Income Chart",
   spending: "Spending",
-
   "spending-chart": "Spending Chart",
   longevity: "Longevity",
   composite: "Composite",
@@ -131,7 +130,7 @@ const ReportSettingsPage = ({
             <SortableItem
               key={sc.id}
               id={sc.id}
-              // onClick={() => setTab(i)}
+            // onClick={() => setTab(i)}
             >
               <Page
                 setting={sc}

@@ -3,6 +3,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import {
   ChevronUpDownIcon,
   ExclamationTriangleIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "flowbite-react";
 
@@ -16,6 +17,7 @@ interface Props {
   errorMessage?: string | React.ReactElement;
   invalid?: boolean;
   setSelected: (s: any) => void;
+  tooltip?: string;
 }
 
 function Select({
@@ -28,12 +30,12 @@ function Select({
   labelLength = 0,
   errorMessage,
   invalid,
+  tooltip,
 }: Props) {
   return (
     <div
-      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
-        vertical ? "items-start" : "lg:items-center"
-      } `}
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
+        } `}
     >
       {label && (
         <label
@@ -60,26 +62,29 @@ function Select({
                 <div className="relative w-full">{selected?.name}</div>
               </span>
               <span className=" flex items-center pr-2">
-                {errorMessage && invalid ? (
+                {tooltip || (errorMessage && invalid) ? (
                   <div className={""}>
                     <Tooltip
                       content={
-                        <div>
-                          {errorMessage && invalid && (
-                            <div className="text-red-500 w-32">
-                              {errorMessage}
-                            </div>
-                          )}
+                        <div
+                          className={`${invalid && "text-red-500"} w-32 z-[50000]`}
+                        >
+                          {errorMessage || tooltip}
                         </div>
                       }
                       theme={{ target: "" }}
-                      placement="right-end"
-                      style="light"
-                      // className="border-black border"
+                      placement="left-end"
+                      style={invalid ? "light" : "dark"}
+                    // className="border-black border"
                     >
                       <div className="relative cursor-pointer">
                         {errorMessage && invalid ? (
                           <ExclamationTriangleIcon
+                            className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} `}
+                          />
+                        ) : null}
+                        {tooltip ? (
+                          <QuestionMarkCircleIcon
                             className={`h-5 w-5 ${invalid ? "text-red-500" : "text-[#D0D5DD]"} `}
                           />
                         ) : null}
@@ -100,15 +105,14 @@ function Select({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-[5000]">
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm z-[50000]">
                   {options.map((person: any, personIdx: number) => (
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 ${
-                          active
-                            ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
-                            : "text-gray-900"
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 z-[6000] ${active
+                          ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
+                          : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -116,9 +120,8 @@ function Select({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${
-                              selected ? "font-medium" : "font-normal"
-                            }`}
+                            className={`block truncate ${selected ? "font-medium" : "font-normal"
+                              }`}
                           >
                             {person.name}
                           </span>

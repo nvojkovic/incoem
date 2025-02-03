@@ -20,16 +20,16 @@ interface Props {
   errorMessage?: string;
   onKeyDown?: (e: any) => void;
   subtype?:
-    | "money"
-    | "percent"
-    | "text"
-    | "number"
-    | "date"
-    | "toggle"
-    | "password"
-    | "mo/yr"
-    | "textarea";
-  size?: "xs" | "sm" | "md" | "lg" | "full";
+  | "money"
+  | "percent"
+  | "text"
+  | "number"
+  | "date"
+  | "toggle"
+  | "password"
+  | "mo/yr"
+  | "textarea";
+  size?: string;
   width?: string;
   setValue: (value: any) => void;
   [key: string]: any;
@@ -40,6 +40,7 @@ const calcSize = (s: any) => {
   if (s == "md") return "w-36";
   if (s == "lg") return "w-[200px]";
   if (s == "full") return "w-full";
+  else return s;
 };
 const Input = ({
   subtype = "text",
@@ -237,9 +238,8 @@ const Input = ({
             }
             theme={{ target: "" }}
             placement="right-end"
-            style="light"
 
-            // className="border-black border"
+          // className="border-black border"
           >
             <div className="relative cursor-pointer">
               {errorMessage && invalid ? (

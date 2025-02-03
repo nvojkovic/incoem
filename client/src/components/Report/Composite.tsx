@@ -40,9 +40,9 @@ const Composite = ({
             currentYear + scenario.maxYearsShown >
             currentYear + tableInd * height && (
               <div className="w-full">
-                <table className="border bg-white !text-sm w-full">
+                <table className="bg-white !text-sm w-full">
                   <thead
-                    className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1`}
+                    className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky z-50 border-1 print:border-b-black print:border-b-2`}
                   >
                     <tr>
                       <th className="px-2 py-3">Year</th>
@@ -51,6 +51,7 @@ const Composite = ({
                       </th>
 
                       {client.longevityFlag &&
+                        scenario.people.every((p) => p.sex) &&
                         scenario.people.map((person) => (
                           <th
                             className={`px-2 py-3 text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
@@ -58,13 +59,15 @@ const Composite = ({
                             {person.name} <br /> alive
                           </th>
                         ))}
-                      {client.longevityFlag && scenario.people.length > 1 && (
-                        <th
-                          className={`px-2 py-3 text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
-                        >
-                          At least one <br /> alive
-                        </th>
-                      )}
+                      {client.longevityFlag &&
+                        scenario.people.every((p) => p.sex) &&
+                        scenario.people.length > 1 && (
+                          <th
+                            className={`px-2 py-3 text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}
+                          >
+                            At least one <br /> alive
+                          </th>
+                        )}
                       <th className="px-2 py-3">Income</th>
 
                       {client.taxesFlag && scenario.taxType == "Post-Tax" && (
@@ -171,6 +174,7 @@ const Composite = ({
                           </td>
 
                           {client.longevityFlag &&
+                            scenario.people.every((p) => p.sex) &&
                             scenario.people.map((_, i) => (
                               <td
                                 className={`px-2 py-[6px] text-center ${scenario.people.length == 1 ? "border-r border-black" : ""}`}
@@ -184,6 +188,7 @@ const Composite = ({
                               </td>
                             ))}
                           {client.longevityFlag &&
+                            scenario.people.every((p) => p.sex) &&
                             scenario.people.length > 1 && (
                               <td
                                 className={`px-2 py-[6px] text-center ${scenario.people.length > 1 ? "border-r border-black" : ""}`}

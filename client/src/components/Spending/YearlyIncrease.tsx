@@ -16,8 +16,13 @@ const YearlyIncreaseComponent = ({
     <div className="flex gap-4">
       <div className={labels ? "" : "mt-1"}>
         <Select
-          width="!w-[120px]"
+          width="!w-[130px]"
           label={labels ? "Yearly Increase" : ""}
+          tooltip={
+            increase.type === "general"
+              ? 'General will set the yearly increase equal to the "inflation" input set throughout the client file'
+              : ""
+          }
           vertical
           options={[
             { value: "general", name: "General" },

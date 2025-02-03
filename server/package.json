@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx prisma generate && tsc",
     "start": "npx tsc-watch --onSuccess \"node dist/index.js\"",
-    "data-migration:move-people-incomes": "node ./prisma/migrations/move-people-incomes.js"
+    "data-migration:move-people-incomes": "node ./prisma/migrations/move-people-incomes.js",
+    "data-migration:versatile": "node ./prisma/migrations/migrate-versatile.js"
   },
   "keywords": [],
   "author": "",
