@@ -122,7 +122,7 @@ const VersatileCalculator: React.FC = () => {
                 <div className="flex flex-col items-center bg-white px-6 py-3 rounded-lg shadow-md border w-40 relative">
                   <div className="uppercase tracking-wide text-sm text-gray-800 flex gap-2">
                     <Tooltip
-                      content="Compound Annual Growth Rate"
+                      content={`Compound Annual Growth Rate for all ${settings.user.endYear} years`}
                       placement="bottom-end"
                       className="normal-case "
                     >
