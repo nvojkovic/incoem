@@ -44,7 +44,7 @@ export interface CalculatorSettings {
     yearlyReturns: { [key: number]: number };
     mean: number;
     std: number;
-    selectedRandom: "mean" | "worst" | "best";
+    selectedRandom: "mean" | "worst" | "best" | "75th" | "25th";
     seed: number;
   };
 }
@@ -100,6 +100,10 @@ export const getReturns = (settings: CalculatorSettings) => {
         return seqs[0][year - 1];
       } else if (settings.returns.selectedRandom === "best") {
         return seqs[2][year - 1];
+      } else if (settings.returns.selectedRandom === "25th") {
+        return seqs[3][year - 1];
+      } else if (settings.returns.selectedRandom === "75th") {
+        return seqs[4][year - 1];
       } else {
         return seqs[1][year - 1];
       }

@@ -30,7 +30,7 @@ const VersatileCalculator: React.FC = () => {
   const returnsMemo = getReturns(settings);
   const calculations = calculateProjection(settings, returnsMemo);
   const [open, setOpen] = useState(true);
-  const getRandom = (type: "best" | "mean" | "worst") => {
+  const getRandom = (type: "best" | "mean" | "worst" | "25th" | "75th") => {
     const sett = {
       ...settings,
       returns: {
@@ -62,6 +62,16 @@ const VersatileCalculator: React.FC = () => {
           label: "Worst",
           ...getRandom("worst"),
           color: "#e74c3c", // Indigo color
+        },
+        {
+          label: "25th",
+          ...getRandom("25th"),
+          color: "#fe0", // Indigo color
+        },
+        {
+          label: "75th",
+          ...getRandom("75th"),
+          color: "#000", // Indigo color
         },
       ]
       : [

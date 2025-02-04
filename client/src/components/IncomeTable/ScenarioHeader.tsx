@@ -28,7 +28,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
 
   return (
     <div
-      className={`flex justify-between items-center sticky ${isFullscreen ? "top-[44px]" : "top-[116px]"} z-[5000] bg-white px-4`}
+      className={`flex justify-between items-center sticky ${isFullscreen ? "top-[44px]" : "top-[119px]"} z-[5000] bg-white px-4`}
     >
       <div className="flex items-center gap-3 z-0 w-full">
         {settings.people.length == 2 && (
