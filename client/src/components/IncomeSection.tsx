@@ -95,7 +95,7 @@ export const IncomeComponent = ({
 
 const IncomeSection = () => {
   const [removeOpen, setRemoveOpen] = useState(-1);
-  const { data, removeIncome, setIncome, updateIncomes } = useInfo();
+  const { data, removeIncome, setIncome, updateIncomes, setField } = useInfo();
   const incomes = data.incomes;
   const people = data.people;
 
@@ -120,8 +120,25 @@ const IncomeSection = () => {
       <div>
         <div className="flex gap-6 items-center justify-between py-5 sticky z-50 top-[72px] bg-[#f3f4f6] px-[10px] ml-[-10px] w-[1428px]">
           <div className="font-semibold text-2xl">Income information</div>
-          <div className="w-40">
-            <AddIncome />
+          <div className=" flex gap-3 h-10 items-end">
+            <div className="w-[140px]">
+              <Input
+                label="General Inflation"
+                vertical
+                value={data.liveSettings.inflation}
+                subtype="percent"
+                width="!w-[120px]"
+                setValue={(i) =>
+                  setField("liveSettings")({
+                    ...data.liveSettings,
+                    inflation: i,
+                  })
+                }
+              />
+            </div>
+            <div className="mr-4">
+              <AddIncome />
+            </div>
           </div>
         </div>
         {incomes.length === 0 && (
