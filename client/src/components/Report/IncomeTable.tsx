@@ -1,5 +1,5 @@
 import ResultTable from "src/components/IncomeTable/ResultTable";
-import { UserProvider } from "src/useUser";
+import { UserProvider } from "src/hooks/useUser";
 import Header from "./Header";
 
 interface PrintProps {

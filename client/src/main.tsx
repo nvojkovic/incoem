@@ -1,15 +1,10 @@
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import "./sentry";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Clients from "./Clients";
-import "./supertokens";
 import Login from "./pages/login";
 import Root from "./components/Root";
-import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
-import Session from "supertokens-auth-react/recipe/session";
-import ThirdPartyEmailPassword from "supertokens-auth-react/recipe/emailpassword";
-import EmailVerification from "supertokens-auth-react/recipe/emailverification";
+import { SuperTokensWrapper } from "supertokens-auth-react";
 import Signup from "./pages/signup";
 import Settings from "./pages/settings";
 import PrintPage from "./pages/print";
@@ -21,7 +16,7 @@ import Paused from "./pages/paused";
 import HelpCenter from "./pages/help";
 import ResetPassword from "./pages/reset-password";
 import ResetPasswordConfirm from "./pages/reset-password-confirm";
-import VersatileCalculator from "./components/Calculators/VersatileCalculator";
+import VersatileCalculator from "./components/Calculators/Versatile/VersatileCalculator";
 import ClientContainer from "./components/ClientContainer";
 import IncomeSection from "./components/IncomeSection";
 import Summary from "./components/Summary";
@@ -31,7 +26,7 @@ import AllInOneCalculator from "./components/Calculators/AllInOnceCalculator";
 import ClientOverview from "./components/ClientOverview";
 import NotFound from "./pages/not-found";
 import LongevityPage from "./components/Longevity/LongevityPage";
-import { IncomeProvider } from "./useData";
+import { IncomeProvider } from "./hooks/useData";
 import { useState } from "react";
 import IncomeCash from "./components/Nate/IncomeCash";
 import { Client } from "./types";
@@ -43,26 +38,7 @@ import Analysis from "./components/Nate/Analysis";
 import ContractualWealthPage from "./components/Nate/ContractualWealth";
 import ExternalDocs from "./pages/external-docs";
 import PrintAssetSummary from "./pages/print-asset-summary";
-
-SuperTokens.init({
-  appInfo: {
-    apiDomain: import.meta.env.VITE_API_URL,
-    apiBasePath: "/auth",
-    appName: "Income Mapper",
-    websiteDomain: import.meta.env.VITE_APP_URL,
-    websiteBasePath: "/login",
-  },
-  recipeList: [
-    Session.init(),
-    ThirdPartyEmailPassword.init(),
-    EmailVerification.init(),
-  ],
-});
-
-const A = () => {
-  const a: any = undefined;
-  return <div>{a[1]}</div>;
-};
+import "./services/supertokens";
 
 export const router = createBrowserRouter([
   {
@@ -73,10 +49,6 @@ export const router = createBrowserRouter([
       {
         path: "/clients",
         element: <Clients />,
-      },
-      {
-        path: "/test",
-        element: <A />,
       },
       {
         path: "client/:id",

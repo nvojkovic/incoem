@@ -3,7 +3,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useInfo } from "../../useData";
+import { useInfo } from "../../hooks/useData";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
@@ -28,7 +28,7 @@ import {
   NewSpending,
   ScenarioSettings,
 } from "src/types";
-import { useUser } from "src/useUser";
+import { useUser } from "src/hooks/useUser";
 
 const currentYear = new Date().getFullYear();
 

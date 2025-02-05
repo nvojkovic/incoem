@@ -1,5 +1,5 @@
 import { arrayMove } from "@dnd-kit/sortable";
-import { useInfo } from "../useData";
+import { useInfo } from "../hooks/useData";
 import PersonInfo from "./Info/PersonInfo";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";

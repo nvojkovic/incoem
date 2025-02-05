@@ -1,7 +1,7 @@
 import Container from "./Container";
 import MapSection from "../MapSection";
 import Input from "../Inputs/Input";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import { SocialInsurance } from "./types";
 import { NRA } from "src/calculator/utils";
 import { printNumber, splitDate } from "src/utils";

@@ -1,7 +1,7 @@
 import React from "react";
 import TimeValueCalculator from "./TimeValueCalculator";
 import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { useInfo } from "../../useData";
+import { useInfo } from "../../hooks/useData";
 import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import {
@@ -96,12 +96,12 @@ const AllInOneCalculator: React.FC<any> = () => {
                         data.flatMap((item: any, i: any) =>
                           i === index
                             ? [
-                                item,
-                                {
-                                  ...item,
-                                  id: Math.round(Math.random() * 100000),
-                                },
-                              ]
+                              item,
+                              {
+                                ...item,
+                                id: Math.round(Math.random() * 100000),
+                              },
+                            ]
                             : [item],
                         ),
                       )

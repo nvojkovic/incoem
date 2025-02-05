@@ -1,4 +1,4 @@
-import { useInfo } from "../useData";
+import { useInfo } from "src/hooks/useData";
 import Navbar from "./Navbar";
 import { useFullscreen } from "src/hooks/useFullScreen";
 

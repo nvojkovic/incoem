@@ -63,8 +63,9 @@ export const getClient = (id: any) => {
 };
 
 export const getPrintClient = (id: any) => {
-  // const API = "http://im-server:3000/";
-  return fetch(API + `print/client/${id}`, {
+  const base =
+    import.meta.env.VITE_ENV === "local" ? "http://im-server:3000/" : API;
+  return fetch(base + `print/client/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

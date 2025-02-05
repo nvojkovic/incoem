@@ -1,9 +1,9 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import { SessionAuth } from "supertokens-auth-react/recipe/session";
-import { UserProvider, useUser } from "../useUser";
+import { UserProvider, useUser } from "../hooks/useUser";
 import { useEffect } from "react";
-import IntercomMessanger from "../intercom";
+import IntercomMessanger from "../services/intercom";
 import Error from "src/pages/error";
 const Root = () => {
   return (

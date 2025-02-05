@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
-import { IncomeProvider } from "src/useData";
+import { IncomeProvider } from "src/hooks/useData";
 import AssetSummary from "src/components/Report/AssetSummary";
 
 const PrintAssetSummary = () => {

@@ -22,7 +22,7 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 import SortableItem from "./Sortable/SortableItem";
-import { useInfo } from "../useData";
+import { useInfo } from "../hooks/useData";
 import Input from "./Inputs/Input";
 import Layout from "./Layout";
 import { EmploymentIncome, Income, SocialSecurityIncome } from "src/types";

@@ -19,7 +19,7 @@ import SortableItem from "src/components/Sortable/SortableItem";
 import ScenarioTab from "src/components/ScenarioTab";
 import { useState } from "react";
 import { printReport } from "src/utils";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import { useFullscreen } from "src/hooks/useFullScreen";
 import { Spinner } from "flowbite-react";
 

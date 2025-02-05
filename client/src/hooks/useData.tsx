@@ -1,14 +1,14 @@
 import React from "react";
 import { useContext } from "react";
-import { updateData, updateScenarios } from "./services/client";
-import { debounce, updateAtIndex } from "./utils";
+import { updateData, updateScenarios } from "../services/client";
+import { debounce, updateAtIndex } from "../utils";
 import {
   Client,
   Income,
   Person,
   RetirementSpendingSettings,
   ScenarioSettings,
-} from "./types";
+} from "../types";
 
 const IncomeContext = React.createContext({
   data: {} as Client,

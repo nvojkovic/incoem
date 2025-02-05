@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Input from "../Inputs/Input";
+import Input from "src/components/Inputs/Input";
 import { CalculatorSettings } from "./versatileTypes";
-import { useInfo } from "src/useData";
-import Button from "../Inputs/Button";
+import { useInfo } from "src/hooks/useData";
+import Button from "src/components/Inputs/Button";
 import { ArrowDownIcon, TableCellsIcon } from "@heroicons/react/24/outline";
-import Select from "../Inputs/Select";
-import Modal from "../Modal";
+import Select from "src/components/Inputs/Select";
+import Modal from "src/components/Modal";
 import { yearRange } from "src/utils";
 import { Tooltip } from "flowbite-react";
 

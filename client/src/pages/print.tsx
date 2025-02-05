@@ -1,7 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
-import Print from "../components/Report/Print";
 import Report from "../components/Report/Report";
 
 const PrintPage = () => {
@@ -28,6 +27,5 @@ const PrintPage = () => {
       page={JSON.parse(searchParams.get("page") || "{}")}
     />
   );
-  return <div>{scenario && <Print client={client} scenario={scenario} />}</div>;
 };
 export default PrintPage;

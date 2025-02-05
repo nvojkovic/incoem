@@ -1,4 +1,4 @@
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import MapSection from "../MapSection";
 import Container from "./Container";
 import { printNumber } from "src/utils";

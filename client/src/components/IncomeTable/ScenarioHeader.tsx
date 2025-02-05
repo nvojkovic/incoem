@@ -6,7 +6,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Input from "src/components/Inputs/Input";
 import { useFullscreen } from "src/hooks/useFullScreen";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import { Client, ScenarioSettings } from "src/types";
 import title from "src/calculator/title";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "../Inputs/Button";
-import { convertToParens, printNumber, yearRange } from "../../utils";
+import Button from "src/components/Inputs/Button";
+import { convertToParens, printNumber, yearRange } from "src/utils";
 import {
   CalculatorSettings,
   cagr,
@@ -13,10 +13,10 @@ import {
   ChevronUpIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useInfo } from "../../useData";
-import Layout from "../Layout";
+import { useInfo } from "src/hooks/useData";
+import Layout from "src/components/Layout";
 import { Tooltip } from "flowbite-react";
-import VersatileBalance from "../Charts/VersatileBalance";
+import VersatileBalance from "src/components//Charts/VersatileBalance";
 import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
 

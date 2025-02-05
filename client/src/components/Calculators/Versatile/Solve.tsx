@@ -1,11 +1,11 @@
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import {
   CalculatorSettings,
   calculateProjection,
   getReturns,
 } from "./versatileTypes";
-import Select from "../Inputs/Select";
-import Button from "../Inputs/Button";
+import Select from "src/components/Inputs/Select";
+import Button from "src/components/Inputs/Button";
 
 const Solve = () => {
   const { data: client, setField } = useInfo();
