@@ -97,7 +97,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
     // Add lines for each visible dataset
     datasets
-      .filter((d) => visibleSeries.has(d.label))
+      .filter((d) => !hiddenSeries.has(d.label))
       .forEach((series) => {
         svg
           .append("path")
