@@ -25,11 +25,11 @@ import DraggableTable from "./DraggableTable";
 import { jointTable, makeTable } from "../Longevity/calculate";
 import { calculateSpendingYear } from "../Spending/calculate";
 import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
+import { useFullscreen } from "src/hooks/useFullScreen";
 
 const ResultTable = ({
   client,
   settings,
-  fullScreen,
   selectedYear,
   setSelectedYear,
   setSelectedColumn,
@@ -39,15 +39,14 @@ const ResultTable = ({
   client: Client;
   settings: ScenarioSettings;
   removeScenario: any;
-  fullScreen: boolean;
   id: number;
   selectedYear: number;
   setSelectedYear: any;
   selectedColumn: SelectedColumn;
-  changeFullScreen: any;
   setSelectedColumn: any;
   setSettings?: (data: any) => void;
 }) => {
+  const { isFullscreen } = useFullscreen();
   const startYear = new Date().getFullYear();
   const incomes = settings.incomes.filter((inc) => inc.enabled);
   const [openModal, setOpenModal] = useState(-1);
@@ -340,7 +339,7 @@ const ResultTable = ({
             <DraggableTable
               columns={columns}
               setSelectedYear={setSelectedYear}
-              fullScreen={fullScreen}
+              fullScreen={isFullscreen}
               tableData={tableData}
               selectedYear={selectedYear}
               hoverRow={hoverRow}
@@ -353,7 +352,7 @@ const ResultTable = ({
             />
             <table className="pr-3 ml-[-3px]">
               <thead
-                className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${fullScreen ? "top-[110px]" : "top-[180px]"}`}
+                className={`text-xs cursor-pointer print:static bg-[#F9FAFB] text-black font-medium text-left sticky z-50 print:border-transparent print:border-b-gray-500 print:border-2 border-1 ${isFullscreen ? "top-[110px]" : "top-[180px]"}`}
               >
                 <tr>
                   <td

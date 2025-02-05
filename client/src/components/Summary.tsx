@@ -13,19 +13,16 @@ import SmallToggle from "./Inputs/SmallToggle";
 import { SelectedColumn } from "src/types";
 const Summary = () => {
   const [tab, setTab] = useState(-1);
+  const { data, storeScenarios, setField } = useInfo();
+  const [selectedYear, setSelectedYear] = useState(0);
+  const { isFullscreen } = useFullscreen();
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
     id: 0,
     type: "none",
   });
 
-  const { data, storeScenarios, setField } = useInfo();
-
   const shownTable = data.liveSettings.mapType;
   const scenarios = data.scenarios;
-
-  const { isFullscreen, toggleFullscreen } = useFullscreen();
-
-  const [selectedYear, setSelectedYear] = useState(0);
 
   const liveSettings = {
     ...data.liveSettings,
@@ -37,6 +34,7 @@ const Summary = () => {
 
   const settings =
     tab == -1 ? liveSettings : (scenarios.find(({ id }) => id === tab) as any);
+
   return (
     <Layout page="map">
       <div className="pb-32 border-[#EDEEF1] border">
@@ -55,14 +53,12 @@ const Summary = () => {
           ) : (
             <ResultTable
               client={data}
-              changeFullScreen={() => toggleFullscreen()}
               settings={settings}
               removeScenario={() => {
                 const newScenarios = scenarios.filter((sc) => sc.id != tab);
                 storeScenarios(newScenarios);
                 setTab(-1);
               }}
-              fullScreen={isFullscreen}
               selectedYear={selectedYear}
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}

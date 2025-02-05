@@ -5,6 +5,7 @@ import { UserProvider, useUser } from "../hooks/useUser";
 import { useEffect } from "react";
 import IntercomMessanger from "../services/intercom";
 import Error from "src/pages/error";
+import config from "src/services/config";
 const Root = () => {
   return (
     <SessionAuth>
@@ -50,7 +51,7 @@ const Tmp = () => {
   };
   console.log(u);
 
-  const env = import.meta.env.VITE_ENV;
+  const env = config.ENV;
   if (env === "local") {
     return <Outlet />;
   } else {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { imageUrlToBase64 } from "src/utils";
 import { deathText } from "./Cover";
 import { PrintClient, ScenarioSettings } from "src/types";
+import config from "src/services/config";
 
 const Header = ({
   client,
@@ -11,8 +12,8 @@ const Header = ({
   scenario: ScenarioSettings;
 }) => {
   const logoUrl = client?.userdata?.logo
-    ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
-    : `${import.meta.env.VITE_APP_URL}/logo.png`;
+    ? `${config.API_URL}logo?logo=${client?.userdata?.logo}`
+    : `${config.APP_URL}/logo.png`;
   const [logoData, setLogoData] = useState("");
   useEffect(() => {
     imageUrlToBase64(logoUrl).then((data) => {

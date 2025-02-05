@@ -1,4 +1,5 @@
 import { birthday } from "src/calculator/utils";
+import config from "src/services/config";
 import { Person, PrintClient, ScenarioSettings } from "src/types";
 
 const PrintCard = ({ title, subtitle }: any) => (
@@ -31,7 +32,7 @@ const ReportCover = ({ settings, client }: CoverProps) => {
               <img
                 src={
                   client?.userdata?.logo
-                    ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
+                    ? `${config.API_URL}logo?logo=${client?.userdata?.logo}`
                     : "/img/logo.png"
                 }
                 alt="logo"

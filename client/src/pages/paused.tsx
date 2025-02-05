@@ -5,6 +5,7 @@ import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
 import { useUser } from "../hooks/useUser";
 import { useEffect } from "react";
+import config from "src/services/config";
 
 declare global {
   namespace JSX {
@@ -59,9 +60,9 @@ const Paused = () => {
             <Button
               type="primary"
               onClick={async () => {
-                const d = await fetch(
-                  import.meta.env.VITE_API_URL + "stripeRedirect",
-                ).then((a) => a.json());
+                const d = await fetch(config.API_URL + "stripeRedirect").then(
+                  (a) => a.json(),
+                );
                 window.open(d.url, "_blank");
               }}
             >

@@ -3,6 +3,7 @@ import { NRA } from "src/calculator/utils";
 import { useEffect, useState } from "react";
 import { PrintClient } from "src/types";
 import { calculateAge } from "../Info/PersonInfo";
+import config from "src/services/config";
 
 interface Props {
   client: PrintClient;
@@ -25,8 +26,8 @@ const Subtitle = ({ children }: any) => {
 
 const AssetSummary = ({ client }: Props) => {
   const logoUrl = client?.userdata?.logo
-    ? `${import.meta.env.VITE_API_URL}logo?logo=${client?.userdata?.logo}`
-    : `${import.meta.env.VITE_APP_URL}/logo.png`;
+    ? `${config.API_URL}logo?logo=${client?.userdata?.logo}`
+    : `${config.APP_URL}/logo.png`;
   const [logoData, setLogoData] = useState(null as any);
 
   const getPerson = (person: number) => {

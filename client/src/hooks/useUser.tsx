@@ -4,6 +4,7 @@ import { getUser, updateSettings } from "../services/client";
 import { router } from "../main";
 import { debounce } from "../utils";
 import { User } from "../types";
+import config from "src/services/config";
 
 interface UserContextType {
   user: User | null;
@@ -50,7 +51,7 @@ export const UserProvider: React.FC<{
 
   const updatePrimaryColor = async (color: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}settings`, {
+      const response = await fetch(`${config.API_URL}settings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

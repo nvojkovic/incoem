@@ -24,11 +24,9 @@ const DragAlongCell = ({
 
   const style: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
-    // position: "relative",
     transform: fixed ? "" : CSS.Translate.toString(transform),
     transition: "width transform 0.2s ease-in-out",
     width: cell.column.getSize(),
-    // zIndex: isDragging ? 1 : 0,
   };
 
   return (

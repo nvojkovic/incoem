@@ -1,1 +1,5 @@
-import '@testing-library/jest-dom';
+jest.mock("./services/config", () => ({
+  config: {
+    apiUrl: "http://localhost:mock",
+  },
+}));

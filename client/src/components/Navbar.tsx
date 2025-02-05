@@ -8,6 +8,7 @@ import { useInfo } from "../hooks/useData";
 import { calculateAge } from "./Info/PersonInfo";
 import { router } from "src/main";
 import { Client } from "src/types";
+import config from "src/services/config";
 
 const NavItem = ({
   name,
@@ -53,7 +54,7 @@ const Navbar = ({ active, client }: { active: string; client?: Client }) => {
                 <img
                   src={
                     user?.info?.logo
-                      ? `${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`
+                      ? `${config.API_URL}logo/?logo=${user.info.logo}`
                       : "/img/logo.png"
                   }
                   className="h-9 mr-2 "

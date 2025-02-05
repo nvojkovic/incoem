@@ -1,6 +1,7 @@
 import { useInfo } from "src/hooks/useData";
 import Navbar from "./Navbar";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import config from "src/services/config";
 
 const Layout = ({
   page,
@@ -22,7 +23,7 @@ const Layout = ({
       <div className={`pt-6 ${!wide && "max-w-[1480px]"} m-auto mb-16 px-10`}>
         {children}
       </div>
-      {import.meta.env.VITE_ENV === "staging" && (
+      {config.ENV === "staging" && (
         <div className="fixed bottom-0 w-screen bg-red-500 h-10 text-white text-center flex items-center justify-center font-bold z-[10000]">
           DEVELOPMENT SERVER
         </div>
