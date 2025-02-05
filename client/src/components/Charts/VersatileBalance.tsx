@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { convertToParens, printNumber } from "src/utils";
 import { CalculationRow } from "../Calculators/versatileTypes";
@@ -12,6 +12,9 @@ interface ChartData {
 
 const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
+  const [visibleSeries, setVisibleSeries] = useState<Set<string>>(
+    new Set(datasets.map(d => d.label))
+  );
 
   useEffect(() => {
     d3.select(svgRef.current).selectAll(".tooltip").remove();
@@ -93,8 +96,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .x((d: any) => x(d.year))
       .y((d: any) => y(d.endingBalance));
 
-    // Add lines for each dataset
-    datasets.forEach((series) => {
+    // Add lines for each visible dataset
+    datasets.filter(d => visibleSeries.has(d.label)).forEach((series) => {
       svg
         .append("path")
         .datum(series.data)
@@ -104,29 +107,49 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         .attr("d", line as any);
     });
 
-    // Add legend
+    // Add legend at the bottom
+    const legendItemWidth = 150;
+    const legendItemHeight = 20;
+    const legendRows = Math.ceil(datasets.length * legendItemWidth / width);
+    const itemsPerRow = Math.floor(width / legendItemWidth);
+    
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - 100}, 20)`);
+      .attr("transform", `translate(0, ${height + 40})`);
 
     datasets.forEach((series, i) => {
+      const row = Math.floor(i / itemsPerRow);
+      const col = i % itemsPerRow;
+      
       const legendRow = legend
         .append("g")
-        .attr("transform", `translate(0, ${i * 20})`);
+        .attr("transform", `translate(${col * legendItemWidth}, ${row * legendItemHeight})`)
+        .style("cursor", "pointer")
+        .on("click", () => {
+          const newVisible = new Set(visibleSeries);
+          if (newVisible.has(series.label)) {
+            newVisible.delete(series.label);
+          } else {
+            newVisible.add(series.label);
+          }
+          setVisibleSeries(newVisible);
+        });
 
       legendRow
         .append("rect")
         .attr("width", 10)
         .attr("height", 10)
-        .attr("fill", series.color);
+        .attr("fill", series.color)
+        .style("opacity", visibleSeries.has(series.label) ? 1 : 0.3);
 
       legendRow
         .append("text")
         .attr("x", 15)
         .attr("y", 9)
         .attr("font-size", "12px")
-        .text(series.label);
+        .text(series.label)
+        .style("opacity", visibleSeries.has(series.label) ? 1 : 0.3);
     });
 
     const tooltip = d3
