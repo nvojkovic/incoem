@@ -187,8 +187,18 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         if (!values.length) return;
 
         vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
+        // Calculate tooltip dimensions and position
+        const tooltipNode = tooltip.node() as HTMLElement;
+        const tooltipRect = tooltipNode.getBoundingClientRect();
+        const containerRect = svgRef.current.getBoundingClientRect();
+
+        const left = Math.min(
+          event.pageX + 10,
+          containerRect.right - tooltipRect.width - 10
+        );
+
         tooltip
-          .style("left", event.pageX + 10 + "px")
+          .style("left", left + "px")
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
@@ -231,8 +241,18 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         if (!values.length) return;
 
         vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
+        // Calculate tooltip dimensions and position
+        const tooltipNode = tooltip.node() as HTMLElement;
+        const tooltipRect = tooltipNode.getBoundingClientRect();
+        const containerRect = svgRef.current.getBoundingClientRect();
+
+        const left = Math.min(
+          event.pageX + 10,
+          containerRect.right - tooltipRect.width - 10
+        );
+
         tooltip
-          .style("left", event.pageX + 10 + "px")
+          .style("left", left + "px")
           .style("top", event.pageY - 10 + "px").html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
