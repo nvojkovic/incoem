@@ -108,15 +108,15 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     });
 
     // Add legend at the bottom
-    const legendItemWidth = 150;
-    const legendItemHeight = 20;
+    const legendItemWidth = 120;
+    const legendItemHeight = 25;
     const legendRows = Math.ceil(datasets.length * legendItemWidth / width);
     const itemsPerRow = Math.floor(width / legendItemWidth);
     
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(0, ${height + 20})`);
+      .attr("transform", `translate(0, ${height + 30})`);
 
     datasets.forEach((series, i) => {
       const row = Math.floor(i / itemsPerRow);
