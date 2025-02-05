@@ -12,9 +12,7 @@ interface ChartData {
 
 const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
-  const [visibleSeries, setVisibleSeries] = useState<Set<string>>(
-    new Set(datasets.map((d) => d.label)),
-  );
+  const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     d3.select(svgRef.current).selectAll(".tooltip").remove();
@@ -26,7 +24,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const shownDatasets = datasets.filter((d) => visibleSeries.has(d.label));
+    const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
     const largest = d3.max(shownDatasets, (series) =>
       d3.max(series.data, (d) => d.endingBalance),
     ) as number;
@@ -132,13 +130,13 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         )
         .style("cursor", "pointer")
         .on("click", () => {
-          const newVisible = new Set(visibleSeries);
-          if (newVisible.has(series.label)) {
-            newVisible.delete(series.label);
+          const newHidden = new Set(hiddenSeries);
+          if (hiddenSeries.has(series.label)) {
+            newHidden.delete(series.label);
           } else {
-            newVisible.add(series.label);
+            newHidden.add(series.label);
           }
-          setVisibleSeries(newVisible);
+          setHiddenSeries(newHidden);
         });
 
       legendRow
@@ -146,7 +144,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", series.color)
-        .style("opacity", visibleSeries.has(series.label) ? 1 : 0.3);
+        .style("opacity", hiddenSeries.has(series.label) ? 0.3 : 1);
 
       legendRow
         .append("text")
@@ -154,7 +152,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         .attr("y", 9)
         .attr("font-size", "12px")
         .text(series.label)
-        .style("opacity", visibleSeries.has(series.label) ? 1 : 0.3);
+        .style("opacity", hiddenSeries.has(series.label) ? 0.3 : 1);
     });
 
     const tooltip = d3
@@ -309,7 +307,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       });
 
     d3.select(svgRef.current).selectAll(".tooltip").remove();
-  }, [datasets, visibleSeries]);
+  }, [datasets, hiddenSeries]);
 
   return (
     <div className="bg-white px-5 rounded-lg pb-5">
