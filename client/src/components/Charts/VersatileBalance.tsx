@@ -13,7 +13,7 @@ interface ChartData {
 const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
   const [visibleSeries, setVisibleSeries] = useState<Set<string>>(
-    new Set(datasets.map(d => d.label))
+    new Set(datasets.map((d) => d.label)),
   );
 
   useEffect(() => {
@@ -26,7 +26,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const largest = d3.max(datasets, (series) =>
+    const shownDatasets = datasets.filter((d) => visibleSeries.has(d.label));
+    const largest = d3.max(shownDatasets, (series) =>
       d3.max(series.data, (d) => d.endingBalance),
     ) as number;
 
@@ -37,7 +38,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       left: 50 + 12 * Math.log10(largest),
     };
     const width = 1050 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
+    const height = 350 - margin.top - margin.bottom;
 
     const x = d3
       .scaleLinear()
@@ -67,7 +68,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("x", width / 2)
-      .attr("y", height + margin.bottom + 0)
+      .attr("y", height + margin.bottom - 30)
       .text("Years")
       .style("font-size", "18px");
 
@@ -97,34 +98,38 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .y((d: any) => y(d.endingBalance));
 
     // Add lines for each visible dataset
-    datasets.filter(d => visibleSeries.has(d.label)).forEach((series) => {
-      svg
-        .append("path")
-        .datum(series.data)
-        .attr("fill", "none")
-        .attr("stroke", series.color)
-        .attr("stroke-width", 2.5)
-        .attr("d", line as any);
-    });
+    datasets
+      .filter((d) => visibleSeries.has(d.label))
+      .forEach((series) => {
+        svg
+          .append("path")
+          .datum(series.data)
+          .attr("fill", "none")
+          .attr("stroke", series.color)
+          .attr("stroke-width", 2.5)
+          .attr("d", line as any);
+      });
 
     // Add legend at the bottom
-    const legendItemWidth = 120;
+    const legendItemWidth = 80;
     const legendItemHeight = 25;
-    const legendRows = Math.ceil(datasets.length * legendItemWidth / width);
     const itemsPerRow = Math.floor(width / legendItemWidth);
-    
+
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(0, ${height + 50})`);
+      .attr("transform", `translate(0, ${height + 65})`);
 
     datasets.forEach((series, i) => {
       const row = Math.floor(i / itemsPerRow);
       const col = i % itemsPerRow;
-      
+
       const legendRow = legend
         .append("g")
-        .attr("transform", `translate(${col * legendItemWidth}, ${row * legendItemHeight})`)
+        .attr(
+          "transform",
+          `translate(${col * legendItemWidth}, ${row * legendItemHeight})`,
+        )
         .style("cursor", "pointer")
         .on("click", () => {
           const newVisible = new Set(visibleSeries);
@@ -217,23 +222,25 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
         const left = Math.min(
           event.pageX + 10,
-          containerRect.right - tooltipRect.width - 10
+          containerRect.right - tooltipRect.width - 10,
         );
 
-        tooltip
-          .style("left", left + "px")
-          .style("top", event.pageY - 10 + "px").html(`
+        tooltip.style("left", left + "px").style("top", event.pageY - 10 + "px")
+          .html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
               ${values
               .map(
                 (v: any) => `
-                <div style="">
-                  <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
-                  <span class="${v.data.return < 0 ? "text-red-500" : ""}">
-                      ${`${convertToParens(v.return.toString() + `%`)}`}
-                  </span>
+                <div style="" class="flex">
+                  <strong style="width:120px; display:inline-block; color: ${v.color}">${v.label}:</strong>
+                <div class="flex justify-between w-full">
+                    ${printNumber(v.data.endingBalance)}
+                    <span class="${v.data.return < 0 ? "text-red-500" : ""} font-semibold">
+                        ${`${convertToParens(v.return.toString() + `%`)}`}
+                    </span>
+                </div>
                 </div>
               `,
               )
@@ -271,12 +278,11 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
         const left = Math.min(
           event.pageX + 10,
-          containerRect.right - tooltipRect.width - 10
+          containerRect.right - tooltipRect.width - 10,
         );
 
-        tooltip
-          .style("left", left + "px")
-          .style("top", event.pageY - 10 + "px").html(`
+        tooltip.style("left", left + "px").style("top", event.pageY - 10 + "px")
+          .html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
@@ -303,7 +309,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       });
 
     d3.select(svgRef.current).selectAll(".tooltip").remove();
-  }, [datasets]);
+  }, [datasets, visibleSeries]);
 
   return (
     <div className="bg-white px-5 rounded-lg pb-5">

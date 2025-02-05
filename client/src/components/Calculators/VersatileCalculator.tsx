@@ -23,7 +23,6 @@ import Solve from "./Solve";
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
   const settings = client.versatileCalculator as CalculatorSettings;
-  console.log("calc", settings);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
 
@@ -49,16 +48,6 @@ const VersatileCalculator: React.FC = () => {
     settings.returns.returnType === "random"
       ? [
         {
-          label: "Best",
-          ...getRandom("best"),
-          color: "#2ecc71", // Indigo color
-        },
-        {
-          label: "Median",
-          ...getRandom("mean"),
-          color: "#3498db", // Indigo color
-        },
-        {
           label: "Worst",
           ...getRandom("worst"),
           color: "#e74c3c", // Indigo color
@@ -66,12 +55,22 @@ const VersatileCalculator: React.FC = () => {
         {
           label: "25th",
           ...getRandom("25th"),
-          color: "#fe0", // Indigo color
+          color: "#ff8614", // Indigo color
+        },
+        {
+          label: "Median",
+          ...getRandom("mean"),
+          color: "#46C6FF", // Indigo color
         },
         {
           label: "75th",
           ...getRandom("75th"),
-          color: "#000", // Indigo color
+          color: "#4693FF", // Indigo color
+        },
+        {
+          label: "Best",
+          ...getRandom("best"),
+          color: "#2ecc71", // Indigo color
         },
       ]
       : [
@@ -84,8 +83,6 @@ const VersatileCalculator: React.FC = () => {
           color: "#3498db", // Indigo color
         },
       ];
-
-  console.log("RERERE");
 
   return (
     <Layout page="calculator" wide>
@@ -153,7 +150,6 @@ const VersatileCalculator: React.FC = () => {
                   <Button
                     type="secondary"
                     onClick={() => {
-                      console.log("setting to", initialVersatileSettings);
                       setField("versatileCalculator")(initialVersatileSettings);
                     }}
                   >
@@ -338,7 +334,7 @@ const VersatileCalculator: React.FC = () => {
                         {printNumber(row.totalPayments)}
                       </td>{" "}
                       <td
-                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${row.return < 0 ? "text-red-500" : ""}`}
+                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${returnsMemo(row.year) < 0 ? "text-red-500" : ""}`}
                         onClick={() =>
                           setSelectedRow(selectedRow === index ? null : index)
                         }

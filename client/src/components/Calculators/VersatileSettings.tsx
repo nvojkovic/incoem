@@ -291,7 +291,9 @@ const VersatileSettings = () => {
                   label="Sequence shown"
                   options={[
                     { id: "worst", name: "Worst" },
+                    { id: "25th", name: "25th" },
                     { id: "median", name: "Median" },
+                    { id: "75th", name: "75th" },
                     { id: "best", name: "Best" },
                   ]}
                   selected={{
