@@ -33,7 +33,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     const margin = {
       top: 20,
       right: 40,
-      bottom: 40,
+      bottom: 80,
       left: 50 + 12 * Math.log10(largest),
     };
     const width = 1050 - margin.left - margin.right;
@@ -116,7 +116,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(0, ${height + 30})`);
+      .attr("transform", `translate(0, ${height + 50})`);
 
     datasets.forEach((series, i) => {
       const row = Math.floor(i / itemsPerRow);
