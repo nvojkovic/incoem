@@ -56,7 +56,6 @@ export const calculateSingleSpending = (
     settings.whoDies != -1 &&
     settings.deathYears[settings.whoDies]
   ) {
-    console.log("death reduction", settings.whoDies, data.people);
     const age =
       calculateAge(new Date(data.people[settings.whoDies].birthday)) + years;
     if (age > (settings.deathYears[settings.whoDies] as any)) {

@@ -69,7 +69,9 @@ const ResultTable = ({
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 
-  const { updateIncomes } = useInfo();
+  const { setField } = useInfo();
+
+  const updateIncomes = (incomes: Income[]) => setField("incomes")(incomes);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {

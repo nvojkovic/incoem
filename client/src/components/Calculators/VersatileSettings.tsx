@@ -43,7 +43,11 @@ const VersatileSettings = () => {
               width="!w-[130px]"
               label="Present Value"
               subtype="money"
-              value={Math.round(settings.user.presentValue)}
+              value={
+                settings.user.presentValue !== null
+                  ? Math.round(settings.user.presentValue)
+                  : null
+              }
               setValue={(value) =>
                 updateSettings("user", "presentValue", value)
               }
@@ -116,7 +120,11 @@ const VersatileSettings = () => {
                 subtype="money"
                 size="md"
                 width="!w-[100px]"
-                value={Math.round(settings.payment.amount)}
+                value={
+                  settings.payment.amount !== null
+                    ? Math.round(settings.payment.amount)
+                    : null
+                }
                 setValue={(value) => updateSettings("payment", "amount", value)}
               />
 

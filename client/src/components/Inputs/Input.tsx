@@ -123,9 +123,7 @@ const Input = ({
   } else if (subtype === "toggle") {
     input = (
       <div
-        className={
-          "focus:outline-none focus:border-[#FF6C47] focus:ring-1 focus:ring-[#FF6C47] rounded-lg py-2 disabled:bg-gray-100 "
-        }
+        className={`focus:outline-none focus:border-[#FF6C47] focus:ring-1 focus:ring-[#FF6C47] rounded-lg py-2 disabled:bg-gray-100 ${width}`}
       >
         <Toggle enabled={value} setEnabled={setValue} {...props} />
       </div>

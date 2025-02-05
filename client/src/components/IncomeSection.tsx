@@ -95,7 +95,8 @@ export const IncomeComponent = ({
 
 const IncomeSection = () => {
   const [removeOpen, setRemoveOpen] = useState(-1);
-  const { data, removeIncome, setIncome, updateIncomes, setField } = useInfo();
+  const { data, removeIncome, setIncome, setField } = useInfo();
+  const updateIncomes = (incomes: Income[]) => setField("incomes")(incomes);
   const incomes = data.incomes;
   const people = data.people;
 
