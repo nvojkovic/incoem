@@ -25,10 +25,13 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
-    // Use all datasets for domain calculation to maintain consistent scale
-    const largest = d3.max(datasets, (series) =>
-      d3.max(series.data, (d) => d.endingBalance),
-    ) as number;
+    const largest = shownDatasets.length
+      ? (d3.max(shownDatasets, (series) =>
+          d3.max(series.data, (d) => d.endingBalance),
+        ) as number)
+      : (d3.max(datasets, (series) =>
+          d3.max(series.data, (d) => d.endingBalance),
+        ) as number) * 0.1;
 
     const margin = {
       top: 20,
