@@ -108,7 +108,7 @@ const CompositeTable = ({
 
                     {client.taxesFlag && scenario.taxType == "Post-Tax" && (
                       <th
-                        className={`px-2 font-medium  ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
+                        className={`px-2 font-medium  ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""} ${!client.needsFlag && client.stabilityRatioFlag && "border-r border-gray-700"}`}
                         onClick={setColumn("posttax")}
                       >
                         Post-Tax Income
@@ -279,7 +279,7 @@ const CompositeTable = ({
 
                         {client.taxesFlag && scenario.taxType == "Post-Tax" && (
                           <td
-                            className={`px-2 py-1 ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}`}
+                            className={`px-2 py-1 ${selectedColumn?.type === "posttax" ? "!bg-slate-200" : ""}  ${!client.needsFlag && client.stabilityRatioFlag && "border-r border-gray-700"}`}
                           >
                             {printNumber(income - taxes)}
                           </td>

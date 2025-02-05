@@ -27,11 +27,11 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
     const largest = shownDatasets.length
       ? (d3.max(shownDatasets, (series) =>
-          d3.max(series.data, (d) => d.endingBalance),
-        ) as number)
+        d3.max(series.data, (d) => d.endingBalance),
+      ) as number)
       : (d3.max(datasets, (series) =>
-          d3.max(series.data, (d) => d.endingBalance),
-        ) as number) * 0.1;
+        d3.max(series.data, (d) => d.endingBalance),
+      ) as number) * 0.1;
 
     const margin = {
       top: 20,

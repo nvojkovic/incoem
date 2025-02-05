@@ -75,7 +75,11 @@ const Composite = ({
                       )}
 
                       {client.taxesFlag && scenario.taxType == "Post-Tax" && (
-                        <th className="px-2 py-3">Post-Tax Income</th>
+                        <th
+                          className={`px-2 py-3 ${!client.needsFlag && client.stabilityRatioFlag && "border-r border-gray-700"}`}
+                        >
+                          Post-Tax Income
+                        </th>
                       )}
                       {client.needsFlag && (
                         <th className="px-2 py-3">Spending</th>
@@ -209,7 +213,9 @@ const Composite = ({
                             )}
                           {client.taxesFlag &&
                             scenario.taxType == "Post-Tax" && (
-                              <td className="px-2 py-1">
+                              <td
+                                className={`px-2 py-1 ${!client.needsFlag && client.stabilityRatioFlag && "border-r border-gray-700"}`}
+                              >
                                 {printNumber(income - taxes)}
                               </td>
                             )}

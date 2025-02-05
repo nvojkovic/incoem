@@ -259,7 +259,8 @@ const SpendingPage = () => {
             >
               <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
               <div className="mb-5">
-                Are you sure you want to delete this scenario?
+                Are you sure you want to reset spending? This will delete all
+                your spending inputs.
               </div>
             </Confirm>
           </div>
