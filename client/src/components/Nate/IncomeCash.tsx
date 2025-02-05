@@ -5,7 +5,7 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Input from "../Inputs/Input";
 import Confirm from "../Confirm";
 import Button from "../Inputs/Button";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import Select from "../Inputs/Select";
 import { CashAsset, Income } from "./types";
 import { printNumber } from "src/utils";

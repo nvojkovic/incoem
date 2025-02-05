@@ -2,8 +2,8 @@ import { IncomeComponent } from "../IncomeSection";
 import Modal from "../Modal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import title from "../../calculator/title";
-import { useInfo } from "../../useData";
-import { useUser } from "../../useUser";
+import { useInfo } from "../../hooks/useData";
+import { useUser } from "../../hooks/useUser";
 import Input from "../Inputs/Input";
 import { Income } from "src/types";
 

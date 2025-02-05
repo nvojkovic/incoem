@@ -3,7 +3,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { useInfo } from "../../useData";
+import { useInfo } from "../../hooks/useData";
 import Button from "../Inputs/Button";
 import Input from "../Inputs/Input";
 import MapSection from "../MapSection";
@@ -28,11 +28,13 @@ import {
   NewSpending,
   ScenarioSettings,
 } from "src/types";
+import { useUser } from "src/hooks/useUser";
 
 const currentYear = new Date().getFullYear();
 
 const SpendingPage = () => {
   const { data, setSpending, setField: set } = useInfo();
+  const { user } = useUser();
 
   const settings = {
     ...data.liveSettings,
@@ -219,60 +221,119 @@ const SpendingPage = () => {
     ),
   );
 
+  const initialSpending = {
+    preTaxRate: user?.info?.globalPreRetirementTaxRate,
+    postTaxRate: user?.info?.globalPostRetirementTaxRate,
+    retirementYear: undefined as any,
+    preSpending: [],
+    postSpending: [],
+    yearlyIncrease: { type: "general" },
+    newCurrentSpending: { type: "yearly", value: 0 },
+    currentSpending: 0,
+    decreaseAtDeath: [0, 0] as any,
+  };
+
   // const taxes = yearRange(
   //   startYear,
   //   startYear + settings.maxYearsShown - 1,
   // ).map((year) => {});
+  //
+  const [resetOpen, setResetOpen] = useState(false);
 
   return (
     <Layout page="spending">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 mt-[-20px]">
+        <div className="flex justify-end">
+          <div className="w-40">
+            <Button type="secondary" onClick={() => setResetOpen(true)}>
+              Reset
+            </Button>
+
+            <Confirm
+              isOpen={resetOpen}
+              onClose={() => setResetOpen(false)}
+              onConfirm={() => {
+                set("spending")(initialSpending);
+                setResetOpen(false);
+              }}
+            >
+              <TrashIcon className="text-slate-400 w-10 m-auto mb-5" />
+              <div className="mb-5">
+                Are you sure you want to reset spending? This will delete all
+                your spending inputs.
+              </div>
+            </Confirm>
+          </div>
+        </div>
         <MapSection
           title={<div className="py-2 px-3">Current Spending</div>}
           toggleabble
           defaultOpen
         >
-          <div className="flex gap-4">
-            <div>
-              <Input
-                vertical
-                size="lg"
-                value={
-                  spending.newCurrentSpending
-                    ? spending.newCurrentSpending
-                    : convertToMoYr(spending.currentSpending)
-                }
-                setValue={(v) =>
-                  setSpending({ ...spending, newCurrentSpending: v })
-                }
-                subtype="mo/yr"
-                label="Amount (Today's Dollars)"
-              />
-            </div>
-            <YearlyIncreaseComponent
-              labels
-              increase={spending.yearlyIncrease}
-              setYearlyIncrease={setField("yearlyIncrease")}
-            />
-            {data.people.map((v, i) => (
-              <div>
-                <Input
-                  vertical
-                  size="lg"
-                  value={spending.decreaseAtDeath[i]}
-                  setValue={(value: number) =>
-                    setSpending({
-                      ...spending,
-                      decreaseAtDeath: spending.decreaseAtDeath.map(
-                        (val, ind) => (ind == i ? value : val),
-                      ) as [number, number],
-                    })
-                  }
-                  subtype="percent"
-                  label={`Decrease at ${v.name} Death`}
-                />
-              </div>
-            ))}
+          <div className="">
+            <table className="">
+              <thead
+                className={`text-xs cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+              >
+                <tr>
+                  <th className="px-4 py-1 font-medium">
+                    Amount (Today's Dollars)
+                  </th>
+                  <th className="px-5 py-1 font-medium">Yearly increase</th>
+                  {data.people.map((v) => (
+                    <th className="px-5 py-1 font-medium" key={v.id}>
+                      {`Decrease at ${v.name} Death`}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="">
+                  <td className="px-4 py-2 ">
+                    <Input
+                      label=""
+                      vertical
+                      size="lg"
+                      value={
+                        spending.newCurrentSpending
+                          ? spending.newCurrentSpending
+                          : convertToMoYr(spending.currentSpending)
+                      }
+                      setValue={(v) =>
+                        setSpending({ ...spending, newCurrentSpending: v })
+                      }
+                      subtype="mo/yr"
+                    />
+                  </td>
+                  <td className="px-4 py-2 ">
+                    <YearlyIncreaseComponent
+                      labels={false}
+                      increase={spending.yearlyIncrease}
+                      setYearlyIncrease={setField("yearlyIncrease")}
+                    />
+                  </td>
+                  {data.people.map((_, i) => (
+                    <td className="px-4 py-2">
+                      <Input
+                        vertical
+                        size="lg"
+                        value={spending.decreaseAtDeath[i]}
+                        setValue={(value: number) =>
+                          setSpending({
+                            ...spending,
+                            decreaseAtDeath: spending.decreaseAtDeath.map(
+                              (val, ind) => (ind == i ? value : val),
+                            ) as [number, number],
+                          })
+                        }
+                        subtype="percent"
+                        label={""}
+                      />
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
           </div>
         </MapSection>
         <MapSection

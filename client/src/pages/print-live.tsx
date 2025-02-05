@@ -2,7 +2,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPrintClient } from "../services/client";
 import Report from "src/components/Report/Report";
-import { IncomeProvider } from "src/useData";
+import { IncomeProvider } from "src/hooks/useData";
 
 const PrintLivePage = () => {
   const [client, setClient] = useState({} as any);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ResultTable from "src/components/IncomeTable/ResultTable";
 
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import Layout from "src/components/Layout";
 import MapChart from "src/components/MapChart";
 import CompositeTable from "./Report/CompositeTable";

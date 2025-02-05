@@ -8,7 +8,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { updateAtIndex } from "../../utils";
 import { createClient } from "../../services/client";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../useUser";
+import { useUser } from "../../hooks/useUser";
 import Select from "../Inputs/Select";
 import {
   Client,
@@ -17,7 +17,7 @@ import {
   ScenarioSettings,
   User,
 } from "src/types";
-import { initialVersatileSettings } from "../Calculators/versatileTypes";
+import { initialVersatileSettings } from "src/components/Calculators/Versatile/versatileTypes";
 
 const PersonInfo = ({
   person,

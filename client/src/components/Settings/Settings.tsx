@@ -5,7 +5,7 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import Alert from "src/components/Alert";
-import { useUser } from "src/useUser";
+import { useUser } from "src/hooks/useUser";
 import { applyToAll, updateSettings, uploadLogo } from "src/services/client";
 import Layout from "../Layout";
 import Input from "../Inputs/Input";

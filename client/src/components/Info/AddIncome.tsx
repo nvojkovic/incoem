@@ -2,7 +2,7 @@ import { newIncome } from "../../createIncome";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Fragment, useMemo } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { useInfo } from "../../useData";
+import { useInfo } from "../../hooks/useData";
 import { IncomeType, Person } from "src/types";
 
 interface AddIncomeProps { }

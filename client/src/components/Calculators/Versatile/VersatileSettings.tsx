@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Input from "../Inputs/Input";
+import Input from "src/components/Inputs/Input";
 import { CalculatorSettings } from "./versatileTypes";
-import { useInfo } from "src/useData";
-import Button from "../Inputs/Button";
+import { useInfo } from "src/hooks/useData";
+import Button from "src/components/Inputs/Button";
 import { ArrowDownIcon, TableCellsIcon } from "@heroicons/react/24/outline";
-import Select from "../Inputs/Select";
-import Modal from "../Modal";
+import Select from "src/components/Inputs/Select";
+import Modal from "src/components/Modal";
 import { yearRange } from "src/utils";
 import { Tooltip } from "flowbite-react";
 
@@ -43,7 +43,11 @@ const VersatileSettings = () => {
               width="!w-[130px]"
               label="Present Value"
               subtype="money"
-              value={Math.round(settings.user.presentValue)}
+              value={
+                settings.user.presentValue !== null
+                  ? Math.round(settings.user.presentValue)
+                  : null
+              }
               setValue={(value) =>
                 updateSettings("user", "presentValue", value)
               }
@@ -116,7 +120,11 @@ const VersatileSettings = () => {
                 subtype="money"
                 size="md"
                 width="!w-[100px]"
-                value={Math.round(settings.payment.amount)}
+                value={
+                  settings.payment.amount !== null
+                    ? Math.round(settings.payment.amount)
+                    : null
+                }
                 setValue={(value) => updateSettings("payment", "amount", value)}
               />
 
@@ -283,7 +291,9 @@ const VersatileSettings = () => {
                   label="Sequence shown"
                   options={[
                     { id: "worst", name: "Worst" },
+                    { id: "25th", name: "25th" },
                     { id: "median", name: "Median" },
+                    { id: "75th", name: "75th" },
                     { id: "best", name: "Best" },
                   ]}
                   selected={{

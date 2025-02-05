@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { convertToParens, printNumber } from "src/utils";
-import { CalculationRow } from "../Calculators/versatileTypes";
+import { CalculationRow } from "src/components/Calculators/Versatile/versatileTypes";
 
 interface ChartData {
   label: string;
@@ -12,6 +12,7 @@ interface ChartData {
 
 const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   const svgRef = useRef<any>();
+  const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     d3.select(svgRef.current).selectAll(".tooltip").remove();
@@ -23,14 +24,19 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
 
     d3.select(svgRef.current).selectAll("*").remove();
 
-    const largest = d3.max(datasets, (series) =>
-      d3.max(series.data, (d) => d.endingBalance),
-    ) as number;
+    const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
+    const largest = shownDatasets.length
+      ? (d3.max(shownDatasets, (series) =>
+        d3.max(series.data, (d) => d.endingBalance),
+      ) as number)
+      : (d3.max(datasets, (series) =>
+        d3.max(series.data, (d) => d.endingBalance),
+      ) as number) * 0.1;
 
     const margin = {
       top: 20,
       right: 40,
-      bottom: 40,
+      bottom: 80,
       left: 50 + 12 * Math.log10(largest),
     };
     const width = 1050 - margin.left - margin.right;
@@ -64,7 +70,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .append("text")
       .attr("text-anchor", "middle")
       .attr("x", width / 2)
-      .attr("y", height + margin.bottom + 0)
+      .attr("y", height + margin.bottom - 30)
       .text("Years")
       .style("font-size", "18px");
 
@@ -93,40 +99,64 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .x((d: any) => x(d.year))
       .y((d: any) => y(d.endingBalance));
 
-    // Add lines for each dataset
-    datasets.forEach((series) => {
-      svg
-        .append("path")
-        .datum(series.data)
-        .attr("fill", "none")
-        .attr("stroke", series.color)
-        .attr("stroke-width", 2.5)
-        .attr("d", line as any);
-    });
+    // Add lines for each visible dataset
+    datasets
+      .filter((d) => !hiddenSeries.has(d.label))
+      .forEach((series) => {
+        svg
+          .append("path")
+          .datum(series.data)
+          .attr("fill", "none")
+          .attr("stroke", series.color)
+          .attr("stroke-width", 2.5)
+          .attr("d", line as any);
+      });
 
-    // Add legend
+    // Add legend at the bottom
+    const legendItemWidth = 80;
+    const legendItemHeight = 25;
+    const itemsPerRow = Math.floor(width / legendItemWidth);
+
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - 100}, 20)`);
+      .attr("transform", `translate(0, ${height + 65})`);
 
     datasets.forEach((series, i) => {
+      const row = Math.floor(i / itemsPerRow);
+      const col = i % itemsPerRow;
+
       const legendRow = legend
         .append("g")
-        .attr("transform", `translate(0, ${i * 20})`);
+        .attr(
+          "transform",
+          `translate(${col * legendItemWidth}, ${row * legendItemHeight})`,
+        )
+        .style("cursor", "pointer")
+        .on("click", () => {
+          const newHidden = new Set(hiddenSeries);
+          if (hiddenSeries.has(series.label)) {
+            newHidden.delete(series.label);
+          } else {
+            newHidden.add(series.label);
+          }
+          setHiddenSeries(newHidden);
+        });
 
       legendRow
         .append("rect")
         .attr("width", 10)
         .attr("height", 10)
-        .attr("fill", series.color);
+        .attr("fill", series.color)
+        .style("opacity", hiddenSeries.has(series.label) ? 0.3 : 1);
 
       legendRow
         .append("text")
         .attr("x", 15)
         .attr("y", 9)
         .attr("font-size", "12px")
-        .text(series.label);
+        .text(series.label)
+        .style("opacity", hiddenSeries.has(series.label) ? 0.3 : 1);
     });
 
     const tooltip = d3
@@ -187,20 +217,32 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         if (!values.length) return;
 
         vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
-        tooltip
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 10 + "px").html(`
+        // Calculate tooltip dimensions and position
+        const tooltipNode = tooltip.node() as HTMLElement;
+        const tooltipRect = tooltipNode.getBoundingClientRect();
+        const containerRect = svgRef.current.getBoundingClientRect();
+
+        const left = Math.min(
+          event.pageX + 10,
+          containerRect.right - tooltipRect.width - 10,
+        );
+
+        tooltip.style("left", left + "px").style("top", event.pageY - 10 + "px")
+          .html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
               ${values
               .map(
                 (v: any) => `
-                <div style="">
-                  <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
-                  <span class="${v.data.return < 0 ? "text-red-500" : ""}">
-                      ${`${convertToParens(v.return.toString() + `%`)}`}
-                  </span>
+                <div style="" class="flex">
+                  <strong style="width:120px; display:inline-block; color: ${v.color}">${v.label}:</strong>
+                <div class="flex justify-between w-full">
+                    ${printNumber(v.data.endingBalance)}
+                    <span class="${v.data.return < 0 ? "text-red-500" : ""} font-semibold">
+                        ${`${convertToParens(v.return.toString() + `%`)}`}
+                    </span>
+                </div>
                 </div>
               `,
               )
@@ -231,9 +273,18 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
         if (!values.length) return;
 
         vertical.attr("transform", `translate(${x(values[0]?.data?.year)},0)`);
-        tooltip
-          .style("left", event.pageX + 10 + "px")
-          .style("top", event.pageY - 10 + "px").html(`
+        // Calculate tooltip dimensions and position
+        const tooltipNode = tooltip.node() as HTMLElement;
+        const tooltipRect = tooltipNode.getBoundingClientRect();
+        const containerRect = svgRef.current.getBoundingClientRect();
+
+        const left = Math.min(
+          event.pageX + 10,
+          containerRect.right - tooltipRect.width - 10,
+        );
+
+        tooltip.style("left", left + "px").style("top", event.pageY - 10 + "px")
+          .html(`
             <div style="font-family: sans-serif; font-size: 14px;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
@@ -260,7 +311,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       });
 
     d3.select(svgRef.current).selectAll(".tooltip").remove();
-  }, [datasets]);
+  }, [datasets, hiddenSeries]);
 
   return (
     <div className="bg-white px-5 rounded-lg pb-5">

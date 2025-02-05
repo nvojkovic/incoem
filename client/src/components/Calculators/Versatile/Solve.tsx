@@ -1,11 +1,11 @@
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import {
   CalculatorSettings,
   calculateProjection,
   getReturns,
 } from "./versatileTypes";
-import Select from "../Inputs/Select";
-import Button from "../Inputs/Button";
+import Select from "src/components/Inputs/Select";
+import Button from "src/components/Inputs/Button";
 
 const Solve = () => {
   const { data: client, setField } = useInfo();
@@ -52,7 +52,6 @@ const Solve = () => {
     testSettings.payment.type = "simple";
 
     const returnsMemo = getReturns(settings);
-    console.log("cc", "start");
     while (iteration < maxIterations) {
       mid = (low + high) / 2;
       testSettings.payment.amount = mid;
@@ -61,7 +60,6 @@ const Solve = () => {
 
       const lastRow = calculations[calculations.length - 1];
 
-      console.log("cc", mid, low, high, lastRow.realBalance);
       if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
         break;
       }
@@ -105,7 +103,6 @@ const Solve = () => {
 
       const lastRow = calculations[calculations.length - 1];
 
-      console.log(mid, low, high, lastRow.realBalance);
       if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
         break;
       }
@@ -149,7 +146,6 @@ const Solve = () => {
 
       const lastRow = calculations[calculations.length - 1];
 
-      console.log(mid, low, high, lastRow.realBalance);
       if (Math.abs(lastRow.realBalance - targetEndingBalance) < tolerance) {
         break;
       }

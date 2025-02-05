@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "../Inputs/Button";
-import { convertToParens, printNumber, yearRange } from "../../utils";
+import Button from "src/components/Inputs/Button";
+import { convertToParens, printNumber, yearRange } from "src/utils";
 import {
   CalculatorSettings,
   cagr,
@@ -13,24 +13,23 @@ import {
   ChevronUpIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useInfo } from "../../useData";
-import Layout from "../Layout";
+import { useInfo } from "src/hooks/useData";
+import Layout from "src/components/Layout";
 import { Tooltip } from "flowbite-react";
-import VersatileBalance from "../Charts/VersatileBalance";
+import VersatileBalance from "src/components//Charts/VersatileBalance";
 import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
   const settings = client.versatileCalculator as CalculatorSettings;
-  console.log("calc", settings);
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
 
   const returnsMemo = getReturns(settings);
   const calculations = calculateProjection(settings, returnsMemo);
   const [open, setOpen] = useState(true);
-  const getRandom = (type: "best" | "mean" | "worst") => {
+  const getRandom = (type: "best" | "mean" | "worst" | "25th" | "75th") => {
     const sett = {
       ...settings,
       returns: {
@@ -49,19 +48,29 @@ const VersatileCalculator: React.FC = () => {
     settings.returns.returnType === "random"
       ? [
         {
-          label: "Best",
-          ...getRandom("best"),
-          color: "#2ecc71", // Indigo color
+          label: "Worst",
+          ...getRandom("worst"),
+          color: "#e74c3c", // Indigo color
+        },
+        {
+          label: "25th",
+          ...getRandom("25th"),
+          color: "#ff8614", // Indigo color
         },
         {
           label: "Median",
           ...getRandom("mean"),
-          color: "#3498db", // Indigo color
+          color: "#46C6FF", // Indigo color
         },
         {
-          label: "Worst",
-          ...getRandom("worst"),
-          color: "#e74c3c", // Indigo color
+          label: "75th",
+          ...getRandom("75th"),
+          color: "#4693FF", // Indigo color
+        },
+        {
+          label: "Best",
+          ...getRandom("best"),
+          color: "#2ecc71", // Indigo color
         },
       ]
       : [
@@ -74,8 +83,6 @@ const VersatileCalculator: React.FC = () => {
           color: "#3498db", // Indigo color
         },
       ];
-
-  console.log("RERERE");
 
   return (
     <Layout page="calculator" wide>
@@ -122,7 +129,7 @@ const VersatileCalculator: React.FC = () => {
                 <div className="flex flex-col items-center bg-white px-6 py-3 rounded-lg shadow-md border w-40 relative">
                   <div className="uppercase tracking-wide text-sm text-gray-800 flex gap-2">
                     <Tooltip
-                      content="Compound Annual Growth Rate"
+                      content={`Compound Annual Growth Rate for all ${settings.user.endYear} years`}
                       placement="bottom-end"
                       className="normal-case "
                     >
@@ -143,7 +150,6 @@ const VersatileCalculator: React.FC = () => {
                   <Button
                     type="secondary"
                     onClick={() => {
-                      console.log("setting to", initialVersatileSettings);
                       setField("versatileCalculator")(initialVersatileSettings);
                     }}
                   >
@@ -328,7 +334,7 @@ const VersatileCalculator: React.FC = () => {
                         {printNumber(row.totalPayments)}
                       </td>{" "}
                       <td
-                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${row.return < 0 ? "text-red-500" : ""}`}
+                        className={`border px-4 py-2 ${selectedCol === "return-percent" ? "bg-slate-200" : ""}  ${returnsMemo(row.year) < 0 ? "text-red-500" : ""}`}
                         onClick={() =>
                           setSelectedRow(selectedRow === index ? null : index)
                         }

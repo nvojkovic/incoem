@@ -3,7 +3,7 @@ import Layout from "../Layout";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { printSummary } from "src/utils";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 
 const NavItem = ({ name, active, link, color }: any) => {
   return (

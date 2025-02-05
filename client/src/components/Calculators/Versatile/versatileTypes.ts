@@ -44,7 +44,7 @@ export interface CalculatorSettings {
     yearlyReturns: { [key: number]: number };
     mean: number;
     std: number;
-    selectedRandom: "mean" | "worst" | "best";
+    selectedRandom: "mean" | "worst" | "best" | "75th" | "25th";
     seed: number;
   };
 }
@@ -100,6 +100,10 @@ export const getReturns = (settings: CalculatorSettings) => {
         return seqs[0][year - 1];
       } else if (settings.returns.selectedRandom === "best") {
         return seqs[2][year - 1];
+      } else if (settings.returns.selectedRandom === "25th") {
+        return seqs[3][year - 1];
+      } else if (settings.returns.selectedRandom === "75th") {
+        return seqs[4][year - 1];
       } else {
         return seqs[1][year - 1];
       }
@@ -145,7 +149,7 @@ export const calculateProjection = (
     if (settings.payment.timing === "beginning") {
       if (beginning <= 0 || -payment >= ending) {
         rows.push({
-          age: settings.user.startAge + year,
+          age: settings.user.startAge + year - 1,
           investmentFee,
           year,
           beginning: beginning <= 0 ? 0 : beginning,
@@ -181,7 +185,7 @@ export const calculateProjection = (
     if (settings.payment.timing === "end") {
       if (ending <= 0 || -payment >= ending) {
         rows.push({
-          age: settings.user.startAge + year,
+          age: settings.user.startAge + year - 1,
           year,
           investmentFee: totalInvestmentFee,
           beginning: beginning <= 0 ? 0 : beginning,
@@ -202,7 +206,7 @@ export const calculateProjection = (
     ending += growth;
 
     rows.push({
-      age: settings.user.startAge + year,
+      age: settings.user.startAge + year - 1,
       year,
       beginning: beginning <= 0 ? 0 : beginning,
       totalPayments: beginning <= 0 ? 0 : payment,

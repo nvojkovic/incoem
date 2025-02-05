@@ -53,5 +53,11 @@ export const getSelectedSequences = (settings: CalculatorSettings) => {
 
   const sorted = results.sort((a, b) => a.val - b.val);
   console.log(sorted);
-  return [sorted[0].seq, sorted[500].seq, sorted[999].seq];
+  return [
+    sorted[100].seq,
+    sorted[500].seq,
+    sorted[900].seq,
+    sorted[250].seq,
+    sorted[750].seq,
+  ];
 };

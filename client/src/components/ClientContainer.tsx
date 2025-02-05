@@ -1,6 +1,6 @@
 import "../App.css";
 import { Outlet, useParams } from "react-router-dom";
-import { useInfo } from "../useData";
+import { useInfo } from "../hooks/useData";
 import Layout from "./Layout";
 import Spinner from "./Spinner";
 import { useEffect } from "react";

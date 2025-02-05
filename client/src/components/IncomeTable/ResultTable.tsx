@@ -19,7 +19,7 @@ import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import { arrayMove } from "@dnd-kit/sortable";
 
 import React from "react";
-import { useInfo } from "src/useData";
+import { useInfo } from "src/hooks/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
 import DraggableTable from "./DraggableTable";
 import { jointTable, makeTable } from "../Longevity/calculate";
@@ -69,7 +69,9 @@ const ResultTable = ({
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 
-  const { updateIncomes } = useInfo();
+  const { setField } = useInfo();
+
+  const updateIncomes = (incomes: Income[]) => setField("incomes")(incomes);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {

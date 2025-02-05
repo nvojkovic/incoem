@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import useWindowFocus from "use-window-focus";
 import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
-import { useUser } from "../useUser";
+import { useUser } from "../hooks/useUser";
 import { useEffect } from "react";
 
 const KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;

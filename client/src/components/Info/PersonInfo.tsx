@@ -1,5 +1,5 @@
 import { Person } from "src/types";
-import { useInfo } from "../../useData";
+import { useInfo } from "../../hooks/useData";
 import Input from "../Inputs/Input";
 import Select from "../Inputs/Select";
 

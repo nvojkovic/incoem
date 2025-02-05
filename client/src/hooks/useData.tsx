@@ -1,23 +1,21 @@
 import React from "react";
 import { useContext } from "react";
-import { updateData, updateScenarios } from "./services/client";
-import { debounce, updateAtIndex } from "./utils";
+import { updateData, updateScenarios } from "../services/client";
+import { debounce, updateAtIndex } from "../utils";
 import {
   Client,
   Income,
   Person,
   RetirementSpendingSettings,
   ScenarioSettings,
-} from "./types";
+} from "../types";
 
 const IncomeContext = React.createContext({
   data: {} as Client,
   addIncome: (_: Income) => { },
   removeIncome: (_: number) => { },
-  updateIncomes: (_: Income[]) => { },
   setIncome: ((_: number, __: Income) => { }) as any,
   storeScenarios: (_: ScenarioSettings[]) => { },
-  addScenario: (_: ScenarioSettings) => { },
   setPerson: (_: Person) => { },
   setField: (_: keyof Client) => (_: any) => { },
   setSpending: (_: RetirementSpendingSettings) => { },
@@ -37,11 +35,6 @@ export const IncomeProvider = ({
   setLocal,
   children,
 }: IncomeProviderProps) => {
-  // const [data, setLocal] = useState<Client>(initialData);
-
-  // useEffect(() => {
-  //   setLocal(initialData);
-  // }, [initialData]);
   const setData = (fn: (data: Client) => Client) => {
     console.log("setting data", data);
     setLocal((data) => {
@@ -49,15 +42,6 @@ export const IncomeProvider = ({
       console.log("result", result);
       updateRemote(result.id, result);
       return result;
-    });
-  };
-  const updateIncomes = (incomes: Income[]) => {
-    setData((data) => {
-      console.log("whtf", incomes);
-      return {
-        ...data,
-        incomes,
-      };
     });
   };
 
@@ -69,7 +53,6 @@ export const IncomeProvider = ({
   };
 
   const addIncome = (income: Income) => {
-    console.log("addIncome", income, "old", data.incomes);
     setData((data) => ({
       ...data,
       incomes: [...data.incomes, income],
@@ -114,18 +97,12 @@ export const IncomeProvider = ({
     }));
   };
 
-  const addScenario = (scenario: ScenarioSettings) => {
-    storeScenarios([...data.scenarios, scenario]);
-  };
-
   const value = {
     data,
     addIncome,
     removeIncome,
     setIncome,
-    updateIncomes,
     storeScenarios,
-    addScenario,
     setPerson,
     setSpending,
     setField,
