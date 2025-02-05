@@ -25,7 +25,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     d3.select(svgRef.current).selectAll("*").remove();
 
     const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
-    const largest = d3.max(shownDatasets, (series) =>
+    // Use all datasets for domain calculation to maintain consistent scale
+    const largest = d3.max(datasets, (series) =>
       d3.max(series.data, (d) => d.endingBalance),
     ) as number;
 
