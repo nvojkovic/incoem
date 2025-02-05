@@ -1,16 +1,12 @@
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-  moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/src/__mocks__/fileMock.js',
-    '^src/(.*)$': '<rootDir>/src/$1'
-  },
-  transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: 'tsconfig.json'
-    }]
-  }
-};
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  preset: "ts-jest",
+  plugins: [react(), tsconfigPaths()],
+  setupFiles: ["<rootDir>/src/setupTests.ts"],
+  moduleDirectories: ["node_modules", "<rootDir>/src", "<rootDir>"],
+  modulePathIgnorePatterns: ["<rootDir>/node_modules/"],
+});

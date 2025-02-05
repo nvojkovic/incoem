@@ -1,0 +1,170 @@
+src
+├── App.css
+├── assets
+│   ├── login-bg.png
+│   ├── save.png
+│   ├── tables-female.json
+│   ├── tables-male.json
+│   └── user.png
+├── calculator
+│   ├── basic-annuity.ts
+│   ├── calculate.ts
+│   ├── company-pension.ts
+│   ├── employment-income.ts
+│   ├── other-income.ts
+│   ├── paydown.ts
+│   ├── social-security.ts
+│   ├── title.ts
+│   ├── types.d.ts
+│   └── utils.ts
+├── Clients.tsx
+├── components
+│   ├── Alert.tsx
+│   ├── Calculators
+│   │   ├── AllInOnceCalculator.tsx
+│   │   ├── CalculatorMap.tsx
+│   │   ├── TimeValueCalculator.tsx
+│   │   └── Versatile
+│   │       ├── randomReturn.ts
+│   │       ├── Solve.tsx
+│   │       ├── VersatileCalculator.tsx
+│   │       ├── VersatileSettings.tsx
+│   │       └── versatileTypes.ts
+│   ├── Charts
+│   │   ├── LifeExpectancyChart.tsx
+│   │   ├── MainChart.tsx
+│   │   ├── PieChart.tsx
+│   │   ├── SpendingChart.tsx
+│   │   ├── VersatileBalance.tsx
+│   │   └── VersatileChart.tsx
+│   ├── ClientContainer.tsx
+│   ├── ClientOverview.tsx
+│   ├── Clients
+│   │   ├── ClientOverview.tsx
+│   │   └── NewClient.tsx
+│   ├── Confirm.tsx
+│   ├── IncomeSection.tsx
+│   ├── IncomeTable
+│   │   ├── DragAlongCell.tsx
+│   │   ├── DraggableTableHeader.tsx
+│   │   ├── DraggableTable.tsx
+│   │   ├── ResultTable.tsx
+│   │   ├── ScenarioHeader.tsx
+│   │   └── tableData.tsx
+│   ├── Info
+│   │   ├── AddIncome.tsx
+│   │   ├── BasicAnnuity.tsx
+│   │   ├── CompanyPension.tsx
+│   │   ├── EmploymentIncome.tsx
+│   │   ├── IncomeModal.tsx
+│   │   ├── IncomeYearlyIncrease.tsx
+│   │   ├── OtherIncome.tsx
+│   │   ├── Paydown.tsx
+│   │   ├── PersonInfo.tsx
+│   │   └── SocialSecurity.tsx
+│   ├── Inputs
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── ModalInput.tsx
+│   │   ├── MonthPicker.tsx
+│   │   ├── Select.tsx
+│   │   ├── SmallToggle.tsx
+│   │   ├── __tests__aa
+│   │   │   └── asd.tsx
+│   │   └── Toggle.tsx
+│   ├── Layout.tsx
+│   ├── Longevity
+│   │   ├── calculate.test.ts
+│   │   ├── calculate.ts
+│   │   ├── LongevityChart.tsx
+│   │   └── LongevityPage.tsx
+│   ├── MapChart.tsx
+│   ├── MapSection.tsx
+│   ├── Modal.tsx
+│   ├── Nate
+│   │   ├── Analysis.tsx
+│   │   ├── Container.tsx
+│   │   ├── ContractualWealth.tsx
+│   │   ├── DebtInheritance.tsx
+│   │   ├── HardAssets.tsx
+│   │   ├── IncomeCash.tsx
+│   │   ├── SocialInsurance.tsx
+│   │   ├── StatementWealth.tsx
+│   │   └── types.d.ts
+│   ├── Navbar.tsx
+│   ├── Report
+│   │   ├── AssetSummary.tsx
+│   │   ├── CompositeTable.tsx
+│   │   ├── Composite.tsx
+│   │   ├── Cover.tsx
+│   │   ├── Header.tsx
+│   │   ├── IncomeChart.tsx
+│   │   ├── IncomeTable.tsx
+│   │   ├── Longevity.tsx
+│   │   ├── PrintCard.tsx
+│   │   ├── Report.tsx
+│   │   ├── SpendingChart.tsx
+│   │   └── Spending.tsx
+│   ├── Root.tsx
+│   ├── Scenarios.tsx
+│   ├── ScenarioTab.tsx
+│   ├── Section.tsx
+│   ├── Settings
+│   │   ├── AdvisorSection.tsx
+│   │   ├── GlobalDefaultsSection.tsx
+│   │   ├── ReportSettings.tsx
+│   │   ├── SectionHeader.tsx
+│   │   ├── Settings.tsx
+│   │   ├── types.ts
+│   │   └── utils.ts
+│   ├── Sortable
+│   │   ├── SortableItemIncome.tsx
+│   │   ├── SortableItem.tsx
+│   │   └── SortableList.tsx
+│   ├── SpendChart.tsx
+│   ├── Spending
+│   │   ├── calculate.ts
+│   │   ├── SpendingPage.tsx
+│   │   ├── SpendingTable.tsx
+│   │   └── YearlyIncrease.tsx
+│   ├── Spinner.tsx
+│   ├── Summary.tsx
+│   └── WhoDies.tsx
+├── createIncome.ts
+├── hooks
+│   ├── useData.tsx
+│   ├── useFullScreen.tsx
+│   └── useUser.tsx
+├── main.tsx
+├── __mocks__
+│   └── fileMock.js
+├── pages
+│   ├── error.tsx
+│   ├── external-docs.tsx
+│   ├── help.tsx
+│   ├── home.tsx
+│   ├── login.tsx
+│   ├── not-found.tsx
+│   ├── paused.tsx
+│   ├── print-asset-summary.tsx
+│   ├── print-live.tsx
+│   ├── print.tsx
+│   ├── reset-password-confirm.tsx
+│   ├── reset-password.tsx
+│   ├── settings.tsx
+│   ├── signup.tsx
+│   ├── subscribe.tsx
+│   ├── verify-email-confim.tsx
+│   └── verify-email.tsx
+├── router.tsx
+├── sentry.ts
+├── services
+│   ├── client.ts
+│   ├── intercom.tsx
+│   └── supertokens.ts
+├── setupTests.ts
+├── types.ts
+├── utils.ts
+└── vite-env.d.ts
+
+22 directories, 146 files

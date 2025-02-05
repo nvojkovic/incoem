@@ -4,9 +4,10 @@ import Button from "../components/Inputs/Button";
 import Session from "supertokens-web-js/recipe/session";
 import { useUser } from "../hooks/useUser";
 import { useEffect } from "react";
+import config from "src/services/config";
 
-const KEY = import.meta.env.VITE_STRIPE_PUBLIC_KEY;
-const TABLE = import.meta.env.VITE_STRIPE_PRICING_TABLE_ID;
+const KEY = config.STRIPE_PUBLIC_KEY;
+const TABLE = config.STRIPE_PRICING_TABLE_ID;
 
 declare global {
   namespace JSX {
@@ -36,12 +37,6 @@ const Subscribe = () => {
       fetchUser();
     }
   }, [windowFocused]);
-  // const subscribe = async () => {
-  //   const d = await fetch(
-  //     import.meta.env.VITE_API_URL + "stripeSubscribe",
-  //   ).then((a) => a.json());
-  //   window.open(d.url, "_blank");
-  // };
   return (
     <div className="w-full flex justify-center">
       <div className="flex items-center justify-center h-screen m-auto w-auto relative">

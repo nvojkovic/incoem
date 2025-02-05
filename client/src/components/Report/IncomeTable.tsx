@@ -20,8 +20,6 @@ const IncomeTable = ({ client, scenario }: PrintProps) => {
           <ResultTable
             client={client}
             settings={scenario}
-            changeFullScreen={() => { }}
-            fullScreen={true}
             id={scenario.id}
             removeScenario={() => { }}
             selectedYear={0}

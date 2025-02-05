@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Tooltip } from "flowbite-react";
 import {
   ArrowUpRightIcon,
@@ -16,6 +16,7 @@ import GlobalDefaultsSection from "./GlobalDefaultsSection";
 import SectionHeader from "./SectionHeader";
 import ReportSettingsPage from "./ReportSettings";
 import { arrayMove } from "@dnd-kit/sortable";
+import config from "src/services/config";
 
 const isColorTooLight = (
   hexColor: string,
@@ -82,15 +83,7 @@ export const ApplyToCurrent = ({
 
 const Settings = () => {
   const { user, fetchUser, updateInfo } = useUser();
-  useEffect(() => {
-    // setSettings(user?.info || null, false);
-  }, [user]);
-  // const [settings, setSettingsS] = useState(null as any);
-  // const setSettings = (a: any, save = true) => {
-  //   if (save) setToSave(true);
-  //   setSettingsS(a);
-  // };
-  //
+  const API = config.API_URL;
   const settings = user?.info;
 
   const setSettings = (settings: any) => {
@@ -177,7 +170,7 @@ const Settings = () => {
                   {user?.info?.logo && (
                     <div className="flex items-center justify-center">
                       <img
-                        src={`${import.meta.env.VITE_API_URL}logo/?logo=${user.info.logo}`}
+                        src={`${API}logo/?logo=${user.info.logo}`}
                         className="h-20 min-w-20"
                       />
                     </div>
@@ -421,14 +414,14 @@ const Settings = () => {
                       user?.info?.subsciptionStatus === "active" ||
                       user?.info?.subsciptionStatus === "trialing"
                     ) {
-                      const d = await fetch(
-                        import.meta.env.VITE_API_URL + "stripeRedirect",
-                      ).then((a) => a.json());
+                      const d = await fetch(API + "stripeRedirect").then((a) =>
+                        a.json(),
+                      );
                       window.open(d.url, "_blank");
                     } else {
-                      const d = await fetch(
-                        import.meta.env.VITE_API_URL + "stripeSubscribe",
-                      ).then((a) => a.json());
+                      const d = await fetch(API + "stripeSubscribe").then((a) =>
+                        a.json(),
+                      );
                       window.open(d.url, "_blank");
                     }
                   }}

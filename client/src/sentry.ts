@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react";
+import config from "./services/config";
 
-const env = import.meta.env.VITE_ENV;
-if (env !== "local") {
+if (config.ENV !== "local") {
   Sentry.init({
     dsn: "https://aee32b5dd78bc0b8226aa719668d9c84@o100162.ingest.us.sentry.io/4508300936544256",
     integrations: [
@@ -22,6 +22,6 @@ if (env !== "local") {
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-    environment: import.meta.env.VITE_ENV,
+    environment: config.ENV,
   });
 }

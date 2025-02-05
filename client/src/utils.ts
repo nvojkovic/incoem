@@ -1,3 +1,4 @@
+import config from "./services/config";
 import { Client, MonthlyYearlyAmount, ScenarioSettings } from "./types";
 
 export function updateAtIndex<T>(arr: T[], index: number, update: T) {
@@ -41,25 +42,22 @@ export const convertToParens = (s: string) => {
 
 export const printReport = async (clientId: number, scenarioId: number) => {
   let url;
+  const API = config.API_URL;
   if (scenarioId === -1) {
-    url = import.meta.env.VITE_API_URL + "print/client/pdf-live/" + clientId;
+    url = API + "print/client/pdf-live/" + clientId;
   } else {
-    url =
-      import.meta.env.VITE_API_URL +
-      "print/client/pdf/" +
-      clientId +
-      "/" +
-      scenarioId;
+    url = API + "print/client/pdf/" + clientId + "/" + scenarioId;
   }
   const pdfFile = await fetch(url).then((res) => res.json());
-  return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
+  return API + "report/?report=" + pdfFile.file;
 };
 
 export const printSummary = async (clientId: number) => {
   let url;
-  url = import.meta.env.VITE_API_URL + "print/asset-summary/" + clientId;
+  const API = config.API_URL;
+  url = API + "print/asset-summary/" + clientId;
   const pdfFile = await fetch(url).then((res) => res.json());
-  return import.meta.env.VITE_API_URL + "report/?report=" + pdfFile.file;
+  return API + "report/?report=" + pdfFile.file;
 };
 
 export function timeAgo(date: Date): string {

@@ -1,6 +1,6 @@
-import femaleTables from "src/assets/tables-female.json";
-import maleTables from "src/assets/tables-male.json";
 import { calculateAge } from "../Info/PersonInfo";
+import femaleTables from "./tables-female.json";
+import maleTables from "./tables-male.json";
 import { birthday } from "src/calculator/utils";
 import { Person } from "src/types";
 

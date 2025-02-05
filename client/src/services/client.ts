@@ -1,6 +1,7 @@
 import { Client } from "src/types";
+import config from "./config";
 
-const API = import.meta.env.VITE_API_URL;
+const API = config.API_URL;
 
 export const helpUrl = `${API}help`;
 
@@ -63,8 +64,7 @@ export const getClient = (id: any) => {
 };
 
 export const getPrintClient = (id: any) => {
-  const base =
-    import.meta.env.VITE_ENV === "local" ? "http://im-server:3000/" : API;
+  const base = config.ENV === "local" ? "http://im-server:3000/" : API;
   return fetch(base + `print/client/${id}`, {
     method: "GET",
     headers: {
