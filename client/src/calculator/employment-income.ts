@@ -45,7 +45,6 @@ const calculate = (info: CalculationInfo<EmploymentIncome>) => {
   );
 
   if (income.startAge === age) {
-    console.log("wtf", income.startAge, age);
     return (baseAmount * income.firstYearProratePercent) / 100;
   }
 

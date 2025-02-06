@@ -270,7 +270,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                 Toggle incomes on/off
               </div>
               <div className="bg-gray-500 h-[1px] w-full"></div>
-              <div className="flex flex-col px-3">
+              <div className="flex flex-col px-3 max-h-[350px] overflow-y-auto">
                 {client.incomes.map((income, i) => (
                   <div className="flex items-center">
                     <div className="text-xs w-[555px]">
