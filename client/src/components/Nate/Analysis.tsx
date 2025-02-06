@@ -30,13 +30,14 @@ const Analysis = () => {
       .map((i) => i.accountValue || 0)
       .reduce((a, b) => a + b, 0);
 
-  const assets = cashAssets + statementWealth + hardAssets;
+  const assets = cashAssets + statementWealth + hardAssets + contractualWealth;
 
   const liabilities =
     assetSummary.debts.map((i) => i.balance || 0).reduce((a, b) => a + b, 0) +
     assetSummary.inheritance
       .map((i) => i.amount || 0)
       .reduce((a, b) => a + b, 0);
+
   return (
     <Container active="analysis">
       <MapSection title="Analysis" defaultOpen>
@@ -55,9 +56,7 @@ const Analysis = () => {
                 <tbody className="text-sm">
                   <tr className="">
                     <td className="px-2 py-2 ">Assets</td>
-                    <td className="px-2 py-2">
-                      {printNumber(assets + contractualWealth)}
-                    </td>
+                    <td className="px-2 py-2">{printNumber(assets)}</td>
                   </tr>
                   <tr className="">
                     <td className="px-2 py-2 ">Liabilities</td>
@@ -66,7 +65,7 @@ const Analysis = () => {
                   <tr className=" font-semibold">
                     <td className="px-2 py-2 ">Net Worth</td>
                     <td className="px-2 py-2">
-                      {printNumber(assets + contractualWealth - liabilities)}
+                      {printNumber(assets - liabilities)}
                     </td>
                   </tr>
                 </tbody>
@@ -104,9 +103,7 @@ const Analysis = () => {
 
                   <tr className="">
                     <td className="px-2 py-2 ">Hard Assets</td>
-                    <td className="px-2 py-2">
-                      {printNumber(hardAssets - liabilities)}
-                    </td>
+                    <td className="px-2 py-2">{printNumber(hardAssets)}</td>
                   </tr>
                   <tr className="font-semibold">
                     <td className="px-2 py-2 ">Total Assets</td>
@@ -115,8 +112,7 @@ const Analysis = () => {
                         cashAssets +
                           contractualWealth +
                           statementWealth +
-                          hardAssets -
-                          liabilities,
+                          hardAssets,
                       )}
                     </td>
                   </tr>
