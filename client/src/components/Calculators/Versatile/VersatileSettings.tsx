@@ -87,7 +87,7 @@ const VersatileSettings = () => {
       </div>
 
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
-        <div className="flex gap-7 justify-between items-center mb-[16px]">
+        <div className="flex gap-7 justify-between items-center">
           <h2 className="text-xl font-semibold">Payment</h2>
           <div className="flex w-60 text-sm">
             <div
@@ -105,7 +105,7 @@ const VersatileSettings = () => {
           </div>
         </div>
         {settings.payment.type === "detailed" && (
-          <div className="w-32 mx-auto mt-1 mb-1">
+          <div className="w-32 mx-auto">
             <Button type="primary" onClick={() => setOpenYears(true)}>
               Open Years{" "}
             </Button>
@@ -115,11 +115,11 @@ const VersatileSettings = () => {
           <div className="flex gap-6">
             <div className="flex gap-2">
               <Input
-                labelLength={90}
+                labelLength={86}
                 label="Payment ($)"
                 subtype="money"
                 size="md"
-                width="!w-[100px]"
+                width="!w-[99px]"
                 value={
                   settings.payment.amount !== null
                     ? Math.round(settings.payment.amount)
@@ -152,28 +152,32 @@ const VersatileSettings = () => {
               </Tooltip>
             </div>
             <Input
-              label="Increase (%)"
-              labelLength={100}
-              width="!w-[80px]"
-              subtype="percent"
-              value={settings.payment.increase}
-              setValue={(value) => updateSettings("payment", "increase", value)}
+              label="Start Year"
+              subtype="number"
+              labelLength={72}
+              width="!w-[50px]"
+              value={settings.payment.startYear}
+              setValue={(value) =>
+                updateSettings("payment", "startYear", value)
+              }
             />
           </div>
         )}
         <div className="flex gap-6">
           {" "}
           <Input
-            label="Start Year"
-            subtype="number"
-            labelLength={80}
-            value={settings.payment.startYear}
-            setValue={(value) => updateSettings("payment", "startYear", value)}
+            label="Increase (%)"
+            labelLength={100}
+            width="!w-[80px]"
+            subtype="percent"
+            value={settings.payment.increase}
+            setValue={(value) => updateSettings("payment", "increase", value)}
           />
-          <div className="w-[208px]">
+          <div className="w-[168px]">
             <Select
-              labelLength={163}
+              labelLength={60}
               label="Timing"
+              width="!w-[80px]"
               options={[
                 { id: "beginning", name: "BoY" },
                 { id: "end", name: "EoY" },
@@ -264,19 +268,19 @@ const VersatileSettings = () => {
         )}
 
         {settings.returns.returnType === "random" && (
-          <div className="flex gap-6 w-full items-center justify-between min-w-[440px]">
-            <div className="flex gap-4 flex-col !w-[55px]">
+          <div className="flex gap-6 w-full items-center justify-between min-w-[300px]">
+            <div className="flex gap-4 flex-col">
               <Input
-                label="Mean Return"
-                labelLength={120}
+                label="Mean"
+                labelLength={70}
                 width="!w-[60px]"
                 subtype="percent"
                 value={settings.returns.mean}
                 setValue={(value) => updateSettings("returns", "mean", value)}
               />
               <Input
-                label="Return Std. Dev."
-                labelLength={120}
+                label="Std. Dev."
+                labelLength={70}
                 width="!w-[60px]"
                 subtype="percent"
                 value={settings.returns.std}
@@ -330,7 +334,7 @@ const VersatileSettings = () => {
       </div>
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="col-span-3">
-          <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
+          <h2 className="text-xl font-semibold">Other Settings</h2>
         </div>
         <div className="grid grid-cols-2 gap-4 flex-col">
           <Input
