@@ -31,7 +31,7 @@ const VersatileSettings = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 sticky top-[100px]">
+    <div className="flex flex-col gap-6 sticky top-[98px]">
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="col-span-3">
           <h2 className="text-xl font-semibold">User Settings</h2>
