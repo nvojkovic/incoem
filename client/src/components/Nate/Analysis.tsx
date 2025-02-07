@@ -30,11 +30,14 @@ const Analysis = () => {
       .map((i) => i.accountValue || 0)
       .reduce((a, b) => a + b, 0);
 
-  const assets = cashAssets + statementWealth + hardAssets;
+  const assets = cashAssets + statementWealth + hardAssets + contractualWealth;
 
-  const liabilities = assetSummary.debts
-    .map((i) => i.balance || 0)
-    .reduce((a, b) => a + b, 0);
+  const liabilities =
+    assetSummary.debts.map((i) => i.balance || 0).reduce((a, b) => a + b, 0) +
+    assetSummary.inheritance
+      .map((i) => i.amount || 0)
+      .reduce((a, b) => a + b, 0);
+
   return (
     <Container active="analysis">
       <MapSection title="Analysis" defaultOpen>
@@ -105,7 +108,12 @@ const Analysis = () => {
                   <tr className="font-semibold">
                     <td className="px-2 py-2 ">Total Assets</td>
                     <td className="px-2 py-2">
-                      {printNumber(cashAssets + statementWealth + hardAssets)}
+                      {printNumber(
+                        cashAssets +
+                          contractualWealth +
+                          statementWealth +
+                          hardAssets,
+                      )}
                     </td>
                   </tr>
                 </tbody>
