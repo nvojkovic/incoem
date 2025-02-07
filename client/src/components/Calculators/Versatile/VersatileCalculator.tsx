@@ -89,12 +89,12 @@ const VersatileCalculator: React.FC = () => {
   return (
     <Layout page="calculator" wide>
       <div className="max-w-[1600px] mx-auto px-4 mt-[-25px]">
-        <div className="flex gap-12">
+        <div className="flex gap-6">
           <div>
             <VersatileSettings />
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-8 z-[10] pt-12 mt-[-150px]">
+            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-4 z-[10] pt-12 mt-[-150px]">
               <div className="flex gap-4">
                 <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
