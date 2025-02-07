@@ -332,7 +332,7 @@ const VersatileSettings = () => {
         <div className="col-span-3">
           <h2 className="text-xl font-semibold mb-4">Other Settings</h2>
         </div>
-        <div className="grid grid-cols-2 gap-6 flex-col">
+        <div className="grid grid-cols-2 gap-4 flex-col">
           <Input
             label="Taxes (%)"
             labelLength={80}

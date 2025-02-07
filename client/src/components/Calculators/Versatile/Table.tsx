@@ -78,7 +78,7 @@ const Table = ({ calculations, open, returnsMemo }: TableProps) => {
                 : setSelectedCol("return")
             }
           >
-            Return
+            Return ($)
           </th>
           <th
             className={`px-4 py-2 !rounded-none ${selectedCol === "fees" ? "bg-slate-200" : ""}`}
