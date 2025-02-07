@@ -314,7 +314,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   }, [datasets, hiddenSeries]);
 
   return (
-    <div className="bg-white px-5 rounded-lg pb-5">
+    <div className="bg-white px-5 rounded-lg pb-2">
       <svg ref={svgRef} />
     </div>
   );
