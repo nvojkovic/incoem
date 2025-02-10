@@ -334,10 +334,10 @@ const MainChart = ({
               .map(
                 (key: any) =>
                   `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; ${stackedData.find((k) => (k.name = key)).stable ? "color: black; !important" : "color: #999 !important; "}">
                   <div>
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)}; margin-right: 5px;"></span>
-                    ${key}: 
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)};  margin-right: 5px;"></span>
+                    ${key} ${1}: 
                   </div>
                   <div>
                     <b>${formatCurrency.format(selectedData[key])}</b>
