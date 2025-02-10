@@ -261,7 +261,7 @@ const SurvivalChart = ({
     svg
       .append("g")
       .call(yAxis)
-      .call((g) => g.select(".domain").attr("stroke", "#888"))
+      .call((g) => g.select(".domain").remove()) // Remove the y-axis line
       .call((g) => g.selectAll(".tick line").attr("stroke", "#888"))
       .call((g) => g.selectAll(".tick text").attr("fill", "#666").attr("x"));
 
