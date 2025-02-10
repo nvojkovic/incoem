@@ -71,8 +71,9 @@ const SurvivalChart = ({
           .tickSize(-height)
           .tickFormat("" as any),
       )
-      .selectAll("line") // Select all the lines within the grid
-      .attr("stroke", "#e5e5e5"); // Apply the stroke color to the lines specifically
+      .call(g => g.select(".domain").remove())  // Remove domain line
+      .selectAll("line")
+      .attr("stroke", "#e5e5e5");
 
     svg
       .append("g")
@@ -85,8 +86,9 @@ const SurvivalChart = ({
           .tickSize(-width)
           .tickFormat("" as any),
       )
-      .selectAll("line") // Select all the lines within the grid
-      .attr("stroke", "#e5e5e5"); // Apply the stroke color to the lines specifically
+      .call(g => g.select(".domain").remove())  // Remove domain line
+      .selectAll("line")
+      .attr("stroke", "#e5e5e5");
 
     // Add lines
     svg
