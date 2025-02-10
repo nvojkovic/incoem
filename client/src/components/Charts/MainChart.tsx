@@ -340,7 +340,7 @@ const MainChart = ({
                     <span style="color: ${stackedData.find((k) => k.name === key).stable ? "black" : "#999"}">${key}: </span>
                   </div>
                   <div>
-                    <b>${formatCurrency.format(selectedData[key])}</b>
+                    <b style="color: ${stackedData.find((k) => k.name === key).stable ? "black" : "#999"}">${formatCurrency.format(selectedData[key])}</b>
                   </div>
                 </div>
               </div>`,
