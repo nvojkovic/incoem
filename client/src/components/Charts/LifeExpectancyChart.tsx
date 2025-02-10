@@ -255,7 +255,7 @@ const SurvivalChart = ({
       .append("g")
       .attr("transform", `translate(0,${height})`)
       .call(xAxis)
-      .call((g) => g.select(".domain").attr("stroke", "#888"))
+      .call((g) => g.select(".domain").remove()) // Remove the x-axis line
       .call((g) => g.selectAll(".tick line").attr("stroke", "#888"))
       .call((g) => g.selectAll(".tick text").attr("fill", "#666").attr("x"));
     svg
