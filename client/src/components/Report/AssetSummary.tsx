@@ -39,8 +39,38 @@ const AssetSummary = ({ client }: Props) => {
   }, [logoUrl]);
 
   const assetSummary = client.assetSummary;
+
+  const cashAssets = assetSummary.cashAssets
+    .map((i) => i.balance || 0)
+    .reduce((a, b) => a + b, 0);
+  const statementWealth = assetSummary.statementWealth
+    .map((i) => i.marketValue || 0)
+    .reduce((a, b) => a + b, 0);
+  const hardAssets = assetSummary.hardAssets
+    .map((i) => i.marketValue || 0)
+    .reduce((a, b) => a + b, 0);
+
+  const contractualWealth =
+    assetSummary.lifeInsurance
+      .map((i) => i.cashValue || 0)
+      .reduce((a, b) => a + b, 0) +
+    assetSummary.accumulationAnnuity
+      .map((i) => i.accountValue || 0)
+      .reduce((a, b) => a + b, 0) +
+    assetSummary.personalPensionAnnuity
+      .map((i) => i.accountValue || 0)
+      .reduce((a, b) => a + b, 0);
+
+  const assets = cashAssets + statementWealth + hardAssets + contractualWealth;
+
+  const liabilities =
+    assetSummary.debts.map((i) => i.balance || 0).reduce((a, b) => a + b, 0) +
+    assetSummary.inheritance
+      .map((i) => i.amount || 0)
+      .reduce((a, b) => a + b, 0);
+
   return (
-    <div className="text-sm px-24">
+    <div className="text-sm px-24 !text-[16px]">
       <div className="flex justify-end">
         <img
           src={`${logoData}`}
@@ -188,6 +218,70 @@ const AssetSummary = ({ client }: Props) => {
           </table>
         </div>
       )}
+
+      <div className="break-inside-avoid-page">
+        <Header text="Social Insurance" color="#4471c4" />
+        <Subtitle>Social Security</Subtitle>
+        <table className="text-center border-collapse">
+          <thead>
+            <th className="border border-slate-600 px-4">Name</th>
+            <th className="border border-slate-600 px-4">
+              Full Retirement Age
+            </th>
+            <th className="border border-slate-600 px-4">
+              Full Retirement Date
+            </th>
+            <th className="border border-slate-600 px-4">Monthly Income</th>
+            <th className="border border-slate-600 px-4">Annual Income</th>
+          </thead>
+          {client.assetSummary.socialInsurance.map((insurance) => {
+            const person = client.people.find((p) => p.id === insurance.owner);
+            if (!person) return null;
+            const { year: birthYear } = splitDate(person?.birthday || "");
+            const [retirementYear, retirementMonth] = NRA(birthYear);
+            const birthday = new Date(person?.birthday || "");
+            birthday.setMonth(birthday.getMonth() + retirementMonth);
+            birthday.setFullYear(birthday.getFullYear() + retirementYear);
+
+            return (
+              <tr>
+                <td className="border border-slate-600 px-4">
+                  {getPerson(insurance.owner)}
+                </td>
+                <td className="border border-slate-600 px-4">{`${retirementYear} years ${retirementMonth} months`}</td>
+                <td className="border border-slate-600 px-4">
+                  {birthday.toLocaleDateString()}
+                </td>
+                <td className="border border-slate-600 px-4">
+                  {printNumber(insurance.monthlyAmount)}
+                </td>
+                <td className="border border-slate-600 px-4">
+                  {printNumber(insurance.monthlyAmount * 12)}
+                </td>
+              </tr>
+            );
+          })}
+          <tr>
+            <td className="">{}</td>
+            <td className="">{}</td>
+            <td className="border border-slate-600 px-4 font-bold">Total</td>
+            <td className="border border-slate-600 px-4 font-bold">
+              {printNumber(
+                client.assetSummary.socialInsurance
+                  .map((i) => i.monthlyAmount)
+                  .reduce((a, b) => a + b, 0),
+              )}
+            </td>
+            <td className="border border-slate-600 px-4 font-bold">
+              {printNumber(
+                client.assetSummary.socialInsurance
+                  .map((i) => i.monthlyAmount * 12)
+                  .reduce((a, b) => a + b, 0),
+              )}
+            </td>
+          </tr>
+        </table>
+      </div>
 
       {assetSummary.lifeInsurance.length > 0 ||
         assetSummary.longTermCare.length > 0 ||
@@ -543,69 +637,6 @@ const AssetSummary = ({ client }: Props) => {
           )}
         </div>
       </div>
-      <div className="break-inside-avoid-page">
-        <Header text="Social Insurance" color="#4471c4" />
-        <Subtitle>Social Security</Subtitle>
-        <table className="text-center border-collapse">
-          <thead>
-            <th className="border border-slate-600 px-4">Name</th>
-            <th className="border border-slate-600 px-4">
-              Full Retirement Age
-            </th>
-            <th className="border border-slate-600 px-4">
-              Full Retirement Date
-            </th>
-            <th className="border border-slate-600 px-4">Monthly Income</th>
-            <th className="border border-slate-600 px-4">Annual Income</th>
-          </thead>
-          {client.assetSummary.socialInsurance.map((insurance) => {
-            const person = client.people.find((p) => p.id === insurance.owner);
-            if (!person) return null;
-            const { year: birthYear } = splitDate(person?.birthday || "");
-            const [retirementYear, retirementMonth] = NRA(birthYear);
-            const birthday = new Date(person?.birthday || "");
-            birthday.setMonth(birthday.getMonth() + retirementMonth);
-            birthday.setFullYear(birthday.getFullYear() + retirementYear);
-
-            return (
-              <tr>
-                <td className="border border-slate-600 px-4">
-                  {getPerson(insurance.owner)}
-                </td>
-                <td className="border border-slate-600 px-4">{`${retirementYear} years ${retirementMonth} months`}</td>
-                <td className="border border-slate-600 px-4">
-                  {birthday.toLocaleDateString()}
-                </td>
-                <td className="border border-slate-600 px-4">
-                  {printNumber(insurance.monthlyAmount)}
-                </td>
-                <td className="border border-slate-600 px-4">
-                  {printNumber(insurance.monthlyAmount * 12)}
-                </td>
-              </tr>
-            );
-          })}
-          <tr>
-            <td className="">{}</td>
-            <td className="">{}</td>
-            <td className="border border-slate-600 px-4 font-bold">Total</td>
-            <td className="border border-slate-600 px-4 font-bold">
-              {printNumber(
-                client.assetSummary.socialInsurance
-                  .map((i) => i.monthlyAmount)
-                  .reduce((a, b) => a + b, 0),
-              )}
-            </td>
-            <td className="border border-slate-600 px-4 font-bold">
-              {printNumber(
-                client.assetSummary.socialInsurance
-                  .map((i) => i.monthlyAmount * 12)
-                  .reduce((a, b) => a + b, 0),
-              )}
-            </td>
-          </tr>
-        </table>
-      </div>
 
       <div className="break-inside-avoid-page">
         {assetSummary.statementWealth.length > 0 && (
@@ -923,6 +954,102 @@ const AssetSummary = ({ client }: Props) => {
           </table>
         </div>
       )}
+
+      <div className="break-inside-avoid-page">
+        <Header text="Analysis" color="#4471c4" />
+        <div className="flex gap-4 pt-5 w-[800px] !text-[16px]">
+          <div className="w-full rounded-md">
+            <table className="text-center border-collapse">
+              <thead className={`text-left z-50 border-1 `}>
+                <tr className="">
+                  <th className="border border-slate-600 px-4">
+                    Net Worth Summary
+                  </th>
+                  <th className="border border-slate-600 px-4">Amount ($)</th>
+                </tr>
+              </thead>
+              <tbody className="">
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">Assets</td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(assets)}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">Liabilities</td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(liabilities)}
+                  </td>
+                </tr>
+                <tr className=" font-semibold">
+                  <td className="border border-slate-600 px-4 ">Net Worth</td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(assets - liabilities)}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="w-full">
+            <table className="text-center border-collapse">
+              <thead
+                className={` cursor-pointer text-left sticky z-50 border-1 !font-normal`}
+              >
+                <tr className="">
+                  <th className="border border-slate-600 px-4 ">
+                    Asset Class - Summary
+                  </th>
+                  <th className="border border-slate-600 px-4 ">Amount ($)</th>
+                </tr>
+              </thead>
+              <tbody className="">
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">Cash</td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(cashAssets)}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">
+                    Contactual Wealth
+                  </td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(contractualWealth)}
+                  </td>
+                </tr>
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">
+                    Statement Wealth
+                  </td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(statementWealth)}
+                  </td>
+                </tr>
+
+                <tr className="">
+                  <td className="border border-slate-600 px-4 ">Hard Assets</td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(hardAssets)}
+                  </td>
+                </tr>
+                <tr className="font-semibold">
+                  <td className="border border-slate-600 px-4 ">
+                    Total Assets
+                  </td>
+                  <td className="border border-slate-600 px-4 ">
+                    {printNumber(
+                      cashAssets +
+                      contractualWealth +
+                      statementWealth +
+                      hardAssets,
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
