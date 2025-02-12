@@ -21,7 +21,7 @@ const LifeInsuranceSection = () => {
 
   const { data, setField } = useInfo();
 
-  const options = [...data.people] as any[];
+  const options = [...data.people];
   const setValue = (
     index: number,
     field: keyof LifeInsurance,

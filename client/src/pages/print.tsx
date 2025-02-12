@@ -8,18 +8,14 @@ const PrintPage = () => {
   const { id, scenarioId } = useParams();
   const [searchParams, _] = useSearchParams();
   useEffect(() => {
-    getPrintClient(id)
-      .then((data) => data.json())
-      .then((data) => {
+    if (id)
+      getPrintClient(id).then((data) => {
         setClient(data);
       });
   }, [id, scenarioId]);
 
   const scenario = client?.scenarios?.find((s: any) => s.id == scenarioId);
-  console.log("sc", scenario, client);
   if (!client) return <div>Loading...</div>;
-  // if (!scenario) return null;
-  //
   return (
     <Report
       client={client}

@@ -10,7 +10,7 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 import SpendChart from "./SpendChart";
 import Scenarios from "./Scenarios";
 import SmallToggle from "./Inputs/SmallToggle";
-import { SelectedColumn } from "src/types";
+import { SavedScenario, ScenarioSettings, SelectedColumn } from "src/types";
 const Summary = () => {
   const [tab, setTab] = useState(-1);
   const { data, storeScenarios, setField } = useInfo();
@@ -32,8 +32,18 @@ const Summary = () => {
     spending: data.spending,
   };
 
-  const settings =
-    tab == -1 ? liveSettings : (scenarios.find(({ id }) => id === tab) as any);
+  const settings: ScenarioSettings =
+    tab == -1
+      ? liveSettings
+      : {
+        ...(scenarios.find(({ id }) => id === tab) as SavedScenario),
+        maxYearsShown: data.liveSettings.maxYearsShown,
+        chartType: data.liveSettings.chartType,
+        mapType: data.liveSettings.mapType,
+        monthlyYearly: data.liveSettings.monthlyYearly,
+        taxType: data.liveSettings.taxType,
+        inflationType: data.liveSettings.inflationType,
+      };
 
   return (
     <Layout page="map">

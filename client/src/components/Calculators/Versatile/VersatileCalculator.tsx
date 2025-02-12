@@ -94,7 +94,7 @@ const VersatileCalculator: React.FC = () => {
             <VersatileSettings />
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-4 z-[10] pt-12 mt-[-150px]">
+            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-2 z-[10] pt-12 mt-[-150px]">
               <div className="flex gap-4">
                 <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">

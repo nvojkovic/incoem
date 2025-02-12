@@ -99,15 +99,14 @@ const initializeNewClient = (user: User | null): Client => ({
   spending: {
     preTaxRate: user?.info?.globalPreRetirementTaxRate,
     postTaxRate: user?.info?.globalPostRetirementTaxRate,
-    retirementYear: undefined as any,
+    retirementYear: undefined as unknown as number,
     preSpending: [],
     postSpending: [],
     yearlyIncrease: { type: "general" },
     newCurrentSpending: { type: "yearly", value: 0 },
     currentSpending: 0,
-    decreaseAtDeath: [0, 0] as any,
+    decreaseAtDeath: [0, 0],
   } as RetirementSpendingSettings,
-  calculators: undefined as any,
   allInOneCalculator: [],
   versatileCalculator: initialVersatileSettings,
   liveSettings: {
@@ -119,8 +118,8 @@ const initializeNewClient = (user: User | null): Client => ({
     whoDies: -1,
     taxType: "Pre-Tax",
     inflationType: "Nominal",
-    incomes: [] as any,
-    people: [] as any,
+    incomes: [],
+    people: [],
     longevityPercent: 50,
     chartType: "income",
     deathYears: [
@@ -140,7 +139,7 @@ const NewClient = () => {
   const [client, setClient] = useState<Client>(() => initializeNewClient(user));
   const navigate = useNavigate();
   const addClient = async () => {
-    const d = await createClient(client as any);
+    const d = await createClient(client);
     const js = await d.json();
     setNewOpen(false);
     setClient(initializeNewClient(user));

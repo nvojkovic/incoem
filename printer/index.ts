@@ -16,7 +16,7 @@ app.use(
     credentials: true,
   }),
 );
-async function mergeAllPDFs(urls: any[]) {
+async function mergeAllPDFs(urls: string[]) {
   // create an empty PDFLib object of PDFDocument to do the merging into
   const pdfDoc = await PDFDocument.create();
 
@@ -50,7 +50,7 @@ const getAssetSummary = async (browser: Browser, url: string) => {
     const page = await browser.newPage();
     console.log("new page");
     await page.setViewport({ width: 1200, height: 800 });
-    await page.goto(url as any, {
+    await page.goto(url, {
       waitUntil: ["networkidle0", "load", "domcontentloaded"],
     });
 
@@ -89,7 +89,7 @@ const getPdf = async (page: Page, base: string, data: any) => {
   try {
     const url = `${base}?page=${JSON.stringify(data)}`;
     await page.setViewport({ width: 1200, height: 800 });
-    await page.goto(url as any, {
+    await page.goto(url, {
       waitUntil: ["networkidle0", "load", "domcontentloaded"],
     });
 
@@ -186,7 +186,7 @@ app.get("/asset-summary", async (req, res) => {
 
   res.contentType("application/pdf");
   console.log(result);
-  res.send(Buffer.from(result as any));
+  if (result) res.send(Buffer.from(result));
 });
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);

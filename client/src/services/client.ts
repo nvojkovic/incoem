@@ -1,5 +1,6 @@
-import { Client } from "src/types";
 import config from "./config";
+import { Client, ScenarioSettings, UserInfo } from "src/types";
+// import config from "./config";
 
 const API = config.API_URL;
 
@@ -53,7 +54,7 @@ export const getClients = () => {
   });
 };
 
-export const getClient = (id: any) => {
+export const getClient = (id: string) => {
   return fetch(API + `client/${id}`, {
     method: "GET",
 
@@ -63,17 +64,20 @@ export const getClient = (id: any) => {
   });
 };
 
-export const getPrintClient = (id: any) => {
-  const base = config.ENV === "local" ? "http://im-server:3000/" : API;
-  return fetch(base + `print/client/${id}`, {
+export const getPrintClient = async (id: any) => {
+  const base =
+    import.meta.env.VITE_ENV === "local" ? "http://im-server:3000/" : API;
+  // const base = "http://localhost:3000/";
+  const res = await fetch(base + `print/client/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
+  return await res.json();
 };
 
-export const updateData = (id: any, data: any) => {
+export const updateData = (id: string, data: Client) => {
   return fetch(API + `client/${id}`, {
     method: "POST",
     headers: {
@@ -83,7 +87,7 @@ export const updateData = (id: any, data: any) => {
   });
 };
 
-export const applyToAll = (name: any, value: any) => {
+export const applyToAll = (name: string, value: boolean) => {
   return fetch(API + `user/featureToggle`, {
     method: "POST",
     headers: {
@@ -93,7 +97,7 @@ export const applyToAll = (name: any, value: any) => {
   });
 };
 
-export const updateScenarios = (id: any, data: any) => {
+export const updateScenarios = (id: number, data: ScenarioSettings[]) => {
   return fetch(API + `client/scenarios/${id}`, {
     method: "POST",
     headers: {
@@ -112,9 +116,9 @@ export const getUser = () => {
   });
 };
 
-export const updateSettings = (settings: any) => {
+export const updateSettings = (settings: UserInfo) => {
   const result = settings;
-  delete result.email;
+  delete (result as any).email;
   return fetch(API + "settings", {
     method: "POST",
     headers: {
@@ -124,7 +128,7 @@ export const updateSettings = (settings: any) => {
   });
 };
 
-export const uploadLogo = (logo: any) => {
+export const uploadLogo = (logo: File) => {
   const formData = new FormData();
   formData.append("logo", logo);
 

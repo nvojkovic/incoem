@@ -70,11 +70,11 @@ const SocialSecurity = ({ people, income: pension, setIncome }: Props) => {
               )}
               {pension.calculationMethod == "manual" && (
                 <Input
-                  label="Annual Amount"
+                  label="Amount"
                   subtype="mo/yr"
                   size="lg"
                   value={amount}
-                  tooltip="Annual amount"
+                  tooltip="Amount"
                   setValue={(name) => setIncome({ ...pension, amount: name })}
                 />
               )}

@@ -10,11 +10,12 @@ const PrintLivePage = () => {
   console.log(searchParams);
   const { id } = useParams();
   useEffect(() => {
-    getPrintClient(id)
-      .then((data) => data.json())
-      .then((data) => {
-        setClient(data);
-      });
+    if (id)
+      getPrintClient(id)
+        .then((data) => data.json())
+        .then((data) => {
+          setClient(data);
+        });
   }, [id]);
 
   const scenario = {
@@ -28,7 +29,7 @@ const PrintLivePage = () => {
   scenario.name = "Live";
   return (
     <IncomeProvider data={client as any} setLocal={() => { }}>
-      <div className="bg-white ">
+      <div className="bg-white">
         <Report
           client={client}
           scenario={scenario}

@@ -140,7 +140,6 @@ export interface Client {
   incomes: Income[];
   spending: RetirementSpendingSettings;
   scenarios: ScenarioSettings[];
-  calculators: any;
   stabilityRatioFlag: boolean;
   needsFlag: boolean;
   taxesFlag: boolean;
@@ -172,7 +171,7 @@ export interface UserInfo {
   needsFlag: boolean;
   longevityFlag: boolean;
   taxesFlag: boolean;
-  logo?: string;
+  logo?: string | null;
   email: string;
   name?: string;
   primaryColor: string;
@@ -184,24 +183,29 @@ export interface UserInfo {
   globalReportSettings: ReportSettings;
 }
 
-export interface ScenarioSettings {
+export interface SavedScenario {
   id: number;
   name: string;
-  maxYearsShown: number;
   deathYears: (number | null)[];
   ssSurvivorAge: (number | null)[];
-  mapType: "result" | "composite";
-  monthlyYearly: "monthly" | "yearly";
-  chartType: "income" | "spending";
   inflation: number;
-  taxType: "Pre-Tax" | "Post-Tax";
   longevityPercent: number;
-  inflationType: "Real" | "Nominal";
   retirementYear?: number;
   whoDies: number;
   people: Person[];
   incomes: Income[];
 }
+
+export interface LiveSettings {
+  maxYearsShown: number;
+  mapType: "result" | "composite";
+  monthlyYearly: "monthly" | "yearly";
+  chartType: "income" | "spending";
+  taxType: "Pre-Tax" | "Post-Tax";
+  inflationType: "Real" | "Nominal";
+}
+
+export type ScenarioSettings = SavedScenario & LiveSettings;
 
 export type YearlyIncrease =
   | { type: "general" }

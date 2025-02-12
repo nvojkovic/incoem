@@ -65,8 +65,8 @@ const makeReport = async (id: number, page: string, fileName: string) => {
     "/?pages=" +
     JSON.stringify(pages) +
     "&url=" +
-    process.env.APP_URL +
-    // "http://im-client:5173" +
+    // process.env.APP_URL +
+    "http://im-client:5173" +
     page;
   console.log("Printing url:", url);
   const pdf = await fetch(url);
@@ -79,8 +79,8 @@ export const getPrintAssetSummary = async (req: Request, res: Response) => {
   const url =
     process.env.PRINTER_URL +
     "/asset-summary?url=" +
-    process.env.APP_URL +
-    // "http:im-client:5173" +
+    // process.env.APP_URL +
+    "http:im-client:5173" +
     "/print-asset-summary/" +
     req.params.id;
 

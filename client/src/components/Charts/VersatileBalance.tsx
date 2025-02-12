@@ -64,7 +64,13 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       .append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x).tickFormat(d3.format("d")))
-      .style("font-size", "15px");
+      .call((g) =>
+        g
+          .selectAll(".tick text")
+          .attr("fill", "#666")
+          .style("font-size", "13px"),
+      )
+      .style("font-size", "13px");
 
     svg
       .append("text")
@@ -83,7 +89,13 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
           .tickFormat((d) => `$${d3.format(",")(d)}`)
           .ticks(7),
       )
-      .style("font-size", "16px");
+      .call((g) =>
+        g
+          .selectAll(".tick text")
+          .attr("fill", "#666")
+          .style("font-size", "13px"),
+      )
+      .style("font-size", "13px");
 
     svg
       .append("text")
