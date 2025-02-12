@@ -26,7 +26,7 @@ function ClientContainer() {
   const { data: clientData, setLocal: updateClientData } = useInfo();
   const { id } = useParams();
   useEffect(() => {
-    if (!clientData || clientData.id?.toString() !== id) {
+    if (id && (!clientData || clientData.id?.toString() !== id)) {
       getClient(id)
         .then((data) => data.json())
         .then((data) => {

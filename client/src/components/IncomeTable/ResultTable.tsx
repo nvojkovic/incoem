@@ -270,15 +270,15 @@ const ResultTable = ({
                         )
                         .filter((t) => typeof t === "number")
                         .reduce((a, b) => a + b, 0) *
-                      (client.taxesFlag &&
+                        (client.taxesFlag &&
                         settings.taxType == "Post-Tax" &&
                         settings.retirementYear
-                        ? 1 -
-                        (currentYear >= settings.retirementYear
-                          ? client.spending.postTaxRate
-                          : client.spending.preTaxRate) /
-                        100
-                        : 1),
+                          ? 1 -
+                            (currentYear >= settings.retirementYear
+                              ? client.spending.postTaxRate
+                              : client.spending.preTaxRate) /
+                              100
+                          : 1),
                     )}
                   </div>
                 </Tooltip>
@@ -356,8 +356,9 @@ const ResultTable = ({
               >
                 <tr>
                   <td
-                    className={`font-medium  ${selectedColumn.type == "total" ? "bg-slate-200" : ""
-                      }`}
+                    className={`font-medium   ${
+                      selectedColumn.type == "total" ? "bg-slate-200" : ""
+                    }`}
                   >
                     <div
                       className={`flex flex-col items-start px-2 ${client.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}

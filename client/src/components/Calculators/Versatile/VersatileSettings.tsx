@@ -8,6 +8,7 @@ import Select from "src/components/Inputs/Select";
 import Modal from "src/components/Modal";
 import { yearRange } from "src/utils";
 import { Tooltip } from "flowbite-react";
+import SmallToggle, { SmallTroggle } from "src/components/Inputs/SmallToggle";
 
 const VersatileSettings = () => {
   const { data: client, setField } = useInfo();
@@ -89,19 +90,21 @@ const VersatileSettings = () => {
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="flex gap-7 justify-between items-center">
           <h2 className="text-xl font-semibold">Payment</h2>
-          <div className="flex w-60 text-sm">
-            <div
-              className={`w-full text-center py-1 ${settings.payment.type === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("payment", "type", "simple")}
-            >
-              Simple
-            </div>
-            <div
-              className={`w-full text-center py-1 ${settings.payment.type === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("payment", "type", "detailed")}
-            >
-              Detailed
-            </div>
+          <div className="flex">
+            <SmallToggle
+              item1="Simple"
+              item2="Detailed"
+              active={
+                settings.payment.type === "simple" ? "Simple" : "Detailed"
+              }
+              toggle={() =>
+                updateSettings(
+                  "payment",
+                  "type",
+                  settings.payment.type === "simple" ? "detailed" : "simple",
+                )
+              }
+            />
           </div>
         </div>
         {settings.payment.type === "detailed" && (
@@ -196,28 +199,15 @@ const VersatileSettings = () => {
       <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Return</h2>
-          <div className="flex  text-sm">
-            <div
-              className={`w-full text-center py-1 px-4 ${settings.returns.returnType === "simple" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("returns", "returnType", "simple")}
-            >
-              Simple
-            </div>
-            <div
-              className={`w-full text-center py-1  px-4 ${settings.returns.returnType === "detailed" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() =>
-                updateSettings("returns", "returnType", "detailed")
-              }
-            >
-              Detailed
-            </div>
-            <div
-              className={`w-full text-center py-1  px-4 ${settings.returns.returnType === "random" ? "bg-main-orange-light" : ""} cursor-pointer rounded-md`}
-              onClick={() => updateSettings("returns", "returnType", "random")}
-            >
-              Random
-            </div>
-          </div>
+          <SmallTroggle
+            item1="Simple"
+            item2="Detailed"
+            item3="Random"
+            active={(settings.returns.returnType as any).capitalize()}
+            set={(value: string) =>
+              updateSettings("returns", "returnType", value.toLowerCase())
+            }
+          />
         </div>
         {settings.returns.returnType === "detailed" && (
           <div className="w-32 mx-auto mt-1 mb-1">

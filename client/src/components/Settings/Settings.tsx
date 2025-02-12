@@ -91,10 +91,12 @@ const Settings = () => {
   };
   const [tooLight, setTooLight] = useState(false);
   const ref = useRef(null as any);
-  const upload = async (e: any) => {
-    const file = e.target.files[0];
-    await uploadLogo(file);
-    fetchUser();
+  const upload: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      await uploadLogo(file);
+      fetchUser();
+    }
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {

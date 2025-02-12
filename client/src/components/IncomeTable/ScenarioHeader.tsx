@@ -9,6 +9,7 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 import { useInfo } from "src/hooks/useData";
 import { Client, ScenarioSettings } from "src/types";
 import title from "src/calculator/title";
+import { calculateAge } from "../Info/PersonInfo";
 
 interface Props {
   settings: ScenarioSettings;
@@ -23,6 +24,9 @@ const ScenarioHeader = ({ client, settings }: Props) => {
       setField("liveSettings")({ ...client.liveSettings, ...v });
     }
   };
+  const setLiveSettings = (v: any) => {
+    setField("liveSettings")({ ...client.liveSettings, ...v });
+  };
 
   const { isFullscreen } = useFullscreen();
   const disabled = settings.id !== -1;
@@ -32,46 +36,72 @@ const ScenarioHeader = ({ client, settings }: Props) => {
       className={`flex justify-between items-center sticky ${isFullscreen ? "top-[44px]" : "top-[119px]"} z-[5000] bg-white px-4`}
     >
       <div className="flex items-center gap-3 z-0 w-full">
-        {settings.people.length == 2 && (
-          <div className="flex">
-            <WhoDies
-              disabled={settings.id !== -1}
-              active={settings.whoDies == -1}
-              setWhoDies={(i: number) => setSettings({ whoDies: i })}
-              i={-1}
-              title="Both Alive"
-            />
-            {settings.people.map((person, i) => (
+        {settings.people.length == 2 &&
+          (disabled ? (
+            <>
+              <div
+                className={`px-4 ${settings.whoDies !== -1 && "pr-1"} bg-main-orange text-white font-medium h flex items-center gap-2 cursor-pointer border border-gray-300 border-1 rounded-lg h-[32px]`}
+              >
+                <span className="text-sm text-nowrap flex items-center gap-3">
+                  {settings.whoDies == -1
+                    ? "Both Alive"
+                    : settings.people[settings.whoDies].name + " Dies At"}
+                  {settings.whoDies != -1 && (
+                    <Input
+                      disabled={disabled}
+                      width="!w-12 text-black !font-normal !py-0 !rounded-[5px]"
+                      label=""
+                      labelLength={0}
+                      value={
+                        calculateAge(
+                          new Date(settings.people[settings.whoDies].birthday),
+                        ) || ""
+                      }
+                      setValue={() => { }}
+                    />
+                  )}
+                </span>
+              </div>
+            </>
+          ) : (
+            <div className="flex">
               <WhoDies
-                active={settings.whoDies == i}
                 disabled={settings.id !== -1}
-                key={person.id}
-                age={settings.deathYears[i]}
-                setAge={(e: any) =>
-                  setSettings({
-                    deathYears: updateAtIndex(
-                      settings.deathYears,
-                      i,
-                      parseInt(e),
-                    ),
-                  })
-                }
+                active={settings.whoDies == -1}
                 setWhoDies={(i: number) => setSettings({ whoDies: i })}
-                i={i}
-                title={`${person.name} Dies At`}
+                i={-1}
+                title="Both Alive"
               />
-            ))}
-          </div>
-        )}
+              {settings.people.map((person, i) => (
+                <WhoDies
+                  active={settings.whoDies == i}
+                  disabled={settings.id !== -1}
+                  key={person.id}
+                  age={settings.deathYears[i]}
+                  setAge={(e: any) =>
+                    setSettings({
+                      deathYears: updateAtIndex(
+                        settings.deathYears,
+                        i,
+                        parseInt(e),
+                      ),
+                    })
+                  }
+                  setWhoDies={(i: number) => setSettings({ whoDies: i })}
+                  i={i}
+                  title={`${person.name} Dies At`}
+                />
+              ))}
+            </div>
+          ))}
         <div className="bg-gray-300 mt-[-5px] w-[1px] h-[73px] mx-2"></div>
         <div className="mt-[-3px]">
           <MultiToggle
             vertical={true}
             options={["Real", "Nominal"]}
             label=""
-            disabled={disabled}
             value={settings.inflationType}
-            setValue={(v: any) => setSettings({ inflationType: v })}
+            setValue={(v: any) => setLiveSettings({ inflationType: v })}
           />
         </div>
         <div className="mt-[-5px]">
@@ -83,10 +113,10 @@ const ScenarioHeader = ({ client, settings }: Props) => {
               }, 0);
             }}
             inlineLabel="Inflation rate"
-            disabled={disabled}
             label=""
             labelLength={85}
             size="xs"
+            disabled={disabled}
             vertical
             width="!w-[160px] !py-[4px]"
             subtype="percent"
@@ -101,10 +131,11 @@ const ScenarioHeader = ({ client, settings }: Props) => {
               <MultiToggle
                 options={["Pre-Tax", "Post-Tax"]}
                 label=""
-                disabled={disabled}
                 vertical={true}
                 value={settings.taxType}
-                setValue={(v: any) => setSettings({ ...settings, taxType: v })}
+                setValue={(v: any) =>
+                  setLiveSettings({ ...settings, taxType: v })
+                }
               />
             </div>
           )}
@@ -234,7 +265,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                   label="Years Shown"
                   value={settings.maxYearsShown}
                   setValue={(v: any) =>
-                    setSettings({ ...settings, maxYearsShown: v })
+                    setLiveSettings({ ...settings, maxYearsShown: v })
                   }
                   tooltip={
                     <div className="w-40">

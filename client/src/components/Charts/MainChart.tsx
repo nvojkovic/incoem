@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { jointTable, makeTable } from "../Longevity/calculate";
+import { calculateAge } from "../Info/PersonInfo";
+import { Person } from "src/types";
 
 interface Props {
-  years: any;
-  taxes: any;
-  stackedData: any;
-  lineData: any;
-  spending: any;
-  stability: any;
-  needsFlag: any;
-  longevityFlag: any;
-  people: any;
-  initialHeight: any;
-  maxY?: any;
+  years: number[];
+  taxes: number[];
+  stackedData: { name: string; stable: boolean; values: number[] }[];
+  lineData: number[];
+  spending: boolean;
+  stability: boolean;
+  needsFlag: boolean;
+  longevityFlag: boolean;
+  people: Person[];
+  initialHeight: number;
+  maxY?: number;
 }
 
 const MainChart = ({
@@ -29,8 +31,9 @@ const MainChart = ({
   initialHeight = 500,
   maxY,
 }: Props) => {
-  const svgRef = useRef() as any;
-  const containerRef = useRef() as any;
+  // svg ref with proper type
+  const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({
     width: 1100,
     height: initialHeight,
@@ -56,6 +59,7 @@ const MainChart = ({
   ];
 
   useEffect(() => {
+    if (!containerRef.current) return;
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setDimensions({
@@ -71,7 +75,8 @@ const MainChart = ({
   }, []);
 
   useEffect(() => {
-    svgRef.current.innerHtml = "";
+    if (!svgRef.current || !containerRef.current) return;
+    svgRef.current.innerHTML = "";
     d3.select(svgRef.current).selectAll("*").remove();
     // Remove any existing legend containers
     d3.select(containerRef.current).selectAll(".legend-container").remove();
@@ -114,7 +119,7 @@ const MainChart = ({
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // First sort the stackedData array
-    stackedData.sort((a: any, b: any) => {
+    stackedData.sort((a, b) => {
       if (a.stable === b.stable) {
         return a.name.localeCompare(b.name);
       }
@@ -122,33 +127,34 @@ const MainChart = ({
     });
 
     // Process data after sorting
-    const processedData = years.map((year: any, index: any) => {
-      const yearData = { year } as any;
-      stackedData.forEach((item: any) => {
+    const processedData = years.map((year, index) => {
+      const yearData: Record<string, number> = { year };
+      stackedData.forEach((item) => {
         yearData[item.name] = item.values[index];
       });
       return yearData;
     });
+    console.log("processed data", processedData);
 
     // Get keys from sorted data
     const keys = stackedData
-      .filter((d: any) => !hiddenSeries.has(d.name))
-      .map((d: any) => d.name) as any;
+      .filter((d) => !hiddenSeries.has(d.name))
+      .map((d) => d.name);
 
     const x = d3
       .scaleLinear()
-      .domain(d3.extent(years) as any)
+      .domain(d3.extent(years) as number[])
       .range([0, width]);
 
     const y = d3
       .scaleLinear()
       .domain([
         0,
-        maxY * 1.1 ||
+        (maxY || 0) * 1.1 ||
         Math.max(
-          (d3 as any).max(processedData as any, (d: any) => {
-            return d3.sum(keys, (key: any) => d[key]);
-          }),
+          d3.max(processedData, (d) => {
+            return d3.sum(keys, (key) => d[key]);
+          }) || 0,
           lineData ? Math.max(...lineData) : 0,
         ) * 1.1,
       ])
@@ -178,14 +184,15 @@ const MainChart = ({
       .y1((d) => y(d[1]))
       .curve(d3.curveMonotoneX);
 
-    (mainG as any)
+    mainG
       .selectAll("path.area")
       .data(layers)
       .join("path")
       .attr("class", "area")
       .attr("fill", (d: any) => {
         const item = stackedData.find((item: any) => item.name === d.key);
-        const baseColor = color(d.key);
+        if (!item) return "";
+        const baseColor = color(d.key) as string;
         if (item.stable || !stability) return baseColor;
 
         // Create a unique pattern ID for each unstable series
@@ -217,10 +224,10 @@ const MainChart = ({
         return `url(#${patternId})`;
       })
       .attr("opacity", (d: any) =>
-        stackedData.find((item: any) => item.name === d.key).stable ? 1 : 0.9,
+        stackedData.find((item: any) => item.name === d.key)?.stable ? 1 : 0.9,
       )
-      .attr("d", area)
-      .style("stroke", (d: any) => color(d.key))
+      .attr("d", area as any)
+      .style("stroke", (d: any) => color(d.key) as string)
       .style("stroke-width", 1);
 
     const line = d3
@@ -236,7 +243,7 @@ const MainChart = ({
         .attr("fill", "none")
         .attr("stroke", "#ED4337")
         .attr("stroke-width", 3)
-        .attr("d", line);
+        .attr("d", line as unknown as number[]);
 
     // Update x-axis
     mainG
@@ -337,10 +344,10 @@ const MainChart = ({
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${color(key)};  margin-right: 5px;"></span>
-                    <span style="color: ${stackedData.find((k) => k.name === key).stable ? "black" : "#999"}">${key}: </span>
+                    <span style="color: ${stackedData.find((k: any) => k.name === key)?.stable ? "black" : "#777"}">${key}: </span>
                   </div>
                   <div>
-                    <b style="color: ${stackedData.find((k) => k.name === key).stable ? "black" : "#999"}">${formatCurrency.format(selectedData[key])}</b>
+                    <b style="color: ${stackedData.find((k: any) => k.name === key)?.stable ? "black" : "#777"}">${formatCurrency.format(selectedData[key])}</b>
                   </div>
                 </div>
               </div>`,
@@ -417,7 +424,7 @@ const MainChart = ({
             }</div></div></div>`
             : "";
         tooltip.html(
-          `<div class="mb-4"><strong>Year: ${year}</strong><br>${longevityContent}${tooltipContent}</div>`,
+          `<div class="mb-4"><strong>Year: ${year} (${people.map((p: any) => calculateAge(new Date(p.birthday))).join("/")})</strong><br>${longevityContent}${tooltipContent}</div>`,
         );
 
         // Calculate tooltip dimensions
@@ -492,7 +499,7 @@ const MainChart = ({
         .style("border-radius", "50%")
         .style(
           "opacity",
-          stackedData.find((item: any) => item.name === key).stable ? 1 : 0.5,
+          stackedData.find((item: any) => item.name === key)?.stable ? 1 : 0.5,
         );
 
       legendItem
