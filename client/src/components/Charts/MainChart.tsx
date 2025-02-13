@@ -404,6 +404,16 @@ const MainChart = ({
               }
                               </div>
               <div class="h-[1px] bg-black my-1"/>
+              ${stability ? `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                  <div class="ml-5">
+                    <b>Stability Ratio: </b>
+                  </div>
+                  <div>
+                    <b>${(100 * keys.filter(key => stackedData.find(k => k.name === key)?.stable).map(key => selectedData[key]).reduce((a, b) => a + b, 0) / keys.map(key => selectedData[key]).reduce((a, b) => a + b, 0)).toFixed(1)}%</b>
+                  </div>
+                </div>
+              </div>` : ''}
 <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-1 ">
                   <div class="ml-5">
