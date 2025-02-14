@@ -11,11 +11,9 @@ const PrintAssetSummary = () => {
   const { id } = useParams();
   useEffect(() => {
     if (id)
-      getPrintClient(id)
-        .then((a) => a.json())
-        .then((data) => {
-          setClient(data);
-        });
+      getPrintClient(id).then((data) => {
+        setClient(data);
+      });
   }, [id]);
 
   console.log(client);
