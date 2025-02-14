@@ -11,11 +11,9 @@ const PrintLivePage = () => {
   const { id } = useParams();
   useEffect(() => {
     if (id)
-      getPrintClient(id)
-        .then((data) => data.json())
-        .then((data) => {
-          setClient(data);
-        });
+      getPrintClient(id).then((data) => {
+        setClient(data);
+      });
   }, [id]);
 
   const scenario = {
