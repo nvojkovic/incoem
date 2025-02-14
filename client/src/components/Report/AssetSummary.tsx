@@ -957,7 +957,7 @@ const AssetSummary = ({ client }: Props) => {
 
       <div className="break-inside-avoid-page">
         <Header text="Analysis" color="#4471c4" />
-        <div className="flex gap-4 pt-5 w-[800px] !text-[16px]">
+        <div className="flex justify-between gap-4 pt-5 !text-[16px]">
           <div className="w-full rounded-md">
             <table className="text-center border-collapse">
               <thead className={`text-left z-50 border-1 `}>
@@ -990,7 +990,7 @@ const AssetSummary = ({ client }: Props) => {
               </tbody>
             </table>
           </div>
-          <div className="w-full">
+          <div className="w-full flex">
             <table className="text-center border-collapse">
               <thead
                 className={` cursor-pointer text-left sticky z-50 border-1 !font-normal`}
