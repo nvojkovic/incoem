@@ -47,7 +47,6 @@ export const calculateSingleSpending = (
       return amount;
     })
     .reduce((a, b) => a + b, 0);
-  console.log(year, toRemove, baseAmount);
 
   baseAmount = inflateAmount(baseAmount - toRemove, spending.yearlyIncrease);
   // Apply death reduction to base

@@ -1,9 +1,10 @@
-import { yearRange } from "src/utils";
+import { printNumber, yearRange } from "src/utils";
 import Table from "../Calculators/Versatile/Table";
 import VersatileSettings from "../Calculators/Versatile/VersatileSettings";
 import {
   CalculatorSettings,
   StoredCalculator,
+  cagr,
   calculateProjection,
   getReturns,
 } from "../Calculators/Versatile/versatileTypes";
@@ -100,8 +101,54 @@ const VersatileReport = ({ client, settings }: VersatileCalculatorProps) => {
           </div>
         </div>
       </div>
+
       <VersatileSettings settings={{ ...settings, id: null as any }} print />
       <div className="mb-12"></div>
+
+      <div className="flex gap-4 justify-center mb-10">
+        <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg border">
+          <div className="uppercase tracking-wide text-sm text-gray-800">
+            Ending Balance
+          </div>
+          <div className="font-semibold text-lg mt-[2px]">
+            <span
+              className={
+                calculations.length &&
+                calculations[calculations.length - 1].endingBalance < 0
+                  ? "text-red-500"
+                  : ""
+              }
+            >
+              {printNumber(
+                calculations.length &&
+                  calculations[calculations.length - 1].endingBalance,
+              )}
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg border">
+          <div className="uppercase tracking-wide text-sm text-gray-800">
+            Total Payments
+          </div>
+          <div className="font-semibold text-lg mt-[2px]">
+            {printNumber(
+              calculations
+                .map((i) => i.totalPayments)
+                .reduce((a, b) => a + b, 0),
+            )}{" "}
+          </div>
+        </div>
+        <div className="flex flex-col items-center bg-white px-6 py-3 rounded-lg border w-40 relative">
+          <div className="uppercase tracking-wide text-sm text-gray-800 flex gap-2">
+            <div className="flex gap-2">
+              <div>CAGR</div>
+            </div>
+          </div>
+          <div className="font-semibold text-lg mt-[2px] ml-[10px]">
+            {cagr(calculations.map((y) => returnsMemo(y.year)))}%
+          </div>
+        </div>
+      </div>
 
       <VersatileBalance datasets={chartData} print />
       <div className="break-after-page"></div>

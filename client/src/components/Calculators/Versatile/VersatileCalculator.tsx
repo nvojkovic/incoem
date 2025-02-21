@@ -22,6 +22,8 @@ import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
 import Table from "./Table";
 import Scenarios from "./Scenarios";
+import ChartModal from "src/components/ChartModal";
+import { useFullscreen } from "src/hooks/useFullScreen";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
@@ -94,6 +96,7 @@ const VersatileCalculator: React.FC = () => {
             color: "#3498db", // Indigo color
           },
         ];
+  const { isFullscreen } = useFullscreen();
 
   return (
     <Layout page="calculator" wide>
@@ -101,12 +104,15 @@ const VersatileCalculator: React.FC = () => {
         <Scenarios tab={tab} setTab={setTab} />
         <div className="flex gap-6">
           <div>
-            <div className="sticky top-[160px]">
+            <div className="sticky " style={{ top: isFullscreen ? 107 : 169 }}>
               <VersatileSettings settings={settings} print={false} />
             </div>
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[120px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-2 z-[10] pt-12 mt-[-150px]">
+            <div
+              className="sticky top-[120px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-3 z-[10] pt-12 mt-[-150px]"
+              style={{ top: isFullscreen ? 58 : 120 }}
+            >
               <div className="flex gap-4">
                 <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
@@ -178,19 +184,29 @@ const VersatileCalculator: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white pt-3 pr-3 border rounded-lg mt-20 shadow-md sticky top-[200px]">
+            <div
+              className="bg-white py-3 pr-3 border rounded-lg mt-20 shadow-md sticky top-[250px]"
+              style={{ top: isFullscreen ? 193 : 253 }}
+            >
               {
-                <div
-                  className={`flex justify-end cursor-pointer ${"z-50 sticky top-[72px]"}`}
-                  onClick={() => setOpen(!open)}
-                >
+                <div className={`flex justify-end cursor-pointer `}>
                   {open ? (
-                    <ChevronUpIcon className="text-[#475467] w-6" />
+                    <ChevronUpIcon
+                      className="text-[#475467] w-6"
+                      onClick={() => setOpen(!open)}
+                    />
                   ) : (
-                    <ChevronDownIcon className="text-[#475467] w-6" />
+                    <ChevronDownIcon
+                      className="text-[#475467] w-6"
+                      onClick={() => setOpen(!open)}
+                    />
                   )}
+                  <ChartModal>
+                    <VersatileBalance datasets={chartData} print={false} full />
+                  </ChartModal>
                 </div>
               }
+
               <div
                 className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
               >
@@ -199,7 +215,7 @@ const VersatileCalculator: React.FC = () => {
             </div>
             <div className=""></div>
 
-            <div className="mt-[40px]">
+            <div className="mt-[60px]">
               <Table
                 calculations={calculations}
                 returnsMemo={returnsMemo}
