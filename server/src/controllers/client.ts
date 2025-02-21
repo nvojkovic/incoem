@@ -3,6 +3,7 @@ import fs from "fs";
 import { Request, Response } from "express";
 import { SessionRequest } from "supertokens-node/framework/express";
 import { request } from "http";
+import config from "../config";
 
 const prisma = new PrismaClient();
 export const allClients = async (req: SessionRequest, res: Response) => {
@@ -60,14 +61,7 @@ const makeReport = async (id: number, page: string, fileName: string) => {
     return true;
   });
 
-  const url =
-    process.env.PRINTER_URL +
-    "/?pages=" +
-    JSON.stringify(pages) +
-    "&url=" +
-    process.env.APP_URL +
-    // "http://im-client:5173" +
-    page;
+  const url = `${config.PRINTER_URL}/?pages=${JSON.stringify(pages)}&url=${config.PRINTER_APP_URL}${page}`;
   console.log("Printing url:", url);
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
@@ -76,13 +70,7 @@ const makeReport = async (id: number, page: string, fileName: string) => {
 
 export const getPrintAssetSummary = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
-  const url =
-    process.env.PRINTER_URL +
-    "/asset-summary?url=" +
-    process.env.APP_URL +
-    // "http:im-client:5173" +
-    "/print-asset-summary/" +
-    req.params.id;
+  const url = `${config.PRINTER_URL}/asset-summary?url=${config.PRINTER_APP_URL}/print-asset-summary/${id}`;
 
   const pdf = await fetch(url);
   const data = await pdf.arrayBuffer();
@@ -93,15 +81,9 @@ export const getPrintAssetSummary = async (req: Request, res: Response) => {
 
 export const getPrintVersatile = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
-  const url =
-    process.env.PRINTER_URL +
-    "/versatile?url=" +
-    process.env.APP_URL +
-    // "http:im-client:5173" +
-    "/print-versatile/" +
-    req.params.id +
-    "/" +
-    req.params.scenarioId;
+
+  const url = `${config.PRINTER_URL}/versatile?url=${config.PRINTER_APP_URL}/print-versatile/${id}/${req.params.scenarioId}`;
+
   console.log(url);
 
   const pdf = await fetch(url);

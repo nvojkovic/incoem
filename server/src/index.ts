@@ -47,7 +47,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.APP_URL,
     allowedHeaders: [
       "content-type",
       ...supertokens.getAllCORSHeaders(),

@@ -7,6 +7,13 @@ import { Cluster } from "puppeteer-cluster";
 dotenv.config();
 const port = 3002;
 
+const launchOptions = {
+  executablePath: "/usr/bin/google-chrome",
+  ignoreDefaultArgs: ["--disable-extensions"],
+  args: ["--no-sandbox", "--disable-setuid-sandbox", "--user-agent=printer"],
+  headless: true,
+};
+
 let app = express();
 app.use(express.json());
 app.use(
@@ -95,7 +102,7 @@ const getVersatile = async (browser: Browser, url: string) => {
 
     //wait a second
     console.log("waiting");
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1000));
     console.log("done waiting");
 
     const header = await page.evaluate(() => {
@@ -168,12 +175,7 @@ const getPdf = async (page: Page, base: string, data: any) => {
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_PAGE,
     maxConcurrency: 20,
-    puppeteerOptions: {
-      executablePath: "/usr/bin/google-chrome",
-      ignoreDefaultArgs: ["--disable-extensions"],
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      headless: true,
-    },
+    puppeteerOptions: launchOptions,
   });
 
   await cluster.task(async ({ page, data }) => {
@@ -186,11 +188,7 @@ const getPdf = async (page: Page, base: string, data: any) => {
     if (!url) {
       return res.status(400).send("Missing url query parameter");
     }
-    const browser = await puppeteer.launch({
-      executablePath: "/usr/bin/google-chrome",
-      ignoreDefaultArgs: ["--disable-extensions"],
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    const browser = await puppeteer.launch(launchOptions);
 
     const toPrint = JSON.parse(pages as string).filter((i: any) => i.enabled);
 
@@ -214,11 +212,7 @@ app.get("/asset-summary", async (req, res) => {
   if (!url) {
     return res.status(400).send("Missing url query parameter");
   }
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/google-chrome",
-    ignoreDefaultArgs: ["--disable-extensions"],
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = await puppeteer.launch(launchOptions);
 
   const result = await getAssetSummary(browser, url as string);
   browser.close();
@@ -233,11 +227,7 @@ app.get("/versatile", async (req, res) => {
   if (!url) {
     return res.status(400).send("Missing url query parameter");
   }
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/google-chrome",
-    ignoreDefaultArgs: ["--disable-extensions"],
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--user-agent=printer"],
-  });
+  const browser = await puppeteer.launch(launchOptions);
 
   const result = await getVersatile(browser, url as string);
   browser.close();

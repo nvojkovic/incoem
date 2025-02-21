@@ -4,7 +4,7 @@ import { getPrintClient } from "../services/client";
 import Report from "../components/Report/Report";
 
 const PrintPage = () => {
-  const [client, setClient] = useState({} as any);
+  const [client, setClient] = useState(null as any);
   const { id, scenarioId } = useParams();
   const [searchParams, _] = useSearchParams();
   useEffect(() => {
@@ -16,10 +16,20 @@ const PrintPage = () => {
 
   const scenario = client?.scenarios?.find((s: any) => s.id == scenarioId);
   if (!client) return <div>Loading...</div>;
+  const scenarioData = {
+    ...scenario,
+    mapType: client.liveSettings.mapType,
+    inflationType: client.liveSettings.inflationType,
+    monthlyYearly: client.liveSettings.monthlyYearly,
+    chartType: client.liveSettings.chartType,
+    maxYearsShown: client.liveSettings.maxYearsShown,
+    taxType: client.liveSettings.taxType,
+  };
+
   return (
     <Report
       client={client}
-      scenario={scenario}
+      scenario={scenarioData}
       page={JSON.parse(searchParams.get("page") || "{}")}
     />
   );

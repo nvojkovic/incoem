@@ -38,8 +38,6 @@ const ResultTable = ({
 }: {
   client: Client;
   settings: ScenarioSettings;
-  removeScenario: any;
-  id: number;
   selectedYear: number;
   setSelectedYear: any;
   selectedColumn: SelectedColumn;

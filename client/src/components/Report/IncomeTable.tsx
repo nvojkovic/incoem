@@ -20,12 +20,10 @@ const IncomeTable = ({ client, scenario }: PrintProps) => {
           <ResultTable
             client={client}
             settings={scenario}
-            id={scenario.id}
-            removeScenario={() => { }}
             selectedYear={0}
-            setSelectedYear={() => { }}
+            setSelectedYear={() => {}}
             selectedColumn={{ id: 0, type: "none" }}
-            setSelectedColumn={() => { }}
+            setSelectedColumn={() => {}}
           />
         </div>
       </div>
