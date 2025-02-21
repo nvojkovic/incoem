@@ -13,7 +13,6 @@ interface MapChartProps {
 }
 
 const MapChart = ({ settings, client, print }: MapChartProps) => {
-  console.log("sss", settings);
   const incomes = settings.incomes.filter((inc) => inc.enabled);
   const startYear = new Date().getFullYear();
   const divisionFactor =
@@ -74,27 +73,27 @@ const MapChart = ({ settings, client, print }: MapChartProps) => {
         lineData={
           client.needsFlag
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (currentYear) =>
-                calculateSpendingYear(
-                  {
-                    people: settings.people,
-                    incomes: settings.incomes,
-                    version: 1,
-                  },
-                  client.spending,
-                  { ...settings, taxType: "Pre-Tax" },
-                  currentYear,
-                ) /
-                divisionFactor +
-                (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
-            )
+                (currentYear) =>
+                  calculateSpendingYear(
+                    {
+                      people: settings.people,
+                      incomes: settings.incomes,
+                      version: 1,
+                    },
+                    client.spending,
+                    { ...settings, taxType: "Pre-Tax" },
+                    currentYear,
+                  ) /
+                    divisionFactor +
+                  (settings.taxType == "Post-Tax" ? taxes(currentYear) : 0),
+              )
             : []
         }
         taxes={
           client.needsFlag && settings.taxType === "Post-Tax"
             ? yearRange(startYear, startYear + settings.maxYearsShown - 1).map(
-              (line) => taxes(line),
-            )
+                (line) => taxes(line),
+              )
             : []
         }
         stability={client.stabilityRatioFlag}

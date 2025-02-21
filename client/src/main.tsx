@@ -39,6 +39,7 @@ import ContractualWealthPage from "./components/Nate/ContractualWealth";
 import ExternalDocs from "./pages/external-docs";
 import PrintAssetSummary from "./pages/print-asset-summary";
 import "./services/supertokens";
+import VersatilePrintPage from "./pages/print/versatile";
 
 export const router = createBrowserRouter([
   {
@@ -135,6 +136,10 @@ export const router = createBrowserRouter([
         element: <HelpCenter />,
       },
     ],
+  },
+  {
+    path: "/print-versatile/:id/:scenarioId/",
+    element: <VersatilePrintPage />,
   },
   {
     path: "/print-asset-summary/:id/",

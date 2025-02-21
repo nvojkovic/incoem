@@ -10,7 +10,10 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 import SpendChart from "./SpendChart";
 import Scenarios from "./Scenarios";
 import SmallToggle from "./Inputs/SmallToggle";
-import { SavedScenario, ScenarioSettings, SelectedColumn } from "src/types";
+
+import { SelectedColumn } from "src/types";
+import ChartModal from "./ChartModal";
+
 const Summary = () => {
   const [tab, setTab] = useState(-1);
   const { data, storeScenarios, setField } = useInfo();
@@ -32,19 +35,15 @@ const Summary = () => {
     spending: data.spending,
   };
 
-  const settings: ScenarioSettings =
-    tab == -1
-      ? liveSettings
-      : {
-        ...(scenarios.find(({ id }) => id === tab) as SavedScenario),
-        maxYearsShown: data.liveSettings.maxYearsShown,
-        chartType: data.liveSettings.chartType,
-        mapType: data.liveSettings.mapType,
-        monthlyYearly: data.liveSettings.monthlyYearly,
-        taxType: data.liveSettings.taxType,
-        inflationType: data.liveSettings.inflationType,
-      };
+  const settings =
+    tab == -1 ? liveSettings : (scenarios.find(({ id }) => id === tab) as any);
 
+  const chart =
+    settings.chartType == "spending" ? (
+      <SpendChart settings={settings} client={data} />
+    ) : (
+      <MapChart settings={settings} client={data} />
+    );
   return (
     <Layout page="map">
       <div className="pb-32 border-[#EDEEF1] border">
@@ -73,7 +72,7 @@ const Summary = () => {
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => { }}
+              setSettings={tab === -1 ? setField("liveSettings") : () => {}}
               id={tab}
             />
           )}
@@ -93,12 +92,9 @@ const Summary = () => {
                   });
                 }}
               />
+              <ChartModal children={chart} />
             </div>
-            {settings.chartType == "spending" ? (
-              <SpendChart settings={settings} client={data} />
-            ) : (
-              <MapChart settings={settings} client={data} />
-            )}
+            {chart}
           </div>
         </div>
       </div>

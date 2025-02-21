@@ -18,6 +18,7 @@ interface Props {
   invalid?: boolean;
   setSelected: (s: any) => void;
   tooltip?: string;
+  disabled?: boolean;
 }
 
 function Select({
@@ -31,11 +32,13 @@ function Select({
   errorMessage,
   invalid,
   tooltip,
+  disabled,
 }: Props) {
   return (
     <div
-      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${vertical ? "items-start" : "lg:items-center"
-        } `}
+      className={`flex ${vertical && "flex-col"} gap-1 flex-shrink ${
+        vertical ? "items-start" : "items-center"
+      } `}
     >
       {label && (
         <label
@@ -53,17 +56,17 @@ function Select({
             : `w-full ${width}`
         }
       >
-        <Listbox value={selected} onChange={setSelected}>
+        <Listbox value={selected} onChange={setSelected} disabled={disabled}>
           <div className="relative">
             <Listbox.Button
-              className={`relative w-full cursor-default rounded-lg bg-white py-[6px] pl-3 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD] flex justify-between ${invalid ? "border-red-500 border-2" : ""}`}
+              className={`relative w-full cursor-default rounded-lg ${disabled ? "bg-gray-100" : "bg-white"} py-[6px] pl-3 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border border-[#D0D5DD] flex justify-between ${invalid ? "border-red-500 border-2" : ""}`}
             >
               <span className="block truncate min-h-6 text-base">
                 <div className="relative w-full">{selected?.name}</div>
               </span>
               <span className=" flex items-center pr-2">
                 {tooltip || (errorMessage && invalid) ? (
-                  <div className={""}>
+                  <div className={"print:hidden"}>
                     <Tooltip
                       content={
                         <div
@@ -75,7 +78,7 @@ function Select({
                       theme={{ target: "" }}
                       placement="left-end"
                       style={invalid ? "light" : "dark"}
-                    // className="border-black border"
+                      // className="border-black border"
                     >
                       <div className="relative cursor-pointer">
                         {errorMessage && invalid ? (
@@ -110,9 +113,10 @@ function Select({
                     <Listbox.Option
                       key={personIdx}
                       className={({ active }) =>
-                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 z-[6000] ${active
-                          ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
-                          : "text-gray-900"
+                        `relative cursor-default min-h-8 select-none py-2 text-left pl-8 z-[6000] ${
+                          active
+                            ? " text-main-orange bg-[rgba(var(--primary-color-segment),0.1)]"
+                            : "text-gray-900"
                         }`
                       }
                       value={person}
@@ -120,8 +124,9 @@ function Select({
                       {({ selected }) => (
                         <>
                           <span
-                            className={`block truncate ${selected ? "font-medium" : "font-normal"
-                              }`}
+                            className={`block truncate ${
+                              selected ? "font-medium" : "font-normal"
+                            }`}
                           >
                             {person.name}
                           </span>

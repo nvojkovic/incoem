@@ -1,5 +1,5 @@
 import config from "./config";
-import { Client, ScenarioSettings, UserInfo } from "src/types";
+import { Client, PrintClient, ScenarioSettings, UserInfo } from "src/types";
 // import config from "./config";
 
 const API = config.API_URL;
@@ -64,17 +64,18 @@ export const getClient = (id: string) => {
   });
 };
 
-export const getPrintClient = async (id: any) => {
-  const base =
-    import.meta.env.VITE_ENV === "local" ? "http://im-server:3000/" : API;
-  // const base = "http://localhost:3000/";
-  const res = await fetch(base + `print/client/${id}`, {
+export const getPrintClient = async (id: any): Promise<PrintClient> => {
+  const local =
+    navigator.userAgent === "printer"
+      ? "http://im-server:3000/"
+      : "http://localhost:3000/";
+  const base = import.meta.env.VITE_ENV === "local" ? local : API;
+  return fetch(base + `print/client/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  });
-  return await res.json();
+  }).then((res) => res.json());
 };
 
 export const updateData = (id: string, data: Client) => {

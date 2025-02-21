@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Input from "src/components/Inputs/Input";
-import { CalculatorSettings } from "./versatileTypes";
+import { CalculatorSettings, StoredCalculator } from "./versatileTypes";
 import { useInfo } from "src/hooks/useData";
 import Button from "src/components/Inputs/Button";
 import { ArrowDownIcon, TableCellsIcon } from "@heroicons/react/24/outline";
@@ -10,12 +10,18 @@ import { yearRange } from "src/utils";
 import { Tooltip } from "flowbite-react";
 import SmallToggle, { SmallTroggle } from "src/components/Inputs/SmallToggle";
 
-const VersatileSettings = () => {
-  const { data: client, setField } = useInfo();
-  const settings = client.versatileCalculator as CalculatorSettings;
+const VersatileSettings = ({
+  settings,
+  print,
+}: {
+  settings: StoredCalculator;
+  print: boolean;
+}) => {
+  const { setField } = useInfo();
   console.log("calc", settings);
   const [openYears, setOpenYears] = useState(false);
   const [openReturns, setOpenReturns] = useState(false);
+  const disabled = !!settings.id;
 
   const updateSettings = (
     category: keyof CalculatorSettings,
@@ -32,8 +38,10 @@ const VersatileSettings = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6 sticky top-[98px]">
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+    <div
+      className={`grid ${print ? "grid-cols-2 grid-rows-2" : "grid-cols-1"} gap-6`}
+    >
+      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md print:shadow-none bg-white">
         <div className="col-span-3">
           <h2 className="text-xl font-semibold">User Settings</h2>
         </div>
@@ -52,6 +60,7 @@ const VersatileSettings = () => {
               setValue={(value) =>
                 updateSettings("user", "presentValue", value)
               }
+              disabled={disabled}
             />{" "}
             <Input
               labelLength={100}
@@ -64,6 +73,7 @@ const VersatileSettings = () => {
               }
               value={settings.user.endValue}
               setValue={(value) => updateSettings("user", "endValue", value)}
+              disabled={disabled}
             />
           </div>
           <div className="flex flex-col gap-3">
@@ -74,6 +84,7 @@ const VersatileSettings = () => {
               subtype="number"
               value={settings.user.startAge}
               setValue={(value) => updateSettings("user", "startAge", value)}
+              disabled={disabled}
             />
             <Input
               label="Years"
@@ -82,12 +93,13 @@ const VersatileSettings = () => {
               width="!w-[50px]"
               value={settings.user.endYear}
               setValue={(value) => updateSettings("user", "endYear", value)}
+              disabled={disabled}
             />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md print:shadow-none bg-white">
         <div className="flex gap-7 justify-between items-center">
           <h2 className="text-xl font-semibold">Payment</h2>
           <div className="flex">
@@ -104,11 +116,12 @@ const VersatileSettings = () => {
                   settings.payment.type === "simple" ? "detailed" : "simple",
                 )
               }
+              disabled={disabled}
             />
           </div>
         </div>
         {settings.payment.type === "detailed" && (
-          <div className="w-32 mx-auto">
+          <div className="w-32 mx-auto print:hidden">
             <Button type="primary" onClick={() => setOpenYears(true)}>
               Open Years{" "}
             </Button>
@@ -129,30 +142,33 @@ const VersatileSettings = () => {
                     : null
                 }
                 setValue={(value) => updateSettings("payment", "amount", value)}
+                disabled={disabled}
               />
 
-              <Tooltip
-                content="Copy payment to every year in Detailed."
-                theme={{ target: "" }}
-              >
-                <Button
-                  type="secondary"
-                  onClick={() => {
-                    updateSettings(
-                      "payment",
-                      "years",
-                      Object.fromEntries(
-                        yearRange(
-                          settings.payment.startYear,
-                          settings.user.endYear,
-                        ).map((i) => [i, settings.payment.amount]),
-                      ) as any,
-                    );
-                  }}
+              <div className="print:hidden">
+                <Tooltip
+                  content="Copy payment to every year in Detailed."
+                  theme={{ target: "" }}
                 >
-                  <TableCellsIcon className="h-5 w-5" />
-                </Button>
-              </Tooltip>
+                  <Button
+                    type="secondary"
+                    onClick={() => {
+                      updateSettings(
+                        "payment",
+                        "years",
+                        Object.fromEntries(
+                          yearRange(
+                            settings.payment.startYear,
+                            settings.user.endYear,
+                          ).map((i) => [i, settings.payment.amount]),
+                        ) as any,
+                      );
+                    }}
+                  >
+                    <TableCellsIcon className="h-5 w-5" />
+                  </Button>
+                </Tooltip>
+              </div>
             </div>
             <Input
               label="Start Year"
@@ -163,6 +179,7 @@ const VersatileSettings = () => {
               setValue={(value) =>
                 updateSettings("payment", "startYear", value)
               }
+              disabled={disabled}
             />
           </div>
         )}
@@ -175,11 +192,13 @@ const VersatileSettings = () => {
             subtype="percent"
             value={settings.payment.increase}
             setValue={(value) => updateSettings("payment", "increase", value)}
+            disabled={disabled}
           />
           <div className="w-[168px]">
             <Select
               labelLength={60}
               label="Timing"
+              disabled={disabled}
               width="!w-[80px]"
               options={[
                 { id: "beginning", name: "BoY" },
@@ -196,7 +215,7 @@ const VersatileSettings = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md print:shadow-none bg-white">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Return</h2>
           <SmallTroggle
@@ -207,10 +226,11 @@ const VersatileSettings = () => {
             set={(value: string) =>
               updateSettings("returns", "returnType", value.toLowerCase())
             }
+            disabled={disabled}
           />
         </div>
         {settings.returns.returnType === "detailed" && (
-          <div className="w-32 mx-auto mt-1 mb-1">
+          <div className="w-32 mx-auto mt-1 mb-1 print:invisible">
             <Button type="primary" onClick={() => setOpenReturns(true)}>
               Open Years
             </Button>
@@ -227,6 +247,7 @@ const VersatileSettings = () => {
                 setValue={(value) =>
                   updateSettings("returns", "rateOfReturn", value)
                 }
+                disabled={disabled}
               />
               <div className="w-10">
                 <Tooltip
@@ -243,7 +264,7 @@ const VersatileSettings = () => {
                           yearRange(0, settings.user.endYear).map((i) => [
                             i,
                             Math.round(100 * settings.returns.rateOfReturn) /
-                            100,
+                              100,
                           ]),
                         ) as any,
                       );
@@ -267,6 +288,7 @@ const VersatileSettings = () => {
                 subtype="percent"
                 value={settings.returns.mean}
                 setValue={(value) => updateSettings("returns", "mean", value)}
+                disabled={disabled}
               />
               <Input
                 label="Std. Dev."
@@ -275,6 +297,7 @@ const VersatileSettings = () => {
                 subtype="percent"
                 value={settings.returns.std}
                 setValue={(value) => updateSettings("returns", "std", value)}
+                disabled={disabled}
               />
             </div>
             <div className="flex flex-col gap-4 w-[230px]">
@@ -283,6 +306,7 @@ const VersatileSettings = () => {
                   tooltip="This will determine what values are used in the Table, Summary, and Solve"
                   labelLength={260}
                   label="Sequence shown"
+                  disabled={disabled}
                   options={[
                     { id: "worst", name: "Worst" },
                     { id: "25th", name: "25th" },
@@ -301,28 +325,31 @@ const VersatileSettings = () => {
                   }
                 />
               </div>
-              <Tooltip
-                content="Generate new sequence of returns."
-                theme={{ target: "" }}
-              >
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    updateSettings(
-                      "returns",
-                      "seed",
-                      (settings.returns.seed || 0) + 1,
-                    );
-                  }}
+              <div className="print:invisible">
+                <Tooltip
+                  content="Generate new sequence of returns."
+                  theme={{ target: "" }}
                 >
-                  Rerun
-                </Button>
-              </Tooltip>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      updateSettings(
+                        "returns",
+                        "seed",
+                        (settings.returns.seed || 0) + 1,
+                      );
+                    }}
+                    disabled={disabled}
+                  >
+                    Rerun
+                  </Button>
+                </Tooltip>
+              </div>
             </div>
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md bg-white">
+      <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-md print:shadow-none bg-white">
         <div className="col-span-3">
           <h2 className="text-xl font-semibold">Other Settings</h2>
         </div>
@@ -333,6 +360,7 @@ const VersatileSettings = () => {
             subtype="percent"
             value={settings.other.taxRate}
             setValue={(value) => updateSettings("other", "taxRate", value)}
+            disabled={disabled}
           />
           <Input
             label="Inflation (%)"
@@ -340,6 +368,7 @@ const VersatileSettings = () => {
             subtype="percent"
             value={settings.other.inflation}
             setValue={(value) => updateSettings("other", "inflation", value)}
+            disabled={disabled}
           />
           <Input
             label="Investment Fee (%)"
@@ -351,6 +380,7 @@ const VersatileSettings = () => {
             setValue={(value) =>
               updateSettings("other", "investmentFee", value)
             }
+            disabled={disabled}
           />
         </div>
       </div>
@@ -366,6 +396,7 @@ const VersatileSettings = () => {
               setValue={(value) =>
                 updateSettings("payment", "detailedIncrease", value)
               }
+              disabled={disabled}
             />
           </div>
           <div className="flex flex-col max-h-[500px] overflow-scroll gap-2 mb-4">
@@ -405,6 +436,7 @@ const VersatileSettings = () => {
                         [i]: value,
                       } as any)
                     }
+                    disabled={disabled}
                   />
                   <div className="w-12">
                     <Button
@@ -423,13 +455,13 @@ const VersatileSettings = () => {
                                   k,
                                   Math.round(
                                     settings.payment.years[i] *
-                                    Math.pow(
-                                      1 +
-                                      (settings.payment.detailedIncrease ||
-                                        0) /
-                                      100,
-                                      k - i,
-                                    ),
+                                      Math.pow(
+                                        1 +
+                                          (settings.payment.detailedIncrease ||
+                                            0) /
+                                            100,
+                                        k - i,
+                                      ),
                                   ),
                                 ];
                               else return [k, settings.payment.years[k]];
@@ -437,6 +469,7 @@ const VersatileSettings = () => {
                           ) as any,
                         );
                       }}
+                      disabled={disabled}
                     >
                       <div className="flex items-center justify-center h-6">
                         <ArrowDownIcon className="w-4 h-4" />
@@ -468,6 +501,7 @@ const VersatileSettings = () => {
                         [year]: value,
                       } as any)
                     }
+                    disabled={disabled}
                   />
                   <div className="w-12">
                     <Button
@@ -490,6 +524,7 @@ const VersatileSettings = () => {
                           ) as any,
                         );
                       }}
+                      disabled={disabled}
                     >
                       <div className="flex items-center justify-center h-6">
                         <ArrowDownIcon className="w-4 h-4" />

@@ -52,6 +52,14 @@ export const printReport = async (clientId: number, scenarioId: number) => {
   return API + "report/?report=" + pdfFile.file;
 };
 
+export const printVersatile = async (clientId: number, scenarioId: number) => {
+  let url;
+  const API = config.API_URL;
+  url = API + "print/versatile/" + clientId + "/" + scenarioId;
+  const pdfFile = await fetch(url).then((res) => res.json());
+  return API + "report/?report=" + pdfFile.file;
+};
+
 export const printSummary = async (clientId: number) => {
   let url;
   const API = config.API_URL;

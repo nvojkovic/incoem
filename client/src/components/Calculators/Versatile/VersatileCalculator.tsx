@@ -3,6 +3,7 @@ import Button from "src/components/Inputs/Button";
 import { printNumber, yearRange } from "src/utils";
 import {
   CalculatorSettings,
+  StoredCalculator,
   cagr,
   calculateProjection,
   getReturns,
@@ -20,14 +21,22 @@ import VersatileBalance from "src/components//Charts/VersatileBalance";
 import VersatileSettings from "./VersatileSettings";
 import Solve from "./Solve";
 import Table from "./Table";
+import Scenarios from "./Scenarios";
 
 const VersatileCalculator: React.FC = () => {
   const { data: client, setField } = useInfo();
-  const settings = client.versatileCalculator as CalculatorSettings;
+  const [tab, setTab] = useState(-1);
+  const [open, setOpen] = useState(true);
+
+  const settings: StoredCalculator =
+    tab == -1
+      ? client.versatileCalculator
+      : (client.versatileCalculators.find(({ id }) => id === tab) as any);
+
+  const disabled = tab !== -1;
 
   const returnsMemo = getReturns(settings);
   const calculations = calculateProjection(settings, returnsMemo);
-  const [open, setOpen] = useState(true);
   const getRandom = (
     settings: CalculatorSettings,
     type: "best" | "mean" | "worst" | "25th" | "75th",
@@ -49,52 +58,55 @@ const VersatileCalculator: React.FC = () => {
   const chartData =
     settings.returns.returnType === "random"
       ? [
-        {
-          label: "Worst",
-          ...getRandom(settings, "worst"),
-          color: "#e74c3c", // Indigo color
-        },
-        {
-          label: "25th",
-          ...getRandom(settings, "25th"),
-          color: "#ff8614", // Indigo color
-        },
-        {
-          label: "Median",
-          ...getRandom(settings, "mean"),
-          color: "#46C6FF", // Indigo color
-        },
-        {
-          label: "75th",
-          ...getRandom(settings, "75th"),
-          color: "#4693FF", // Indigo color
-        },
-        {
-          label: "Best",
-          ...getRandom(settings, "best"),
-          color: "#2ecc71", // Indigo color
-        },
-      ]
+          {
+            label: "Worst",
+            ...getRandom(settings, "worst"),
+            color: "#e74c3c", // Indigo color
+          },
+          {
+            label: "25th",
+            ...getRandom(settings, "25th"),
+            color: "#ff8614", // Indigo color
+          },
+          {
+            label: "Median",
+            ...getRandom(settings, "mean"),
+            color: "#46C6FF", // Indigo color
+          },
+          {
+            label: "75th",
+            ...getRandom(settings, "75th"),
+            color: "#4693FF", // Indigo color
+          },
+          {
+            label: "Best",
+            ...getRandom(settings, "best"),
+            color: "#2ecc71", // Indigo color
+          },
+        ]
       : [
-        {
-          label: "Balance",
-          data: calculations,
-          returns: yearRange(1, settings.user.endYear).map((i) =>
-            returnsMemo(i),
-          ),
-          color: "#3498db", // Indigo color
-        },
-      ];
+          {
+            label: "Balance",
+            data: calculations,
+            returns: yearRange(1, settings.user.endYear).map((i) =>
+              returnsMemo(i),
+            ),
+            color: "#3498db", // Indigo color
+          },
+        ];
 
   return (
     <Layout page="calculator" wide>
       <div className="max-w-[1600px] mx-auto px-4 mt-[-25px]">
+        <Scenarios tab={tab} setTab={setTab} />
         <div className="flex gap-6">
           <div>
-            <VersatileSettings />
+            <div className="sticky top-[160px]">
+              <VersatileSettings settings={settings} print={false} />
+            </div>
           </div>
           <div className="w-[1200px]">
-            <div className="sticky top-[50px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-2 z-[10] pt-12 mt-[-150px]">
+            <div className="sticky top-[120px] bg-[#f3f4f6] flex justify-between items-center gap-5 pb-2 z-[10] pt-12 mt-[-150px]">
               <div className="flex gap-4">
                 <div className="flex flex-col items-center  bg-white px-6 py-3 rounded-lg shadow-md border">
                   <div className="uppercase tracking-wide text-sm text-gray-800">
@@ -104,14 +116,14 @@ const VersatileCalculator: React.FC = () => {
                     <span
                       className={
                         calculations.length &&
-                          calculations[calculations.length - 1].endingBalance < 0
+                        calculations[calculations.length - 1].endingBalance < 0
                           ? "text-red-500"
                           : ""
                       }
                     >
                       {printNumber(
                         calculations.length &&
-                        calculations[calculations.length - 1].endingBalance,
+                          calculations[calculations.length - 1].endingBalance,
                       )}
                     </span>
                   </div>
@@ -147,17 +159,22 @@ const VersatileCalculator: React.FC = () => {
                 </div>
               </div>
               <div className="flex gap-4 items-end">
-                <Solve />
-                <div className="w-40">
-                  <Button
-                    type="secondary"
-                    onClick={() => {
-                      setField("versatileCalculator")(initialVersatileSettings);
-                    }}
-                  >
-                    Reset Inputs
-                  </Button>
-                </div>
+                <Solve settings={settings} />
+                {!disabled && (
+                  <div className="w-40">
+                    <Button
+                      type="secondary"
+                      onClick={() => {
+                        setField("versatileCalculator")(
+                          initialVersatileSettings,
+                        );
+                      }}
+                      disabled={disabled}
+                    >
+                      Reset Inputs
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -177,7 +194,7 @@ const VersatileCalculator: React.FC = () => {
               <div
                 className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
               >
-                <VersatileBalance datasets={chartData} />
+                <VersatileBalance datasets={chartData} print={false} />
               </div>
             </div>
             <div className=""></div>

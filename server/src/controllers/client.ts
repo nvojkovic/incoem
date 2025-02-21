@@ -79,8 +79,8 @@ export const getPrintAssetSummary = async (req: Request, res: Response) => {
   const url =
     process.env.PRINTER_URL +
     "/asset-summary?url=" +
-    // process.env.APP_URL +
-    "http:im-client:5173" +
+    process.env.APP_URL +
+    // "http:im-client:5173" +
     "/print-asset-summary/" +
     req.params.id;
 
@@ -89,24 +89,26 @@ export const getPrintAssetSummary = async (req: Request, res: Response) => {
   const filename = `/storage/${id}-asset-summary.pdf`;
   fs.writeFileSync(filename, Buffer.from(data));
   return res.json({ file: filename });
+};
 
-  fetch(url).then(({ body, headers }) => {
-    body?.pipeTo(
-      new WritableStream({
-        start() {
-          headers.forEach((v, n) => res.setHeader(n, v));
-        },
-        write(chunk) {
-          res.write(chunk);
-        },
-        close() {
-          res.end();
-        },
-      }),
-    );
-  });
-
+export const getPrintVersatile = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const url =
+    process.env.PRINTER_URL +
+    "/versatile?url=" +
+    process.env.APP_URL +
+    // "http:im-client:5173" +
+    "/print-versatile/" +
+    req.params.id +
+    "/" +
+    req.params.scenarioId;
   console.log(url);
+
+  const pdf = await fetch(url);
+  const data = await pdf.arrayBuffer();
+  const filename = `/storage/${id}-versatile.pdf`;
+  fs.writeFileSync(filename, Buffer.from(data));
+  return res.json({ file: filename });
 };
 
 export const getPrintClientPdfLive = async (req: Request, res: Response) => {
@@ -157,6 +159,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
     stabilityRatioFlag,
     needsFlag,
     versatileCalculator,
+    versatileCalculators,
     allInOneCalculator,
     taxesFlag,
     assetSummary,
@@ -183,6 +186,7 @@ export const updateClient = async (req: SessionRequest, res: Response) => {
       assetSummary,
       allInOneCalculator,
       versatileCalculator,
+      versatileCalculators,
       liveSettings,
       reportSettings,
       updatedAt: new Date(),

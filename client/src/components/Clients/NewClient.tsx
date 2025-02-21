@@ -109,6 +109,7 @@ const initializeNewClient = (user: User | null): Client => ({
   } as RetirementSpendingSettings,
   allInOneCalculator: [],
   versatileCalculator: initialVersatileSettings,
+  versatileCalculators: [],
   liveSettings: {
     id: -1,
     name: "",
@@ -176,9 +177,9 @@ const NewClient = () => {
                 people: singleMode
                   ? [client.people[0]]
                   : [
-                    ...client.people,
-                    { name: "", birthday: null as any, id: 1 },
-                  ],
+                      ...client.people,
+                      { name: "", birthday: null as any, id: 1 },
+                    ],
                 assetSummary: {
                   ...client.assetSummary,
                   socialInsurance: client.assetSummary.socialInsurance.map(
