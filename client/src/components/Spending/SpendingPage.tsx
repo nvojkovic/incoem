@@ -29,6 +29,7 @@ import {
   ScenarioSettings,
 } from "src/types";
 import { useUser } from "src/hooks/useUser";
+import ChartModal from "../ChartModal";
 
 const currentYear = new Date().getFullYear();
 
@@ -238,6 +239,29 @@ const SpendingPage = () => {
   //   startYear + settings.maxYearsShown - 1,
   // ).map((year) => {});
   //
+  //
+  const chart = (
+    <SpendingChart
+      spending={true}
+      maxY={maxY}
+      longevityFlag={false}
+      people={[]}
+      initialHeight={window.innerHeight - 400}
+      stability={data.stabilityRatioFlag}
+      needsFlag={data.needsFlag}
+      years={yearRange(currentYear, currentYear + settings.maxYearsShown)}
+      stackedData={[baseSpending, ...preSpending, ...postSpending, taxes].map(
+        (item) => ({
+          name: item[0].name,
+          stable: true,
+          values: item.map((i) =>
+            i.name == "Taxes" ? i.amount : i.amount / factor,
+          ),
+        }),
+      )}
+    />
+  );
+
   const [resetOpen, setResetOpen] = useState(false);
 
   return (
@@ -863,32 +887,11 @@ const SpendingPage = () => {
             </div>
           </div>
           <div className="h-[1px] bg-gray-300 w-full"></div>
-          <div className="bg-white pb-[2px]">
-            <SpendingChart
-              spending={true}
-              maxY={maxY}
-              longevityFlag={false}
-              people={[]}
-              initialHeight={window.innerHeight - 400}
-              stability={data.stabilityRatioFlag}
-              needsFlag={data.needsFlag}
-              years={yearRange(
-                currentYear,
-                currentYear + settings.maxYearsShown,
-              )}
-              stackedData={[
-                baseSpending,
-                ...preSpending,
-                ...postSpending,
-                taxes,
-              ].map((item) => ({
-                name: item[0].name,
-                stable: true,
-                values: item.map((i) =>
-                  i.name == "Taxes" ? i.amount : i.amount / factor,
-                ),
-              }))}
-            />
+          <div className="">
+            <div className="flex justify-end mt-3 mr-3">
+              <ChartModal>{chart}</ChartModal>
+            </div>
+            <div className="bg-white pb-[2px]">{chart}</div>
           </div>
         </MapSection>
         <MapSection defaultOpen title="">

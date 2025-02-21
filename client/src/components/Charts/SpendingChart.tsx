@@ -73,7 +73,7 @@ const SpendingChart = ({
 
     if (dimensions.width === 0 || !years.length || !stackedData.length) return;
 
-    const margin = { top: 40, right: 30, bottom: 80, left: 75 };
+    const margin = { top: 40, right: 30, bottom: 40, left: 75 };
     const width = dimensions.width - margin.left - margin.right;
     const height = dimensions.height - margin.top - margin.bottom;
 
@@ -382,11 +382,11 @@ const SpendingChart = ({
       .style("justify-content", "center")
       .style("flex-wrap", "wrap")
       .style("gap", "20px")
-      .style("margin-top", "150px")
-      .style("margin-right", "100px")
+      .style("margin-top", "50px")
+      .style("margin-right", "40px")
       .style("position", "absolute")
       .style("width", "calc(100%-20px)")
-      .style("bottom", "-90px");
+      .style("bottom", "-40px");
 
     // Add legend items
 
@@ -456,7 +456,7 @@ const SpendingChart = ({
           width: "calc(100% - 20px)",
           backgroundColor: "white",
           position: "relative",
-          marginBottom: 100,
+          marginBottom: 40,
           marginLeft: 15,
         }}
       >
