@@ -13,9 +13,11 @@ interface ChartData {
 const D3TimeseriesChart = ({
   datasets,
   print,
+  full,
 }: {
   datasets: ChartData[];
   print: boolean;
+  full?: boolean;
 }) => {
   const svgRef = useRef<any>();
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
@@ -41,12 +43,18 @@ const D3TimeseriesChart = ({
 
     const margin = {
       top: 20,
-      right: 40,
+      right: 0,
       bottom: 80,
       left: 50 + 12 * Math.log10(largest),
     };
-    const width = (print ? 850 : 1050) - margin.left - margin.right;
-    const height = (print ? 600 : 350) - margin.top - margin.bottom;
+    const width =
+      (print ? 850 : full ? window.innerWidth * 0.9 : 1100) -
+      margin.left -
+      margin.right;
+    const height =
+      (print ? 500 : full ? window.innerHeight * 0.8 : 350) -
+      margin.top -
+      margin.bottom;
 
     const x = d3
       .scaleLinear()
@@ -332,7 +340,7 @@ const D3TimeseriesChart = ({
   }, [datasets, hiddenSeries]);
 
   return (
-    <div className={`bg-white px-5 rounded-lg pb-2 ${print && "border "}`}>
+    <div className={`bg-white px-1 rounded-lg pb-2 ${print && "border "}`}>
       <svg ref={svgRef} />
     </div>
   );

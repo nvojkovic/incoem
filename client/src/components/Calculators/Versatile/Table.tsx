@@ -11,14 +11,22 @@ interface TableProps {
   returnsMemo: any;
 }
 
-const Table = ({ calculations, returnsMemo }: TableProps) => {
+const Table = ({ calculations, returnsMemo, open }: TableProps) => {
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
+  let topOffset = 300;
+  if (open) {
+    topOffset += 356;
+  }
   const { isFullscreen } = useFullscreen();
+  if (isFullscreen) {
+    topOffset -= 63;
+  }
   return (
     <table className="text-sm w-full bg-white shadow-lg print:shadow-none">
       <thead
-        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 ${isFullscreen ? "top-[595px]" : "top-[596px]"} rounded-none !border-none`}
+        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 rounded-none !border-none`}
+        style={{ top: topOffset }}
       >
         <tr>
           <th

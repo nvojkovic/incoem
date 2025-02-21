@@ -24,7 +24,6 @@ const IncomeModal = ({
   const people = data.people;
   const index = incomes.findIndex((inc) => inc.id === i);
 
-  console.log("open222", open, data);
   if (!data) return;
   return (
     <>

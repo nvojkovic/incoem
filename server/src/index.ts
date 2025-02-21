@@ -39,6 +39,7 @@ import {
   validateRequest,
 } from "./controllers/external";
 import { updateAssetSummarySchema } from "./schema/assetSummary";
+import config from "./config";
 const port = 3000;
 
 let app = express();
@@ -47,7 +48,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.APP_URL,
+    origin: config.ENV === "local" ? "*" : process.env.APP_URL,
     allowedHeaders: [
       "content-type",
       ...supertokens.getAllCORSHeaders(),

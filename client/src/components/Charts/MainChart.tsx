@@ -64,7 +64,7 @@ const MainChart = ({
       for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width - 10,
-          height: initialHeight,
+          height: window.innerHeight - 230,
         });
       }
     });
@@ -134,7 +134,6 @@ const MainChart = ({
       });
       return yearData;
     });
-    console.log("processed data", processedData);
 
     // Get keys from sorted data
     const keys = stackedData
@@ -169,7 +168,6 @@ const MainChart = ({
         return a.stable ? -1 : 1;
       })
       .map((d) => d.name);
-    console.log("sorted domain", sortedDomain);
 
     // Updated color scale using sorted domain
     const color = d3.scaleOrdinal().domain(sortedDomain).range(colorArray);
@@ -591,7 +589,6 @@ const MainChart = ({
         style={{
           width: "calc(100% - 20px)",
           backgroundColor: "white",
-          height: `${initialHeight - 50}px`,
           position: "relative",
           marginBottom: 100,
           marginLeft: 15,

@@ -311,7 +311,6 @@ const ResultTable = ({
       }
     }
   };
-  console.log("open@", settings.id, openModal);
 
   return (
     <>

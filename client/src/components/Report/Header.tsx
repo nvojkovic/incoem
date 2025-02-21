@@ -13,7 +13,7 @@ const Header = ({
 }) => {
   const logoUrl = client?.userdata?.logo
     ? `${config.PRINT_API_URL}logo?logo=${client?.userdata?.logo}`
-    : `${config.PRINT_API_URL}/logo.png`;
+    : `${config.APP_URL}/logo.png`;
   const [logoData, setLogoData] = useState("");
   useEffect(() => {
     imageUrlToBase64(logoUrl).then((data) => {
