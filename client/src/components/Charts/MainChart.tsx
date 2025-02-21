@@ -364,7 +364,9 @@ const MainChart = ({
                 </div>
               </div>`;
           if (needsFlag)
-            tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
+            tooltipContent += `<div style="display: flex; flex-direction:column; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px" class="mb-1">
+
+              <div class="h-[1px] bg-black my-1 w-full" ></div>
                 ${
                   taxes.length
                     ? `<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 5px">
@@ -379,7 +381,7 @@ const MainChart = ({
                     : ""
                 }
 
-<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; margin-bottom: 1px;">
                   <div>
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: ${taxes.length ? "white" : "red"}; margin-right: 5px;"></span>
                    Spending: 
@@ -402,12 +404,11 @@ const MainChart = ({
                 </div>`
                     : ""
                 }
-                              </div>
-              <div class="h-[1px] bg-black my-1"/>
+              <div class="h-[1px] bg-black my-1 w-full" ></div>
               ${
                 stability
-                  ? `<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;">
+                  ? `<div style="" class="w-full flex items-center justify-between">
+                <div class="w-full flex items-center justify-between">
                   <div class="ml-5">
                     <b>Stability Ratio: </b>
                   </div>
@@ -427,18 +428,18 @@ const MainChart = ({
                     ).toFixed(1)}%</b>
                   </div>
                 </div>
-              </div>`
+              </div>
+                             </div>
+              `
                   : ""
               }
-<div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class=" mt-2 mb-6">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-1 ">
+              <div class="flex items-center justify-between w-full text-xs">
                   <div class="ml-5">
                     <b>Gap: </b>
                   </div>
                   <div>
                     <b style="color:${keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)] < 0 ? "red" : "green"}">${formatCurrency.format(keys.map((key: any) => selectedData[key]).reduce((a: any, b: any) => a + b, 0) - lineData[years.indexOf(year)])}</b>
                   </div>
-                </div>
               </div>
             `;
         }
@@ -451,7 +452,7 @@ const MainChart = ({
               }</div></div></div>`
             : "";
         tooltip.html(
-          `<div class="mb-4"><strong>Year: ${year} (${people.map((p: any) => calculateAge(new Date(p.birthday))).join("/")})</strong><br>${longevityContent}${tooltipContent}</div>`,
+          `<div class=""><strong>Year: ${year} (${people.map((p: any) => calculateAge(new Date(p.birthday))).join("/")})</strong><br>${longevityContent}${tooltipContent}</div>`,
         );
 
         // Calculate tooltip dimensions

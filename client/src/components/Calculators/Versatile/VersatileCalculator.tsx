@@ -201,8 +201,21 @@ const VersatileCalculator: React.FC = () => {
                       onClick={() => setOpen(!open)}
                     />
                   )}
-                  <ChartModal>
-                    <VersatileBalance datasets={chartData} print={false} full />
+                  <ChartModal
+                    onClose={() =>
+                      document
+                        .querySelectorAll(`.tooltip-modal`)
+                        .forEach((el) => {
+                          el.remove();
+                        })
+                    }
+                  >
+                    <VersatileBalance
+                      datasets={chartData}
+                      print={false}
+                      full
+                      prefix="modal"
+                    />
                   </ChartModal>
                 </div>
               }
@@ -210,11 +223,13 @@ const VersatileCalculator: React.FC = () => {
               <div
                 className={` transition-maxHeight w-full duration-500 ease-in-out ${open ? "max-h-[1500px]" : "max-h-0 overflow-hidden"}`}
               >
-                <VersatileBalance datasets={chartData} print={false} />
+                <VersatileBalance
+                  datasets={chartData}
+                  print={false}
+                  prefix="main"
+                />
               </div>
             </div>
-            <div className=""></div>
-
             <div className="mt-[60px]">
               <Table
                 calculations={calculations}
