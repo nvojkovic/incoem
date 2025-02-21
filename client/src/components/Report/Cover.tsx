@@ -32,7 +32,7 @@ const ReportCover = ({ settings, client }: CoverProps) => {
               <img
                 src={
                   client?.userdata?.logo
-                    ? `${config.API_URL}logo?logo=${client?.userdata?.logo}`
+                    ? `${config.PRINT_API_URL}logo?logo=${client?.userdata?.logo}`
                     : "/img/logo.png"
                 }
                 alt="logo"

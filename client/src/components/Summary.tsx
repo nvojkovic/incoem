@@ -16,7 +16,7 @@ import ChartModal from "./ChartModal";
 
 const Summary = () => {
   const [tab, setTab] = useState(-1);
-  const { data, storeScenarios, setField } = useInfo();
+  const { data, setField } = useInfo();
   const [selectedYear, setSelectedYear] = useState(0);
   const { isFullscreen } = useFullscreen();
   const [selectedColumn, setSelectedColumn] = useState<SelectedColumn>({
@@ -35,8 +35,18 @@ const Summary = () => {
     spending: data.spending,
   };
 
-  const settings =
+  const init =
     tab == -1 ? liveSettings : (scenarios.find(({ id }) => id === tab) as any);
+
+  const settings = {
+    ...init,
+    inflationType: data.liveSettings.inflationType,
+    mapType: data.liveSettings.mapType,
+    monthlyYearly: data.liveSettings.monthlyYearly,
+    chartType: data.liveSettings.chartType,
+    maxYearsShown: data.liveSettings.maxYearsShown,
+    taxType: data.liveSettings.taxType,
+  };
 
   const chart =
     settings.chartType == "spending" ? (
@@ -63,17 +73,11 @@ const Summary = () => {
             <ResultTable
               client={data}
               settings={settings}
-              removeScenario={() => {
-                const newScenarios = scenarios.filter((sc) => sc.id != tab);
-                storeScenarios(newScenarios);
-                setTab(-1);
-              }}
               selectedYear={selectedYear}
               setSelectedYear={setSelectedYear}
               selectedColumn={selectedColumn}
               setSelectedColumn={setSelectedColumn}
               setSettings={tab === -1 ? setField("liveSettings") : () => {}}
-              id={tab}
             />
           )}
           <div className=" my-3 bg-white">

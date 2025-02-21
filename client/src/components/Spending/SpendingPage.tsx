@@ -383,8 +383,8 @@ const SpendingPage = () => {
                   {spending.preSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-16">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-16">Increase (%)</div>
+                  )}{" "}
                 </th>
                 <th className="px-6 py-3 font-medium">Actions</th>
               </tr>
@@ -535,17 +535,18 @@ const SpendingPage = () => {
                   (Cal Year)
                 </th>
                 <th
-                  className={`px-6 py-3 font-medium ${spending.postSpending.find(
-                    (i) => i.increase.type === "custom",
-                  ) && "w-64"
-                    }`}
+                  className={`px-6 py-3 font-medium ${
+                    spending.postSpending.find(
+                      (i) => i.increase.type === "custom",
+                    ) && "w-64"
+                  }`}
                 >
                   Yearly <br /> Increase{" "}
                   {spending.postSpending.find(
                     (i) => i.increase.type === "custom",
                   ) && (
-                      <div className="inline-block ml-8">Increase (%)</div>
-                    )}{" "}
+                    <div className="inline-block ml-8">Increase (%)</div>
+                  )}{" "}
                 </th>
 
                 {data.people.map((i) => (
@@ -686,12 +687,12 @@ const SpendingPage = () => {
           </table>
         </MapSection>
         <MapSection
-          title={<div className="py-2 px-3">Spending Needs</div>}
+          title={<div className="pt0 pb-3 px-3">Spending Needs</div>}
           toggleabble
           defaultOpen
         >
-          <div className="flex gap-6 p-2">
-            <div className="p-3 bg-white w-full">
+          <div className="flex gap-6 py-2">
+            <div className="p-2 bg-white w-full">
               <div className="flex justify-between w-full items-center">
                 <div className="flex gap-4 items-end">
                   {data.people.length > 1 ? (
@@ -922,10 +923,11 @@ export const MultiToggle = ({
         {options.map((item: any, i: any) => (
           <button
             key={item}
-            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${value === item
+            className={`${i == 0 ? "rounded-l-md" : ""} ${i == options.length - 1 ? "rounded-r-md ml-[-1px]" : ""} text-sm flex-1 py-[6px] ${
+              value === item
                 ? "bg-main-orange text-white"
                 : "bg-gray-200 text-[#555860]"
-              } ${vertical ? "" : "w-full"}`}
+            } ${vertical ? "" : "w-full"}`}
             onClick={() => !disabled && setValue(item)}
           >
             {item}

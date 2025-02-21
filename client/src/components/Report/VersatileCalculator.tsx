@@ -9,6 +9,7 @@ import {
 } from "../Calculators/Versatile/versatileTypes";
 import VersatileBalance from "../Charts/VersatileBalance";
 import { PrintClient } from "src/types";
+import config from "src/services/config";
 
 interface VersatileCalculatorProps {
   settings: StoredCalculator;
@@ -85,7 +86,7 @@ const VersatileReport = ({ client, settings }: VersatileCalculatorProps) => {
                 <img
                   src={
                     client?.userdata?.logo
-                      ? `http://im-server:3000/logo?logo=${client?.userdata?.logo}`
+                      ? `${config.PRINT_API_URL}logo?logo=${client?.userdata?.logo}`
                       : "/img/logo.png"
                   }
                   alt="logo"
@@ -99,7 +100,6 @@ const VersatileReport = ({ client, settings }: VersatileCalculatorProps) => {
           </div>
         </div>
       </div>
-      {settings.name}
       <VersatileSettings settings={{ ...settings, id: null as any }} print />
       <div className="mb-12"></div>
 
