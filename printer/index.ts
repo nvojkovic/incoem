@@ -84,6 +84,45 @@ const getAssetSummary = async (browser: Browser, url: string) => {
     console.log(e);
   }
 };
+const getVersatile = async (browser: Browser, url: string) => {
+  try {
+    const page = await browser.newPage();
+    console.log("new page");
+    await page.setViewport({ width: 1200, height: 800 });
+    await page.goto(url, {
+      waitUntil: ["networkidle0", "load", "domcontentloaded"],
+    });
+
+    //wait a second
+    console.log("waiting");
+    await new Promise((r) => setTimeout(r, 2000));
+    console.log("done waiting");
+
+    const header = await page.evaluate(() => {
+      const headerElement = document.getElementById("print-header");
+      if (!headerElement) return "";
+      return headerElement.innerHTML;
+    });
+    const pdf = await page.pdf({
+      format: "letter",
+      printBackground: true,
+      headerTemplate: header,
+      displayHeaderFooter: !!header,
+      scale: 0.85,
+      margin: {
+        top: "30px",
+        bottom: "30px",
+      },
+    });
+    //
+    // await page.addStyleTag({
+    //   content: "@page:first {margin-top: 0;} body {margin-top: 1cm;}",
+    // });
+    return pdf;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const getPdf = async (page: Page, base: string, data: any) => {
   try {
@@ -188,6 +227,26 @@ app.get("/asset-summary", async (req, res) => {
   console.log(result);
   if (result) res.send(Buffer.from(result));
 });
+
+app.get("/versatile", async (req, res) => {
+  const { url } = req.query;
+  if (!url) {
+    return res.status(400).send("Missing url query parameter");
+  }
+  const browser = await puppeteer.launch({
+    executablePath: "/usr/bin/google-chrome",
+    ignoreDefaultArgs: ["--disable-extensions"],
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--user-agent=printer"],
+  });
+
+  const result = await getVersatile(browser, url as string);
+  browser.close();
+
+  res.contentType("application/pdf");
+  console.log(result);
+  if (result) res.send(Buffer.from(result));
+});
+
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${port}`);
 });

@@ -3,6 +3,7 @@ import { CalculationRow } from "./versatileTypes";
 import { convertToParens, printNumber } from "src/utils";
 import { Tooltip } from "flowbite-react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { useFullscreen } from "src/hooks/useFullScreen";
 
 interface TableProps {
   calculations: CalculationRow[];
@@ -10,13 +11,14 @@ interface TableProps {
   returnsMemo: any;
 }
 
-const Table = ({ calculations, open, returnsMemo }: TableProps) => {
+const Table = ({ calculations, returnsMemo }: TableProps) => {
   const [selectedCol, setSelectedCol] = useState(null as any);
   const [selectedRow, setSelectedRow] = useState(null as any);
+  const { isFullscreen } = useFullscreen();
   return (
-    <table className="text-sm w-full bg-white shadow-lg">
+    <table className="text-sm w-full bg-white shadow-lg print:shadow-none">
       <thead
-        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 ${open ? "top-[600px]" : "top-[250px]"} rounded-none !border-none`}
+        className={`text-xs cursor-pointer bg-[#F9FAFB] text-black font-medium text-left sticky border-1 ${isFullscreen ? "top-[595px]" : "top-[596px]"} rounded-none !border-none`}
       >
         <tr>
           <th

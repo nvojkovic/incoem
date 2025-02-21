@@ -10,7 +10,13 @@ interface ChartData {
   color: string;
 }
 
-const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
+const D3TimeseriesChart = ({
+  datasets,
+  print,
+}: {
+  datasets: ChartData[];
+  print: boolean;
+}) => {
   const svgRef = useRef<any>();
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
@@ -27,11 +33,11 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
     const shownDatasets = datasets.filter((d) => !hiddenSeries.has(d.label));
     const largest = shownDatasets.length
       ? (d3.max(shownDatasets, (series) =>
-        d3.max(series.data, (d) => d.endingBalance),
-      ) as number)
+          d3.max(series.data, (d) => d.endingBalance),
+        ) as number)
       : (d3.max(datasets, (series) =>
-        d3.max(series.data, (d) => d.endingBalance),
-      ) as number) * 0.1;
+          d3.max(series.data, (d) => d.endingBalance),
+        ) as number) * 0.1;
 
     const margin = {
       top: 20,
@@ -39,8 +45,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
       bottom: 80,
       left: 50 + 12 * Math.log10(largest),
     };
-    const width = 1050 - margin.left - margin.right;
-    const height = 350 - margin.top - margin.bottom;
+    const width = (print ? 850 : 1050) - margin.left - margin.right;
+    const height = (print ? 600 : 350) - margin.top - margin.bottom;
 
     const x = d3
       .scaleLinear()
@@ -245,8 +251,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
               ${values
-              .map(
-                (v: any) => `
+                .map(
+                  (v: any) => `
                 <div style="" class="flex">
                   <strong style="width:120px; display:inline-block; color: ${v.color}">${v.label}:</strong>
                 <div class="flex justify-between w-full">
@@ -257,8 +263,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
                 </div>
                 </div>
               `,
-              )
-              .join("")}
+                )
+                .join("")}
 <div style="">
                   <strong style="width:70px; display:inline-block; color: ">Payment:</strong>                   <span class="">
                     ${printNumber(values[0]?.data?.totalPayments)}
@@ -301,8 +307,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
               ${values
-              .map(
-                (v: any) => `
+                .map(
+                  (v: any) => `
                 <div style="">
                   <strong style="width:70px; display:inline-block; color: ${v.color}">${v.label}:</strong> ${printNumber(v.data.endingBalance)}
                   <span class="${v.data.return < 0 ? "text-red-500" : ""}">
@@ -310,8 +316,8 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
                   </span>
                 </div>
               `,
-              )
-              .join("")}
+                )
+                .join("")}
 <div style="">
                   <strong style="width:70px; display:inline-block; color: ">Payment:</strong>                   <span class="">
                     ${printNumber(values[0]?.data?.totalPayments)}
@@ -326,7 +332,7 @@ const D3TimeseriesChart = ({ datasets }: { datasets: ChartData[] }) => {
   }, [datasets, hiddenSeries]);
 
   return (
-    <div className="bg-white px-5 rounded-lg pb-2">
+    <div className={`bg-white px-5 rounded-lg pb-2 ${print && "border "}`}>
       <svg ref={svgRef} />
     </div>
   );

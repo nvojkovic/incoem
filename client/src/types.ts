@@ -1,21 +1,25 @@
+import {
+  CalculatorSettings,
+  StoredCalculator,
+} from "./components/Calculators/Versatile/versatileTypes";
 import { AssetSummary } from "./components/Nate/types";
 
 export interface SelectedColumn {
   type:
-  | "year"
-  | "age"
-  | "income"
-  | "total"
-  | "none"
-  | "spending"
-  | "gap"
-  | "taxes"
-  | "posttax"
-  | "income-stability"
-  | "spending-stability"
-  | "0-alive"
-  | "1-alive"
-  | "joint-alive";
+    | "year"
+    | "age"
+    | "income"
+    | "total"
+    | "none"
+    | "spending"
+    | "gap"
+    | "taxes"
+    | "posttax"
+    | "income-stability"
+    | "spending-stability"
+    | "0-alive"
+    | "1-alive"
+    | "joint-alive";
   id: number;
 }
 
@@ -145,7 +149,8 @@ export interface Client {
   taxesFlag: boolean;
   longevityFlag: boolean;
   allInOneCalculator: any[];
-  versatileCalculator: any;
+  versatileCalculator: CalculatorSettings;
+  versatileCalculators: StoredCalculator[];
   liveSettings: ScenarioSettings;
   reportSettings: ReportSettings;
   assetSummary: AssetSummary;

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Modal from "./Modal";
-import { ChartBarIcon } from "@heroicons/react/24/outline";
 
 interface ChartModalProps {
   children: React.ReactNode;
@@ -14,13 +13,13 @@ const ChartModal = ({ children, buttonClassName = "" }: ChartModalProps) => {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className={`hover:text-gray-600 transition-colors ${buttonClassName}`}
+        className={`hover:text-gray-600 transition-colors ${buttonClassName} pl-4`}
       >
-        <ChartBarIcon className="w-6 h-6" />
+        <img src="/icons/expand.png" className="h-6 w-6 cursor-pointer" />
       </button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        {children}
+        <div className="w-[90vw] h-full">{children}</div>
       </Modal>
     </>
   );

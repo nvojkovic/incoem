@@ -1,15 +1,15 @@
 import { useInfo } from "src/hooks/useData";
 import {
   CalculatorSettings,
+  StoredCalculator,
   calculateProjection,
   getReturns,
 } from "./versatileTypes";
 import Select from "src/components/Inputs/Select";
 import Button from "src/components/Inputs/Button";
 
-const Solve = () => {
-  const { data: client, setField } = useInfo();
-  const settings = client.versatileCalculator as CalculatorSettings;
+const Solve = ({ settings }: { settings: StoredCalculator }) => {
+  const { setField } = useInfo();
   const solveOptions = [
     { id: "return", name: "Rate of Return" },
     { id: "presentValue", name: "Present Value" },
@@ -166,6 +166,8 @@ const Solve = () => {
       },
     });
   };
+
+  if (settings.id) return null;
 
   return (
     <div className="flex gap-6 items-end">

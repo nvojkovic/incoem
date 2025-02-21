@@ -81,8 +81,9 @@ const Scenarios = ({ tab, setTab }: any) => {
   const [printing, setPrinting] = useState(false);
   return (
     <div
-      className={`flex justify-between items-center print:hidden bg-white sticky z-[5000] ${isFullscreen ? "top-[0px]" : "top-[72px]"
-        } bg-[#f3f4f6]`}
+      className={`flex justify-between items-center print:hidden bg-white sticky z-[5000] ${
+        isFullscreen ? "top-[0px]" : "top-[72px]"
+      } bg-[#f3f4f6]`}
     >
       <DndContext
         sensors={sensors}
@@ -100,7 +101,7 @@ const Scenarios = ({ tab, setTab }: any) => {
               active={tab == -1}
               setActive={() => setTab(-1)}
               live
-              store={() => { }}
+              store={() => {}}
             />
             {scenarios.map((sc, i) => (
               <SortableItem key={sc.id} id={sc.id} onClick={() => setTab(i)}>

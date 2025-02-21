@@ -49,6 +49,11 @@ export interface CalculatorSettings {
   };
 }
 
+export type StoredCalculator = CalculatorSettings & {
+  id: number;
+  name: string;
+};
+
 export const initialVersatileSettings: CalculatorSettings = {
   user: {
     startAge: 0,
