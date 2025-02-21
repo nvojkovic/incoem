@@ -150,7 +150,7 @@ const VersatileReport = ({ client, settings }: VersatileCalculatorProps) => {
         </div>
       </div>
 
-      <VersatileBalance datasets={chartData} print />
+      <VersatileBalance datasets={chartData} print prefix="" />
       <div className="break-after-page"></div>
 
       <Table

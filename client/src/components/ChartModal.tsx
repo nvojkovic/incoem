@@ -4,9 +4,14 @@ import Modal from "./Modal";
 interface ChartModalProps {
   children: React.ReactNode;
   buttonClassName?: string;
+  onClose?: () => void;
 }
 
-const ChartModal = ({ children, buttonClassName = "" }: ChartModalProps) => {
+const ChartModal = ({
+  children,
+  buttonClassName = "",
+  onClose,
+}: ChartModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -18,7 +23,13 @@ const ChartModal = ({ children, buttonClassName = "" }: ChartModalProps) => {
         <img src="/icons/expand.png" className="h-6 w-6 cursor-pointer" />
       </button>
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          onClose && onClose();
+        }}
+      >
         <div className="w-[90vw] h-full">{children}</div>
       </Modal>
     </>

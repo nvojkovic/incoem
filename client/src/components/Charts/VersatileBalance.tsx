@@ -14,18 +14,21 @@ const D3TimeseriesChart = ({
   datasets,
   print,
   full,
+  prefix,
 }: {
   datasets: ChartData[];
   print: boolean;
   full?: boolean;
+  prefix: any;
 }) => {
   const svgRef = useRef<any>();
   const [hiddenSeries, setHiddenSeries] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    d3.select(svgRef.current).selectAll(".tooltip").remove();
+    if (!prefix) return;
+    d3.select(svgRef.current).selectAll(`.tooltip-${prefix}`).remove();
 
-    document.querySelectorAll(".tooltip").forEach((el) => {
+    document.querySelectorAll(`.tooltip-${prefix}`).forEach((el) => {
       el.remove();
     });
     if (!datasets || !datasets.length || !datasets[0].data.length) return;
@@ -43,7 +46,7 @@ const D3TimeseriesChart = ({
 
     const margin = {
       top: 20,
-      right: 0,
+      right: 10,
       bottom: 80,
       left: 50 + 12 * Math.log10(largest),
     };
@@ -188,8 +191,9 @@ const D3TimeseriesChart = ({
     const tooltip = d3
       .select("body")
       .append("div")
-      .attr("class", "tooltip")
+      .attr("class", `tooltip-${prefix}`)
       .style("position", "absolute")
+      .style("z-index", "500000")
       .style("background", "white")
       .style("padding", "8px")
       .style("border", "1px solid black")
@@ -252,10 +256,11 @@ const D3TimeseriesChart = ({
           event.pageX + 10,
           containerRect.right - tooltipRect.width - 10,
         );
+        const top = event.pageY - 10;
+        console.log("lll", left, top);
 
-        tooltip.style("left", left + "px").style("top", event.pageY - 10 + "px")
-          .html(`
-            <div style="font-family: sans-serif; font-size: 14px;">
+        tooltip.style("left", left + "px").style("top", top + "px").html(`
+            <div style="font-family: sans-serif; font-size: 14px; z-index:500000;">
               <div style="font-weight: bold; margin-bottom: 4px; font-size: 18px;">Year: ${year}</div>
               <div class="flex flex-col gap-1">
               ${values
@@ -336,11 +341,13 @@ const D3TimeseriesChart = ({
           `);
       });
 
-    d3.select(svgRef.current).selectAll(".tooltip").remove();
-  }, [datasets, hiddenSeries]);
+    d3.select(svgRef.current).selectAll(`.tooltip-${prefix}`).remove();
+  }, [datasets, hiddenSeries, prefix]);
 
   return (
-    <div className={`bg-white px-1 rounded-lg pb-2 ${print && "border "}`}>
+    <div
+      className={`bg-white px-1 rounded-lg pb-2 ${print && "border "} relative`}
+    >
       <svg ref={svgRef} />
     </div>
   );
