@@ -64,7 +64,7 @@ const MainChart = ({
       for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width - 10,
-          height: window.innerHeight - 230,
+          height: window.innerHeight - 320,
         });
       }
     });

@@ -96,7 +96,33 @@ const Summary = () => {
                   });
                 }}
               />
-              <ChartModal children={chart} />
+              <ChartModal
+                children={
+                  <div>
+                    <div className="flex justify-end gap-3">
+                      <SmallToggle
+                        item1="Income"
+                        item2="Spending"
+                        active={
+                          settings.chartType == "spending"
+                            ? "Spending"
+                            : "Income"
+                        }
+                        toggle={() => {
+                          setField("liveSettings")({
+                            ...settings,
+                            chartType:
+                              settings.chartType == "spending"
+                                ? "income"
+                                : "spending",
+                          });
+                        }}
+                      />
+                    </div>
+                    {chart}
+                  </div>
+                }
+              />
             </div>
             {chart}
           </div>
