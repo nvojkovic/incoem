@@ -55,7 +55,7 @@ const SpendingChart = ({
       for (const entry of entries) {
         setDimensions({
           width: entry.contentRect.width - 10,
-          height: window.innerHeight - 230,
+          height: window.innerHeight - 320,
         });
       }
     });
@@ -465,22 +465,5 @@ const SpendingChart = ({
     </div>
   );
 };
-//
-// MainChart.propTypes = {
-//   years: PropTypes.arrayOf(PropTypes.number).isRequired,
-//   stackedData: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       name: PropTypes.string.isRequired,
-//       values: PropTypes.arrayOf(PropTypes.number).isRequired,
-//       stable: PropTypes.bool.isRequired,
-//     }),
-//   ).isRequired,
-//   lineData: PropTypes.arrayOf(PropTypes.number),
-//   spending: PropTypes.bool.isRequired,
-//   stability: PropTypes.bool.isRequired,
-//   needsFlag: PropTypes.bool.isRequired,
-//   maxY: PropTypes.number,
-//   initialHeight: PropTypes.number,
-// };
 
 export default SpendingChart;
