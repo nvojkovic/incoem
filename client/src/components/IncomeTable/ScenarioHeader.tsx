@@ -297,32 +297,37 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                   />
                 </div>
               </div>
-              <div className="p-3 text-[#9396A0] text-[14px]">
-                Toggle incomes on/off
-              </div>
-              <div className="bg-gray-500 h-[1px] w-full"></div>
-              <div className="flex flex-col px-3 max-h-[350px] overflow-y-auto">
-                {client.incomes.map((income, i) => (
-                  <div className="flex items-center">
-                    <div className="text-xs w-[555px]">
-                      {title(client.incomes, client.people, i)}
-                    </div>
-                    <Input
-                      subtype="toggle"
-                      width="!text-[10px]"
-                      label={""}
-                      value={income.enabled}
-                      setValue={(v) =>
-                        setField("incomes")(
-                          client.incomes.map((income, j) =>
-                            j == i ? { ...income, enabled: v } : income,
-                          ),
-                        )
-                      }
-                    />
+              {!disabled && (
+                <>
+                  <div className="p-3 text-[#9396A0] text-[14px]">
+                    Toggle incomes on/off
                   </div>
-                ))}
-              </div>
+                  <div className="bg-gray-500 h-[1px] w-full"></div>
+                  <div className="flex flex-col px-3 max-h-[350px] overflow-y-auto">
+                    {client.incomes.map((income, i) => (
+                      <div className="flex items-center">
+                        <div className="text-xs w-[555px]">
+                          {title(client.incomes, client.people, i)}
+                        </div>
+                        <Input
+                          subtype="toggle"
+                          width="!text-[10px]"
+                          disabled={disabled}
+                          label={""}
+                          value={income.enabled}
+                          setValue={(v) =>
+                            setField("incomes")(
+                              client.incomes.map((income, j) =>
+                                j == i ? { ...income, enabled: v } : income,
+                              ),
+                            )
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </Menu.Items>
           </Transition>
         </Menu>
