@@ -452,7 +452,7 @@ const MainChart = ({
               }</div></div></div>`
             : "";
         tooltip.html(
-          `<div class=""><strong>Year: ${year} (${people.map((p: any) => calculateAge(new Date(p.birthday))).join("/")})</strong><br>${longevityContent}${tooltipContent}</div>`,
+          `<div class=""><strong>Year: ${year} (${people.map((p: any) => year - new Date().getFullYear() + calculateAge(new Date(p.birthday))).join("/")})</strong><br>${longevityContent}${tooltipContent}</div>`,
         );
 
         // Calculate tooltip dimensions

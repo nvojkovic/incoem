@@ -2,18 +2,26 @@ import { Switch } from "@headlessui/react";
 
 interface ToggleProps {
   enabled: boolean;
+  disabled?: boolean;
   setEnabled: (enabled: boolean) => void;
   tooltip?: string;
   size?: "sm" | "lg";
 }
 
-function Toggle({ enabled, setEnabled, size = "lg", ...props }: ToggleProps) {
+function Toggle({
+  enabled,
+  setEnabled,
+  disabled,
+  size = "lg",
+  ...props
+}: ToggleProps) {
   return (
     <div>
       {size === "sm" ? (
         <Switch
           {...props}
           checked={enabled}
+          disabled={disabled}
           onChange={setEnabled}
           className={`${enabled ? "bg-main-orange" : "bg-gray-200"
             } relative inline-flex h-4 w-7 items-center rounded-full`}
@@ -28,6 +36,7 @@ function Toggle({ enabled, setEnabled, size = "lg", ...props }: ToggleProps) {
         <Switch
           {...props}
           checked={enabled}
+          disabled={disabled}
           onChange={setEnabled}
           className={`${enabled ? "bg-main-orange" : "bg-gray-200"
             } relative inline-flex h-6 w-11 items-center rounded-full`}

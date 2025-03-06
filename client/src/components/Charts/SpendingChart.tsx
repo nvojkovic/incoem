@@ -306,7 +306,7 @@ const SpendingChart = ({
 
                      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-bottom: 7px margin-top: 50px" class="mb-1">
 
-              <div class="h-[1px] bg-black my-1"/>
+              <div class="h-[1px] bg-black my-1 w-full"/>
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%;" class="mt-2">
                   <div class="ml-5">
                     <b>Total Spending: </b>

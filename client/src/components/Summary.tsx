@@ -82,42 +82,48 @@ const Summary = () => {
           )}
           <div className=" my-3 bg-white">
             <div className="flex justify-end p-3">
-              <SmallToggle
-                item1="Income"
-                item2="Spending"
-                active={
-                  settings.chartType == "spending" ? "Spending" : "Income"
-                }
-                toggle={() => {
-                  setField("liveSettings")({
-                    ...settings,
-                    chartType:
-                      settings.chartType == "spending" ? "income" : "spending",
-                  });
-                }}
-              />
+              {data.needsFlag && (
+                <SmallToggle
+                  item1="Income"
+                  item2="Spending"
+                  active={
+                    settings.chartType == "spending" ? "Spending" : "Income"
+                  }
+                  toggle={() => {
+                    setField("liveSettings")({
+                      ...settings,
+                      chartType:
+                        settings.chartType == "spending"
+                          ? "income"
+                          : "spending",
+                    });
+                  }}
+                />
+              )}
               <ChartModal
                 children={
                   <div>
                     <div className="flex justify-end gap-3">
-                      <SmallToggle
-                        item1="Income"
-                        item2="Spending"
-                        active={
-                          settings.chartType == "spending"
-                            ? "Spending"
-                            : "Income"
-                        }
-                        toggle={() => {
-                          setField("liveSettings")({
-                            ...settings,
-                            chartType:
-                              settings.chartType == "spending"
-                                ? "income"
-                                : "spending",
-                          });
-                        }}
-                      />
+                      {data.needsFlag && (
+                        <SmallToggle
+                          item1="Income"
+                          item2="Spending"
+                          active={
+                            settings.chartType == "spending"
+                              ? "Spending"
+                              : "Income"
+                          }
+                          toggle={() => {
+                            setField("liveSettings")({
+                              ...settings,
+                              chartType:
+                                settings.chartType == "spending"
+                                  ? "income"
+                                  : "spending",
+                            });
+                          }}
+                        />
+                      )}
                     </div>
                     {chart}
                   </div>
