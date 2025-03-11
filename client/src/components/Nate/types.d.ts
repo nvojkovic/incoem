@@ -11,7 +11,7 @@ export interface CashAsset {
   bank: string;
   accountNumber: string;
   owner: id;
-  type: "Checking" | "Savings" | "CD" | "Money Market" | "Other";
+  type: "Checking" | "Savings" | "CD" | "Money Market" | "Other" | "HSA";
   interestRate: number;
   balance: number;
 }
@@ -90,6 +90,7 @@ export interface LongTermCare {
   annualPremium: number;
   monthlyBenefit: number;
   deathBenefit: number;
+  benefitPeriod: number;
 }
 
 export interface PersonalPensionAnnuity {
@@ -101,6 +102,7 @@ export interface PersonalPensionAnnuity {
   effectiveDate: string;
   annualIncome: number;
   accountValue: number;
+  survivorPercentage: number;
 }
 export interface AccumulationAnnuity {
   id: string;
@@ -109,7 +111,7 @@ export interface AccumulationAnnuity {
   owner: id;
   taxStatus: string;
   type: string;
-  surrenderFree: boolean;
+  surrenderFree: string;
   accountValue: number;
 }
 
@@ -120,6 +122,7 @@ export interface Pension {
   owner: id;
   monthlyIncome: number;
   survivorBenefit: number;
+  survivorPercentage: number;
 }
 
 export interface AssetSummary {

@@ -281,6 +281,7 @@ const LongTermCareSection = () => {
             <th className="px-6 py-3 font-medium">Insured</th>
             <th className="px-6 py-3 font-medium">Elimination period</th>
             <th className="px-6 py-3 font-medium">COLA</th>
+            <th className="px-6 py-3 font-medium">Benefit Period (Mo)</th>
             <th className="px-6 py-3 font-medium">Annual Premium</th>
             <th className="px-6 py-3 font-medium">Monthly Benefit</th>
             <th className="px-6 py-3 font-medium">Death Benefit</th>
@@ -314,6 +315,7 @@ const LongTermCareSection = () => {
                   selected={data.people[line.insured]}
                   setSelected={(i) => setValue(index, "insured", i.id)}
                   label=""
+                  width="w-40"
                 />
               </td>
               <td className="px-2 py-2">
@@ -325,6 +327,7 @@ const LongTermCareSection = () => {
                     "90 days",
                     "180 days",
                   ].map((name) => ({ name, id: name }))}
+                  width="w-32"
                   selected={{
                     name: line.eliminationPeriod,
                     id: line.eliminationPeriod,
@@ -344,7 +347,15 @@ const LongTermCareSection = () => {
                   label={``}
                 />
               </td>
-
+              <td className="px-2 py-2 ">
+                <Input
+                  value={line.benefitPeriod}
+                  setValue={(v) => setValue(index, "benefitPeriod", v)}
+                  size="full"
+                  subtype="money"
+                  label={``}
+                />
+              </td>
               <td className="px-2 py-2 ">
                 <Input
                   value={line.annualPremium}
@@ -408,6 +419,7 @@ const LongTermCareSection = () => {
             </tr>
           ))}
           <tr>
+            <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
@@ -568,7 +580,7 @@ const AccumulationAnnuitySection = () => {
                   value={line.surrenderFree}
                   setValue={(v) => setValue(index, "surrenderFree", v)}
                   size="full"
-                  subtype="money"
+                  subtype="date"
                   label={``}
                 />
               </td>
@@ -699,6 +711,7 @@ const PensionAnnuitySection = () => {
             <th className="px-6 py-3 font-medium">Owner</th>
             <th className="px-6 py-3 font-medium">Tax Status</th>
             <th className="px-6 py-3 font-medium">Effective Date</th>
+            <th className="px-6 py-3 font-medium">Survivor (%)</th>
             <th className="px-6 py-3 font-medium">Annual Income</th>
             <th className="px-6 py-3 font-medium">Account Value</th>
             <th className="px-6 py-3 font-medium text-right">Actions</th>
@@ -756,6 +769,15 @@ const PensionAnnuitySection = () => {
                   subtype="date"
                   label={``}
                 />
+              </td>{" "}
+              <td className="px-2 py-2 ">
+                <Input
+                  value={line.survivorPercentage}
+                  setValue={(v) => setValue(index, "survivorPercentage", v)}
+                  size="full"
+                  subtype="percent"
+                  label={``}
+                />
               </td>
               <td className="px-2 py-2 ">
                 <Input
@@ -766,7 +788,6 @@ const PensionAnnuitySection = () => {
                   label={``}
                 />
               </td>
-
               <td className="px-2 py-2 ">
                 <Input
                   value={line.accountValue}
@@ -775,8 +796,7 @@ const PensionAnnuitySection = () => {
                   subtype="money"
                   label={``}
                 />
-              </td>
-
+              </td>{" "}
               <td className="px-2 py-2">
                 <div className="flex gap-3">
                   <Confirm
@@ -813,6 +833,7 @@ const PensionAnnuitySection = () => {
             </tr>
           ))}
           <tr>
+            <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
@@ -897,6 +918,7 @@ const PensionSection = () => {
             <th className="px-6 py-3 font-medium">Company</th>
             <th className="px-6 py-3 font-medium">Account #</th>
             <th className="px-6 py-3 font-medium">Owner</th>
+            <th className="px-6 py-3 font-medium">Survivor (%)</th>
             <th className="px-6 py-3 font-medium">Monthly Income</th>
             <th className="px-6 py-3 font-medium">Annual Income</th>
             <th className="px-6 py-3 font-medium text-right">Actions</th>
@@ -933,7 +955,16 @@ const PensionSection = () => {
                   label=""
                 />
               </td>
-
+              <td className="px-2 py-2 ">
+                <Input
+                  vertical
+                  value={line.survivorPercentage}
+                  setValue={(v) => setValue(index, "survivorPercentage", v)}
+                  size="full"
+                  subtype="percent"
+                  label={``}
+                />
+              </td>
               <td className="px-2 py-2 ">
                 <Input
                   vertical
@@ -944,6 +975,7 @@ const PensionSection = () => {
                   label={``}
                 />
               </td>
+
               <td className="px-2 py-2 ">
                 <Input
                   disabled
@@ -990,6 +1022,7 @@ const PensionSection = () => {
             </tr>
           ))}
           <tr>
+            <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium"></td>
             <td className="px-2 py-3 font-medium">Total:</td>

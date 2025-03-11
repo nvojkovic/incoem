@@ -64,11 +64,9 @@ const AssetSummary = ({ client }: Props) => {
 
   const assets = cashAssets + statementWealth + hardAssets + contractualWealth;
 
-  const liabilities =
-    assetSummary.debts.map((i) => i.balance || 0).reduce((a, b) => a + b, 0) +
-    assetSummary.inheritance
-      .map((i) => i.amount || 0)
-      .reduce((a, b) => a + b, 0);
+  const liabilities = assetSummary.debts
+    .map((i) => i.balance || 0)
+    .reduce((a, b) => a + b, 0);
 
   return (
     <div className="text-sm px-24 !text-[16px]">

@@ -272,6 +272,7 @@ const IncomeCash = () => {
                       "Savings",
                       "Money Market",
                       "CD",
+                      "HSA",
                       "Other",
                     ].map((name) => ({ name, id: name }))}
                     selected={{
