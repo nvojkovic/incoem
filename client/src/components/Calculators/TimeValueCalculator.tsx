@@ -87,11 +87,16 @@ const TimeValueCalculator: React.FC<any> = ({
 
     const calculateFV = (r: number) => {
       const rate = r / 100;
+      if (rate === 0) {
+        // Special case for zero interest rate
+        const paymentTotal = annualPayment * n * t;
+        return presentValue + paymentTotal;
+      }
       const paymentFactor = timing === "Beginning of Year" ? 1 + rate / n : 1;
       return (
         presentValue * Math.pow(1 + rate / n, n * t) +
         (annualPayment * paymentFactor * (Math.pow(1 + rate / n, n * t) - 1)) /
-        (rate / n)
+          (rate / n)
       );
     };
 
@@ -106,7 +111,7 @@ const TimeValueCalculator: React.FC<any> = ({
           (annualPayment *
             paymentFactor *
             (Math.pow(1 + rate / n, n * t) - 1)) /
-          ((rate / n) * Math.pow(1 + rate / n, n * t))
+            ((rate / n) * Math.pow(1 + rate / n, n * t))
         );
       case "Interest Rate":
         // Bisection method to find interest rate
@@ -137,23 +142,51 @@ const TimeValueCalculator: React.FC<any> = ({
           ((pf * (Math.pow(1 + r / n, n * t) - 1)) / (r / n))
         );
       case "Time Period":
-        // Newton-Raphson method for time period
-        let guess = t;
-        const maxIterations2 = 100;
-        for (let i = 0; i < maxIterations2; i++) {
-          const fv = calculateFV(interestRate);
-          const derivative = (calculateFV(interestRate + 0.0001) - fv) / 0.0001;
-          const newGuess = guess - (fv - futureValue) / derivative;
-          if (Math.abs(newGuess - guess) < tolerance) {
-            return newGuess;
-          }
-          guess = newGuess;
-        }
-        return guess;
+        const res = calculateNumberOfPeriods(
+          presentValue,
+          futureValue,
+          interestRate,
+          annualPayment,
+          timing === "Beginning of Year",
+        );
+        return res;
       default:
         return 0;
     }
   };
+  function calculateNumberOfPeriods(
+    presentValue: number,
+    futureValue: number,
+    rate: number,
+    payment: number = 0,
+    paymentAtBeginning: boolean = false,
+  ): number {
+    // Convert percentage to decimal if needed
+    const r = rate > 1 ? rate / 100 : rate;
+
+    if (r === 0) {
+      // Simple calculation when rate is zero
+      return (futureValue - presentValue) / payment;
+    }
+
+    if (payment === 0) {
+      // For compound interest without payments
+      return Math.log(futureValue / presentValue) / Math.log(1 + r);
+    }
+
+    // For compound interest with payments
+    if (paymentAtBeginning) {
+      // Beginning of period payments (payments are made at start)
+      const part1 = payment * (1 + r) - futureValue * r;
+      const part2 = payment * (1 + r) - presentValue * r;
+      return Math.log(part1 / part2) / Math.log(1 + r);
+    } else {
+      // End of period payments (payments are made at end)
+      const part1 = payment - futureValue * r;
+      const part2 = payment - presentValue * r;
+      return Math.log(part1 / part2) / Math.log(1 + r);
+    }
+  }
 
   const inputs = [
     <Select
@@ -326,19 +359,21 @@ const TimeValueCalculator: React.FC<any> = ({
               <label className="text-sm text-[#344054] w-36 ">Compunding</label>
               <div className="flex gap-2 mt-[6px]">
                 <button
-                  className={`flex-1 py-[6px] px-4 rounded ${data.compounding === "Annual"
+                  className={`flex-1 py-[6px] px-4 rounded ${
+                    data.compounding === "Annual"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                    } text-sm`}
+                  } text-sm`}
                   onClick={() => handleInputChange("compounding", "Annual")}
                 >
                   Annual
                 </button>
                 <button
-                  className={`flex-1 py-1 px-4 rounded ${data.compounding === "Monthly"
+                  className={`flex-1 py-1 px-4 rounded ${
+                    data.compounding === "Monthly"
                       ? "bg-main-orange text-white"
                       : "bg-gray-200"
-                    } text-sm`}
+                  } text-sm`}
                   onClick={() => handleInputChange("compounding", "Monthly")}
                 >
                   Monthly
