@@ -358,7 +358,7 @@ const ResultTable = ({
                     }`}
                   >
                     <div
-                      className={`flex flex-col items-start px-2 ${client.people.length > 1 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
+                      className={`flex flex-col items-start px-2 ${client.people.length > 1 && settings.incomes.filter((i) => i.enabled).length > 0 ? "py-[0.95rem]" : "py-[0.45rem]"} px-2`}
                       onClick={(e) => {
                         if (e.detail === 1) {
                           setTimeout(() => {
