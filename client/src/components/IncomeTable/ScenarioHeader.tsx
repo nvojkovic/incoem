@@ -9,7 +9,6 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 import { useInfo } from "src/hooks/useData";
 import { Client, ScenarioSettings } from "src/types";
 import title from "src/calculator/title";
-import { calculateAge } from "../Info/PersonInfo";
 
 interface Props {
   settings: ScenarioSettings;
@@ -53,7 +52,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                       label=""
                       labelLength={0}
                       value={settings.deathYears[settings.whoDies]}
-                      setValue={() => {}}
+                      setValue={() => { }}
                     />
                   )}
                 </span>
