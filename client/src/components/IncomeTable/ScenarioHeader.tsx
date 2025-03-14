@@ -9,7 +9,7 @@ import { useFullscreen } from "src/hooks/useFullScreen";
 import { useInfo } from "src/hooks/useData";
 import { Client, ScenarioSettings } from "src/types";
 import title from "src/calculator/title";
-import { calculateAge } from "../Info/PersonInfo";
+import Select from "../Inputs/Select";
 
 interface Props {
   settings: ScenarioSettings;
@@ -53,7 +53,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                       label=""
                       labelLength={0}
                       value={settings.deathYears[settings.whoDies]}
-                      setValue={() => {}}
+                      setValue={() => { }}
                     />
                   )}
                 </span>
@@ -216,7 +216,33 @@ const ScenarioHeader = ({ client, settings }: Props) => {
             </div>
           }
         >
-          <div
+          <Select
+            options={["basic", "composite", "by tax status", "by source"].map(
+              (name) => ({
+                name: name
+                  .split(" ")
+                  .map((s) => s[0].toUpperCase() + s.slice(1))
+                  .join(" "),
+                id: name,
+              }),
+            )}
+            selected={{
+              name: client.liveSettings.mapType
+                .split(" ")
+                .map((s) => s[0].toUpperCase() + s.slice(1))
+                .join(" "),
+              id: client.liveSettings.mapType,
+            }}
+            setSelected={(mapType) =>
+              setField("liveSettings")({
+                ...client.liveSettings,
+                mapType: mapType.id,
+              })
+            }
+            label=""
+          />
+
+          {/*<div
             className="flex gap-3 items-center bg-[#EDEEF1] rounded-md py-[5px] px-[12px] text-[#555860] text-[14px] font-medium cursor-pointer w-[125px] justify-between"
             onClick={() =>
               setField("liveSettings")({
@@ -233,7 +259,7 @@ const ScenarioHeader = ({ client, settings }: Props) => {
               ? "Composite"
               : "Basic"}
             <img src="/icons/chevron-right.png" className="h-2" />
-          </div>
+          </div>*/}
         </Tooltip>
 
         <Menu as="div" className="relative inline-block text-left">
@@ -272,6 +298,16 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                   width="w-[100px]"
                   subtype="number"
                   size="md"
+                />
+                <Input
+                  subtype="toggle"
+                  width="mt-2"
+                  disabled={disabled}
+                  label={"Show tax status"}
+                  value={settings.showTaxType}
+                  setValue={(v) =>
+                    setLiveSettings({ ...settings, showTaxType: v })
+                  }
                 />
 
                 <div className="mt-3">

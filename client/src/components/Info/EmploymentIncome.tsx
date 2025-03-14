@@ -14,9 +14,9 @@ const EmploymentIncomeComponent = ({ people, income, setIncome }: Props) => {
   const amount = income.income
     ? income.income
     : {
-        type: "yearly",
-        value: income.annualIncome,
-      };
+      type: "yearly",
+      value: income.annualIncome,
+    };
   return (
     <div className="flex flex-col gap-4">
       {people.length > 1 && (
@@ -88,6 +88,19 @@ const EmploymentIncomeComponent = ({ people, income, setIncome }: Props) => {
         label="Retirement Month"
         selected={income.retirementAgeMonth}
         setSelected={(i) => setIncome({ ...income, retirementAgeMonth: i.id })}
+      />
+      <Select
+        options={[
+          { name: "Tax-Free", id: "Tax-Free" },
+          { name: "Tax-Deferred", id: "Tax-Deferred" },
+          { name: "Taxable", id: "Taxable" },
+        ]}
+        selected={{
+          name: income.taxType,
+          id: income.taxType,
+        }}
+        setSelected={(i) => setIncome({ ...income, taxType: i.id })}
+        label="Tax Status"
       />
     </div>
   );

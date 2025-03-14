@@ -123,6 +123,7 @@ const initializeNewClient = (user: User | null): Client => ({
     people: [],
     longevityPercent: 50,
     chartType: "income",
+    showTaxType: false,
     deathYears: [
       user?.info?.globalLifeExpectancy,
       user?.info?.globalLifeExpectancy,
@@ -177,9 +178,9 @@ const NewClient = () => {
                 people: singleMode
                   ? [client.people[0]]
                   : [
-                      ...client.people,
-                      { name: "", birthday: null as any, id: 1 },
-                    ],
+                    ...client.people,
+                    { name: "", birthday: null as any, id: 1 },
+                  ],
                 assetSummary: {
                   ...client.assetSummary,
                   socialInsurance: client.assetSummary.socialInsurance.map(

@@ -13,6 +13,7 @@ import SmallToggle from "./Inputs/SmallToggle";
 
 import { SelectedColumn } from "src/types";
 import ChartModal from "./ChartModal";
+import TaxStatusTable from "./IncomeTable/TaxStatusTable";
 
 const Summary = () => {
   const [tab, setTab] = useState(-1);
@@ -46,6 +47,7 @@ const Summary = () => {
     chartType: data.liveSettings.chartType,
     maxYearsShown: data.liveSettings.maxYearsShown,
     taxType: data.liveSettings.taxType,
+    showTaxType: data.liveSettings.showTaxType,
   };
 
   const chart =
@@ -54,32 +56,35 @@ const Summary = () => {
     ) : (
       <MapChart settings={settings} client={data} />
     );
+
+  const getTable = (shownTable: string) => {
+    if (shownTable === "composite") {
+      return CompositeTable;
+    } else if (shownTable === "result") {
+      return ResultTable;
+    } else if (shownTable === "by tax status") {
+      return TaxStatusTable;
+    } else {
+      return ResultTable;
+    }
+  };
+  const Table = getTable(shownTable);
   return (
     <Layout page="map">
       <div className="pb-32 border-[#EDEEF1] border">
         <div className={`sticky z-50 ${isFullscreen ? "top-0" : "top-[72px]"}`}>
           <Scenarios tab={tab} setTab={setTab} />
           <ScenarioHeader client={data} settings={settings} />
-          {shownTable === "composite" ? (
-            <CompositeTable
-              client={data}
-              scenario={settings}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-              selectedColumn={selectedColumn}
-              setSelectedColumn={setSelectedColumn}
-            />
-          ) : (
-            <ResultTable
-              client={data}
-              settings={settings}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-              selectedColumn={selectedColumn}
-              setSelectedColumn={setSelectedColumn}
-              setSettings={tab === -1 ? setField("liveSettings") : () => {}}
-            />
-          )}
+          <Table
+            client={data}
+            scenario={settings}
+            settings={settings}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            selectedColumn={selectedColumn}
+            setSelectedColumn={setSelectedColumn}
+          />
+
           <div className=" my-3 bg-white">
             <div className="flex justify-end p-3">
               {data.needsFlag && (

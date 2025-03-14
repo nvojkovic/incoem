@@ -6,20 +6,20 @@ import { AssetSummary } from "./components/Nate/types";
 
 export interface SelectedColumn {
   type:
-    | "year"
-    | "age"
-    | "income"
-    | "total"
-    | "none"
-    | "spending"
-    | "gap"
-    | "taxes"
-    | "posttax"
-    | "income-stability"
-    | "spending-stability"
-    | "0-alive"
-    | "1-alive"
-    | "joint-alive";
+  | "year"
+  | "age"
+  | "income"
+  | "total"
+  | "none"
+  | "spending"
+  | "gap"
+  | "taxes"
+  | "posttax"
+  | "income-stability"
+  | "spending-stability"
+  | "0-alive"
+  | "1-alive"
+  | "joint-alive";
   id: number;
 }
 
@@ -42,6 +42,7 @@ export interface Income {
   type: IncomeType;
   enabled: boolean;
   stable: boolean;
+  taxType: TaxType;
 }
 
 export type IncomeType =
@@ -51,6 +52,8 @@ export type IncomeType =
   | "annuity"
   | "other-income"
   | "paydown";
+
+export type TaxType = "Taxable" | "Tax-Deferred" | "Tax-Free";
 
 export interface MonthlyYearlyAmount {
   type: "monthly" | "yearly";
@@ -68,6 +71,7 @@ export interface EmploymentIncome extends Income {
   yearlyIncrease: YearlyIncrease;
   retirementAgeYear: number;
   retirementAgeMonth: number;
+  taxType: TaxType;
 }
 
 export interface SocialSecurityIncome extends Income {
@@ -94,6 +98,7 @@ export interface CompanyPension extends Income {
   yearlyIncrease: YearlyIncrease;
   startAge?: number | null;
   firstYearProRatePercent: number;
+  taxType: TaxType;
 }
 
 export interface BasicAnnuity extends Income {
@@ -107,6 +112,7 @@ export interface BasicAnnuity extends Income {
   yearlyIncrease: YearlyIncrease;
   survivorPercent: number;
   firstYearProRatePercent: number;
+  taxType: TaxType;
 }
 
 export interface OtherIncome extends Income {
@@ -122,6 +128,7 @@ export interface OtherIncome extends Income {
   yearlyIncrease: YearlyIncrease;
   survivorPercent: number;
   firstYearProRatePercent: number;
+  taxType: TaxType;
 }
 
 export interface Paydown extends Income {
@@ -133,6 +140,7 @@ export interface Paydown extends Income {
   startYear: number;
   length: number;
   interestRate: number;
+  taxType: TaxType;
 }
 
 export interface Client {
@@ -208,6 +216,7 @@ export interface LiveSettings {
   chartType: "income" | "spending";
   taxType: "Pre-Tax" | "Post-Tax";
   inflationType: "Real" | "Nominal";
+  showTaxType: boolean;
 }
 
 export type ScenarioSettings = SavedScenario & LiveSettings;

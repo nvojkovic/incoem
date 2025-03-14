@@ -49,6 +49,7 @@ export const generateColumns = (
         value: row[title(incomes, data.people, i)],
         year: row.year,
         incomeId: income.id,
+        taxStatus: (income as any).taxType,
         selectedColumn,
         column: { type: "income", id: incomes[i].id },
       }),

@@ -17,9 +17,9 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
   const amount = pension.amount
     ? pension.amount
     : {
-        type: "yearly",
-        value: pension.annualAmount,
-      };
+      type: "yearly",
+      value: pension.annualAmount,
+    };
 
   return (
     <>
@@ -99,6 +99,19 @@ const BasicAnnuity = ({ people, annuity: pension, setIncome }: Props) => {
                 firstYearProRatePercent: parseInt(name),
               })
             }
+          />
+          <Select
+            options={[
+              { name: "Tax-Free", id: "Tax-Free" },
+              { name: "Tax-Deferred", id: "Tax-Deferred" },
+              { name: "Taxable", id: "Taxable" },
+            ]}
+            selected={{
+              name: pension.taxType,
+              id: pension.taxType,
+            }}
+            setSelected={(i) => setIncome({ ...pension, taxType: i.id })}
+            label="Tax Status"
           />
         </div>
       </div>

@@ -109,6 +109,19 @@ const BasicAnnuity = ({ people, paydown, setIncome }: Props) => {
         value={{ value: result, type: resultType }}
         setValue={({ type }) => setResultType(type)}
       />
+      <Select
+        options={[
+          { name: "Tax-Free", id: "Tax-Free" },
+          { name: "Tax-Deferred", id: "Tax-Deferred" },
+          { name: "Taxable", id: "Taxable" },
+        ]}
+        selected={{
+          name: paydown.taxType,
+          id: paydown.taxType,
+        }}
+        setSelected={(i) => setIncome({ ...paydown, taxType: i.id })}
+        label="Tax Status"
+      />
     </div>
   );
 };
