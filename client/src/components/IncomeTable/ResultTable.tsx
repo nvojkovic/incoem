@@ -163,22 +163,20 @@ const ResultTable = ({
               const result = calculateOne(income, currentYear);
               return [
                 title(incomes, settings.people, i),
-                <div>
+                <div className="flex gap-2">
+                  {printNumber(result.amount)}
                   {result.note ? (
                     <Tooltip
                       content={result.note}
                       theme={{ target: "" }}
                       placement="top"
-                      className="!z-[50000] bg-white print:hidden"
+                      className="!z-[50000]  print:hidden "
                     >
                       <div className="cursor-pointer flex items-center gap-2 ">
-                        {printNumber(result.amount)}
                         <QuestionMarkCircleIcon className="h-5 w-5 text-[#D0D5DD] print:hidden" />
                       </div>
                     </Tooltip>
-                  ) : (
-                    printNumber(result.amount)
-                  )}
+                  ) : null}
                 </div>,
               ];
             }),
