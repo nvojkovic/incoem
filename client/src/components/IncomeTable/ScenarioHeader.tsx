@@ -52,12 +52,8 @@ const ScenarioHeader = ({ client, settings }: Props) => {
                       width="!w-12 text-black !font-normal !py-0 !rounded-[5px]"
                       label=""
                       labelLength={0}
-                      value={
-                        calculateAge(
-                          new Date(settings.people[settings.whoDies].birthday),
-                        ) || ""
-                      }
-                      setValue={() => { }}
+                      value={settings.deathYears[settings.whoDies]}
+                      setValue={() => {}}
                     />
                   )}
                 </span>
