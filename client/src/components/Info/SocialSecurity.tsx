@@ -44,6 +44,13 @@ const SocialSecurity = ({ people, income: pension, setIncome }: Props) => {
                   label="Person"
                 />
               )}
+              <Input
+                label="Title"
+                subtype="text"
+                size="lg"
+                value={pension.name}
+                setValue={(name) => setIncome({ ...pension, name })}
+              />
               <Select
                 options={[
                   { name: "Manual", id: "manual" },

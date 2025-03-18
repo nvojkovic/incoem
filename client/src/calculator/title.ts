@@ -22,6 +22,7 @@ const title = (income: Income[], people: Person[], i: number) => {
       "paydown",
       "other-income",
       "employment-income",
+      "social-security",
     ].includes(income[i].type)
   )
     type = ((income[i] as any).name || type) + " ";
@@ -47,7 +48,7 @@ const title = (income: Income[], people: Person[], i: number) => {
   }
 };
 
-(String.prototype as any).capitalize = function () {
+(String.prototype as any).capitalize = function() {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 

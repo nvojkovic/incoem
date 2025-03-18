@@ -169,20 +169,7 @@ const IncomeSection = () => {
                           <EllipsisVerticalIcon className="text-slate-800 w-5 " />
                         </div>
                         <div className="font-semibold text  flex justify-between items-center flex-grow">
-                          <div>
-                            <Input
-                              label=""
-                              subtype="text"
-                              width="!w-[250px]"
-                              size="lg"
-                              value={
-                                (item as any).name || title(incomes, people, i)
-                              }
-                              setValue={(name) =>
-                                setIncome(i, { ...item, name })
-                              }
-                            />
-                          </div>
+                          <div>{title(incomes, people, i)}</div>
                           <div className="flex items-center gap-3">
                             <Toggle
                               enabled={item.enabled}

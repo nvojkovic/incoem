@@ -76,6 +76,7 @@ export interface EmploymentIncome extends Income {
 
 export interface SocialSecurityIncome extends Income {
   type: "social-security";
+  name: string;
   calculationMethod: "manual" | "pia";
   pia: number;
   annualAmount: number;
