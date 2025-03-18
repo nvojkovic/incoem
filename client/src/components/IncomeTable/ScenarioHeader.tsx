@@ -1,6 +1,5 @@
 import WhoDies from "../WhoDies";
 import { updateAtIndex } from "../../utils";
-import { Tooltip } from "flowbite-react";
 import { MultiToggle } from "../Spending/SpendingPage";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -201,52 +200,37 @@ const ScenarioHeader = ({ client, settings }: Props) => {
         </div>
       </div>
       <div className="flex gap-2">
-        <Tooltip
-          theme={{ target: "" }}
-          placement="bottom"
-          style="light"
-          content={
-            <div className="!text-[12px] !font-medium !leading-[18px] w-[160px]">
-              <div className="text-[#9396A0]">Column Configuration</div>
-              <div className="text-[#555860]">
-                Basic: Income sources only
-                <br />
-                Composite: Calculations
-              </div>
-            </div>
+        <Select
+          options={[
+            "all incomes",
+            "composite",
+            "by tax status",
+            "by income type",
+            "by person",
+          ].map((name) => ({
+            name: name
+              .split(" ")
+              .map((s) => s[0].toUpperCase() + s.slice(1))
+              .join(" "),
+            id: name,
+          }))}
+          selected={{
+            name: client.liveSettings.mapType
+              ?.split(" ")
+              .map((s) => s[0].toUpperCase() + s.slice(1))
+              .join(" "),
+            id: client.liveSettings.mapType,
+          }}
+          setSelected={(mapType) =>
+            setField("liveSettings")({
+              ...client.liveSettings,
+              mapType: mapType.id,
+            })
           }
-        >
-          <Select
-            options={[
-              "all incomes",
-              "composite",
-              "by tax status",
-              "by income type",
-              "by person",
-            ].map((name) => ({
-              name: name
-                .split(" ")
-                .map((s) => s[0].toUpperCase() + s.slice(1))
-                .join(" "),
-              id: name,
-            }))}
-            selected={{
-              name: client.liveSettings.mapType
-                ?.split(" ")
-                .map((s) => s[0].toUpperCase() + s.slice(1))
-                .join(" "),
-              id: client.liveSettings.mapType,
-            }}
-            setSelected={(mapType) =>
-              setField("liveSettings")({
-                ...client.liveSettings,
-                mapType: mapType.id,
-              })
-            }
-            label=""
-          />
+          label=""
+        />
 
-          {/*<div
+        {/*<div
             className="flex gap-3 items-center bg-[#EDEEF1] rounded-md py-[5px] px-[12px] text-[#555860] text-[14px] font-medium cursor-pointer w-[125px] justify-between"
             onClick={() =>
               setField("liveSettings")({
@@ -264,8 +248,6 @@ const ScenarioHeader = ({ client, settings }: Props) => {
               : "Basic"}
             <img src="/icons/chevron-right.png" className="h-2" />
           </div>*/}
-        </Tooltip>
-
         <Menu as="div" className="relative inline-block text-left">
           <div>
             <Menu.Button className="bg-[#EDEEF1] w-8 h-8 flex items-center justify-center cursor-pointer rounded-md ">

@@ -41,7 +41,7 @@ const SourceTable = ({
     selectedYear === year ? setSelectedYear(-1) : setSelectedYear(year);
   };
 
-  const groupedIncomesByTaxType = client.incomes.reduce((acc, income) => {
+  const groupedIncomesByTaxType = scenario.incomes.reduce((acc, income) => {
     const key = income.type;
     if (!acc[key]) acc[key] = [];
     acc[key].push(income);
@@ -130,7 +130,7 @@ const SourceTable = ({
                       };
                     };
                     const income = (type: string) =>
-                      client.incomes
+                      scenario.incomes
                         .filter(
                           (income) => income.enabled && income.type === type,
                         )
@@ -167,7 +167,7 @@ const SourceTable = ({
                         >
                           {" "}
                           {printNumber(
-                            client.incomes
+                            scenario.incomes
                               .map((item) => calculateOne(item, line).amount)
                               .reduce((a, b) => a + b, 0),
                           )}

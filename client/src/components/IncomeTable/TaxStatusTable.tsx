@@ -1,4 +1,6 @@
+import { Tooltip } from "flowbite-react";
 import calculate from "src/calculator/calculate";
+import title from "src/calculator/title";
 import { useFullscreen } from "src/hooks/useFullScreen";
 import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 import {
@@ -41,7 +43,7 @@ const TaxStatusTable = ({
     selectedYear === year ? setSelectedYear(-1) : setSelectedYear(year);
   };
 
-  const groupedIncomesByTaxType = client.incomes.reduce(
+  const groupedIncomesByTaxType = scenario.incomes.reduce(
     (acc, income) => {
       const key = income.taxType || "Taxable";
       if (!acc[key]) acc[key] = [];
@@ -59,7 +61,8 @@ const TaxStatusTable = ({
 
   const selectedColor = (key: string) =>
     selectedColumn?.type === key
-      ? selectedTaxColors[key] || "bg-slate-200"
+      ? (client.liveSettings.showTaxType && selectedTaxColors[key]) ||
+      "bg-slate-200"
       : "";
   const selectedColorHeader = (key: string) =>
     selectedColumn?.type === key ? "bg-slate-200" : "";
@@ -137,17 +140,24 @@ const TaxStatusTable = ({
                         amount: result.amount / divisionFactor,
                       };
                     };
-                    const income = (taxType: string) =>
-                      client.incomes
+                    const getIncomes = (taxType: string) =>
+                      scenario.incomes
                         .filter(
                           (income) =>
                             income.enabled &&
                             (income.taxType === taxType ||
                               (!income.taxType && taxType === "Taxable")),
                         )
-                        .map((income) => calculateOne(income, line).amount)
+                        .map((income, i) => [
+                          title(scenario.incomes, client.people, i),
+                          calculateOne(income, line).amount,
+                        ]);
+
+                    const income = (taxType: string) =>
+                      getIncomes(taxType)
+                        .map((item) => item[1])
                         .filter((t) => typeof t === "number")
-                        .reduce((a, b) => a + b, 0);
+                        .reduce((a: any, b: any) => a + b, 0);
 
                     return (
                       <tr
@@ -168,20 +178,97 @@ const TaxStatusTable = ({
                         </td>
                         {Object.keys(groupedIncomesByTaxType).map((key) => (
                           <td
-                            className={`px-2 py-[0.45rem] ${selectedColumn?.type === key || line == selectedYear ? selectedColor(key) : taxColors[key]} text-[#475467] ${selectedYear === line ? selectedTaxColors[key] : ""}`}
+                            className={`px-2 py-[0.45rem] ${selectedColumn?.type === key || line == selectedYear ? selectedColor(key) : client.liveSettings.showTaxType && taxColors[key]} text-[#475467] ${selectedYear === line ? (client.liveSettings.showTaxType ? selectedTaxColors[key] : "bg-slate-200") : ""}`}
                           >
-                            {printNumber(income(key))}
+                            <Tooltip
+                              content={(() => {
+                                return (
+                                  <div className="z-[5000000] sticky w-60 ">
+                                    <div className="text-lg mb-2">{line}</div>
+                                    {scenario.incomes
+                                      .filter((i) => i.taxType === key)
+                                      .map(
+                                        (income, i) =>
+                                          calculateOne(income, line).amount >
+                                          0 && (
+                                            <div className="flex justify-between gap-3">
+                                              <div className="font-bold">
+                                                {title(
+                                                  scenario.incomes,
+                                                  client.people,
+                                                  i,
+                                                )}
+                                                :{" "}
+                                              </div>
+                                              {printNumber(
+                                                calculateOne(income, line)
+                                                  .amount,
+                                              )}
+                                            </div>
+                                          ),
+                                      )}
+                                  </div>
+                                );
+                              })()}
+                              theme={{ target: "" }}
+                              style="light"
+                              arrow={false}
+                              className={`border border-main-orange ${scenario.incomes.filter(
+                                (i) =>
+                                  i.taxType === key &&
+                                  calculateOne(i, line).amount > 0,
+                              ).length == 0 && "hidden"
+                                }`}
+                              placement="bottom"
+                            >
+                              {printNumber(income(key) as any)}
+                            </Tooltip>
                           </td>
                         ))}
+
                         <td
                           className={`px-2 py-[0.45rem] font-medium ${selectedColumn?.type === "total" ? "!bg-slate-200" : ""} ${selectedYear === line ? "!bg-slate-200" : ""}`}
                         >
                           {" "}
-                          {printNumber(
-                            client.incomes
-                              .map((item) => calculateOne(item, line).amount)
-                              .reduce((a, b) => a + b, 0),
-                          )}
+                          <Tooltip
+                            content={(() => {
+                              return (
+                                <div className="z-[5000000] sticky w-64 ">
+                                  <div className="text-lg mb-2">{line}</div>
+                                  {scenario.incomes.map(
+                                    (income, i) =>
+                                      calculateOne(income, line).amount !=
+                                      0 && (
+                                        <div className="flex justify-between gap-3">
+                                          <div className="font-bold">
+                                            {title(
+                                              scenario.incomes,
+                                              client.people,
+                                              i,
+                                            )}
+                                            :{" "}
+                                          </div>
+                                          {printNumber(
+                                            calculateOne(income, line).amount,
+                                          )}
+                                        </div>
+                                      ),
+                                  )}
+                                </div>
+                              );
+                            })()}
+                            theme={{ target: "" }}
+                            style="light"
+                            arrow={false}
+                            className="border border-main-orange"
+                            placement="bottom"
+                          >
+                            {printNumber(
+                              scenario.incomes
+                                .map((item) => calculateOne(item, line).amount)
+                                .reduce((a, b) => a + b, 0),
+                            )}
+                          </Tooltip>
                         </td>
                       </tr>
                     );

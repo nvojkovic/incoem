@@ -9,6 +9,7 @@
     "data-migration:move-people-incomes": "node ./prisma/migrations/move-people-incomes.js",
     "data-migration:versatile": "node ./prisma/migrations/migrate-versatile.js",
     "data-migration:tax-status": "node ./prisma/migrations/default-tax-status.js",
+    "data-migration:social-security-tax-status": "node ./prisma/migrations/social-security-tax-status.js",
     "data-migration:new-report-pages": "node ./prisma/migrations/new-report-pages.js"
   },
   "keywords": [],

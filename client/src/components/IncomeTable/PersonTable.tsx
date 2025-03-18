@@ -40,7 +40,7 @@ const PersonTable = ({
     selectedYear === year ? setSelectedYear(-1) : setSelectedYear(year);
   };
 
-  const groupedIncomesByTaxType = client.incomes.reduce(
+  const groupedIncomesByTaxType = scenario.incomes.reduce(
     (acc, income) => {
       const key = income.personId;
       if (!acc[key]) acc[key] = [];
@@ -132,7 +132,7 @@ const PersonTable = ({
                       };
                     };
                     const income = (person: string) =>
-                      client.incomes
+                      scenario.incomes
                         .filter(
                           (income) =>
                             income.enabled &&
@@ -171,7 +171,7 @@ const PersonTable = ({
                         >
                           {" "}
                           {printNumber(
-                            client.incomes
+                            scenario.incomes
                               .map((item) => calculateOne(item, line).amount)
                               .reduce((a, b) => a + b, 0),
                           )}
