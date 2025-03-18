@@ -14,6 +14,7 @@ export const newEmploymentIncome = (): any => ({
   yearlyIncrease: { type: "general" },
   retirementAgeYear: null,
   retirementAgeMonth: null,
+  taxType: "Taxable",
 });
 
 export const newSocialSecurityIncome = (
@@ -21,6 +22,7 @@ export const newSocialSecurityIncome = (
 ): SocialSecurityIncome => ({
   id: id(),
   enabled: true,
+  name: "",
   type: "social-security",
   personId: person.id,
   stable: true,
@@ -33,7 +35,7 @@ export const newSocialSecurityIncome = (
   calculationMethod: "pia",
   startAgeYear: null as any,
   startAgeMonth: null as any,
-  taxType: "" as any,
+  taxType: "Taxable",
 });
 
 export const newPensionIncome = (): any => ({
@@ -49,6 +51,7 @@ export const newPensionIncome = (): any => ({
   yearlyIncrease: { type: "none" },
   firstYearProRatePercent: 100,
   startAge: null,
+  taxType: "Taxable",
 });
 
 export const newBasicAnnuity = (): any => ({
@@ -64,6 +67,7 @@ export const newBasicAnnuity = (): any => ({
   yearlyIncrease: { type: "none" },
   survivorPercent: null,
   firstYearProRatePercent: 100,
+  taxType: "Taxable",
 });
 
 export const otherIncome = (): any => ({
@@ -81,6 +85,7 @@ export const otherIncome = (): any => ({
   survivorPercent: 100,
   firstYearProRatePercent: 100,
   name: "",
+  taxType: "Taxable",
 });
 
 export const paydown = (): any => ({
@@ -95,6 +100,7 @@ export const paydown = (): any => ({
   paymentInYear: "beginning",
   interestRate: null,
   total: null,
+  taxType: "Taxable",
 });
 
 export const newIncome = (type: IncomeType, person: Person): Income => {

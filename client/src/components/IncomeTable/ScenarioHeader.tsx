@@ -217,18 +217,22 @@ const ScenarioHeader = ({ client, settings }: Props) => {
           }
         >
           <Select
-            options={["basic", "composite", "by tax status", "by source"].map(
-              (name) => ({
-                name: name
-                  .split(" ")
-                  .map((s) => s[0].toUpperCase() + s.slice(1))
-                  .join(" "),
-                id: name,
-              }),
-            )}
+            options={[
+              "all incomes",
+              "composite",
+              "by tax status",
+              "by income type",
+              "by person",
+            ].map((name) => ({
+              name: name
+                .split(" ")
+                .map((s) => s[0].toUpperCase() + s.slice(1))
+                .join(" "),
+              id: name,
+            }))}
             selected={{
               name: client.liveSettings.mapType
-                .split(" ")
+                ?.split(" ")
                 .map((s) => s[0].toUpperCase() + s.slice(1))
                 .join(" "),
               id: client.liveSettings.mapType,

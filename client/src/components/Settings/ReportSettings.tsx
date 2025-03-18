@@ -32,6 +32,9 @@ const names: any = {
   "spending-chart": "Spending Chart",
   longevity: "Longevity",
   composite: "Composite",
+  "by-person": "By Person",
+  "by-income-type": "By Income Type",
+  "by-tax-status": "By Tax Status",
 };
 
 const Page = ({ setting, setSetting, index }: any) => {

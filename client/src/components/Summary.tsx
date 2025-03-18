@@ -14,6 +14,8 @@ import SmallToggle from "./Inputs/SmallToggle";
 import { SelectedColumn } from "src/types";
 import ChartModal from "./ChartModal";
 import TaxStatusTable from "./IncomeTable/TaxStatusTable";
+import SourceTable from "./IncomeTable/SourceTable";
+import PersonTable from "./IncomeTable/PersonTable";
 
 const Summary = () => {
   const [tab, setTab] = useState(-1);
@@ -64,6 +66,10 @@ const Summary = () => {
       return ResultTable;
     } else if (shownTable === "by tax status") {
       return TaxStatusTable;
+    } else if (shownTable === "by income type") {
+      return SourceTable;
+    } else if (shownTable === "by person") {
+      return PersonTable;
     } else {
       return ResultTable;
     }

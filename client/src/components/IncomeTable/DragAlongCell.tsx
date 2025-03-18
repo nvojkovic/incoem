@@ -4,6 +4,7 @@ import { CSSProperties } from "react";
 import { CSS } from "@dnd-kit/utilities";
 import { SelectedColumn } from "src/types";
 import { useInfo } from "src/hooks/useData";
+import { hoverTaxColors, selectedTaxColors, taxColors } from "src/utils";
 
 const DragAlongCell = ({
   cell,
@@ -32,17 +33,16 @@ const DragAlongCell = ({
     transition: "width transform 0.2s ease-in-out",
     width: cell.column.getSize(),
   };
-  console.log("aa", cell, cell.getValue());
 
-  const taxColors = {
-    Taxable: "",
-    "Tax-Deferred": "bg-pink-100",
-    "Tax-Free": "bg-green-100",
-  } as any;
+  const selected =
+    (selectedColumn.type == column.type && selectedColumn.id === column.id) ||
+    selectedYear === data.year;
+
+  const taxStatus = (cell.getValue() as any).taxStatus || "Taxable";
 
   return (
     <td
-      className={` ${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} ${column.type === "year" ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${(selectedColumn.type == column.type && selectedColumn.id === column.id) || selectedYear === data.year ? "bg-slate-200" : liveSettings.showTaxType && taxColors[(cell.getValue() as any).taxStatus as string]}`}
+      className={` ${["year", "age", "total"].includes(column.type) ? "font-medium text-black " : "text-[#475467]"} ${column.type === "year" ? "px-6" : "px-2"} py-[0.45rem] print:py-[0.2rem] ${(cell as any).hoverRow && !selected && liveSettings.showTaxType && hoverTaxColors[taxStatus]} ${liveSettings.showTaxType ? (selected ? selectedTaxColors[taxStatus] : liveSettings.showTaxType && taxColors[taxStatus]) : selected && "bg-slate-200"}`}
       ref={setNodeRef}
       onClick={() => {
         if (selectedYear === data.year) setSelectedYear(0);
@@ -50,7 +50,7 @@ const DragAlongCell = ({
       }}
       style={style}
     >
-      <div className="bg-pink-100"></div>
+      <div className="bg-[#e8d3df]"></div>
       {(cell.getValue() as any).value}
     </td>
   );

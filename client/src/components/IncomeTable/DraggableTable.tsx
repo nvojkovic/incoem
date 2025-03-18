@@ -92,7 +92,7 @@ const DraggableTable = ({
               >
                 <DragAlongCell
                   key={cell.id}
-                  cell={cell}
+                  cell={{ ...cell, hoverRow: hoverRow === i } as any}
                   selectedColumn={selectedColumn}
                   selectedYear={selectedYear}
                   setSelectedYear={setSelectedYear}

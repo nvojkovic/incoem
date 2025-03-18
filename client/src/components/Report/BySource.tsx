@@ -1,26 +1,27 @@
-import ResultTable from "src/components/IncomeTable/ResultTable";
 import { UserProvider } from "src/hooks/useUser";
 import Header from "./Header";
 import { PrintClient } from "src/types";
+import SourceTable from "../IncomeTable/SourceTable";
 
 interface PrintProps {
   client: PrintClient;
   scenario: any;
 }
 
-const IncomeTable = ({ client, scenario }: PrintProps) => {
+const BySource = ({ client, scenario }: PrintProps) => {
   return (
     <UserProvider ignoreLogin>
       <Header client={client} scenario={scenario} />
 
       <div className="w-full pt-5 flex justify-center">
-        <div className="text-2xl mx-auto mb-5">Income</div>
+        <div className="text-2xl mx-auto mb-5">By Income Type</div>
       </div>
       <div className="mx-auto px-10">
         <div>
-          <ResultTable
+          <SourceTable
+            print
             client={client}
-            settings={scenario}
+            scenario={scenario}
             selectedYear={0}
             setSelectedYear={() => { }}
             selectedColumn={{ id: 0, type: "none" }}
@@ -44,4 +45,4 @@ const IncomeTable = ({ client, scenario }: PrintProps) => {
   );
 };
 
-export default IncomeTable;
+export default BySource;

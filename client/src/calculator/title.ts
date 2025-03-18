@@ -1,5 +1,14 @@
 import { Income, Person } from "src/types";
 
+export const basicTitle = (type: string) => {
+  if (type == "company-pension") return "Pension";
+  return type
+    .split("-")
+    .map((i) => (i as any).capitalize())
+    .filter((i) => i !== "Income")
+    .join(" ");
+};
+
 const title = (income: Income[], people: Person[], i: number) => {
   let person: any = people.find((p) => p.id === income[i].personId);
   if (!person) {
@@ -9,12 +18,7 @@ const title = (income: Income[], people: Person[], i: number) => {
     (r) => r.type === income[i].type && r.personId == income[i].personId,
   ).length;
 
-  let type = income[i].type
-    .split("-")
-    .map((i) => (i as any).capitalize())
-    .filter((i) => i !== "Income")
-    .join(" ");
-  if (income[i].type == "company-pension") type = "Pension";
+  let type = basicTitle(income[i].type);
   if (
     [
       "annuity",

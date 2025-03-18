@@ -1,11 +1,11 @@
 import calculate from "src/calculator/calculate";
+import { basicTitle } from "src/calculator/title";
 import { useFullscreen } from "src/hooks/useFullScreen";
 import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 import {
   printNumber,
   selectedTaxColors,
   splitDate,
-  taxColors,
   yearRange,
 } from "src/utils";
 
@@ -18,14 +18,14 @@ interface Props {
   setSelectedYear?: any;
   print?: boolean;
 }
-const TaxStatusTable = ({
+const SourceTable = ({
   scenario,
   client,
   setSelectedYear,
   selectedYear,
   setSelectedColumn,
-  print,
   selectedColumn,
+  print,
 }: Props) => {
   const currentYear = new Date().getFullYear();
   const height = 100;
@@ -41,26 +41,18 @@ const TaxStatusTable = ({
     selectedYear === year ? setSelectedYear(-1) : setSelectedYear(year);
   };
 
-  const groupedIncomesByTaxType = client.incomes.reduce(
-    (acc, income) => {
-      const key = income.taxType || "Taxable";
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(income);
-      return acc;
-    },
-    { Taxable: [], "Tax-Deferred": [], "Tax-Free": [] } as any,
-  );
+  const groupedIncomesByTaxType = client.incomes.reduce((acc, income) => {
+    const key = income.type;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(income);
+    return acc;
+  }, {} as any);
   console.log("hhh", groupedIncomesByTaxType);
-  {
-    ("text-[#475467]");
-  }
   const divisionFactor =
     client.liveSettings.monthlyYearly === "monthly" ? 12 : 1;
 
   const selectedColor = (key: string) =>
-    selectedColumn?.type === key
-      ? selectedTaxColors[key] || "bg-slate-200"
-      : "";
+    selectedColumn?.type === key ? "bg-slate-200" : "";
   const selectedColorHeader = (key: string) =>
     selectedColumn?.type === key ? "bg-slate-200" : "";
   return (
@@ -93,7 +85,7 @@ const TaxStatusTable = ({
                         onClick={setColumn(key)}
                         key={key}
                       >
-                        {key}
+                        {basicTitle(key)}
                       </th>
                     ))}
                     <th
@@ -137,13 +129,10 @@ const TaxStatusTable = ({
                         amount: result.amount / divisionFactor,
                       };
                     };
-                    const income = (taxType: string) =>
+                    const income = (type: string) =>
                       client.incomes
                         .filter(
-                          (income) =>
-                            income.enabled &&
-                            (income.taxType === taxType ||
-                              (!income.taxType && taxType === "Taxable")),
+                          (income) => income.enabled && income.type === type,
                         )
                         .map((income) => calculateOne(income, line).amount)
                         .filter((t) => typeof t === "number")
@@ -168,7 +157,7 @@ const TaxStatusTable = ({
                         </td>
                         {Object.keys(groupedIncomesByTaxType).map((key) => (
                           <td
-                            className={`px-2 py-[0.45rem] ${selectedColumn?.type === key || line == selectedYear ? selectedColor(key) : taxColors[key]} text-[#475467] ${selectedYear === line ? selectedTaxColors[key] : ""}`}
+                            className={`px-2 py-[0.45rem] ${selectedColumn?.type === key || line == selectedYear ? "bg-slate-200" : ""} text-[#475467] ${selectedYear === line ? selectedTaxColors[key] : ""}`}
                           >
                             {printNumber(income(key))}
                           </td>
@@ -196,4 +185,4 @@ const TaxStatusTable = ({
   );
 };
 
-export default TaxStatusTable;
+export default SourceTable;

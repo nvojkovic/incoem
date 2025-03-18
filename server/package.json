@@ -7,7 +7,9 @@
     "build": "npx prisma generate && tsc",
     "start": "npx tsc-watch --onSuccess \"node dist/index.js\"",
     "data-migration:move-people-incomes": "node ./prisma/migrations/move-people-incomes.js",
-    "data-migration:versatile": "node ./prisma/migrations/migrate-versatile.js"
+    "data-migration:versatile": "node ./prisma/migrations/migrate-versatile.js",
+    "data-migration:tax-status": "node ./prisma/migrations/default-tax-status.js",
+    "data-migration:new-report-pages": "node ./prisma/migrations/new-report-pages.js"
   },
   "keywords": [],
   "author": "",

@@ -6,6 +6,9 @@ import IncomeTable from "./IncomeTable";
 import Longevity from "./Longevity";
 import Spending from "./Spending";
 import SpendingChart from "./SpendingChart";
+import BySource from "./BySource";
+import ByPerson from "./ByPerson";
+import ByTaxType from "./ByTaxType";
 
 interface ReportProps {
   scenario: ScenarioSettings;
@@ -19,6 +22,12 @@ const Report = ({ scenario, client, page }: ReportProps) => {
     return <Cover settings={scenario} client={client} />;
   if (page.name == "incomes")
     return <IncomeTable scenario={scenario} client={client} />;
+  if (page.name == "by-income-type")
+    return <BySource scenario={scenario} client={client} />;
+  if (page.name == "by-person")
+    return <ByPerson scenario={scenario} client={client} />;
+  if (page.name == "by-tax-status")
+    return <ByTaxType scenario={scenario} client={client} />;
   if (page.name == "income-chart")
     return <IncomeChart scenario={scenario} client={client} print />;
   if (page.name == "spending-chart")

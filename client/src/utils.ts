@@ -180,3 +180,20 @@ export const getTaxRate = (
     return (client.spending.preTaxRate || 0) / 100;
   }
 };
+export const taxColors = {
+  Taxable: "",
+  "Tax-Deferred": "bg-pink-100",
+  "Tax-Free": "bg-green-100",
+} as any;
+
+export const hoverTaxColors = {
+  Taxable: "bg-slate-100",
+  "Tax-Deferred": "bg-[#f7dfed]",
+  "Tax-Free": "bg-[#d0f7dd]",
+} as any;
+
+export const selectedTaxColors = {
+  Taxable: "bg-slate-200",
+  "Tax-Deferred": "bg-pink-200",
+  "Tax-Free": "bg-green-200",
+} as any;
