@@ -22,7 +22,6 @@ import React from "react";
 import { useInfo } from "src/hooks/useData";
 import { generateColumns } from "src/components/IncomeTable/tableData";
 import DraggableTable from "./DraggableTable";
-import { jointTable, makeTable } from "../Longevity/calculate";
 import { calculateSpendingYear } from "../Spending/calculate";
 import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 import { useFullscreen } from "src/hooks/useFullScreen";
