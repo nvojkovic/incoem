@@ -81,10 +81,10 @@ const PersonTable = ({
       },
       {
         value: (
-          <LongevityTooltip client={client} currentYear={currentYear}>
+          <LongevityTooltip client={client} currentYear={line}>
             <div className="font-medium text-black w-6">
               {scenario.people
-                .map((p) => currentYear - splitDate(p.birthday).year)
+                .map((p) => line - splitDate(p.birthday).year)
                 .join("/")}
             </div>
           </LongevityTooltip>
