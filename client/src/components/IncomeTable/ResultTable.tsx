@@ -26,6 +26,7 @@ import { jointTable, makeTable } from "../Longevity/calculate";
 import { calculateSpendingYear } from "../Spending/calculate";
 import { Client, Income, ScenarioSettings, SelectedColumn } from "src/types";
 import { useFullscreen } from "src/hooks/useFullScreen";
+import LongevityTooltip from "./LongevityTooltip";
 
 const ResultTable = ({
   client,
@@ -109,52 +110,13 @@ const ResultTable = ({
           age: (
             <div className="flex gap-2">
               <div className="w-20 relative">
-                <Tooltip
-                  content={(() => {
-                    const people = settings.people;
-                    const joint =
-                      people.length > 1 ? (
-                        <div>
-                          Joint:{" "}
-                          {Math.round(
-                            (jointTable(people[0], people[1]).find(
-                              (i) => i.year === currentYear,
-                            )?.oneAlive || 0) * 1000,
-                          ) / 10}
-                          %
-                        </div>
-                      ) : null;
-                    const table = settings.people.map((p) => {
-                      const t = makeTable(p);
-                      const item = t.table.find((i) => i.year == currentYear);
-                      if (!item) return null;
-                      return (
-                        <div key={p.name}>
-                          {p.name}: {Math.round(item?.probability * 1000) / 10}%
-                        </div>
-                      );
-                    });
-                    return (
-                      <div className="z-[5000000] bg-white w-40 sticky">
-                        <b>Survival Probability</b>
-                        {client.longevityFlag && <>{table}</>}
-                        {joint}
-                      </div>
-                    );
-                  })()}
-                  theme={{ target: "" }}
-                  placement="right"
-                  hidden={
-                    !client.longevityFlag || !client.people.every((p) => p.sex)
-                  }
-                  style="light"
-                  arrow={false}
-                  className={`border-2 border-main-orange bg-white print:hidden ${client.longevityFlag ? "" : "hidden"}`}
-                >
-                  {settings.people
-                    .map((p) => currentYear - splitDate(p.birthday).year)
-                    .join("/")}
-                </Tooltip>
+                <LongevityTooltip client={client} currentYear={currentYear}>
+                  <div>
+                    {settings.people
+                      .map((p) => currentYear - splitDate(p.birthday).year)
+                      .join("/")}
+                  </div>
+                </LongevityTooltip>
               </div>
             </div>
           ),

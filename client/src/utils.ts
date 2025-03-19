@@ -184,19 +184,19 @@ export const taxColors = {
   Taxable: "",
   "Tax-Deferred": "bg-pink-100",
   "Tax-Free": "bg-green-100",
-  "social-security": "bg-blue-100",
+  "Social Security": "bg-blue-100",
 } as any;
 
 export const hoverTaxColors = {
   Taxable: "bg-slate-100",
   "Tax-Deferred": "bg-[#f7dfed]",
   "Tax-Free": "bg-[#d0f7dd]",
-  "social-security": "bg-[#d4e7fc]",
+  "Social Security": "bg-[#d4e7fc]",
 } as any;
 
 export const selectedTaxColors = {
   Taxable: "bg-slate-200",
   "Tax-Deferred": "bg-pink-200",
   "Tax-Free": "bg-green-200",
-  "social-security": "bg-blue-200",
+  "Social Security": "bg-blue-200",
 } as any;

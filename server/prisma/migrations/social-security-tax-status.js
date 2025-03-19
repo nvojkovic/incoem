@@ -12,14 +12,14 @@ async function main() {
         data: {
           incomes: client.incomes.map((item) =>
             item.type === "social-security"
-              ? { ...item, taxType: "social-security" }
+              ? { ...item, taxType: "Social Security" }
               : item,
           ),
           scenarios: client.scenarios.map((scenario) => ({
             ...scenario,
             incomes: scenario.incomes.map((item) =>
               item.type === "social-security"
-                ? { ...item, taxType: "social-security" }
+                ? { ...item, taxType: "Social Security" }
                 : item,
             ),
           })),
